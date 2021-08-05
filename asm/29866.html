@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 74AA</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="26675.html">6833</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29866">Map</a></td>
+<td class="next">
+Next: <a href="29916.html">74DC</a>
+</td>
+</tr>
+</table>
+<div class="description">74AA: Print characters to the screen</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="30034.html">7552</a> and <a href="59537.html">PINK_HEADER</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_BIKE_GRAPHIC</td>
+<td class="address-2"><span id="29866"></span>74AA</td>
+<td class="instruction">LD H,$78</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=$78</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29868"></span>74AC</td>
+<td class="instruction">JR <a href="29866.html#29877">PRINT_BIKE_GRAPHIC_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29866.html#29877">PRINT_BIKE_GRAPHIC_0</a></td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_LETTER</td>
+<td class="address-2"><span id="29870"></span>74AE</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29871"></span>74AF</td>
+<td class="instruction">ADD A,A</td>
+<td class="comment-1" rowspan="1">Double the value in <span class="register">A</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29872"></span>74B0</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29873"></span>74B1</td>
+<td class="instruction">LD H,$0F</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=$0F</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29875"></span>74B3</td>
+<td class="instruction">ADD HL,HL</td>
+<td class="comment-1" rowspan="2">Shift <span class="register">HL</span> left two bits</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29876"></span>74B4</td>
+<td class="instruction">ADD HL,HL</td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_BIKE_GRAPHIC_0</td>
+<td class="address-2"><span id="29877"></span>74B5</td>
+<td class="instruction">LD B,$08</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=$08</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29879"></span>74B7</td>
+<td class="instruction">LD C,D</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=<span class="register">D</span></td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_LETTER_LOOP</td>
+<td class="address-2"><span id="29880"></span>74B8</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=(<span class="register">HL</span>)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29881"></span>74B9</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Writes <span class="register">A</span> to the memory location held by <span class="register">DE</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29882"></span>74BA</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increases <span class="register">L</span> by one</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29883"></span>74BB</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increases <span class="register">D</span> by one</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29884"></span>74BC</td>
+<td class="instruction">DJNZ <a href="29866.html#29880">PRINT_LETTER_LOOP</a></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">B</span> by one, jump to <a href="29866.html#29880">PRINT_LETTER_LOOP</a> if not zero</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29886"></span>74BE</td>
+<td class="instruction">LD D,C</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">C</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29887"></span>74BF</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increases <span class="register">E</span> by one</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29888"></span>74C0</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29889"></span>74C1</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29890"></span>74C2</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="29891"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routines at <a href="29916.html">74DC</a>, <a href="30034.html">7552</a> and <a href="60754.html">ED52</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_BIKE_GRAPHIC_1</td>
+<td class="address-2"><span id="29891"></span>74C3</td>
+<td class="instruction">LD B,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=$20</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29893"></span>74C5</td>
+<td class="instruction">LD DE,$5AE0</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=$5AE0</td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_BIKE_GRAPHIC_2</td>
+<td class="address-2"><span id="29896"></span>74C8</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Writes <span class="register">A</span> to the memory location held by <span class="register">DE</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29897"></span>74C9</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increases <span class="register">E</span> by one</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29898"></span>74CA</td>
+<td class="instruction">DJNZ <a href="29866.html#29896">PRINT_BIKE_GRAPHIC_2</a></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">B</span> by one, jump to <a href="29866.html#29896">PRINT_BIKE_GRAPHIC_2</a> if not zero</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29900"></span>74CC</td>
+<td class="instruction">LD B,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=$20</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29902"></span>74CE</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29903"></span>74CF</td>
+<td class="instruction">LD DE,$50E0</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=$50E0</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29906"></span>74D2</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_STRING</td>
+<td class="address-2"><span id="29907"></span>74D3</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1">Stores the first letter of the string in <span class="register">A</span></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29908"></span>74D4</td>
+<td class="instruction">CALL <a href="29866.html#29870">PRINT_LETTER</a></td>
+<td class="comment-1" rowspan="1">Calls the subroutine at <a href="29866.html#29870">PRINT_LETTER</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29911"></span>74D7</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increases <span class="register">HL</span> by one</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29912"></span>74D8</td>
+<td class="instruction">DJNZ <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">B</span> by one, loop back to <a href="29866.html#29907">PRINT_STRING</a> and keep going until <span class="register">B</span> is zero</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29914"></span>74DA</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29915"></span>74DB</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="26675.html">6833</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29866">Map</a></td>
+<td class="next">
+Next: <a href="29916.html">74DC</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.5.</div>
+</footer>
+</body>
+</html>

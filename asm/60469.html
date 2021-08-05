@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at EC35</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60403.html">EBF3</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60469">Map</a></td>
+<td class="next">
+Next: <a href="60558.html">EC8E</a>
+</td>
+</tr>
+</table>
+<div class="description">EC35: Routine at EC35</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60469"></span>EC35</td>
+<td class="instruction">DI</td>
+<td class="comment-1" rowspan="1">Disable interupts</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60470"></span>EC36</td>
+<td class="instruction">XOR A</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=0</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60471"></span>EC37</td>
+<td class="instruction">LD C,(HL)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60472"></span>EC38</td>
+<td class="instruction">INC C</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60473"></span>EC39</td>
+<td class="instruction">JR NZ,$EC3D</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60475"></span>EC3B</td>
+<td class="instruction">EI</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60476"></span>EC3C</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60477"></span>EC3D</td>
+<td class="instruction">DEC C</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60478"></span>EC3E</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60479"></span>EC3F</td>
+<td class="instruction">LD E,(HL)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60480"></span>EC40</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60481"></span>EC41</td>
+<td class="instruction">LD D,(HL)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60482"></span>EC42</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-2"><span id="60483"></span>EC43</td>
+<td class="instruction">OUT ($FE),A</td>
+<td class="comment-1" rowspan="1">Set the border to the colour held in <span class="register">A</span></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60485"></span>EC45</td>
+<td class="instruction">LD B,C</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60486"></span>EC46</td>
+<td class="instruction">XOR $10</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-2"><span id="60488"></span>EC48</td>
+<td class="instruction">DJNZ $EC48</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60490"></span>EC4A</td>
+<td class="instruction">LD B,A</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60491"></span>EC4B</td>
+<td class="instruction">DEC DE</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60492"></span>EC4C</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60493"></span>EC4D</td>
+<td class="instruction">OR E</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60494"></span>EC4E</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60495"></span>EC4F</td>
+<td class="instruction">JR NZ,$EC43</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60497"></span>EC51</td>
+<td class="instruction">LD D,$0F</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-2"><span id="60499"></span>EC53</td>
+<td class="instruction">DEC DE</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60500"></span>EC54</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60501"></span>EC55</td>
+<td class="instruction">OR E</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60502"></span>EC56</td>
+<td class="instruction">JR NZ,$EC53</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60504"></span>EC58</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60505"></span>EC59</td>
+<td class="instruction">INC A</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60506"></span>EC5A</td>
+<td class="instruction">AND $17</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60508"></span>EC5C</td>
+<td class="instruction">JR $EC37</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60510"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="30034.html">7552</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60510"></span>EC5E</td>
+<td class="instruction">LD HL,$EEE8</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=$EEE8</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60513"></span>EC61</td>
+<td class="instruction">JR $EC35</td>
+<td class="comment-1" rowspan="1">Jump to <a href="60469.html">EC35</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60515"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="30034.html">7552</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60515"></span>EC63</td>
+<td class="instruction">LD HL,$EF4F</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=$EF4F</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60518"></span>EC66</td>
+<td class="instruction">JR $EC35</td>
+<td class="comment-1" rowspan="1">Jump to <a href="60469.html">EC35</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60520"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="30034.html">7552</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60520"></span>EC68</td>
+<td class="instruction">LD HL,$EFC2</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=$EFC2</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60523"></span>EC6B</td>
+<td class="instruction">JR $EC35</td>
+<td class="comment-1" rowspan="1">Jump to <a href="60469.html">EC35</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60525"></span>EC6D</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60526"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="60587.html">ECAB</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60526"></span>EC6E</td>
+<td class="instruction">LD (IY+$07),$00</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60530"></span>EC72</td>
+<td class="instruction">SET 3,(IY+$30)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60534"></span>EC76</td>
+<td class="instruction">LD HL,$5C3B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60537"></span>EC79</td>
+<td class="instruction">RES 5,(HL)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-2"><span id="60539"></span>EC7B</td>
+<td class="instruction">BIT 5,(HL)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60541"></span>EC7D</td>
+<td class="instruction">JR Z,$EC7B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60543"></span>EC7F</td>
+<td class="instruction">LD A,($5C08)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60546"></span>EC82</td>
+<td class="instruction">CP $80</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60548"></span>EC84</td>
+<td class="instruction">JR NC,$EC6F</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60550"></span>EC86</td>
+<td class="instruction">CP $60</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60552"></span>EC88</td>
+<td class="instruction">RET C</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60553"></span>EC89</td>
+<td class="instruction">RES 5,A</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60555"></span>EC8B</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60556"></span>EC8C</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="60557"></span>EC8D</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60403.html">EBF3</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60469">Map</a></td>
+<td class="next">
+Next: <a href="60558.html">EC8E</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.5.</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at E8E4</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="59616.html">E8E0</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#59620">Map</a></td>
+<td class="next">
+Next: <a href="59648.html">E900</a>
+</td>
+</tr>
+</table>
+<div class="description">E8E4: Displays the pink footer</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59620"></span>
+<div class="comments">
+<div class="paragraph">
+This routine moves the data at <a href="43264.html">START_FOOTER</a> to the screen buffer (to draw the start page footer).
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PINK_FOOTER</td>
+<td class="address-2"><span id="59620"></span>E8E4</td>
+<td class="instruction">LD DE,$5000</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=$5000 (target)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59623"></span>E8E7</td>
+<td class="instruction">LD HL,$A900</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="43264.html">START_FOOTER</a> (source)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59626"></span>E8EA</td>
+<td class="instruction">LD BC,$0800</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=$0800 (counter)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59629"></span>E8ED</td>
+<td class="instruction">LDIR</td>
+<td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59631"></span>E8EF</td>
+<td class="instruction">LD D,$5A</td>
+<td class="comment-1" rowspan="1">DE=$5A00 (target)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59633"></span>E8F1</td>
+<td class="instruction">LD B,$01</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=$0100 (counter)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59635"></span>E8F3</td>
+<td class="instruction">LDIR</td>
+<td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59637"></span>E8F5</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59638"></span>E8F6</td>
+<td class="instruction">IN A,($1F)</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59640"></span>E8F8</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59641"></span>E8F9</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59642"></span>E8FA</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59643"></span>E8FB</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59644"></span>E8FC</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59645"></span>E8FD</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59646"></span>E8FE</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59647"></span>E8FF</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="59616.html">E8E0</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#59620">Map</a></td>
+<td class="next">
+Next: <a href="59648.html">E900</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.5.</div>
+</footer>
+</body>
+</html>
