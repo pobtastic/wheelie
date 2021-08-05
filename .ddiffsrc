@@ -1,0 +1,5 @@
+# rc file for check-asms. check-bins, disassembly-diff, skooldiff, write-files
+
+OLD_VERSION=20200731
+SK_OLD_VERSION=8.4
+SNAPSHOT=$WHEELIE_HOME/build/Wheelie.z80
