@@ -1,0 +1,12 @@
+; tap2sna.py file for Wheelie. Run
+;
+;   $ tap2sna.py @wheelie.t2s
+;
+; to create a Z80 snapshot.
+
+https://www.worldofspectrum.org//pub/sinclair/games/w/Wheelie.tzx.zip
+Wheelie.z80
+
+; from tape block #3 to address 16384.
+--ram load=3,$3F6F ;  7616 bytes ; Loading SCREEN$
+--ram load=5,$626C ; 39039 bytes ; Game

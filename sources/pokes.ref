@@ -1,0 +1,6 @@
+; Copyright 2021 Paul Maddern (paul@arcadegeek.co.uk)
+
+[Poke:infiniteLives:Infinite lives]
+To gain infinite lives:
+
+POKE #R$7552(30037),201

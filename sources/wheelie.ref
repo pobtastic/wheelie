@@ -1,0 +1,31 @@
+;
+; SkoolKit ref file for Wheelie
+;
+; To build the HTML disassembly, run these commands:
+;   tap2sna.py @wheelie.t2s
+;   sna2skool.py -H -c wheelie.ctl wheelie.z80 > wheelie.skool
+;   skool2html.py -H wheelie.skool -T dark
+
+[Config]
+RefFiles=changelog.ref;pokes.ref
+GameDir=wheelie
+
+[Game]
+Game=Wheelie
+Logo=#SCR1,0,0,32,8,$A900,$B100(/images/logo)
+Copyright=&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.
+StyleSheet=skoolkit.css;skoolkit-dark.css;wheelie.css
+
+[PageHeaders]
+GameIndex=The complete<>RAM disassembly (work in progress)
+
+[Index]
+MemoryMaps
+Graphics
+DataTables
+Reference
+
+[Page:Changelog]
+SectionType=BulletPoints
+[Changelog:20200619]
+- First draft created in SkoolKit 8.1.
