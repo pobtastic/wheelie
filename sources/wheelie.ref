@@ -3,21 +3,23 @@
 ;
 ; To build the HTML disassembly, run these commands:
 ;   tap2sna.py @wheelie.t2s
-;   sna2skool.py -H -c wheelie.ctl wheelie.z80 > wheelie.skool
-;   skool2html.py -H wheelie.skool -T dark
+;   sna2skool.py -H -c sources/wheelie.ctl Wheelie.z80 > sources/wheelie.skool
+;   skool2html.py -H sources/wheelie.skool -T dark
 
 [Config]
-RefFiles=changelog.ref;pokes.ref
+RefFiles=analytics.ref;bases.ref;changelog.ref;pokes.ref
 GameDir=wheelie
 
 [Game]
 Game=Wheelie
 Logo=#SCR1,0,0,32,8,$A900,$B100(/images/logo)
 Copyright=&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.
+LinkInternalOperands=1
+AddressAnchor={address#IF({base}==16)(:04x)}
 StyleSheet=skoolkit.css;skoolkit-dark.css;wheelie.css
 
 [PageHeaders]
-GameIndex=The complete<>RAM disassembly (work in progress)
+GameIndex=The complete <> RAM disassembly (work in progress)
 
 [Index]
 MemoryMaps
