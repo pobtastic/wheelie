@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at EC8E</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="EC35.html">EC35</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#ec8e">Map</a></td>
+<td class="next">
+Next: <a href="ECAB.html">ECAB</a>
+</td>
+</tr>
+</table>
+<div class="description">EC8E: Print instructions</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="ED52.html">ED52</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PRINT_INSTRUCTIONS</td>
+<td class="address-2"><span id="ec8e"></span>EC8E</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="5">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="74AA.html#74d3">PRINT_STRING</a> to print it to the screen.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec8f"></span>EC8F</td>
+<td class="instruction">LD DE,$4060</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec92"></span>EC92</td>
+<td class="instruction">EXX</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec93"></span>EC93</td>
+<td class="instruction">LD B,$A0</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec95"></span>EC95</td>
+<td class="instruction">CALL <a href="74AA.html#74d3">PRINT_STRING</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec98"></span>EC98</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="4">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="74AA.html#74d3">PRINT_STRING</a> to print it to the screen.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec99"></span>EC99</td>
+<td class="instruction">LD DE,$4800</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec9c"></span>EC9C</td>
+<td class="instruction">EXX</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ec9d"></span>EC9D</td>
+<td class="instruction">CALL <a href="74AA.html#74d3">PRINT_STRING</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eca0"></span>ECA0</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="5">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="74AA.html#74d3">PRINT_STRING</a> to print it to the screen.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eca1"></span>ECA1</td>
+<td class="instruction">LD DE,$5000</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eca4"></span>ECA4</td>
+<td class="instruction">EXX</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eca5"></span>ECA5</td>
+<td class="instruction">LD B,$E0</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eca7"></span>ECA7</td>
+<td class="instruction">CALL <a href="74AA.html#74d3">PRINT_STRING</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ecaa"></span>ECAA</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="EC35.html">EC35</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#ec8e">Map</a></td>
+<td class="next">
+Next: <a href="ECAB.html">ECAB</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.6.</div>
+<div><a href="../../dec/asm/60558.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

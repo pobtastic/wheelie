@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 60390</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60160.html">60160</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60390">Map</a></td>
+<td class="next">
+Next: <a href="60403.html">60403</a>
+</td>
+</tr>
+</table>
+<div class="description">60390: Long pause (roughly 3 seconds)</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="59537.html">PINK_HEADER</a>, <a href="60587.html">60587</a> and <a href="60754.html">60754</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PAUSE</td>
+<td class="address-2"><span id="60390"></span>60390</td>
+<td class="instruction">LD B,5</td>
+<td class="comment-1" rowspan="8">Countdown from $ffff to $0000 a total of $05 times. This is just creating a big pause before allowing input.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="60392"></span>60392</td>
+<td class="instruction">LD HL,0</td>
+</tr>
+<tr>
+<td class="asm-label">PAUSE_LOOP</td>
+<td class="address-2"><span id="60395"></span>60395</td>
+<td class="instruction">DEC HL</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="60396"></span>60396</td>
+<td class="instruction">LD A,H</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="60397"></span>60397</td>
+<td class="instruction">OR L</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="60398"></span>60398</td>
+<td class="instruction">JR NZ,<a href="60390.html#60395">PAUSE_LOOP</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="60400"></span>60400</td>
+<td class="instruction">DJNZ <a href="60390.html#60395">PAUSE_LOOP</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="60402"></span>60402</td>
+<td class="instruction">RET</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60160.html">60160</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60390">Map</a></td>
+<td class="next">
+Next: <a href="60403.html">60403</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.6.</div>
+<div><a href="../../hex/asm/EBE6.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>
