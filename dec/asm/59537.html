@@ -5,7 +5,6 @@
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../skoolkit.css" />
 <link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -53,30 +52,25 @@ Sets the top two rows of the attribute buffer to magenta paper with white ink.
 </td>
 </tr>
 <tr>
-<td class="asm-label">PINK_HEADER</td>
 <td class="address-2"><span id="59537"></span>59537</td>
 <td class="instruction">LD HL,22528</td>
 <td class="comment-1" rowspan="5">Writes $1F (Magenta/ White) to the top two rows of the attribute buffer.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59540"></span>59540</td>
 <td class="instruction">LD B,64</td>
 </tr>
 <tr>
-<td class="asm-label">PINK_HEADER_LOOP</td>
 <td class="address-2"><span id="59542"></span>59542</td>
 <td class="instruction">LD (HL),31</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59544"></span>59544</td>
 <td class="instruction">INC L</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59545"></span>59545</td>
-<td class="instruction">DJNZ <a href="59537.html#59542">PINK_HEADER_LOOP</a></td>
+<td class="instruction">DJNZ <a href="59537.html#59542">59542</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -89,38 +83,31 @@ Source is currently $5840, we write $06 (Black/Yellow) to the memory location he
 </td>
 </tr>
 <tr>
-<td class="asm-label">CLEAR_START_SCREEN</td>
 <td class="address-1"><span id="59547"></span>59547</td>
 <td class="instruction">LD D,H</td>
 <td class="comment-1" rowspan="6">Write $06 (Black/ Yellow) to the next $01BF memory locations of the attribute buffer</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59548"></span>59548</td>
 <td class="instruction">LD E,L</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59549"></span>59549</td>
 <td class="instruction">INC E</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59550"></span>59550</td>
 <td class="instruction">LD BC,447</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59553"></span>59553</td>
 <td class="instruction">LD (HL),6</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59555"></span>59555</td>
 <td class="instruction">LDIR</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59557"></span>59557</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
@@ -136,32 +123,27 @@ From here onward fills the screen buffer with text/ images. Starting with the "w
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59558"></span>59558</td>
 <td class="instruction">LD DE,16384</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=$4000 (top of the screen buffer)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59561"></span>59561</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59562"></span>59562</td>
 <td class="instruction">LD HL,59505</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="59505.html">WELCOME_TEXT</a> ($20 characters in length) and call <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="59505.html">59505</a> ($20 characters in length) and call <a href="29866.html#29907">29907</a></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59565"></span>59565</td>
 <td class="instruction">LD B,32</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59567"></span>59567</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="instruction">CALL <a href="29866.html#29907">29907</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -174,45 +156,38 @@ This section handles the cute row of bike graphics in the top of the display.
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59570"></span>59570</td>
 <td class="instruction">LD B,16</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=$10 (number of bike UDGs to display)</td>
 </tr>
 <tr>
-<td class="asm-label">BANNER_BIKE_GRAPHIC_LOOP</td>
 <td class="address-2"><span id="59572"></span>59572</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59573"></span>59573</td>
 <td class="instruction">LD L,156</td>
-<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="30876.html">BIKE_GRAPHIC</a> and call <a href="29866.html">PRINT_BIKE_GRAPHIC</a> this prints the left half of the bike graphic</td>
+<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="30876.html">30876</a> and call <a href="29866.html">29866</a> this prints the left half of the bike graphic</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59575"></span>59575</td>
-<td class="instruction">CALL <a href="29866.html">PRINT_BIKE_GRAPHIC</a></td>
+<td class="instruction">CALL <a href="29866.html">29866</a></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59578"></span>59578</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59579"></span>59579</td>
-<td class="instruction">CALL <a href="29866.html">PRINT_BIKE_GRAPHIC</a></td>
-<td class="comment-1" rowspan="1">Calling the subroutine <a href="29866.html">PRINT_BIKE_GRAPHIC</a> again prints the right half of the bike graphic</td>
+<td class="instruction">CALL <a href="29866.html">29866</a></td>
+<td class="comment-1" rowspan="1">Calling the subroutine <a href="29866.html">29866</a> again prints the right half of the bike graphic</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59582"></span>59582</td>
-<td class="instruction">DJNZ <a href="59537.html#59572">BANNER_BIKE_GRAPHIC_LOOP</a></td>
-<td class="comment-1" rowspan="1">Decrease bike counter by one, jump back to <a href="59537.html#59572">BANNER_BIKE_GRAPHIC_LOOP</a> if not zero</td>
+<td class="instruction">DJNZ <a href="59537.html#59572">59572</a></td>
+<td class="comment-1" rowspan="1">Decrease bike counter by one, jump back to <a href="59537.html#59572">59572</a> if not zero</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -225,105 +200,87 @@ This loop prints the "start screen text" in blocks of $40 characters (two rows a
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59584"></span>59584</td>
 <td class="instruction">LD C,4</td>
 <td class="comment-1" rowspan="1"><span class="register">C</span>=$04 (there are 4 blocks of text to display)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59586"></span>59586</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59587"></span>59587</td>
 <td class="instruction">LD DE,16480</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=$4060 (position in screen buffer we're writing to)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59590"></span>59590</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59591"></span>59591</td>
 <td class="instruction">LD HL,43008</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="43008.html">START_SCREEN_TEXT</a> ($40 characters in length) and call <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="43008.html">43008</a> ($40 characters in length) and call <a href="29866.html#29907">29907</a></td>
 </tr>
 <tr>
-<td class="asm-label">START_SCREEN_TEXT_LOOP</td>
 <td class="address-2"><span id="59594"></span>59594</td>
 <td class="instruction">LD B,64</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59596"></span>59596</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="instruction">CALL <a href="29866.html#29907">29907</a></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59599"></span>59599</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59600"></span>59600</td>
 <td class="instruction">LD A,E</td>
 <td class="comment-1" rowspan="6">Meh</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59601"></span>59601</td>
 <td class="instruction">AND A</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59602"></span>59602</td>
-<td class="instruction">JR NZ,<a href="59537.html#59606">START_SCREEN_TEXT_SKIP</a></td>
+<td class="instruction">JR NZ,<a href="59537.html#59606">59606</a></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59604"></span>59604</td>
 <td class="instruction">LD D,72</td>
 </tr>
 <tr>
-<td class="asm-label">START_SCREEN_TEXT_SKIP</td>
 <td class="address-2"><span id="59606"></span>59606</td>
 <td class="instruction">ADD A,32</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59608"></span>59608</td>
 <td class="instruction">LD E,A</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59609"></span>59609</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59610"></span>59610</td>
 <td class="instruction">DEC C</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59611"></span>59611</td>
-<td class="instruction">JR NZ,<a href="59537.html#59594">START_SCREEN_TEXT_LOOP</a></td>
+<td class="instruction">JR NZ,<a href="59537.html#59594">59594</a></td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59613"></span>59613</td>
-<td class="instruction">JP <a href="60390.html">PAUSE</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60390.html">PAUSE</a></td>
+<td class="instruction">JP <a href="60390.html">60390</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60390.html">60390</a></td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -341,7 +298,7 @@ Next: <a href="59616.html">59616</a>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
 <div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.6.</div>
-<div><a href="../../hex/asm/E891.html">Switch to hexadecimal</a>.</div>
+<div><a href="../../asm/E891.html">Switch to hexadecimal</a>.</div>
 </footer>
 </body>
 </html>

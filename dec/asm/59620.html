@@ -5,7 +5,6 @@
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../skoolkit.css" />
 <link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -47,109 +46,92 @@ Next: <a href="59648.html">59648</a>
 <span id="59620"></span>
 <div class="comments">
 <div class="paragraph">
-This routine moves the data at <a href="43264.html">START_FOOTER</a> to the screen buffer (to draw the start page footer).
+This routine moves the data at <a href="43264.html">43264</a> to the screen buffer (to draw the start page footer).
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label">PINK_FOOTER</td>
 <td class="address-2"><span id="59620"></span>59620</td>
 <td class="instruction">LD DE,20480</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=$5000 (target)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59623"></span>59623</td>
 <td class="instruction">LD HL,43264</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="43264.html">START_FOOTER</a> (source)</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="43264.html">43264</a> (source)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59626"></span>59626</td>
 <td class="instruction">LD BC,2048</td>
 <td class="comment-1" rowspan="1"><span class="register">BC</span>=$0800 (counter)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59629"></span>59629</td>
 <td class="instruction">LDIR</td>
 <td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59631"></span>59631</td>
 <td class="instruction">LD D,90</td>
 <td class="comment-1" rowspan="1">DE=$5A00 (target)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59633"></span>59633</td>
 <td class="instruction">LD B,1</td>
 <td class="comment-1" rowspan="1"><span class="register">BC</span>=$0100 (counter)</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59635"></span>59635</td>
 <td class="instruction">LDIR</td>
 <td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59637"></span>59637</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59638"></span>59638</td>
 <td class="instruction">IN A,(31)</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59640"></span>59640</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59641"></span>59641</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59642"></span>59642</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59643"></span>59643</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59644"></span>59644</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59645"></span>59645</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59646"></span>59646</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
-<td class="asm-label"></td>
 <td class="address-1"><span id="59647"></span>59647</td>
 <td class="instruction">LD A,B</td>
 <td class="comment-1" rowspan="1"></td>
@@ -170,7 +152,7 @@ Next: <a href="59648.html">59648</a>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.</div>
 <div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.6.</div>
-<div><a href="../../hex/asm/E8E4.html">Switch to hexadecimal</a>.</div>
+<div><a href="../../asm/E8E4.html">Switch to hexadecimal</a>.</div>
 </footer>
 </body>
 </html>
