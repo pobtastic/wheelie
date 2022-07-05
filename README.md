@@ -8,7 +8,7 @@ Created using [SkoolKit](https://skoolkit.ca).
 
 Browse the latest release:
 
-* [Wheelie disassembly](https://pobtastic.github.io/wheelie/hex/) (hexadecimal; mirror [here](http://skoolkit.arcadegeek.co.uk/wheelie/hex/))
+* [Wheelie disassembly](https://pobtastic.github.io/wheelie/) (hexadecimal; mirror [here](http://skoolkit.arcadegeek.co.uk/wheelie/))
 * [Wheelie disassembly](https://pobtastic.github.io/wheelie/dec/) (decimal; mirror [here](http://skoolkit.arcadegeek.co.uk/wheelie/dec/))
 
 To build the current development version, first either install SkoolKit, or
