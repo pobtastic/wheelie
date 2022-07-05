@@ -3,8 +3,6 @@
 <head>
 <title>Wheelie: Routine at EBE6</title>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -39,41 +37,49 @@ Next: <a href="EBF3.html">EBF3</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="E891.html">E891</a>, <a href="ECAB.html">ECAB</a> and <a href="ED52.html">ED52</a>.
+Used by the routines at <a href="E891.html">PINK_HEADER</a>, <a href="ECAB.html">ECAB</a> and <a href="ED52.html">ED52</a>.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">PAUSE</td>
 <td class="address-2"><span id="ebe6"></span>EBE6</td>
 <td class="instruction">LD B,$05</td>
 <td class="comment-1" rowspan="8">Countdown from $ffff to $0000 a total of $05 times. This is just creating a big pause before allowing input.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ebe8"></span>EBE8</td>
 <td class="instruction">LD HL,$0000</td>
 </tr>
 <tr>
+<td class="asm-label">PAUSE_LOOP</td>
 <td class="address-2"><span id="ebeb"></span>EBEB</td>
 <td class="instruction">DEC HL</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ebec"></span>EBEC</td>
 <td class="instruction">LD A,H</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ebed"></span>EBED</td>
 <td class="instruction">OR L</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ebee"></span>EBEE</td>
-<td class="instruction">JR NZ,<a href="EBE6.html#ebeb">$EBEB</a></td>
+<td class="instruction">JR NZ,<a href="EBE6.html#ebeb">PAUSE_LOOP</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ebf0"></span>EBF0</td>
-<td class="instruction">DJNZ <a href="EBE6.html#ebeb">$EBEB</a></td>
+<td class="instruction">DJNZ <a href="EBE6.html#ebeb">PAUSE_LOOP</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ebf2"></span>EBF2</td>
 <td class="instruction">RET</td>
 </tr>

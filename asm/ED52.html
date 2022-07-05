@@ -3,8 +3,6 @@
 <head>
 <title>Wheelie: Routine at ED52</title>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -59,7 +57,7 @@ Next: <a href="EE09.html">EE09</a>
 <tr>
 <td class="address-1"><span id="ed57"></span>ED57</td>
 <td class="instruction">LD HL,$EE74</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="EE74.html">EE74</a> ($20 characters in length) and call <a href="74AA.html#74d3">74D3</a></td>
+<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="EE74.html">INSTRUCTIONS_HEADER</a> ($20 characters in length) and call <a href="74AA.html#74d3">PRINT_STRING</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="ed5a"></span>ED5A</td>
@@ -67,12 +65,12 @@ Next: <a href="EE09.html">EE09</a>
 </tr>
 <tr>
 <td class="address-1"><span id="ed5c"></span>ED5C</td>
-<td class="instruction">CALL <a href="74AA.html#74d3">$74D3</a></td>
+<td class="instruction">CALL <a href="74AA.html#74d3">PRINT_STRING</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="ed5f"></span>ED5F</td>
 <td class="instruction">LD A,$9F</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="EE94.html">EE94</a> and call the subroutine at <a href="74AA.html#74c3">74C3</a> with $9F (magenta/ white with flash toggled)</td>
+<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="EE94.html">PRESSANYKEY_TEXT</a> and call the subroutine at <a href="74AA.html#74c3">PRINT_BIKE_GRAPHIC_1</a> with $9F (magenta/ white with flash toggled)</td>
 </tr>
 <tr>
 <td class="address-1"><span id="ed61"></span>ED61</td>
@@ -80,7 +78,7 @@ Next: <a href="EE09.html">EE09</a>
 </tr>
 <tr>
 <td class="address-1"><span id="ed64"></span>ED64</td>
-<td class="instruction">CALL <a href="74AA.html#74c3">$74C3</a></td>
+<td class="instruction">CALL <a href="74AA.html#74c3">PRINT_BIKE_GRAPHIC_1</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -177,11 +175,11 @@ Displays the instructions for page one.
 <tr>
 <td class="address-1"><span id="ed86"></span>ED86</td>
 <td class="instruction">LD HL,$F000</td>
-<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="F000.html">F000</a> and call <a href="EC8E.html">EC8E</a></td>
+<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="F000.html">INSTRUCTIONS</a> and call <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="ed89"></span>ED89</td>
-<td class="instruction">CALL <a href="EC8E.html">$EC8E</a></td>
+<td class="instruction">CALL <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="ed8c"></span>ED8C</td>
@@ -190,7 +188,7 @@ Displays the instructions for page one.
 </tr>
 <tr>
 <td class="address-1"><span id="ed8d"></span>ED8D</td>
-<td class="instruction">CALL <a href="EBE6.html">$EBE6</a></td>
+<td class="instruction">CALL <a href="EBE6.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>
@@ -240,11 +238,11 @@ Displays the instructions for page two.
 <tr>
 <td class="address-1"><span id="eda3"></span>EDA3</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="EC8E.html">EC8E</a></td>
+<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="eda4"></span>EDA4</td>
-<td class="instruction">CALL <a href="EC8E.html">$EC8E</a></td>
+<td class="instruction">CALL <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="eda7"></span>EDA7</td>
@@ -253,7 +251,7 @@ Displays the instructions for page two.
 </tr>
 <tr>
 <td class="address-1"><span id="eda8"></span>EDA8</td>
-<td class="instruction">CALL <a href="EBE6.html">$EBE6</a></td>
+<td class="instruction">CALL <a href="EBE6.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>
@@ -399,11 +397,11 @@ Displays the instructions for page three.
 <tr>
 <td class="address-1"><span id="ede0"></span>EDE0</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="1">Restore our place in the instructions and call <a href="EC8E.html">EC8E</a></td>
+<td class="comment-1" rowspan="1">Restore our place in the instructions and call <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="ede1"></span>EDE1</td>
-<td class="instruction">CALL <a href="EC8E.html">$EC8E</a></td>
+<td class="instruction">CALL <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
@@ -413,7 +411,7 @@ Displays the instructions for page three.
 </tr>
 <tr>
 <td class="address-1"><span id="ede5"></span>EDE5</td>
-<td class="instruction">CALL <a href="EBE6.html">$EBE6</a></td>
+<td class="instruction">CALL <a href="EBE6.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>
@@ -453,15 +451,15 @@ Displays the instructions for page three.
 <tr>
 <td class="address-1"><span id="edfb"></span>EDFB</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="EC8E.html">EC8E</a></td>
+<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="edfc"></span>EDFC</td>
-<td class="instruction">CALL <a href="EC8E.html">$EC8E</a></td>
+<td class="instruction">CALL <a href="EC8E.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="edff"></span>EDFF</td>
-<td class="instruction">CALL <a href="EBE6.html">$EBE6</a></td>
+<td class="instruction">CALL <a href="EBE6.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>

@@ -3,8 +3,6 @@
 <head>
 <title>Wheelie: Routine at 60558</title>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -45,65 +43,80 @@ Used by the routine at <a href="60754.html">60754</a>.
 </td>
 </tr>
 <tr>
+<td class="asm-label">PRINT_INSTRUCTIONS</td>
 <td class="address-2"><span id="60558"></span>60558</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="5">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="29866.html#29907">29907</a> to print it to the screen.</td>
+<td class="comment-1" rowspan="5">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="29866.html#29907">PRINT_STRING</a> to print it to the screen.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60559"></span>60559</td>
 <td class="instruction">LD DE,16480</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60562"></span>60562</td>
 <td class="instruction">EXX</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60563"></span>60563</td>
 <td class="instruction">LD B,160</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60565"></span>60565</td>
-<td class="instruction">CALL <a href="29866.html#29907">29907</a></td>
+<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60568"></span>60568</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="4">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="29866.html#29907">29907</a> to print it to the screen.</td>
+<td class="comment-1" rowspan="4">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="29866.html#29907">PRINT_STRING</a> to print it to the screen.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60569"></span>60569</td>
 <td class="instruction">LD DE,18432</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60572"></span>60572</td>
 <td class="instruction">EXX</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60573"></span>60573</td>
-<td class="instruction">CALL <a href="29866.html#29907">29907</a></td>
+<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60576"></span>60576</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="5">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="29866.html#29907">29907</a> to print it to the screen.</td>
+<td class="comment-1" rowspan="5">Fetch <span class="register">HL</span> from the shadow registers (beginning of the string to print), and set <span class="register">DE</span> to the position in the screen buffer for where to print. Then pass this all to <a href="29866.html#29907">PRINT_STRING</a> to print it to the screen.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60577"></span>60577</td>
 <td class="instruction">LD DE,20480</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60580"></span>60580</td>
 <td class="instruction">EXX</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60581"></span>60581</td>
 <td class="instruction">LD B,224</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60583"></span>60583</td>
-<td class="instruction">CALL <a href="29866.html#29907">29907</a></td>
+<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60586"></span>60586</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return</td>

@@ -3,8 +3,6 @@
 <head>
 <title>Wheelie: Routine at 60754</title>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -59,7 +57,7 @@ Next: <a href="60937.html">60937</a>
 <tr>
 <td class="address-1"><span id="60759"></span>60759</td>
 <td class="instruction">LD HL,61044</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="61044.html">61044</a> ($20 characters in length) and call <a href="29866.html#29907">29907</a></td>
+<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="61044.html">INSTRUCTIONS_HEADER</a> ($20 characters in length) and call <a href="29866.html#29907">PRINT_STRING</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60762"></span>60762</td>
@@ -67,12 +65,12 @@ Next: <a href="60937.html">60937</a>
 </tr>
 <tr>
 <td class="address-1"><span id="60764"></span>60764</td>
-<td class="instruction">CALL <a href="29866.html#29907">29907</a></td>
+<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60767"></span>60767</td>
 <td class="instruction">LD A,159</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="61076.html">61076</a> and call the subroutine at <a href="29866.html#29891">29891</a> with $9F (magenta/ white with flash toggled)</td>
+<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="61076.html">PRESSANYKEY_TEXT</a> and call the subroutine at <a href="29866.html#29891">PRINT_BIKE_GRAPHIC_1</a> with $9F (magenta/ white with flash toggled)</td>
 </tr>
 <tr>
 <td class="address-1"><span id="60769"></span>60769</td>
@@ -80,7 +78,7 @@ Next: <a href="60937.html">60937</a>
 </tr>
 <tr>
 <td class="address-1"><span id="60772"></span>60772</td>
-<td class="instruction">CALL <a href="29866.html#29891">29891</a></td>
+<td class="instruction">CALL <a href="29866.html#29891">PRINT_BIKE_GRAPHIC_1</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -177,11 +175,11 @@ Displays the instructions for page one.
 <tr>
 <td class="address-1"><span id="60806"></span>60806</td>
 <td class="instruction">LD HL,61440</td>
-<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="61440.html">61440</a> and call <a href="60558.html">60558</a></td>
+<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="61440.html">INSTRUCTIONS</a> and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60809"></span>60809</td>
-<td class="instruction">CALL <a href="60558.html">60558</a></td>
+<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60812"></span>60812</td>
@@ -190,7 +188,7 @@ Displays the instructions for page one.
 </tr>
 <tr>
 <td class="address-1"><span id="60813"></span>60813</td>
-<td class="instruction">CALL <a href="60390.html">60390</a></td>
+<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>
@@ -240,11 +238,11 @@ Displays the instructions for page two.
 <tr>
 <td class="address-1"><span id="60835"></span>60835</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="60558.html">60558</a></td>
+<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60836"></span>60836</td>
-<td class="instruction">CALL <a href="60558.html">60558</a></td>
+<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60839"></span>60839</td>
@@ -253,7 +251,7 @@ Displays the instructions for page two.
 </tr>
 <tr>
 <td class="address-1"><span id="60840"></span>60840</td>
-<td class="instruction">CALL <a href="60390.html">60390</a></td>
+<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>
@@ -399,11 +397,11 @@ Displays the instructions for page three.
 <tr>
 <td class="address-1"><span id="60896"></span>60896</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="1">Restore our place in the instructions and call <a href="60558.html">60558</a></td>
+<td class="comment-1" rowspan="1">Restore our place in the instructions and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60897"></span>60897</td>
-<td class="instruction">CALL <a href="60558.html">60558</a></td>
+<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 <td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
@@ -413,7 +411,7 @@ Displays the instructions for page three.
 </tr>
 <tr>
 <td class="address-1"><span id="60901"></span>60901</td>
-<td class="instruction">CALL <a href="60390.html">60390</a></td>
+<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>
@@ -453,15 +451,15 @@ Displays the instructions for page three.
 <tr>
 <td class="address-1"><span id="60923"></span>60923</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="60558.html">60558</a></td>
+<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60924"></span>60924</td>
-<td class="instruction">CALL <a href="60558.html">60558</a></td>
+<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
 </tr>
 <tr>
 <td class="address-1"><span id="60927"></span>60927</td>
-<td class="instruction">CALL <a href="60390.html">60390</a></td>
+<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
 <td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
 </tr>
 <tr>

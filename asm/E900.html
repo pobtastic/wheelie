@@ -3,8 +3,6 @@
 <head>
 <title>Wheelie: Data at E900</title>
 <meta charset="utf-8" />
-<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
-<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
@@ -42,73 +40,89 @@ Next: <a href="EB00.html">EB00</a>
 </td>
 </tr>
 <tr>
+<td class="asm-label">CONTROL_SELECT_TEXT</td>
 <td class="address-1"><span id="e900"></span>E900</td>
 <td class="instruction">DEFM " PRESS TOP ROW FOR STANDARD MODE"</td>
 <td class="comment-1" rowspan="8">Wheelie control selection page</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e920"></span>E920</td>
 <td class="instruction">DEFM "       (SEE INSTRUCTIONS)       "</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e940"></span>E940</td>
 <td class="instruction">DEFM " PRESS 2ND ROW FOR THE KEMPSTON "</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e960"></span>E960</td>
 <td class="instruction">DEFM "       JOYSTICK INTERFACE       "</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e980"></span>E980</td>
 <td class="instruction">DEFM " PRESS 3RD ROW FOR AGF INTERFACE"</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e9a0"></span>E9A0</td>
 <td class="instruction">DEFM "                                "</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e9c0"></span>E9C0</td>
 <td class="instruction">DEFM "                                "</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="e9e0"></span>E9E0</td>
 <td class="instruction">DEFM "PRESS BOTTOM ROW TO SELECT OTHER"</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ea00"></span>EA00</td>
 <td class="instruction">DEFM " PRESS KEY (MOVE JOYSTICK) FOR  "</td>
-<td class="comment-1" rowspan="1">Change controls for (<a href="E900.html#ea60">EA60</a>, <a href="E900.html#ea80">EA80</a>, <a href="E900.html#eaa0">EAA0</a>, <a href="E900.html#eac0">EAC0</a>, <a href="E900.html#eae0">EAE0</a>)</td>
+<td class="comment-1" rowspan="1">Change controls for (<a href="E900.html#ea60">LEFT</a>, <a href="E900.html#ea80">RIGHT</a>, <a href="E900.html#eaa0">UP</a>, <a href="E900.html#eac0">DOWN</a>, <a href="E900.html#eae0">FREEZE</a>)</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ea20"></span>EA20</td>
 <td class="instruction">DEFM " HANDS OFF KEYBOARD (OR JOYSTICK"</td>
 <td class="comment-1" rowspan="2">Warning message</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ea40"></span>EA40</td>
 <td class="instruction">DEFM "           TO CENTRE)           "</td>
 </tr>
 <tr>
+<td class="asm-label">LEFT</td>
 <td class="address-1"><span id="ea60"></span>EA60</td>
 <td class="instruction">DEFM "              LEFT              "</td>
 <td class="comment-1" rowspan="1">LEFT</td>
 </tr>
 <tr>
+<td class="asm-label">RIGHT</td>
 <td class="address-1"><span id="ea80"></span>EA80</td>
 <td class="instruction">DEFM "              RIGHT             "</td>
 <td class="comment-1" rowspan="1">RIGHT</td>
 </tr>
 <tr>
+<td class="asm-label">UP</td>
 <td class="address-1"><span id="eaa0"></span>EAA0</td>
 <td class="instruction">DEFM "               UP               "</td>
 <td class="comment-1" rowspan="1">UP</td>
 </tr>
 <tr>
+<td class="asm-label">DOWN</td>
 <td class="address-1"><span id="eac0"></span>EAC0</td>
 <td class="instruction">DEFM "              DOWN              "</td>
 <td class="comment-1" rowspan="1">DOWN</td>
 </tr>
 <tr>
+<td class="asm-label">FREEZE</td>
 <td class="address-1"><span id="eae0"></span>EAE0</td>
 <td class="instruction">DEFM "  FREEZE(=JOYSTICK FIRE BUTTON) "</td>
 <td class="comment-1" rowspan="1">FREEZE</td>
