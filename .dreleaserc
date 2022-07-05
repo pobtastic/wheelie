@@ -1,3 +1,0 @@
-GAME=wheelie
-SRCFILES=$(echo wheelie.skool {wheelie,changelog,pokes}.ref wheelie.css COPYING)
-SKOOL2BINOPTS="-i"
