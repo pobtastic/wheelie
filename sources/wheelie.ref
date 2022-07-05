@@ -16,7 +16,7 @@ Logo=#SCR1,0,0,32,8,$A900,$B100(/images/logo)
 Copyright=&copy; 1983 Microsphere &copy; 2021 ArcadeGeek LTD.
 LinkInternalOperands=1
 AddressAnchor={address#IF({base}==16)(:04x)}
-StyleSheet=skoolkit.css;skoolkit-dark.css;wheelie.css
+StyleSheet=wheelie.css
 
 [PageHeaders]
 GameIndex=The complete <> RAM disassembly (work in progress)
