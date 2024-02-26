@@ -4,16 +4,17 @@
 ; To build the HTML disassembly, run these commands:
 ;   tap2sna.py @wheelie.t2s
 ;   sna2skool.py -H -c sources/wheelie.ctl Wheelie.z80 > sources/wheelie.skool
-;   skool2html.py -H sources/wheelie.skool -T dark
+;   skool2html.py -H sources/wheelie.skool -T dark -T wide -toOa
 
 [Config]
-RefFiles=analytics.ref;bases.ref;changelog.ref;pokes.ref
+Expand=#INCLUDE(Expand)
+RefFiles=analytics.ref;bases.ref;changelog.ref;data.ref;pages.ref;pokes.ref;sound.ref
 GameDir=wheelie
 
 [Game]
 Game=Wheelie
-Logo=#SCR1,0,0,32,8,$A900,$B100(/images/logo)
-Copyright=&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.
+Logo=#SCR$01,$00,$00,$20,$08,$A900,$B100(/images/logo)
+Copyright=&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.
 Repository=https://github.com/pobtastic/wheelie/
 LinkInternalOperands=1
 AddressAnchor={address#IF({base}==16)(:04x)}
@@ -28,7 +29,42 @@ Graphics
 DataTables
 Reference
 
-[Page:Changelog]
-SectionType=BulletPoints
-[Changelog:20200619]
-- First draft created in SkoolKit 8.1.
+[Index:Graphics:Graphics]
+Pages
+
+[Links]
+Pages=[Pages]
+
+[Page:Pages]
+SectionPrefix=Pages
+
+[Paths]
+Scenes=graphics/pages.html
+Sound=sound/sound.html
+
+[Expand]
+#DEF(#COLOUR(id)
+  #LET(ink=$id&$07)#IF({ink}>=$00)(INK:
+    #MAP({ink})(
+      UNKNOWN,
+      0:BLACK,
+      1:BLUE,
+      2:RED,
+      3:MAGENTA,
+      4:GREEN,
+      5:CYAN,
+      6:YELLOW,
+      7:WHITE)),
+  #LET(paper=$id>>$03&$07)#IF({paper}>=$00)(PAPER:
+    #MAP({paper})(
+      UNKNOWN,
+      0:BLACK,
+      1:BLUE,
+      2:RED,
+      3:MAGENTA,
+      4:GREEN,
+      5:CYAN,
+      6:YELLOW,
+      7:WHITE))
+  #LET(bright=$id&$40)#IF({bright}>$00)((BRIGHT))
+  #LET(flash=$id&$80)#IF({flash}>$00)(FLASH: ON))

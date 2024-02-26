@@ -1,6 +1,94 @@
-; Copyright 2023 Paul Maddern (paul@arcadegeek.co.uk)
+; Copyright 2024 Paul Maddern (paul@arcadegeek.co.uk)
 
-[Poke:infiniteLives:Infinite lives]
+[Poke:Infinite Lives]
 To gain infinite lives:
 
-POKE #R$7552(30037),201
+<code>
+<div>POKE #R$7552,#N$C9</div>
+</code>
+
+<hr />
+
+Just return, instead of decreasing #R$7839 by one:
+
+<table>
+  <tbody>
+    <tr>
+      <td class="address-1">#R$7552</td>
+      <td class="instruction">LD #REGhl,#R$7839(#N$7839)</td>
+    </tr>
+    <tr>
+      <td class="address-1">#R$7555</td>
+      <td class="instruction">LD (#REGhl)</td>
+    </tr>
+  </tbody>
+</table>
+
+[Poke:Infinite Fuel]
+For infinite fuel:
+
+<code>
+<div>POKE #R$76AC,#N$2A</div>
+<div>POKE #R$E86C,#N$3A</div>
+</code>
+
+<hr />
+
+Fuel is held by #R$783C(#N$783C) and #R$783D(#N$783D). This changes the
+following two instances where the fuel is decreased.
+
+Altering where the decreased fuel is written back to #R$783C:
+
+<table>
+  <tbody>
+    <tr>
+      <td class="address-1">#R$76AA</td>
+      <td class="instruction">SBC #REGhl,#REGde</td>
+    </tr>
+    <tr>
+      <td class="address-1">#R$76AC</td>
+      <td class="instruction">LD (#R$783C(#N$783C)),#REGhl</td>
+    </tr>
+  </tbody>
+</table>
+
+To LoaD the value into #REGhl instead of writing it to #R$783C:
+
+<table>
+  <tbody>
+    <tr>
+      <td class="address-1">#R$76AC</td>
+      <td class="instruction">LD #REGhl,(#R$783C(#N$783C))</td>
+    </tr>
+  </tbody>
+</table>
+
+And similarly, altering:
+
+<table>
+  <tbody>
+    <tr>
+      <td class="address-1">#R$E867</td>
+      <td class="instruction">LD #REGa,#R$783D(#N$783D)</td>
+    </tr>
+    <tr>
+      <td class="address-1">#R$E86A</td>
+      <td class="instruction">SUB #N$08</td>
+    </tr>
+    <tr>
+      <td class="address-1">#R$E86C</td>
+      <td class="instruction">LD (#R$783D(#N$783D)),#REGa</td>
+    </tr>
+  </tbody>
+</table>
+
+For a similar outcome (LoaDing into #REGa instead of writing to #R$783D:
+
+<table>
+  <tbody>
+    <tr>
+      <td class="address-1">#R$E86C</td>
+      <td class="instruction">LD #REGa,(#R$783D(#N$783D))</td>
+    </tr>
+  </tbody>
+</table>

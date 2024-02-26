@@ -4,9 +4,10 @@
 ;
 ; to create a Z80 snapshot.
 
-https://www.worldofspectrum.org//pub/sinclair/games/w/Wheelie.tzx.zip
+https://www.worldofspectrum.org/pub/sinclair/games/w/Wheelie.tzx.zip
 Wheelie.z80
 
-; from tape block #3 to address 16384.
---ram load=3,$3F6F ;  7616 bytes ; Loading SCREEN$
---ram load=5,$626C ; 39039 bytes ; Game
+--tape-name "Wheelie.tzx"
+--tape-sum dbd1377fc02191772523fc0322fb6de9
+;--start 0x5D11
+--start 0x6D1E
