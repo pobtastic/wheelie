@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 749C</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="742C.html">742C</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#749c">Map</a></td>
+<td class="next">
+Next: <a href="74A9.html">74A9</a>
+</td>
+</tr>
+</table>
+<div class="description">749C: Clear Screen</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="75AA.html">PrintGameDisplay</a>, <a href="E80E.html">E80E</a>, <a href="EBE3.html">ClearScreen_Pause</a> and <a href="ECAB.html">StartGame</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ClearScreen</td>
+<td class="address-2"><span id="749c"></span>749C</td>
+<td class="instruction">LD HL,$4000</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="4000.html">4000</a> (screen buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="749f"></span>749F</td>
+<td class="instruction">LD (HL),L</td>
+<td class="comment-1" rowspan="1">Write 00 to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74a0"></span>74A0</td>
+<td class="instruction">LD BC,$1B00</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=1B00.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74a3"></span>74A3</td>
+<td class="instruction">LD D,H</td>
+<td class="comment-1" rowspan="3"><span class="register">DE</span>=<span class="register">HL</span>+01.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74a4"></span>74A4</td>
+<td class="instruction">LD E,L</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74a5"></span>74A5</td>
+<td class="instruction">INC E</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74a6"></span>74A6</td>
+<td class="instruction">LDIR</td>
+<td class="comment-1" rowspan="1">Copy 00 across both the screen and attribute buffers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74a8"></span>74A8</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="742C.html">742C</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#749c">Map</a></td>
+<td class="next">
+Next: <a href="74A9.html">74A9</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/29852.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

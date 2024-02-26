@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at EC2A</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="EC1E.html">EC1E</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#ec2a">Map</a></td>
+<td class="next">
+Next: <a href="EC8E.html">EC8E</a>
+</td>
+</tr>
+</table>
+<div class="description">EC2A: Routine at EC2A</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="763C.html">763C</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec2a"></span>EC2A</td>
+<td class="instruction">LD HL,$7839</td>
+<td class="comment-1" rowspan="2">Write 01 to *<a href="7839.html">Lives</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec2d"></span>EC2D</td>
+<td class="instruction">LD (HL),$01</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec2f"></span>EC2F</td>
+<td class="instruction">LD HL,$7840</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7840.html">7840</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec32"></span>EC32</td>
+<td class="instruction">JP <a href="763C.html#775f">$775F</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="763C.html#775f">775F</a>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec35"></span>EC35</td>
+<td class="instruction">DI</td>
+<td class="comment-1" rowspan="1">Disable interrupts.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec36"></span>EC36</td>
+<td class="instruction">XOR A</td>
+<td class="comment-1" rowspan="1">Flip the bits according to <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec37"></span>EC37</td>
+<td class="instruction">LD C,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec38"></span>EC38</td>
+<td class="instruction">INC C</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">C</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec39"></span>EC39</td>
+<td class="instruction">JR NZ,<a href="EC2A.html#ec3d">$EC3D</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec3d">EC3D</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec3b"></span>EC3B</td>
+<td class="instruction">EI</td>
+<td class="comment-1" rowspan="1">Enable interrupts.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec3c"></span>EC3C</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec3d"></span>EC3D</td>
+<td class="instruction">DEC C</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">C</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec3e"></span>EC3E</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec3f"></span>EC3F</td>
+<td class="instruction">LD E,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec40"></span>EC40</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec41"></span>EC41</td>
+<td class="instruction">LD D,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec42"></span>EC42</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec43"></span>EC43</td>
+<td class="instruction">OUT ($FE),A</td>
+<td class="comment-1" rowspan="1">OUT 41FE</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec45"></span>EC45</td>
+<td class="instruction">LD B,C</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec46"></span>EC46</td>
+<td class="instruction">XOR %00010000</td>
+<td class="comment-1" rowspan="1">Flip bits 4.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec48"></span>EC48</td>
+<td class="instruction">DJNZ <a href="EC2A.html#ec48">$EC48</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="EC2A.html#ec48">EC48</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec4a"></span>EC4A</td>
+<td class="instruction">LD B,A</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec4b"></span>EC4B</td>
+<td class="instruction">DEC DE</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">DE</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec4c"></span>EC4C</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec4d"></span>EC4D</td>
+<td class="instruction">OR E</td>
+<td class="comment-1" rowspan="1">Set the bits from <span class="register">E</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec4e"></span>EC4E</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">B</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec4f"></span>EC4F</td>
+<td class="instruction">JR NZ,<a href="EC2A.html#ec43">$EC43</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec43">EC43</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec51"></span>EC51</td>
+<td class="instruction">LD D,$0F</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=0F.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec53"></span>EC53</td>
+<td class="instruction">DEC DE</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">DE</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec54"></span>EC54</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec55"></span>EC55</td>
+<td class="instruction">OR E</td>
+<td class="comment-1" rowspan="1">Set the bits from <span class="register">E</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec56"></span>EC56</td>
+<td class="instruction">JR NZ,<a href="EC2A.html#ec53">$EC53</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec53">EC53</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec58"></span>EC58</td>
+<td class="instruction">LD A,B</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">B</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec59"></span>EC59</td>
+<td class="instruction">INC A</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec5a"></span>EC5A</td>
+<td class="instruction">AND %00010111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-2, 4.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec5c"></span>EC5C</td>
+<td class="instruction">JR <a href="EC2A.html#ec37">$EC37</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec37">EC37</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ec5e"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="763C.html">763C</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec5e"></span>EC5E</td>
+<td class="instruction">LD HL,$EEE8</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EEE8.html">EEE8</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec61"></span>EC61</td>
+<td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ec63"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="763C.html">763C</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec63"></span>EC63</td>
+<td class="instruction">LD HL,$EF4F</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EF4F.html">EF4F</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec66"></span>EC66</td>
+<td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ec68"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="763C.html">763C</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec68"></span>EC68</td>
+<td class="instruction">LD HL,$EFC2</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EFC2.html">EFC2</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec6b"></span>EC6B</td>
+<td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec6d"></span>EC6D</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ec6e"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="ECAB.html">StartGame</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec6e"></span>EC6E</td>
+<td class="instruction">LD (IY+$07),$00</td>
+<td class="comment-1" rowspan="1">Write 07 to *<span class="register">IY</span>+07.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec72"></span>EC72</td>
+<td class="instruction">SET 3,(IY+$30)</td>
+<td class="comment-1" rowspan="1">Set bit 3 of *<span class="register">IX</span>+30.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec76"></span>EC76</td>
+<td class="instruction">LD HL,$5C3B</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec79"></span>EC79</td>
+<td class="instruction">RES 5,(HL)</td>
+<td class="comment-1" rowspan="1">Reset bit 5 of *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="ec7b"></span>EC7B</td>
+<td class="instruction">BIT 5,(HL)</td>
+<td class="comment-1" rowspan="1">Test bit 5 of *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec7d"></span>EC7D</td>
+<td class="instruction">JR Z,<a href="EC2A.html#ec7b">$EC7B</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec7b">EC7B</a> if {} is zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec7f"></span>EC7F</td>
+<td class="instruction">LD A,($5C08)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec82"></span>EC82</td>
+<td class="instruction">CP $80</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 80.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec84"></span>EC84</td>
+<td class="instruction">JR NC,$EC6F</td>
+<td class="comment-1" rowspan="1">Jump to EC6F if {} is higher. TODO</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec86"></span>EC86</td>
+<td class="instruction">CP $60</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 60.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec88"></span>EC88</td>
+<td class="instruction">RET C</td>
+<td class="comment-1" rowspan="1">Return if {} is lower.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec89"></span>EC89</td>
+<td class="instruction">RES 5,A</td>
+<td class="comment-1" rowspan="1">Reset bit 5 of <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec8b"></span>EC8B</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec8c"></span>EC8C</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+<tr>
+<td class="address-1"><span id="ec8d"></span>EC8D</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1"></td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="EC1E.html">EC1E</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#ec2a">Map</a></td>
+<td class="next">
+Next: <a href="EC8E.html">EC8E</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/60458.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

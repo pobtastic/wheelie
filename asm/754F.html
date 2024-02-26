@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 754F</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="7535.html">7535</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#754f">Map</a></td>
+<td class="next">
+Next: <a href="757D.html">757D</a>
+</td>
+</tr>
+</table>
+<div class="description">754F: Initialise Game</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="75AA.html">PrintGameDisplay</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">InitialiseGame</td>
+<td class="address-2"><span id="754f"></span>754F</td>
+<td class="instruction">CALL <a href="7535.html">PrintDemoMode</a></td>
+<td class="comment-1" rowspan="1">Call <a href="7535.html">PrintDemoMode</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7552"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routines at <a href="6D21.html">6D21</a>, <a href="763C.html">763C</a> and <a href="ED39.html">ED39</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">InitialiseGame_0</td>
+<td class="address-2"><span id="7552"></span>7552</td>
+<td class="instruction">LD HL,$7839</td>
+<td class="comment-1" rowspan="2">Decrease *<a href="7839.html">Lives</a> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7555"></span>7555</td>
+<td class="instruction">DEC (HL)</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7556"></span>
+<div class="comments">
+<div class="paragraph">
+Compare the players current lives with the maximum number of lives (04).
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7556"></span>7556</td>
+<td class="instruction">LD C,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=*<a href="7839.html">Lives</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7557"></span>7557</td>
+<td class="instruction">LD A,$04</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=04 (the maximum number of lives).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7559"></span>7559</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="755a"></span>755A</td>
+<td class="instruction">LD DE,$50CB</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=50CB (screen buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="755d"></span>755D</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="755e"></span>755E</td>
+<td class="instruction">SUB C</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="755f"></span>755F</td>
+<td class="instruction">JR Z,<a href="754F.html#756b">InitialiseGame_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="754F.html#756b">InitialiseGame_2</a> if <span class="register">A</span> is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7561"></span>7561</td>
+<td class="instruction">ADD A,A</td>
+<td class="comment-1" rowspan="2"><span class="register">B</span>=<span class="register">A</span>*02.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7562"></span>7562</td>
+<td class="instruction">LD B,A</td>
+</tr>
+<tr>
+<td class="asm-label">InitialiseGame_1</td>
+<td class="address-2"><span id="7563"></span>7563</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7564"></span>7564</td>
+<td class="instruction">LD L,$64</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<a href="7864.html">64</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7566"></span>7566</td>
+<td class="instruction">CALL <a href="74AA.html">PrintBikeGraphic</a></td>
+<td class="comment-1" rowspan="1">Call <a href="74AA.html">PrintBikeGraphic</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7569"></span>7569</td>
+<td class="instruction">DJNZ <a href="754F.html#7563">InitialiseGame_1</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7563">InitialiseGame_1</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label">InitialiseGame_2</td>
+<td class="address-2"><span id="756b"></span>756B</td>
+<td class="instruction">LD A,C</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="756c"></span>756C</td>
+<td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="757E.html">GameOver</a> if <span class="register">A</span> is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="756d"></span>756D</td>
+<td class="instruction">JR Z,<a href="757E.html">GameOver</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="756f"></span>
+<div class="comments">
+<div class="paragraph">
+Display the bike graphic for each remaining life.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="756f"></span>756F</td>
+<td class="instruction">LD B,C</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span> (counter; current number of lives).</td>
+</tr>
+<tr>
+<td class="asm-label">Print_Lives</td>
+<td class="address-2"><span id="7570"></span>7570</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7571"></span>7571</td>
+<td class="instruction">LD L,$9C</td>
+<td class="comment-1" rowspan="1"><span class="register">L'</span>=<a href="789C.html">9C</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7573"></span>
+<div class="comments">
+<div class="paragraph">
+Print the left side of the bike graphic.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7573"></span>7573</td>
+<td class="instruction">CALL <a href="74AA.html">PrintBikeGraphic</a></td>
+<td class="comment-1" rowspan="1">Call <a href="74AA.html">PrintBikeGraphic</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7576"></span>7576</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7577"></span>
+<div class="comments">
+<div class="paragraph">
+Print the right side of the bike graphic.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7577"></span>7577</td>
+<td class="instruction">CALL <a href="74AA.html">PrintBikeGraphic</a></td>
+<td class="comment-1" rowspan="1">Call <a href="74AA.html">PrintBikeGraphic</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="757a"></span>757A</td>
+<td class="instruction">DJNZ <a href="754F.html#7570">Print_Lives</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7570">Print_Lives</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="757c"></span>757C</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="7535.html">7535</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#754f">Map</a></td>
+<td class="next">
+Next: <a href="757D.html">757D</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/30031.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

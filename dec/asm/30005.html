@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 30005</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29916.html">29916</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#30005">Map</a></td>
+<td class="next">
+Next: <a href="30031.html">30031</a>
+</td>
+</tr>
+</table>
+<div class="description">30005: Print "Demo Mode"</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="27937.html">27937</a>, <a href="30031.html">InitialiseGame</a> and <a href="30268.html">30268</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PrintDemoMode</td>
+<td class="address-2"><span id="30005"></span>30005</td>
+<td class="instruction">LD A,(30765)</td>
+<td class="comment-1" rowspan="3">Jump to <a href="30005.html#30020">NotDemoMode</a> if *<a href="30764.html#30765">30765</a> is not equal to 115.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30008"></span>30008</td>
+<td class="instruction">CP 115</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30010"></span>30010</td>
+<td class="instruction">JR NZ,<a href="30005.html#30020">NotDemoMode</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30012"></span>30012</td>
+<td class="instruction">LD A,130</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=130 (INK:
+RED,
+PAPER:
+BLACK
+
+FLASH: ON).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30014"></span>30014</td>
+<td class="instruction">LD HL,47718</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="47718.html">Messaging_DemoMode</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30017"></span>30017</td>
+<td class="instruction">JP <a href="29891.html">PrintFooterColourString</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29891.html">PrintFooterColourString</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="30020"></span>
+<div class="comments">
+<div class="paragraph">
+If this is not demo mode then set the attributes to INK:
+BLACK,
+PAPER:
+BLACK
+
+ where it would normally display the demo mode footer messaging.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">NotDemoMode</td>
+<td class="address-2"><span id="30020"></span>30020</td>
+<td class="instruction">LD HL,23264</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=23264 (footer attribute buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30023"></span>30023</td>
+<td class="instruction">LD B,32</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=32.</td>
+</tr>
+<tr>
+<td class="asm-label">NotDemoMode_Loop</td>
+<td class="address-2"><span id="30025"></span>30025</td>
+<td class="instruction">LD (HL),0</td>
+<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30027"></span>30027</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30028"></span>30028</td>
+<td class="instruction">DJNZ <a href="30005.html#30025">NotDemoMode_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30005.html#30025">NotDemoMode_Loop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30030"></span>30030</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29916.html">29916</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#30005">Map</a></td>
+<td class="next">
+Next: <a href="30031.html">30031</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/7535.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

@@ -27,7 +27,7 @@ gtag('config', 'G-75RERFCHBG');
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="EB00.html">EB00</a>
+Prev: <a href="EBE3.html">EBE3</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#ebe6">Map</a></td>
 <td class="next">
@@ -35,37 +35,50 @@ Next: <a href="EBF3.html">EBF3</a>
 </td>
 </tr>
 </table>
-<div class="description">EBE6: Long pause (roughly 3 seconds)</div>
+<div class="description">EBE6: Long Pause</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="E891.html">PINK_HEADER</a>, <a href="ECAB.html">ECAB</a> and <a href="ED52.html">ED52</a>.
+Used by the routines at <a href="E891.html">DisplayStartScreen</a>, <a href="EB43.html">DisplayChangeControls</a>, <a href="ECAB.html">StartGame</a> and <a href="ED52.html">DisplayInstructions</a>.
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label">PAUSE</td>
+<td class="routine-comment" colspan="5">
+<span id="ebe6"></span>
+<div class="comments">
+<div class="paragraph">
+Countdown from FFFF to 0000 a total of 05 times. This is creating a big pause of ~3 seconds before allowing input.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PauseLong</td>
 <td class="address-2"><span id="ebe6"></span>EBE6</td>
 <td class="instruction">LD B,$05</td>
-<td class="comment-1" rowspan="8">Countdown from $ffff to $0000 a total of $05 times. This is just creating a big pause before allowing input.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=05 (counter).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="ebe8"></span>EBE8</td>
 <td class="instruction">LD HL,$0000</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=0000.</td>
 </tr>
 <tr>
-<td class="asm-label">PAUSE_LOOP</td>
+<td class="asm-label">PauseLong_Loop</td>
 <td class="address-2"><span id="ebeb"></span>EBEB</td>
 <td class="instruction">DEC HL</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="ebec"></span>EBEC</td>
 <td class="instruction">LD A,H</td>
+<td class="comment-1" rowspan="3">Jump to <a href="EBE6.html#ebeb">PauseLong_Loop</a> until <span class="register">HL</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -75,23 +88,25 @@ Used by the routines at <a href="E891.html">PINK_HEADER</a>, <a href="ECAB.html"
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="ebee"></span>EBEE</td>
-<td class="instruction">JR NZ,<a href="EBE6.html#ebeb">PAUSE_LOOP</a></td>
+<td class="instruction">JR NZ,<a href="EBE6.html#ebeb">PauseLong_Loop</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="ebf0"></span>EBF0</td>
-<td class="instruction">DJNZ <a href="EBE6.html#ebeb">PAUSE_LOOP</a></td>
+<td class="instruction">DJNZ <a href="EBE6.html#ebeb">PauseLong_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="EBE6.html#ebeb">PauseLong_Loop</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="ebf2"></span>EBF2</td>
 <td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="EB00.html">EB00</a>
+Prev: <a href="EBE3.html">EBE3</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#ebe6">Map</a></td>
 <td class="next">
@@ -101,8 +116,8 @@ Next: <a href="EBF3.html">EBF3</a>
 </table>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/60390.html">Switch to decimal</a>.</div>
 </footer>

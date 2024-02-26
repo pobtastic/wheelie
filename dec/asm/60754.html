@@ -27,7 +27,7 @@ gtag('config', 'G-75RERFCHBG');
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="60587.html">60587</a>
+Prev: <a href="60729.html">60729</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#60754">Map</a></td>
 <td class="next">
@@ -35,460 +35,782 @@ Next: <a href="60937.html">60937</a>
 </td>
 </tr>
 </table>
-<div class="description">60754: Playing Instruction display routine</div>
+<div class="description">60754: Display Playing Instructions</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Used by the routine at <a href="59406.html">59406</a>.
+</div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">DisplayInstructions</td>
 <td class="address-2"><span id="60754"></span>60754</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60755"></span>60755</td>
 <td class="instruction">LD DE,16384</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=$4000 (top of the screen buffer)</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=<a href="16384.html">16384</a> (screen buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60758"></span>60758</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Exchange <span class="register">BC</span>, <span class="register">DE</span>, and <span class="register">HL</span> with shadow registers with <span class="register">BC'</span>, <span class="register">DE'</span>, and <span class="register">HL'</span></td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60759"></span>
+<div class="comments">
+<div class="paragraph">
+Prints the "HOW TO PLAY WHEELIE" banner.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60759"></span>60759</td>
 <td class="instruction">LD HL,61044</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="61044.html">INSTRUCTIONS_HEADER</a> ($20 characters in length) and call <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61044.html">Messaging_HowToPlay</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60762"></span>60762</td>
 <td class="instruction">LD B,32</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=32 (length of banner).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60764"></span>60764</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
+<td class="instruction">CALL <a href="29907.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29907.html">Print_Loop</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60767"></span>
+<div class="comments">
+<div class="paragraph">
+Prints the "PRESS ANY KEY FOR NEXT PAGE" footer messaging.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60767"></span>60767</td>
 <td class="instruction">LD A,159</td>
-<td class="comment-1" rowspan="3">Point <span class="register">HL</span> to <a href="61076.html">PRESSANYKEY_TEXT</a> and call the subroutine at <a href="29866.html#29891">PRINT_BIKE_GRAPHIC_1</a> with $9F (magenta/ white with flash toggled)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=159 (INK:
+WHITE,
+PAPER:
+MAGENTA
+
+FLASH: ON).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60769"></span>60769</td>
 <td class="instruction">LD HL,61076</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61076.html">Messaging_PressAnyKey</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60772"></span>60772</td>
-<td class="instruction">CALL <a href="29866.html#29891">PRINT_BIKE_GRAPHIC_1</a></td>
+<td class="instruction">CALL <a href="29891.html">PrintFooterColourString</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29891.html">PrintFooterColourString</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
 <span id="60775"></span>
 <div class="comments">
 <div class="paragraph">
-Colours the screen for page one.
+Display the instructions for page one.
+</div>
+<div class="paragraph">
+<table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="instruction-01" src="../../images/scr/instruction-01.png" /></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+Set the attributes.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60775"></span>60775</td>
 <td class="instruction">LD HL,22592</td>
-<td class="comment-1" rowspan="5">Write $28 (cyan/ black) to the attribute buffer $A0 times, starting from $5840</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=22592 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60778"></span>60778</td>
 <td class="instruction">LD B,160</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=160 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page1_CyanLoop</td>
 <td class="address-2"><span id="60780"></span>60780</td>
 <td class="instruction">LD (HL),40</td>
+<td class="comment-1" rowspan="1">Write 40 (INK:
+BLACK,
+PAPER:
+CYAN
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60782"></span>60782</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60783"></span>60783</td>
-<td class="instruction">DJNZ <a href="60754.html#60780">60780</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60780">Instructions_Page1_CyanLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60780">Instructions_Page1_CyanLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60785"></span>60785</td>
 <td class="instruction">LD B,192</td>
-<td class="comment-1" rowspan="4">Write $30 (yellow/ black) to the attribute buffer $C0 times</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=192 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page1_YellowLoop</td>
 <td class="address-2"><span id="60787"></span>60787</td>
 <td class="instruction">LD (HL),48</td>
+<td class="comment-1" rowspan="1">Write 48 (INK:
+BLACK,
+PAPER:
+YELLOW
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60789"></span>60789</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60790"></span>60790</td>
-<td class="instruction">DJNZ <a href="60754.html#60787">60787</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60787">Instructions_Page1_YellowLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60787">Instructions_Page1_YellowLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60792"></span>60792</td>
 <td class="instruction">LD B,224</td>
-<td class="comment-1" rowspan="4">Write $20 (green/ black) to the attribute buffer $E0 times</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=224 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page1_GreenLoop</td>
 <td class="address-2"><span id="60794"></span>60794</td>
 <td class="instruction">LD (HL),32</td>
+<td class="comment-1" rowspan="1">Write 32 (INK:
+BLACK,
+PAPER:
+GREEN
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60796"></span>60796</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60797"></span>60797</td>
-<td class="instruction">DJNZ <a href="60754.html#60794">60794</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60794">Instructions_Page1_GreenLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60794">Instructions_Page1_GreenLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60799"></span>60799</td>
 <td class="instruction">LD B,96</td>
-<td class="comment-1" rowspan="4">Write $28 (cyan/ black) to the attribute buffer $60 times</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=96 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page1_Cyan2Loop</td>
 <td class="address-2"><span id="60801"></span>60801</td>
 <td class="instruction">LD (HL),40</td>
+<td class="comment-1" rowspan="1">Write 40 (INK:
+BLACK,
+PAPER:
+CYAN
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60803"></span>60803</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60804"></span>60804</td>
-<td class="instruction">DJNZ <a href="60754.html#60801">60801</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60801">Instructions_Page1_Cyan2Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60801">Instructions_Page1_Cyan2Loop</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
 <span id="60806"></span>
 <div class="comments">
 <div class="paragraph">
-Displays the instructions for page one.
+Now display the text for page one on the screen.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60806"></span>60806</td>
 <td class="instruction">LD HL,61440</td>
-<td class="comment-1" rowspan="2">Point <span class="register">HL</span> to <a href="61440.html">INSTRUCTIONS</a> and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61440.html">Messaging_InstructionsPage1</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60809"></span>60809</td>
-<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="instruction">CALL <a href="60558.html">PrintInstructions</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60558.html">PrintInstructions</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60812"></span>60812</td>
 <td class="instruction">PUSH HL</td>
-<td class="comment-1" rowspan="1">Store our position in the instructions for later</td>
+<td class="comment-1" rowspan="1">Store the current position in the instructions for the next page later.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60813"></span>60813</td>
-<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
-<td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
+<td class="instruction">CALL <a href="60390.html">PauseLong</a></td>
+<td class="comment-1" rowspan="1">Debounce using <a href="60390.html">PauseLong</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_InputLoop_Page1</td>
 <td class="address-2"><span id="60816"></span>60816</td>
-<td class="instruction">CALL <a href="25600.html#26664">26664</a></td>
-<td class="comment-1" rowspan="3">Loop until a key is pressed (using <a href="25600.html#26664">26664</a>)</td>
+<td class="instruction">CALL <a href="26664.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26664.html">KeyboardInput</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60819"></span>60819</td>
 <td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60754.html#60816">Instructions_InputLoop_Page1</a> until any key is pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60820"></span>60820</td>
-<td class="instruction">JR Z,<a href="60754.html#60816">60816</a></td>
+<td class="instruction">JR Z,<a href="60754.html#60816">Instructions_InputLoop_Page1</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
 <span id="60822"></span>
 <div class="comments">
 <div class="paragraph">
-Displays the instructions for page two.
+Display the instructions for page two.
+</div>
+<div class="paragraph">
+<table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="instruction-02" src="../../images/scr/instruction-02.png" /></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+Set the attributes.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60822"></span>60822</td>
 <td class="instruction">LD HL,22592</td>
-<td class="comment-1" rowspan="5">Writes $0F (blue/ white) to the attribute buffer $029F times starting at $5840</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=22592 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60825"></span>60825</td>
 <td class="instruction">LD (HL),15</td>
+<td class="comment-1" rowspan="1">Write 15 (INK:
+WHITE,
+PAPER:
+BLUE
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60827"></span>60827</td>
 <td class="instruction">LD DE,22593</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=22593 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60830"></span>60830</td>
 <td class="instruction">LD BC,671</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=671.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60833"></span>60833</td>
 <td class="instruction">LDIR</td>
+<td class="comment-1" rowspan="1">Copy INK:
+WHITE,
+PAPER:
+BLUE
+
+ to the screen buffer 671 times.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60835"></span>
+<div class="comments">
+<div class="paragraph">
+Now display the text for page two on the screen.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60835"></span>60835</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="comment-1" rowspan="1">Restore the position of the instructions pointer from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60836"></span>60836</td>
-<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="instruction">CALL <a href="60558.html">PrintInstructions</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60558.html">PrintInstructions</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60839"></span>60839</td>
 <td class="instruction">PUSH HL</td>
-<td class="comment-1" rowspan="1">Store our position in the instructions for later</td>
+<td class="comment-1" rowspan="1">Store the current position in the instructions for the next page later.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60840"></span>60840</td>
-<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
-<td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
+<td class="instruction">CALL <a href="60390.html">PauseLong</a></td>
+<td class="comment-1" rowspan="1">Debounce using <a href="60390.html">PauseLong</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_InputLoop_Page2</td>
 <td class="address-2"><span id="60843"></span>60843</td>
-<td class="instruction">CALL <a href="25600.html#26664">26664</a></td>
-<td class="comment-1" rowspan="3">Loop until a key is pressed (using <a href="25600.html#26664">26664</a>)</td>
+<td class="instruction">CALL <a href="26664.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26664.html">KeyboardInput</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60846"></span>60846</td>
 <td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60754.html#60843">Instructions_InputLoop_Page2</a> until any key is pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60847"></span>60847</td>
-<td class="instruction">JR Z,<a href="60754.html#60843">60843</a></td>
+<td class="instruction">JR Z,<a href="60754.html#60843">Instructions_InputLoop_Page2</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
 <span id="60849"></span>
 <div class="comments">
 <div class="paragraph">
-Colours the screen for page three.
+Display the instructions for page three.
+</div>
+<div class="paragraph">
+<table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="instruction-03" src="../../images/scr/instruction-03.png" /></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+Set the attributes.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60849"></span>60849</td>
 <td class="instruction">LD HL,22880</td>
-<td class="comment-1" rowspan="5">Write $28 (cyan/ black) to the attribute buffer $80 times, starting from $5960</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=22880 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60852"></span>60852</td>
 <td class="instruction">LD B,128</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=128 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page3_CyanLoop</td>
 <td class="address-2"><span id="60854"></span>60854</td>
 <td class="instruction">LD (HL),40</td>
+<td class="comment-1" rowspan="1">Write 40 (INK:
+BLACK,
+PAPER:
+CYAN
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60856"></span>60856</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60857"></span>60857</td>
-<td class="instruction">DJNZ <a href="60754.html#60854">60854</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60854">Instructions_Page3_CyanLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60854">Instructions_Page3_CyanLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60859"></span>60859</td>
 <td class="instruction">LD B,160</td>
-<td class="comment-1" rowspan="4">Write $20 (green/ black) to the attribute buffer $A0 times</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=160 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page3_GreenLoop</td>
 <td class="address-2"><span id="60861"></span>60861</td>
 <td class="instruction">LD (HL),32</td>
+<td class="comment-1" rowspan="1">Write 32 (INK:
+BLACK,
+PAPER:
+GREEN
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60863"></span>60863</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60864"></span>60864</td>
-<td class="instruction">DJNZ <a href="60754.html#60861">60861</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60861">Instructions_Page3_GreenLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60861">Instructions_Page3_GreenLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60866"></span>60866</td>
 <td class="instruction">LD B,96</td>
-<td class="comment-1" rowspan="4">Write $30 (yellow/ black) to the attribute buffer $60 times</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=96 (counter).</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_Page3_YellowLoop</td>
 <td class="address-2"><span id="60868"></span>60868</td>
 <td class="instruction">LD (HL),48</td>
+<td class="comment-1" rowspan="1">Write 48 (INK:
+BLACK,
+PAPER:
+YELLOW
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60870"></span>60870</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60871"></span>60871</td>
-<td class="instruction">DJNZ <a href="60754.html#60868">60868</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60868">Instructions_Page3_YellowLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60868">Instructions_Page3_YellowLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60873"></span>
+<div class="comments">
+<div class="paragraph">
+Colour the "keys" guide.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60873"></span>60873</td>
 <td class="instruction">LD HL,22624</td>
-<td class="comment-1" rowspan="12">Cycles through the following $04 times (initially starting at $5860); <ul class="">
-<li>Write $1B (magenta/ magenta) to the attribute buffer $09 times</li>
-<li>Add $0037 to the position of the attribute buffer</li>
-</ul> One this is finished, it "pokes a hole" at $5924 making it the same colour as the background $09 (blue/ blue) this gives a 4x4 magenta strip on the bottom row as the text refers to keys on the left and right.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=22624 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60876"></span>60876</td>
 <td class="instruction">LD DE,55</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=0055.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60879"></span>60879</td>
 <td class="instruction">LD C,4</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=4 (counter; rows of "keys").</td>
 </tr>
 <tr>
+<td class="asm-label">HighlightKeys_RowLoop</td>
 <td class="address-2"><span id="60881"></span>60881</td>
 <td class="instruction">LD B,9</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=9 (counter; nine columns to colour).</td>
 </tr>
 <tr>
+<td class="asm-label">HighlightKeys_LineLoop</td>
 <td class="address-2"><span id="60883"></span>60883</td>
 <td class="instruction">LD (HL),27</td>
+<td class="comment-1" rowspan="1">Write 27 (INK:
+MAGENTA,
+PAPER:
+MAGENTA
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60885"></span>60885</td>
 <td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60886"></span>60886</td>
-<td class="instruction">DJNZ <a href="60754.html#60883">60883</a></td>
+<td class="instruction">DJNZ <a href="60754.html#60883">HighlightKeys_LineLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60754.html#60883">HighlightKeys_LineLoop</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60888"></span>60888</td>
 <td class="instruction">ADD HL,DE</td>
+<td class="comment-1" rowspan="1">Add <span class="register">DE</span> to <span class="register">HL</span> to move us down one whole row (32) and back to the beginning of where we need to colour in (32-9=23 ~ 32+23=55).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60889"></span>60889</td>
 <td class="instruction">DEC C</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">C</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60890"></span>60890</td>
-<td class="instruction">JR NZ,<a href="60754.html#60881">60881</a></td>
+<td class="instruction">JR NZ,<a href="60754.html#60881">HighlightKeys_RowLoop</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60754.html#60881">HighlightKeys_RowLoop</a> until <span class="register">C</span> is zero.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60892"></span>
+<div class="comments">
+<div class="paragraph">
+Fill in the gap on the bottom row.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60892"></span>60892</td>
 <td class="instruction">LD L,36</td>
+<td class="comment-1" rowspan="1">Move the screen buffer pointer.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60894"></span>60894</td>
 <td class="instruction">LD (HL),9</td>
+<td class="comment-1" rowspan="1">Write 9 (INK:
+BLUE,
+PAPER:
+BLUE
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
 <span id="60896"></span>
 <div class="comments">
 <div class="paragraph">
-Displays the instructions for page three.
+Now display the text for page three on the screen.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60896"></span>60896</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="1">Restore our place in the instructions and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="comment-1" rowspan="1">Restore the position of the instructions pointer from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60897"></span>60897</td>
-<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="60558.html">PrintInstructions</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60558.html">PrintInstructions</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60900"></span>60900</td>
 <td class="instruction">PUSH HL</td>
-<td class="comment-1" rowspan="1">Store our position in the instructions for later</td>
+<td class="comment-1" rowspan="1">Store the current position in the instructions for the next page later.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60901"></span>60901</td>
-<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
-<td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
+<td class="instruction">CALL <a href="60390.html">PauseLong</a></td>
+<td class="comment-1" rowspan="1">Debounce using <a href="60390.html">PauseLong</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_InputLoop_Page3</td>
 <td class="address-2"><span id="60904"></span>60904</td>
-<td class="instruction">CALL <a href="25600.html#26664">26664</a></td>
-<td class="comment-1" rowspan="3">Loop until a key is pressed (using <a href="25600.html#26664">26664</a>)</td>
+<td class="instruction">CALL <a href="26664.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26664.html">KeyboardInput</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60907"></span>60907</td>
 <td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60754.html#60904">Instructions_InputLoop_Page3</a> until any key is pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60908"></span>60908</td>
-<td class="instruction">JR Z,<a href="60754.html#60904">60904</a></td>
+<td class="instruction">JR Z,<a href="60754.html#60904">Instructions_InputLoop_Page3</a></td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60910"></span>
+<div class="comments">
+<div class="paragraph">
+Display the instructions for page four.
+</div>
+<div class="paragraph">
+<table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="instruction-04" src="../../images/scr/instruction-04.png" /></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+Set the attributes.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60910"></span>60910</td>
 <td class="instruction">LD HL,22592</td>
-<td class="comment-1" rowspan="5">Writes $30 (yellow/ black) to the attribute buffer $029F times starting at $5840</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=22592 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60913"></span>60913</td>
 <td class="instruction">LD (HL),48</td>
+<td class="comment-1" rowspan="1">Write 48 (INK:
+BLACK,
+PAPER:
+YELLOW
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60915"></span>60915</td>
 <td class="instruction">LD DE,22593</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=22593 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60918"></span>60918</td>
 <td class="instruction">LD BC,671</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=671.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60921"></span>60921</td>
 <td class="instruction">LDIR</td>
+<td class="comment-1" rowspan="1">Copy INK:
+BLACK,
+PAPER:
+YELLOW
+
+ to the screen buffer 671 times.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60923"></span>
+<div class="comments">
+<div class="paragraph">
+Now display the text for page four on the screen.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60923"></span>60923</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="2">Restore our place in the instructions and call <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="comment-1" rowspan="1">Restore the position of the instructions pointer from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60924"></span>60924</td>
-<td class="instruction">CALL <a href="60558.html">PRINT_INSTRUCTIONS</a></td>
+<td class="instruction">CALL <a href="60558.html">PrintInstructions</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60558.html">PrintInstructions</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60927"></span>60927</td>
-<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
-<td class="comment-1" rowspan="1">Pause before allowing input (debounce)</td>
+<td class="instruction">CALL <a href="60390.html">PauseLong</a></td>
+<td class="comment-1" rowspan="1">Debounce using <a href="60390.html">PauseLong</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Instructions_InputLoop_Page4</td>
 <td class="address-2"><span id="60930"></span>60930</td>
-<td class="instruction">CALL <a href="25600.html#26664">26664</a></td>
-<td class="comment-1" rowspan="3">Loop until a key is pressed (using <a href="25600.html#26664">26664</a>)</td>
+<td class="instruction">CALL <a href="26664.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26664.html">KeyboardInput</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60933"></span>60933</td>
 <td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60754.html#60930">Instructions_InputLoop_Page4</a> until any key is pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60934"></span>60934</td>
-<td class="instruction">JR Z,<a href="60754.html#60930">60930</a></td>
+<td class="instruction">JR Z,<a href="60754.html#60930">Instructions_InputLoop_Page4</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60936"></span>60936</td>
 <td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return</td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="60587.html">60587</a>
+Prev: <a href="60729.html">60729</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#60754">Map</a></td>
 <td class="next">
@@ -498,8 +820,8 @@ Next: <a href="60937.html">60937</a>
 </table>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/ED52.html">Switch to hexadecimal</a>.</div>
 </footer>

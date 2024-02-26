@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 74C3</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="74C2.html">74C2</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#74c3">Map</a></td>
+<td class="next">
+Next: <a href="74D3.html">74D3</a>
+</td>
+</tr>
+</table>
+<div class="description">74C3: Print Footer Colour String</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Given an attribute value and a pointer to a string of 20 bytes, this routine will print a string to the footer of the screen buffer using the given attribute colour.
+</div>
+<div class="paragraph">
+Used by the routines at <a href="74DC.html">74DC</a>, <a href="75AA.html">PrintGameDisplay</a> and <a href="ED52.html">DisplayInstructions</a>.
+</div>
+</div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">A</td>
+<td class="register-desc">Attribute</td>
+</tr>
+<tr>
+<td class="register">HL</td>
+<td class="register-desc">Address of the string</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PrintFooterColourString</td>
+<td class="address-2"><span id="74c3"></span>74C3</td>
+<td class="instruction">LD B,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=20 (counter of number of characters in a row).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74c5"></span>74C5</td>
+<td class="instruction">LD DE,$5AE0</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=5AE0 (footer attribute buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label">PrintColourString_Loop</td>
+<td class="address-2"><span id="74c8"></span>74C8</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74c9"></span>74C9</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74ca"></span>74CA</td>
+<td class="instruction">DJNZ <a href="74C3.html#74c8">PrintColourString_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="74C3.html#74c8">PrintColourString_Loop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74cc"></span>74CC</td>
+<td class="instruction">LD B,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=20 (counter of number of characters in string).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74ce"></span>74CE</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74cf"></span>74CF</td>
+<td class="instruction">LD DE,$50E0</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=50E0 (footer screen buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74d2"></span>74D2</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="comments">
+<div class="paragraph">
+Continue on to <a href="74D3.html">Print_Loop</a>.
+</div>
+</div>
+</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="74C2.html">74C2</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#74c3">Map</a></td>
+<td class="next">
+Next: <a href="74D3.html">74D3</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/29891.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

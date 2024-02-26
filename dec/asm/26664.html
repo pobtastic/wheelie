@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 26664</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="26662.html">26662</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#26664">Map</a></td>
+<td class="next">
+Next: <a href="26749.html">26749</a>
+</td>
+</tr>
+</table>
+<div class="description">26664: Get Keyboard Input</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="27937.html">27937</a>, <a href="30078.html">GameOver</a>, <a href="30268.html">30268</a>, <a href="59406.html">59406</a>, <a href="60227.html">DisplayChangeControls</a> and <a href="60754.html">DisplayInstructions</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput</td>
+<td class="address-2"><span id="26664"></span>26664</td>
+<td class="instruction">LD DE,65024</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="64000.html#65024">65024</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26667"></span>26667</td>
+<td class="instruction">LD BC,65278</td>
+<td class="comment-1" rowspan="2">Read from the keyboard; <table class="default">
+<tr>
+<th colspan="1" rowspan="2">Port Number</th>
+<th colspan="5" rowspan="1">Bit</th>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">0</th>
+<th colspan="1" rowspan="1">1</th>
+<th colspan="1" rowspan="1">2</th>
+<th colspan="1" rowspan="1">3</th>
+<th colspan="1" rowspan="1">4</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">254</td>
+<td class="centre" colspan="1" rowspan="1">SHIFT</td>
+<td class="centre" colspan="1" rowspan="1">Z</td>
+<td class="centre" colspan="1" rowspan="1">X</td>
+<td class="centre" colspan="1" rowspan="1">C</td>
+<td class="centre" colspan="1" rowspan="1">V</td>
+</tr>
+</table></td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_0</td>
+<td class="address-2"><span id="26670"></span>26670</td>
+<td class="instruction">IN A,(C)</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26672"></span>26672</td>
+<td class="instruction">CPL</td>
+<td class="comment-1" rowspan="1">Invert the bits in <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26673"></span>26673</td>
+<td class="instruction">AND %00011111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-4.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26675"></span>26675</td>
+<td class="instruction">JR Z,<a href="26664.html#26678">KeyboardInput_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26678">KeyboardInput_1</a> if {} is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26677"></span>26677</td>
+<td class="instruction">SCF</td>
+<td class="comment-1" rowspan="1">Set the carry flag.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_1</td>
+<td class="address-2"><span id="26678"></span>26678</td>
+<td class="instruction">RL E</td>
+<td class="comment-1" rowspan="1">Rotate <span class="register">E</span> left.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26680"></span>26680</td>
+<td class="instruction">RL D</td>
+<td class="comment-1" rowspan="1">Rotate <span class="register">D</span> left.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26682"></span>26682</td>
+<td class="instruction">JR NC,<a href="26664.html#26688">KeyboardInput_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26688">KeyboardInput_2</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26684"></span>26684</td>
+<td class="instruction">RLC B</td>
+<td class="comment-1" rowspan="1">Rotate <span class="register">B</span> left (with carry).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26686"></span>26686</td>
+<td class="instruction">JR <a href="26664.html#26670">KeyboardInput_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26670">KeyboardInput_0</a>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_2</td>
+<td class="address-2"><span id="26688"></span>26688</td>
+<td class="instruction">LD A,E</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26689"></span>26689</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26690"></span>26690</td>
+<td class="instruction">JR NC,<a href="26664.html#26694">KeyboardInput_3</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26694">KeyboardInput_3</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26692"></span>26692</td>
+<td class="instruction">SET 0,D</td>
+<td class="comment-1" rowspan="1">Set bit 0 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_3</td>
+<td class="address-2"><span id="26694"></span>26694</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26695"></span>26695</td>
+<td class="instruction">JR NC,<a href="26664.html#26699">KeyboardInput_4</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26699">KeyboardInput_4</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26697"></span>26697</td>
+<td class="instruction">SET 2,D</td>
+<td class="comment-1" rowspan="1">Set bit 2 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_4</td>
+<td class="address-2"><span id="26699"></span>26699</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26700"></span>26700</td>
+<td class="instruction">JR NC,<a href="26664.html#26704">KeyboardInput_5</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26704">KeyboardInput_5</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26702"></span>26702</td>
+<td class="instruction">SET 3,D</td>
+<td class="comment-1" rowspan="1">Set bit 3 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_5</td>
+<td class="address-2"><span id="26704"></span>26704</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26705"></span>26705</td>
+<td class="instruction">JR NC,<a href="26664.html#26709">KeyboardInput_6</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26709">KeyboardInput_6</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26707"></span>26707</td>
+<td class="instruction">SET 4,D</td>
+<td class="comment-1" rowspan="1">Set bit 4 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_6</td>
+<td class="address-2"><span id="26709"></span>26709</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26710"></span>26710</td>
+<td class="instruction">JR NC,<a href="26664.html#26714">KeyboardInput_7</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26714">KeyboardInput_7</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26712"></span>26712</td>
+<td class="instruction">SET 4,D</td>
+<td class="comment-1" rowspan="1">Set bit 4 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_7</td>
+<td class="address-2"><span id="26714"></span>26714</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26715"></span>26715</td>
+<td class="instruction">JR NC,<a href="26664.html#26719">KeyboardInput_8</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26719">KeyboardInput_8</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26717"></span>26717</td>
+<td class="instruction">SET 3,D</td>
+<td class="comment-1" rowspan="1">Set bit 3 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_8</td>
+<td class="address-2"><span id="26719"></span>26719</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26720"></span>26720</td>
+<td class="instruction">JR NC,<a href="26664.html#26724">KeyboardInput_9</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26724">KeyboardInput_9</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26722"></span>26722</td>
+<td class="instruction">SET 2,D</td>
+<td class="comment-1" rowspan="1">Set bit 2 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_9</td>
+<td class="address-2"><span id="26724"></span>26724</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26725"></span>26725</td>
+<td class="instruction">JR NC,<a href="26664.html#26729">KeyboardInput_10</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26729">KeyboardInput_10</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26727"></span>26727</td>
+<td class="instruction">SET 1,D</td>
+<td class="comment-1" rowspan="1">Set bit 1 of <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_10</td>
+<td class="address-2"><span id="26729"></span>26729</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26730"></span>26730</td>
+<td class="instruction">AND %00000011</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26732"></span>26732</td>
+<td class="instruction">CP 3</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 3.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26734"></span>26734</td>
+<td class="instruction">JR NZ,<a href="26664.html#26738">KeyboardInput_11</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26738">KeyboardInput_11</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26736"></span>26736</td>
+<td class="instruction">XOR D</td>
+<td class="comment-1" rowspan="1">Flip the bits according to <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26737"></span>26737</td>
+<td class="instruction">LD D,A</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_11</td>
+<td class="address-2"><span id="26738"></span>26738</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26739"></span>26739</td>
+<td class="instruction">AND %00001100</td>
+<td class="comment-1" rowspan="1">Keep only bits 2-3.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26741"></span>26741</td>
+<td class="instruction">CP 12</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 12.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26743"></span>26743</td>
+<td class="instruction">JR NZ,<a href="26664.html#26747">KeyboardInput_12</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26664.html#26747">KeyboardInput_12</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26745"></span>26745</td>
+<td class="instruction">XOR D</td>
+<td class="comment-1" rowspan="1">Flip the bits according to <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26746"></span>26746</td>
+<td class="instruction">LD D,A</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">KeyboardInput_12</td>
+<td class="address-2"><span id="26747"></span>26747</td>
+<td class="instruction">LD A,D</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26748"></span>26748</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="26662.html">26662</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#26664">Map</a></td>
+<td class="next">
+Next: <a href="26749.html">26749</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/6828.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

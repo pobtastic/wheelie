@@ -31,15 +31,18 @@ Prev: <a href="59616.html">59616</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#59620">Map</a></td>
 <td class="next">
-Next: <a href="59648.html">59648</a>
+Next: <a href="59638.html">59638</a>
 </td>
 </tr>
 </table>
-<div class="description">59620: Displays the pink footer</div>
+<div class="description">59620: Display Pink Footer</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Used by the routine at <a href="59406.html">59406</a>.
+</div>
 </div>
 </td>
 </tr>
@@ -48,112 +51,58 @@ Next: <a href="59648.html">59648</a>
 <span id="59620"></span>
 <div class="comments">
 <div class="paragraph">
-This routine moves the data at <a href="43264.html">START_FOOTER</a> to the screen buffer (to draw the start page footer).
+This routine moves the data at <a href="43264.html">Footer_StartScreen</a> to the screen buffer (to draw the start page footer).
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label">PINK_FOOTER</td>
+<td class="asm-label">DisplayPinkFooter</td>
 <td class="address-2"><span id="59620"></span>59620</td>
 <td class="instruction">LD DE,20480</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=$5000 (target)</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=20480 (screen buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59623"></span>59623</td>
 <td class="instruction">LD HL,43264</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="43264.html">START_FOOTER</a> (source)</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="43264.html">Footer_StartScreen</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59626"></span>59626</td>
 <td class="instruction">LD BC,2048</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=$0800 (counter)</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=2048 (counter).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59629"></span>59629</td>
 <td class="instruction">LDIR</td>
-<td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
+<td class="comment-1" rowspan="1">Copy the footer graphic data to the screen buffer, decrease the counter, repeat until zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59631"></span>59631</td>
 <td class="instruction">LD D,90</td>
-<td class="comment-1" rowspan="1">DE=$5A00 (target)</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=23040 (attribute buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59633"></span>59633</td>
 <td class="instruction">LD B,1</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=$0100 (counter)</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=1 (counter).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59635"></span>59635</td>
 <td class="instruction">LDIR</td>
-<td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
+<td class="comment-1" rowspan="1">Copy the footer attribute data to the attribute buffer, decrease the counter, repeat until zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="59637"></span>59637</td>
 <td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59638"></span>59638</td>
-<td class="instruction">IN A,(31)</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59640"></span>59640</td>
-<td class="instruction">RET</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59641"></span>59641</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59642"></span>59642</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59643"></span>59643</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59644"></span>59644</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59645"></span>59645</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59646"></span>59646</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="59647"></span>59647</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -163,14 +112,14 @@ Prev: <a href="59616.html">59616</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#59620">Map</a></td>
 <td class="next">
-Next: <a href="59648.html">59648</a>
+Next: <a href="59638.html">59638</a>
 </td>
 </tr>
 </table>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/E8E4.html">Switch to hexadecimal</a>.</div>
 </footer>

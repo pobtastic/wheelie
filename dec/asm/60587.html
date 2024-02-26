@@ -31,461 +31,432 @@ Prev: <a href="60558.html">60558</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#60587">Map</a></td>
 <td class="next">
-Next: <a href="60754.html">60754</a>
+Next: <a href="60725.html">60725</a>
 </td>
 </tr>
 </table>
-<div class="description">60587: Routine at ECAB</div>
+<div class="description">60587: Start Game</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Used by the routine at <a href="59406.html">59406</a>.
+</div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">StartGame</td>
 <td class="address-2"><span id="60587"></span>60587</td>
 <td class="instruction">LD HL,2595</td>
-<td class="comment-1" rowspan="2">The keyboard repeat and delay values are loaded to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">REPDEL</a> and <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">REPPER</a>.</td>
+<td class="comment-1" rowspan="2">Write 2595 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>/<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60590"></span>60590</td>
 <td class="instruction">LD (23561),HL</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60593"></span>60593</td>
-<td class="instruction">CALL <a href="26675.html#29852">29852</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="29852.html">ClearScreen</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29852.html">ClearScreen</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60596"></span>60596</td>
 <td class="instruction">LD HL,22784</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=22784 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60599"></span>60599</td>
 <td class="instruction">LD B,64</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=64.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_0</td>
 <td class="address-2"><span id="60601"></span>60601</td>
 <td class="instruction">LD (HL),4</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write 4 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60603"></span>60603</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60604"></span>60604</td>
-<td class="instruction">DJNZ <a href="60587.html#60601">60601</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">DJNZ <a href="60587.html#60601">StartGame_0</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60601">StartGame_0</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60606"></span>60606</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60607"></span>60607</td>
 <td class="instruction">LD DE,18432</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=18432 (screen buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60610"></span>60610</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60611"></span>60611</td>
 <td class="instruction">LD B,64</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=64.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60613"></span>60613</td>
 <td class="instruction">LD HL,60948</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="60948.html">Messaging_CodeEntry</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60616"></span>60616</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="29907.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29907.html">Print_Loop</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60619"></span>60619</td>
-<td class="instruction">CALL <a href="60469.html#60526">60526</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="60458.html#60526">60526</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60458.html#60526">60526</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60622"></span>60622</td>
 <td class="instruction">CP 13</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 13.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60624"></span>60624</td>
-<td class="instruction">JR NZ,<a href="60587.html#60635">60635</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="60587.html#60635">StartGame_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60635">StartGame_2</a> if {} is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_1</td>
 <td class="address-2"><span id="60626"></span>60626</td>
 <td class="instruction">LD HL,257</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Write 1 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a> and 1 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60629"></span>60629</td>
 <td class="instruction">LD (23561),HL</td>
-<td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60632"></span>60632</td>
-<td class="instruction">JP <a href="26675.html#27818">27818</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">JP <a href="27818.html">27818</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="27818.html">27818</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_2</td>
 <td class="address-2"><span id="60635"></span>60635</td>
 <td class="instruction">LD DE,30766</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="30766.html">30766</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60638"></span>60638</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60639"></span>60639</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60640"></span>60640</td>
 <td class="instruction">LD E,32</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=32.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60642"></span>60642</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60643"></span>60643</td>
 <td class="instruction">LD HL,59808</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="59648.html#59808">59808</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60646"></span>60646</td>
 <td class="instruction">LD B,32</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=32.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60648"></span>60648</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="29907.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29907.html">Print_Loop</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60651"></span>60651</td>
 <td class="instruction">LD B,4</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60653"></span>60653</td>
 <td class="instruction">LD HL,61108</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61108.html">Messaging_CodeLetterPosition</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_3</td>
 <td class="address-2"><span id="60656"></span>60656</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60657"></span>60657</td>
 <td class="instruction">LD E,9</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=9.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60659"></span>60659</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60660"></span>60660</td>
 <td class="instruction">PUSH BC</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Stash <span class="register">BC</span> on the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60661"></span>60661</td>
 <td class="instruction">LD B,3</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=3.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60663"></span>60663</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="29907.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29907.html">Print_Loop</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60666"></span>60666</td>
 <td class="instruction">POP BC</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">BC</span> from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60667"></span>60667</td>
 <td class="instruction">PUSH HL</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Stash <span class="register">HL</span> on the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60668"></span>60668</td>
-<td class="instruction">CALL <a href="60469.html#60526">60526</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="60458.html#60526">60526</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60458.html#60526">60526</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60671"></span>60671</td>
 <td class="instruction">POP HL</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60672"></span>60672</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60673"></span>60673</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60674"></span>60674</td>
-<td class="instruction">DJNZ <a href="60587.html#60656">60656</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">DJNZ <a href="60587.html#60656">StartGame_3</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60656">StartGame_3</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60676"></span>60676</td>
 <td class="instruction">LD C,7</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=7.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60678"></span>60678</td>
 <td class="instruction">LD HL,61120</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61120.html">Messaging_Passwords</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_4</td>
 <td class="address-2"><span id="60681"></span>60681</td>
 <td class="instruction">LD E,46</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=46.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60683"></span>60683</td>
 <td class="instruction">LD B,5</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=5.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_5</td>
 <td class="address-2"><span id="60685"></span>60685</td>
 <td class="instruction">LD A,(DE)</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60686"></span>60686</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60687"></span>60687</td>
 <td class="instruction">CP (HL)</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60688"></span>60688</td>
-<td class="instruction">JR NZ,<a href="60587.html#60701">60701</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="60587.html#60701">StartGame_6</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60701">StartGame_6</a> if {} is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60690"></span>60690</td>
 <td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60691"></span>60691</td>
-<td class="instruction">DJNZ <a href="60587.html#60685">60685</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">DJNZ <a href="60587.html#60685">StartGame_5</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60685">StartGame_5</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60693"></span>60693</td>
 <td class="instruction">LD A,7</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=7.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60695"></span>60695</td>
 <td class="instruction">SUB C</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">C</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60696"></span>60696</td>
 <td class="instruction">LD (30752),A</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30750.html#30752">30752</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60699"></span>60699</td>
-<td class="instruction">JR <a href="60587.html#60626">60626</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">JR <a href="60587.html#60626">StartGame_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60626">StartGame_1</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">StartGame_6</td>
 <td class="address-2"><span id="60701"></span>60701</td>
 <td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60702"></span>60702</td>
-<td class="instruction">DJNZ <a href="60587.html#60701">60701</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">DJNZ <a href="60587.html#60701">StartGame_6</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60701">StartGame_6</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60704"></span>60704</td>
 <td class="instruction">DEC C</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">C</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60705"></span>60705</td>
-<td class="instruction">JR NZ,<a href="60587.html#60681">60681</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="60587.html#60681">StartGame_4</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60681">StartGame_4</a> if {} is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60707"></span>60707</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60708"></span>60708</td>
 <td class="instruction">LD E,0</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=0.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60710"></span>60710</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60711"></span>60711</td>
 <td class="instruction">LD HL,61012</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="60948.html#61012">61012</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60714"></span>60714</td>
 <td class="instruction">LD B,32</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=32.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60716"></span>60716</td>
-<td class="instruction">CALL <a href="29866.html#29907">PRINT_STRING</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="29907.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29907.html">Print_Loop</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60719"></span>60719</td>
-<td class="instruction">CALL <a href="60390.html">PAUSE</a></td>
-<td class="comment-1" rowspan="1"></td>
+<td class="instruction">CALL <a href="60390.html">PauseLong</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60390.html">PauseLong</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60722"></span>60722</td>
-<td class="instruction">JP <a href="60587.html#60587">60587</a></td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60725"></span>60725</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60726"></span>60726</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60727"></span>60727</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60728"></span>60728</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="60729"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="30034.html">30034</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="60729"></span>60729</td>
-<td class="instruction">CALL <a href="30034.html">30034</a></td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60732"></span>60732</td>
-<td class="instruction">LD A,(30752)</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60735"></span>60735</td>
-<td class="instruction">LD B,A</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60736"></span>60736</td>
-<td class="instruction">ADD A,A</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60737"></span>60737</td>
-<td class="instruction">ADD A,A</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60738"></span>60738</td>
-<td class="instruction">ADD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60739"></span>60739</td>
-<td class="instruction">LD C,A</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60740"></span>60740</td>
-<td class="instruction">LD B,0</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60742"></span>60742</td>
-<td class="instruction">LD HL,61120</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60745"></span>60745</td>
-<td class="instruction">ADD HL,BC</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60746"></span>60746</td>
-<td class="instruction">LD DE,47823</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60749"></span>60749</td>
-<td class="instruction">LD C,5</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60751"></span>60751</td>
-<td class="instruction">LDIR</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="60753"></span>60753</td>
-<td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return</td>
+<td class="instruction">JP <a href="60587.html#60587">StartGame</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html">StartGame</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -495,14 +466,14 @@ Prev: <a href="60558.html">60558</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#60587">Map</a></td>
 <td class="next">
-Next: <a href="60754.html">60754</a>
+Next: <a href="60725.html">60725</a>
 </td>
 </tr>
 </table>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/ECAB.html">Switch to hexadecimal</a>.</div>
 </footer>

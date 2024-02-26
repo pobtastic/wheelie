@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 74AE</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="74AA.html">74AA</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#74ae">Map</a></td>
+<td class="next">
+Next: <a href="74C2.html">74C2</a>
+</td>
+</tr>
+</table>
+<div class="description">74AE: Print Letter</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="74D3.html">Print_Loop</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PrintLetter</td>
+<td class="address-2"><span id="74ae"></span>74AE</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74af"></span>74AF</td>
+<td class="instruction">ADD A,A</td>
+<td class="comment-1" rowspan="2"><span class="register">L</span>=<span class="register">A</span>*02.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74b0"></span>74B0</td>
+<td class="instruction">LD L,A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74b1"></span>74B1</td>
+<td class="instruction">LD H,$0F</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=0F.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74b3"></span>74B3</td>
+<td class="instruction">ADD HL,HL</td>
+<td class="comment-1" rowspan="2"><span class="register">HL</span>*=04.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74b4"></span>74B4</td>
+<td class="instruction">ADD HL,HL</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="74b5"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="74AA.html">PrintBikeGraphic</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PrintUDG</td>
+<td class="address-2"><span id="74b5"></span>74B5</td>
+<td class="instruction">LD B,$08</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=08.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74b7"></span>74B7</td>
+<td class="instruction">LD C,D</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=<span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">PrintUDGG_Loop</td>
+<td class="address-2"><span id="74b8"></span>74B8</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74b9"></span>74B9</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74ba"></span>74BA</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74bb"></span>74BB</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74bc"></span>74BC</td>
+<td class="instruction">DJNZ <a href="74AE.html#74b8">PrintUDGG_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="74AE.html#74b8">PrintUDGG_Loop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74be"></span>74BE</td>
+<td class="instruction">LD D,C</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74bf"></span>74BF</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74c0"></span>74C0</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="74c1"></span>74C1</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="74AA.html">74AA</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#74ae">Map</a></td>
+<td class="next">
+Next: <a href="74C2.html">74C2</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/29870.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

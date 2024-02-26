@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Wheelie: Data at E900</title>
+<title>Wheelie: Text at E900</title>
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="../wheelie.css" />
 <link rel="stylesheet" type="text/css" href="../skoolkit.css" />
@@ -17,17 +17,17 @@ gtag('js', new Date());
 gtag('config', 'G-75RERFCHBG');
 </script>
 </head>
-<body class="Asm-b">
+<body class="Asm-t">
 <table class="header">
 <tr>
 <td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
-<td class="page-header">Data</td>
+<td class="page-header">Messages</td>
 </tr>
 </table>
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="E8E4.html">E8E4</a>
+Prev: <a href="E8F9.html">E8F9</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#e900">Map</a></td>
 <td class="next">
@@ -35,7 +35,7 @@ Next: <a href="EB00.html">EB00</a>
 </td>
 </tr>
 </table>
-<div class="description">E900: Control selection page</div>
+<div class="description">E900: Messaging: Control Selection</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,10 +44,10 @@ Next: <a href="EB00.html">EB00</a>
 </td>
 </tr>
 <tr>
-<td class="asm-label">CONTROL_SELECT_TEXT</td>
+<td class="asm-label">Messaging_ControlSelection</td>
 <td class="address-1"><span id="e900"></span>E900</td>
 <td class="instruction">DEFM " PRESS TOP ROW FOR STANDARD MODE"</td>
-<td class="comment-1" rowspan="8">Wheelie control selection page</td>
+<td class="comment-1" rowspan="8">Wheelie control selection page.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -85,16 +85,16 @@ Next: <a href="EB00.html">EB00</a>
 <td class="instruction">DEFM "PRESS BOTTOM ROW TO SELECT OTHER"</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Messaging_ChangeControls</td>
 <td class="address-1"><span id="ea00"></span>EA00</td>
 <td class="instruction">DEFM " PRESS KEY (MOVE JOYSTICK) FOR  "</td>
-<td class="comment-1" rowspan="1">Change controls for (<a href="E900.html#ea60">LEFT</a>, <a href="E900.html#ea80">RIGHT</a>, <a href="E900.html#eaa0">UP</a>, <a href="E900.html#eac0">DOWN</a>, <a href="E900.html#eae0">FREEZE</a>)</td>
+<td class="comment-1" rowspan="1">Change controls for (<a href="E900.html#ea60">Messaging_Left</a>, <a href="E900.html#ea80">Messaging_Right</a>, <a href="E900.html#eaa0">Messaging_Up</a>, <a href="E900.html#eac0">Messaging_Down</a>, <a href="E900.html#eae0">Messaging_Freeze</a>).</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Messaging_Warning</td>
 <td class="address-1"><span id="ea20"></span>EA20</td>
 <td class="instruction">DEFM " HANDS OFF KEYBOARD (OR JOYSTICK"</td>
-<td class="comment-1" rowspan="2">Warning message</td>
+<td class="comment-1" rowspan="2">Warning message.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -102,40 +102,40 @@ Next: <a href="EB00.html">EB00</a>
 <td class="instruction">DEFM "           TO CENTRE)           "</td>
 </tr>
 <tr>
-<td class="asm-label">LEFT</td>
+<td class="asm-label">Messaging_Left</td>
 <td class="address-1"><span id="ea60"></span>EA60</td>
 <td class="instruction">DEFM "              LEFT              "</td>
-<td class="comment-1" rowspan="1">LEFT</td>
+<td class="comment-1" rowspan="1">"&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;LEFT&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;".</td>
 </tr>
 <tr>
-<td class="asm-label">RIGHT</td>
+<td class="asm-label">Messaging_Right</td>
 <td class="address-1"><span id="ea80"></span>EA80</td>
 <td class="instruction">DEFM "              RIGHT             "</td>
-<td class="comment-1" rowspan="1">RIGHT</td>
+<td class="comment-1" rowspan="1">"&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;RIGHT&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;".</td>
 </tr>
 <tr>
-<td class="asm-label">UP</td>
+<td class="asm-label">Messaging_Up</td>
 <td class="address-1"><span id="eaa0"></span>EAA0</td>
 <td class="instruction">DEFM "               UP               "</td>
-<td class="comment-1" rowspan="1">UP</td>
+<td class="comment-1" rowspan="1">"&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UP&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;".</td>
 </tr>
 <tr>
-<td class="asm-label">DOWN</td>
+<td class="asm-label">Messaging_Down</td>
 <td class="address-1"><span id="eac0"></span>EAC0</td>
 <td class="instruction">DEFM "              DOWN              "</td>
-<td class="comment-1" rowspan="1">DOWN</td>
+<td class="comment-1" rowspan="1">"&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;DOWN&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;".</td>
 </tr>
 <tr>
-<td class="asm-label">FREEZE</td>
+<td class="asm-label">Messaging_Freeze</td>
 <td class="address-1"><span id="eae0"></span>EAE0</td>
 <td class="instruction">DEFM "  FREEZE(=JOYSTICK FIRE BUTTON) "</td>
-<td class="comment-1" rowspan="1">FREEZE</td>
+<td class="comment-1" rowspan="1">"&#160;&#160;FREEZE(=JOYSTICK FIRE BUTTON) ".</td>
 </tr>
 </table>
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="E8E4.html">E8E4</a>
+Prev: <a href="E8F9.html">E8F9</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#e900">Map</a></td>
 <td class="next">
@@ -145,8 +145,8 @@ Next: <a href="EB00.html">EB00</a>
 </table>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/59648.html">Switch to decimal</a>.</div>
 </footer>

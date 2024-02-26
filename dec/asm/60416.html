@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 60416</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60415.html">60415</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60416">Map</a></td>
+<td class="next">
+Next: <a href="60431.html">60431</a>
+</td>
+</tr>
+</table>
+<div class="description">60416: Routine at EC00</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="27937.html">27937</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60416"></span>60416</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60417"></span>60417</td>
+<td class="instruction">LD C,A</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60418"></span>60418</td>
+<td class="instruction">LD A,(30810)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30810.html">30810</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60421"></span>60421</td>
+<td class="instruction">LD HL,23672</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60424"></span>60424</td>
+<td class="instruction">CP (HL)</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60425"></span>60425</td>
+<td class="instruction">LD A,C</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60426"></span>60426</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60427"></span>60427</td>
+<td class="instruction">RET NZ</td>
+<td class="comment-1" rowspan="1">Return if <span class="register">A</span> was not equal to *<span class="register">HL</span> on line <a href="60416.html#60424">60424</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60428"></span>60428</td>
+<td class="instruction">JP <a href="26749.html#27648">27648</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26749.html#27648">27648</a>.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60415.html">60415</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60416">Map</a></td>
+<td class="next">
+Next: <a href="60431.html">60431</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/EC00.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

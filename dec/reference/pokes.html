@@ -25,22 +25,129 @@ gtag('config', 'G-75RERFCHBG');
 </tr>
 </table>
 <ul class="contents">
-<li><a href="#infiniteLives">Infinite lives</a></li>
+<li><a href="#infinite_lives">Infinite Lives</a></li>
+<li><a href="#infinite_fuel">Infinite Fuel</a></li>
 </ul>
-<div><span id="infiniteLives"></span></div>
+<div><span id="infinite_lives"></span></div>
 <div class="box box-1">
-<div class="box-title">Infinite lives</div>
+<div class="box-title">Infinite Lives</div>
 <div class="paragraph">
 To gain infinite lives:
 </div>
 <div class="paragraph">
-POKE <a href="../asm/30034.html">30037</a>,201
+<code>
+<div>POKE <a href="../asm/30031.html#30034">InitialiseGame_0</a>,201</div>
+</code>
+</div>
+<div class="paragraph">
+<hr />
+</div>
+<div class="paragraph">
+Just return, instead of decreasing <a href="../asm/30777.html">Lives</a> by one:
+</div>
+<div class="paragraph">
+<table>
+<tbody>
+<tr>
+<td class="address-1"><a href="../asm/30031.html#30034">InitialiseGame_0</a></td>
+<td class="instruction">LD <span class="register">HL</span>,<a href="../asm/30777.html">30777</a></td>
+</tr>
+<tr>
+<td class="address-1"><a href="../asm/30031.html#30037">30037</a></td>
+<td class="instruction">LD (<span class="register">HL</span>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div><span id="infinite_fuel"></span></div>
+<div class="box box-2">
+<div class="box-title">Infinite Fuel</div>
+<div class="paragraph">
+For infinite fuel:
+</div>
+<div class="paragraph">
+<code>
+<div>POKE <a href="../asm/30268.html#30380">30380</a>,42</div>
+<div>POKE <a href="../asm/59469.html#59500">59500</a>,58</div>
+</code>
+</div>
+<div class="paragraph">
+<hr />
+</div>
+<div class="paragraph">
+Fuel is held by <a href="../asm/30780.html">30780</a> and <a href="../asm/30780.html#30781">30781</a>. This changes the
+following two instances where the fuel is decreased.
+</div>
+<div class="paragraph">
+Altering where the decreased fuel is written back to <a href="../asm/30780.html">Fuel</a>:
+</div>
+<div class="paragraph">
+<table>
+<tbody>
+<tr>
+<td class="address-1"><a href="../asm/30268.html#30378">30378</a></td>
+<td class="instruction">SBC <span class="register">HL</span>,<span class="register">DE</span></td>
+</tr>
+<tr>
+<td class="address-1"><a href="../asm/30268.html#30380">30380</a></td>
+<td class="instruction">LD (<a href="../asm/30780.html">30780</a>),<span class="register">HL</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph">
+To LoaD the value into <span class="register">HL</span> instead of writing it to <a href="../asm/30780.html">Fuel</a>:
+</div>
+<div class="paragraph">
+<table>
+<tbody>
+<tr>
+<td class="address-1"><a href="../asm/30268.html#30380">30380</a></td>
+<td class="instruction">LD <span class="register">HL</span>,(<a href="../asm/30780.html">30780</a>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph">
+And similarly, altering:
+</div>
+<div class="paragraph">
+<table>
+<tbody>
+<tr>
+<td class="address-1"><a href="../asm/59469.html#59495">59495</a></td>
+<td class="instruction">LD <span class="register">A</span>,<a href="../asm/30780.html#30781">30781</a></td>
+</tr>
+<tr>
+<td class="address-1"><a href="../asm/59469.html#59498">59498</a></td>
+<td class="instruction">SUB 8</td>
+</tr>
+<tr>
+<td class="address-1"><a href="../asm/59469.html#59500">59500</a></td>
+<td class="instruction">LD (<a href="../asm/30780.html#30781">30781</a>),<span class="register">A</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph">
+For a similar outcome (LoaDing into <span class="register">A</span> instead of writing to <a href="../asm/30780.html#30781">30781</a>:
+</div>
+<div class="paragraph">
+<table>
+<tbody>
+<tr>
+<td class="address-1"><a href="../asm/59469.html#59500">59500</a></td>
+<td class="instruction">LD <span class="register">A</span>,(<a href="../asm/30780.html#30781">30781</a>)</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../reference/pokes.html">Switch to hexadecimal</a>.</div>
 </footer>

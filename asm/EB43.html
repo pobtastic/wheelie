@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at EB43</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="EB00.html">EB00</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#eb43">Map</a></td>
+<td class="next">
+Next: <a href="EBE3.html">EBE3</a>
+</td>
+</tr>
+</table>
+<div class="description">EB43: Display Change Controls</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="E80E.html">E80E</a>. <table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="change-controls" src="../images/scr/change-controls.png" /></td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">DisplayChangeControls</td>
+<td class="address-2"><span id="eb43"></span>EB43</td>
+<td class="instruction">LD HL,$E900</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="E900.html">Messaging_ControlSelection</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb46"></span>EB46</td>
+<td class="instruction">LD C,$04</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=04 (four "blocks" of text).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb48"></span>EB48</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb49"></span>EB49</td>
+<td class="instruction">LD DE,$4060</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=4060 (screen buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb4c"></span>EB4C</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb4d"></span>
+<div class="comments">
+<div class="paragraph">
+Re-use the same printing routine as the start screen.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb4d"></span>EB4D</td>
+<td class="instruction">CALL <a href="E891.html#e8ca">StartScreen_TextLoop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="E891.html#e8ca">StartScreen_TextLoop</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb50"></span>EB50</td>
+<td class="instruction">LD HL,$0101</td>
+<td class="comment-1" rowspan="2">Write 01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a> and 01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb53"></span>EB53</td>
+<td class="instruction">LD ($5C09),HL</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb56"></span>
+<div class="comments">
+<div class="paragraph">
+Add a little pause to debounce the keypress from the previous page.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb56"></span>EB56</td>
+<td class="instruction">LD HL,$0000</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=0000.</td>
+</tr>
+<tr>
+<td class="asm-label">ChangeControls_DebounceLoop</td>
+<td class="address-2"><span id="eb59"></span>EB59</td>
+<td class="instruction">DEC HL</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb5a"></span>EB5A</td>
+<td class="instruction">LD A,H</td>
+<td class="comment-1" rowspan="3">Jump to <a href="EB43.html#eb59">ChangeControls_DebounceLoop</a> until <span class="register">HL</span> is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb5b"></span>EB5B</td>
+<td class="instruction">OR L</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb5c"></span>EB5C</td>
+<td class="instruction">JR NZ,<a href="EB43.html#eb59">ChangeControls_DebounceLoop</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb5e"></span>
+<div class="comments">
+<div class="paragraph">
+Get input from the keyboard.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ChangeControls_InputLoop</td>
+<td class="address-2"><span id="eb5e"></span>EB5E</td>
+<td class="instruction">CALL <a href="6828.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="6828.html">KeyboardInput</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb61"></span>EB61</td>
+<td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="EB43.html#eb5e">ChangeControls_InputLoop</a> until any key is pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb62"></span>EB62</td>
+<td class="instruction">JR Z,<a href="EB43.html#eb5e">ChangeControls_InputLoop</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb64"></span>
+<div class="comments">
+<div class="paragraph">
+Test if "keyboard/ standard" control has been selected.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb64"></span>EB64</td>
+<td class="instruction">LD HL,$6828</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="6828.html">KeyboardInput</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb67"></span>EB67</td>
+<td class="instruction">BIT 4,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="EB43.html#eb6f">ChangeControls_TestIfKempston</a> if a key from the top row has not been pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb69"></span>EB69</td>
+<td class="instruction">JR Z,<a href="EB43.html#eb6f">ChangeControls_TestIfKempston</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb6b"></span>
+<div class="comments">
+<div class="paragraph">
+Write the selected control method to *<a href="7850.html">ControlMethod</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">SetControlMethod</td>
+<td class="address-2"><span id="eb6b"></span>EB6B</td>
+<td class="instruction">LD ($7850),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7850.html">ControlMethod</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb6e"></span>EB6E</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb6f"></span>
+<div class="comments">
+<div class="paragraph">
+Test if "kempston joystick" control has been selected.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ChangeControls_TestIfKempston</td>
+<td class="address-2"><span id="eb6f"></span>EB6F</td>
+<td class="instruction">LD HL,$E8F6</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="E8F6.html">KempstonJoystickInput</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb72"></span>EB72</td>
+<td class="instruction">BIT 3,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="EB43.html#eb6b">SetControlMethod</a> if a key from the second row has been pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb74"></span>EB74</td>
+<td class="instruction">JR NZ,<a href="EB43.html#eb6b">SetControlMethod</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb76"></span>
+<div class="comments">
+<div class="paragraph">
+Handle both AGF interface and "other" (user defined keys) selections.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb76"></span>EB76</td>
+<td class="instruction">LD HL,$EB00</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EB00.html">UserDefinedKeysInput</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb79"></span>EB79</td>
+<td class="instruction">LD ($7850),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7850.html">ControlMethod</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb7c"></span>EB7C</td>
+<td class="instruction">BIT 2,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="EC1E.html">SetAGFController</a> if a key from the third row has been pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb7e"></span>EB7E</td>
+<td class="instruction">JP NZ,<a href="EC1E.html">SetAGFController</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb81"></span>EB81</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb82"></span>EB82</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb83"></span>
+<div class="comments">
+<div class="paragraph">
+Ask the user to set user-defined keys.
+</div>
+<div class="paragraph">
+<table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="user-defined-left" src="../images/scr/user-defined-left.png" /></td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb83"></span>EB83</td>
+<td class="instruction">CALL <a href="EBE3.html">ClearScreen_Pause</a></td>
+<td class="comment-1" rowspan="1">Call <a href="EBE3.html">ClearScreen_Pause</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb86"></span>
+<div class="comments">
+<div class="paragraph">
+Set the attributes.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb86"></span>EB86</td>
+<td class="instruction">LD HL,$5900</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=5900 (attribute buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb89"></span>EB89</td>
+<td class="instruction">LD B,$40</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=40 (counter; two rows of text).</td>
+</tr>
+<tr>
+<td class="asm-label">UserDefinedControls_ColourLoop</td>
+<td class="address-2"><span id="eb8b"></span>EB8B</td>
+<td class="instruction">LD (HL),$85</td>
+<td class="comment-1" rowspan="1">Write 85 (INK:
+CYAN,
+PAPER:
+BLACK
+
+FLASH: ON) to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb8d"></span>EB8D</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb8e"></span>EB8E</td>
+<td class="instruction">DJNZ <a href="EB43.html#eb8b">UserDefinedControls_ColourLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="EB43.html#eb8b">UserDefinedControls_ColourLoop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb90"></span>
+<div class="comments">
+<div class="paragraph">
+Set the screen buffer position.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb90"></span>EB90</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb91"></span>EB91</td>
+<td class="instruction">LD D,$48</td>
+<td class="comment-1" rowspan="1"><span class="register">D'</span>=48.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb93"></span>EB93</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb94"></span>
+<div class="comments">
+<div class="paragraph">
+Loop through each control and allow the user to set it.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb94"></span>EB94</td>
+<td class="instruction">LD B,$05</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=05 (counter; five controls to select).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb96"></span>EB96</td>
+<td class="instruction">LD HL,$EA60</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="E900.html#ea60">Messaging_Left</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb99"></span>EB99</td>
+<td class="instruction">LD DE,$7853</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="7853.html">UserDefinedKeyMap</a>.</td>
+</tr>
+<tr>
+<td class="asm-label">UserDefinedControls_Loop</td>
+<td class="address-2"><span id="eb9c"></span>EB9C</td>
+<td class="instruction">PUSH BC</td>
+<td class="comment-1" rowspan="1">Stash the control counter on the stack.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eb9d"></span>
+<div class="comments">
+<div class="paragraph">
+Reset the screen buffer position.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb9d"></span>EB9D</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eb9e"></span>EB9E</td>
+<td class="instruction">LD E,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">E'</span>=20.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eba0"></span>EBA0</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eba1"></span>
+<div class="comments">
+<div class="paragraph">
+Print the control select message to the screen.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eba1"></span>EBA1</td>
+<td class="instruction">LD B,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=20 (counter; number of characters to print for this control).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eba3"></span>EBA3</td>
+<td class="instruction">CALL <a href="74D3.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="74D3.html">Print_Loop</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eba6"></span>EBA6</td>
+<td class="instruction">PUSH HL</td>
+<td class="comment-1" rowspan="1">Stash control messaging pointer on the stack.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="eba7"></span>
+<div class="comments">
+<div class="paragraph">
+Reset the screen buffer position.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eba7"></span>EBA7</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="eba8"></span>EBA8</td>
+<td class="instruction">LD E,$00</td>
+<td class="comment-1" rowspan="1"><span class="register">E'</span>=00.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebaa"></span>EBAA</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the normal registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebab"></span>EBAB</td>
+<td class="instruction">LD HL,$EA00</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="E900.html#ea00">Messaging_ChangeControls</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebae"></span>EBAE</td>
+<td class="instruction">LD B,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=20 (counter; length of "change controls" string).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebb0"></span>EBB0</td>
+<td class="instruction">CALL <a href="74D3.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="74D3.html">Print_Loop</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebb3"></span>EBB3</td>
+<td class="instruction">LD (IY+$07),$00</td>
+<td class="comment-1" rowspan="1">Write 07 to *<span class="register">IY</span>+07.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebb7"></span>EBB7</td>
+<td class="instruction">SET 3,(IY+$30)</td>
+<td class="comment-1" rowspan="1">Set bit 3 of *<span class="register">IX</span>+30.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebbb"></span>EBBB</td>
+<td class="instruction">LD HL,$5C3B</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebbe"></span>EBBE</td>
+<td class="instruction">RES 5,(HL)</td>
+<td class="comment-1" rowspan="1">Reset bit 5 of *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">UserDefinedControls_InputLoop</td>
+<td class="address-2"><span id="ebc0"></span>EBC0</td>
+<td class="instruction">RST $38</td>
+<td class="comment-1" rowspan="1">Call <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/0038.html">MASK_INT</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebc1"></span>EBC1</td>
+<td class="instruction">BIT 5,(HL)</td>
+<td class="comment-1" rowspan="2">Jump to <a href="EB43.html#ebc0">UserDefinedControls_InputLoop</a> until any key is pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebc3"></span>EBC3</td>
+<td class="instruction">JR Z,<a href="EB43.html#ebc0">UserDefinedControls_InputLoop</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ebc5"></span>
+<div class="comments">
+<div class="paragraph">
+Fetch the user keypress.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebc5"></span>EBC5</td>
+<td class="instruction">LD A,($5C08)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebc8"></span>EBC8</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write the keypress to the current position in *<a href="7853.html">UserDefinedKeyMap</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebc9"></span>EBC9</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Move onto the next control key.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ebca"></span>
+<div class="comments">
+<div class="paragraph">
+Warn the user that we debounce using pauses rather than wait for the key to be released.
+</div>
+<div class="paragraph">
+<table class="default">
+<tr>
+<td class="centre" colspan="1" rowspan="1"><img alt="user-defined-warning" src="../images/scr/user-defined-warning.png" /></td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebca"></span>EBCA</td>
+<td class="instruction">LD HL,$EA20</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="E900.html#ea20">Messaging_Warning</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebcd"></span>EBCD</td>
+<td class="instruction">LD B,$40</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=40 (counter; number of characters in the warning messaging).</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="ebcf"></span>
+<div class="comments">
+<div class="paragraph">
+Set the screen buffer position.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebcf"></span>EBCF</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd0"></span>EBD0</td>
+<td class="instruction">LD E,$00</td>
+<td class="comment-1" rowspan="1"><span class="register">E'</span>=00.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd2"></span>EBD2</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd3"></span>EBD3</td>
+<td class="instruction">CALL <a href="74D3.html">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Call <a href="74D3.html">Print_Loop</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd6"></span>EBD6</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd7"></span>EBD7</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd8"></span>EBD8</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebd9"></span>EBD9</td>
+<td class="instruction">CALL <a href="EBE6.html">PauseLong</a></td>
+<td class="comment-1" rowspan="1">Call <a href="EBE6.html">PauseLong</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebdc"></span>EBDC</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebdd"></span>EBDD</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="1">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebde"></span>EBDE</td>
+<td class="instruction">POP HL</td>
+<td class="comment-1" rowspan="2">Restore control messaging pointer and control counter from the stack.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebdf"></span>EBDF</td>
+<td class="instruction">POP BC</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebe0"></span>EBE0</td>
+<td class="instruction">DJNZ <a href="EB43.html#eb9c">UserDefinedControls_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease control counter by one and loop back to <a href="EB43.html#eb9c">UserDefinedControls_Loop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="ebe2"></span>EBE2</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="EB00.html">EB00</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#eb43">Map</a></td>
+<td class="next">
+Next: <a href="EBE3.html">EBE3</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/60227.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

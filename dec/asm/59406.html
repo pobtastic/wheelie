@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 59406</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="59392.html">59392</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#59406">Map</a></td>
+<td class="next">
+Next: <a href="59469.html">59469</a>
+</td>
+</tr>
+</table>
+<div class="description">59406: Routine at E80E</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="27934.html">27934</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="59406"></span>59406</td>
+<td class="instruction">LD HL,65535</td>
+<td class="comment-1" rowspan="2"><span class="register">SP</span>=65535.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59409"></span>59409</td>
+<td class="instruction">LD SP,HL</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59410"></span>59410</td>
+<td class="instruction">CALL <a href="25620.html">25620</a></td>
+<td class="comment-1" rowspan="1">Call <a href="25620.html">25620</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59413"></span>59413</td>
+<td class="instruction">LD HL,26664</td>
+<td class="comment-1" rowspan="2">Write <a href="26664.html">KeyboardInput</a> to <a href="30800.html">ControlMethod</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59416"></span>59416</td>
+<td class="instruction">LD (30800),HL</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59419"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routines at <a href="27937.html">27937</a> and <a href="30078.html">GameOver</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">StartScreen</td>
+<td class="address-2"><span id="59419"></span>59419</td>
+<td class="instruction">LD HL,(30800)</td>
+<td class="comment-1" rowspan="2">Write *<a href="30800.html">ControlMethod</a> to *<a href="30764.html">30764</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59422"></span>59422</td>
+<td class="instruction">LD (30764),HL</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59425"></span>59425</td>
+<td class="instruction">CALL <a href="29852.html">ClearScreen</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29852.html">ClearScreen</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59428"></span>59428</td>
+<td class="instruction">CALL <a href="59620.html">DisplayPinkFooter</a></td>
+<td class="comment-1" rowspan="1">Call <a href="59620.html">DisplayPinkFooter</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59431"></span>59431</td>
+<td class="instruction">XOR A</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=0.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59432"></span>59432</td>
+<td class="instruction">DEC A</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59433"></span>59433</td>
+<td class="instruction">LD (30752),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30750.html#30752">30752</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59436"></span>59436</td>
+<td class="instruction">CALL <a href="59537.html">DisplayStartScreen</a></td>
+<td class="comment-1" rowspan="1">Call <a href="59537.html">DisplayStartScreen</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59439"></span>
+<div class="comments">
+<div class="paragraph">
+Wait for keyboard input.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">StartScreen_Input</td>
+<td class="address-2"><span id="59439"></span>59439</td>
+<td class="instruction">CALL <a href="26664.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26664.html">KeyboardInput</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59442"></span>59442</td>
+<td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="59406.html#59439">StartScreen_Input</a> until any key is pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59443"></span>59443</td>
+<td class="instruction">JR Z,<a href="59406.html#59439">StartScreen_Input</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59445"></span>
+<div class="comments">
+<div class="paragraph">
+Should we start the demo mode?
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59445"></span>59445</td>
+<td class="instruction">BIT 4,A</td>
+<td class="comment-1" rowspan="2">Call <a href="59392.html">InitialiseDemoMode</a> if a key from the top row has been pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59447"></span>59447</td>
+<td class="instruction">CALL NZ,<a href="59392.html">InitialiseDemoMode</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59450"></span>
+<div class="comments">
+<div class="paragraph">
+Should we display the instructions?
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59450"></span>59450</td>
+<td class="instruction">BIT 3,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="59406.html#59459">TestStartGame</a> if a key from the second row has not been pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59452"></span>59452</td>
+<td class="instruction">JR Z,<a href="59406.html#59459">TestStartGame</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59454"></span>59454</td>
+<td class="instruction">CALL <a href="60754.html">DisplayInstructions</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60754.html">DisplayInstructions</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59457"></span>59457</td>
+<td class="instruction">JR <a href="59406.html#59419">StartScreen</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="59406.html#59419">StartScreen</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59459"></span>
+<div class="comments">
+<div class="paragraph">
+Should we start a new game?
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">TestStartGame</td>
+<td class="address-2"><span id="59459"></span>59459</td>
+<td class="instruction">BIT 2,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60587.html">StartGame</a> if a key from the third row has not been pressed.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59461"></span>59461</td>
+<td class="instruction">JP Z,<a href="60587.html">StartGame</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="59464"></span>
+<div class="comments">
+<div class="paragraph">
+Else a key from the third row was pressed so handle changing the controls.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59464"></span>59464</td>
+<td class="instruction">CALL <a href="60227.html">DisplayChangeControls</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60227.html">DisplayChangeControls</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="59467"></span>59467</td>
+<td class="instruction">JR <a href="59406.html#59419">StartScreen</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="59406.html#59419">StartScreen</a>.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="59392.html">59392</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#59406">Map</a></td>
+<td class="next">
+Next: <a href="59469.html">59469</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/E80E.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

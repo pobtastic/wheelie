@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at E800</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="D5A0.html">D5A0</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#e800">Map</a></td>
+<td class="next">
+Next: <a href="E80E.html">E80E</a>
+</td>
+</tr>
+</table>
+<div class="description">E800: Initialise Demo Mode</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="E80E.html">E80E</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">InitialiseDemoMode</td>
+<td class="address-2"><span id="e800"></span>E800</td>
+<td class="instruction">LD HL,$73B7</td>
+<td class="comment-1" rowspan="2">Write <a href="6D21.html#73b7">73B7</a> to *<a href="782C.html">782C</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="e803"></span>E803</td>
+<td class="instruction">LD ($782C),HL</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="e806"></span>E806</td>
+<td class="instruction">LD A,$05</td>
+<td class="comment-1" rowspan="2">Write 05 to *<a href="781E.html#7820">7820</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="e808"></span>E808</td>
+<td class="instruction">LD ($7820),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="e80b"></span>E80B</td>
+<td class="instruction">JP <a href="6CAA.html">$6CAA</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6CAA.html">6CAA</a>.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="D5A0.html">D5A0</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#e800">Map</a></td>
+<td class="next">
+Next: <a href="E80E.html">E80E</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/59392.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

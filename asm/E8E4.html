@@ -31,15 +31,18 @@ Prev: <a href="E8E0.html">E8E0</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#e8e4">Map</a></td>
 <td class="next">
-Next: <a href="E900.html">E900</a>
+Next: <a href="E8F6.html">E8F6</a>
 </td>
 </tr>
 </table>
-<div class="description">E8E4: Displays the pink footer</div>
+<div class="description">E8E4: Display Pink Footer</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Used by the routine at <a href="E80E.html">E80E</a>.
+</div>
 </div>
 </td>
 </tr>
@@ -48,112 +51,58 @@ Next: <a href="E900.html">E900</a>
 <span id="e8e4"></span>
 <div class="comments">
 <div class="paragraph">
-This routine moves the data at <a href="A900.html">START_FOOTER</a> to the screen buffer (to draw the start page footer).
+This routine moves the data at <a href="A900.html">Footer_StartScreen</a> to the screen buffer (to draw the start page footer).
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label">PINK_FOOTER</td>
+<td class="asm-label">DisplayPinkFooter</td>
 <td class="address-2"><span id="e8e4"></span>E8E4</td>
 <td class="instruction">LD DE,$5000</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=$5000 (target)</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=5000 (screen buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8e7"></span>E8E7</td>
 <td class="instruction">LD HL,$A900</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="A900.html">START_FOOTER</a> (source)</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="A900.html">Footer_StartScreen</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8ea"></span>E8EA</td>
 <td class="instruction">LD BC,$0800</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=$0800 (counter)</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=0800 (counter).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8ed"></span>E8ED</td>
 <td class="instruction">LDIR</td>
-<td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
+<td class="comment-1" rowspan="1">Copy the footer graphic data to the screen buffer, decrease the counter, repeat until zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8ef"></span>E8EF</td>
 <td class="instruction">LD D,$5A</td>
-<td class="comment-1" rowspan="1">DE=$5A00 (target)</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=5A00 (attribute buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8f1"></span>E8F1</td>
 <td class="instruction">LD B,$01</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=$0100 (counter)</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=01 (counter).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8f3"></span>E8F3</td>
 <td class="instruction">LDIR</td>
-<td class="comment-1" rowspan="1">Action! Copy source to target, decrease counter, repeat until zero</td>
+<td class="comment-1" rowspan="1">Copy the footer attribute data to the attribute buffer, decrease the counter, repeat until zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e8f5"></span>E8F5</td>
 <td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8f6"></span>E8F6</td>
-<td class="instruction">IN A,($1F)</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8f8"></span>E8F8</td>
-<td class="instruction">RET</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8f9"></span>E8F9</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8fa"></span>E8FA</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8fb"></span>E8FB</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8fc"></span>E8FC</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8fd"></span>E8FD</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8fe"></span>E8FE</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="e8ff"></span>E8FF</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -163,14 +112,14 @@ Prev: <a href="E8E0.html">E8E0</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#e8e4">Map</a></td>
 <td class="next">
-Next: <a href="E900.html">E900</a>
+Next: <a href="E8F6.html">E8F6</a>
 </td>
 </tr>
 </table>
 <footer>
 <div class="release"></div>
-<div class="copyright">&copy; 1983 Microsphere &copy; 2023 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 8.10.</div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
 <div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/59620.html">Switch to decimal</a>.</div>
 </footer>

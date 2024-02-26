@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 29907</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29891.html">29891</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29907">Map</a></td>
+<td class="next">
+Next: <a href="29915.html">29915</a>
+</td>
+</tr>
+</table>
+<div class="description">29907: Print Loop</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="29916.html">29916</a>, <a href="30122.html">PrintGameDisplay</a>, <a href="59537.html">DisplayStartScreen</a>, <a href="60227.html">DisplayChangeControls</a>, <a href="60558.html">PrintInstructions</a>, <a href="60587.html">StartGame</a> and <a href="60754.html">DisplayInstructions</a>.
+</div>
+</div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">B</td>
+<td class="register-desc">Counter; number of characters to print</td>
+</tr>
+<tr>
+<td class="register">HL</td>
+<td class="register-desc">Address of the string</td>
+</tr>
+<tr>
+<td class="register">DE'</td>
+<td class="register-desc">Screen buffer address for output</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Print_Loop</td>
+<td class="address-2"><span id="29907"></span>29907</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1">Fetch a character from the string, store it in <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29908"></span>29908</td>
+<td class="instruction">CALL <a href="29870.html">PrintLetter</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29870.html">PrintLetter</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29911"></span>29911</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment the string pointer by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29912"></span>29912</td>
+<td class="instruction">DJNZ <a href="29907.html#29907">Print_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="29907.html">Print_Loop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29914"></span>29914</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29891.html">29891</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29907">Map</a></td>
+<td class="next">
+Next: <a href="29915.html">29915</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/74D3.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>
