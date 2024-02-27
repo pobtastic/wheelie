@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 30688</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="30683.html">30683</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#30688">Map</a></td>
+<td class="next">
+Next: <a href="30713.html">30713</a>
+</td>
+</tr>
+</table>
+<div class="description">30688: Routine at 77E0</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="29379.html">29379</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="30688"></span>30688</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="6">No operation.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30689"></span>30689</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30690"></span>30690</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30691"></span>30691</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30692"></span>30692</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30693"></span>30693</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="30694"></span>
+<div class="comments">
+<div class="paragraph">
+Print the "THE GHOSTRIDER HAS FINISHED" messaging in the footer.
+</div>
+<div class="paragraph">
+<img alt="ghostrider-finished" src="../../images/font/ghostrider-finished.png" />
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30694"></span>30694</td>
+<td class="instruction">LD A,135</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=135 (INK:
+WHITE,
+PAPER:
+BLACK
+
+FLASH: ON).</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30696"></span>30696</td>
+<td class="instruction">LD HL,30892</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30892.html">Messaging_GhostRiderFinished</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30699"></span>30699</td>
+<td class="instruction">CALL <a href="29891.html">PrintFooterColourString</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29891.html">PrintFooterColourString</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30702"></span>30702</td>
+<td class="instruction">CALL <a href="60520.html">Sounds_GhostriderFinished</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60520.html">Sounds_GhostriderFinished</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="30705"></span>
+<div class="comments">
+<div class="paragraph">
+Set the player lives to 1 this is decreased to 0 by <a href="30031.html#30034">SpendLife</a> so is how the player receives a "Game Over".
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30705"></span>30705</td>
+<td class="instruction">LD HL,30777</td>
+<td class="comment-1" rowspan="2">Write 1 to <a href="30777.html">Lives</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30708"></span>30708</td>
+<td class="instruction">LD (HL),1</td>
+</tr>
+<tr>
+<td class="address-1"><span id="30710"></span>30710</td>
+<td class="instruction">JP <a href="30031.html#30034">SpendLife</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30031.html#30034">SpendLife</a>.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="30683.html">30683</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#30688">Map</a></td>
+<td class="next">
+Next: <a href="30713.html">30713</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/77E0.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

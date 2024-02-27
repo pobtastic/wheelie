@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 29682</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29681.html">29681</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29682">Map</a></td>
+<td class="next">
+Next: <a href="29726.html">29726</a>
+</td>
+</tr>
+</table>
+<div class="description">29682: Routine at 73F2</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="26896.html">26896</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="29682"></span>29682</td>
+<td class="instruction">LD A,(30757)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30757.html">30757</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29685"></span>29685</td>
+<td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Return if <span class="register">A</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29686"></span>29686</td>
+<td class="instruction">RET NZ</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29687"></span>29687</td>
+<td class="instruction">LD HL,65528</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="64000.html#65528">65528</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29690"></span>29690</td>
+<td class="instruction">ADD HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29691"></span>29691</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29692"></span>29692</td>
+<td class="instruction">LD A,L</td>
+<td class="comment-1" rowspan="3"><span class="register">L'</span>-=7.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29693"></span>29693</td>
+<td class="instruction">SUB 7</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29695"></span>29695</td>
+<td class="instruction">LD L,A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29696"></span>29696</td>
+<td class="instruction">SBC A,A</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29697"></span>29697</td>
+<td class="instruction">ADD A,H</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">H'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29698"></span>29698</td>
+<td class="instruction">LD H,A</td>
+<td class="comment-1" rowspan="1"><span class="register">H'</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29699"></span>29699</td>
+<td class="instruction">LD DE,1024</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=1024.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="29702"></span>29702</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29703"></span>29703</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29704"></span>29704</td>
+<td class="instruction">OR (HL)</td>
+<td class="comment-1" rowspan="1">Set the bits from *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29705"></span>29705</td>
+<td class="instruction">XOR (HL)</td>
+<td class="comment-1" rowspan="1">Flip the bits according to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29706"></span>29706</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="2">Increment <span class="register">HL</span> by two.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29707"></span>29707</td>
+<td class="instruction">INC HL</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29708"></span>29708</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29709"></span>29709</td>
+<td class="instruction">CP (HL)</td>
+<td class="comment-1" rowspan="2">Jump to <a href="29682.html#29713">29713</a> if <span class="register">A</span> is equal to *<span class="register">HL'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29710"></span>29710</td>
+<td class="instruction">JR Z,<a href="29682.html#29713">29713</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="29712"></span>29712</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E'</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="29713"></span>29713</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL'</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29714"></span>29714</td>
+<td class="instruction">DEC D</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29715"></span>29715</td>
+<td class="instruction">JR NZ,<a href="29682.html#29702">29702</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29682.html#29702">29702</a> if <span class="register">D'</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29717"></span>29717</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="3">Increment <span class="register">HL'</span> by three.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29718"></span>29718</td>
+<td class="instruction">INC HL</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29719"></span>29719</td>
+<td class="instruction">INC HL</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29720"></span>29720</td>
+<td class="instruction">LD A,E</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29721"></span>29721</td>
+<td class="instruction">LD (30757),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30757.html">30757</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29724"></span>29724</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="29725"></span>29725</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29681.html">29681</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29682">Map</a></td>
+<td class="next">
+Next: <a href="29726.html">29726</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/73F2.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

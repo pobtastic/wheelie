@@ -27,7 +27,7 @@ gtag('config', 'G-75RERFCHBG');
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="27937.html">27937</a>
+Prev: <a href="29176.html">29176</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#29184">Map</a></td>
 <td class="next">
@@ -161,7 +161,7 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-1"><span id="29220"></span>29220</td>
 <td class="instruction">JR NZ,<a href="29184.html#29212">29212</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29184.html#29212">29212</a> if {} is not zero.</td>
+<td class="comment-1" rowspan="1">Jump to <a href="29184.html#29212">29212</a> until <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29222"></span>29222</td>
@@ -523,22 +523,20 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-1"><span id="29330"></span>29330</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E</span>.</td>
+<td class="comment-1" rowspan="3"><span class="register">E</span>+=32.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29331"></span>29331</td>
 <td class="instruction">ADD A,32</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=32.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29333"></span>29333</td>
 <td class="instruction">LD E,A</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29334"></span>29334</td>
 <td class="instruction">JR NZ,<a href="29184.html#29340">29340</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29184.html#29340">29340</a> if {} is not zero.</td>
+<td class="comment-1" rowspan="1">Jump to <a href="29184.html#29340">29340</a> if <span class="register">E</span> is not zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29336"></span>29336</td>
@@ -576,7 +574,7 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-1"><span id="29349"></span>29349</td>
 <td class="instruction">LD A,(30765)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="29184.html#29358">29358</a> if *<a href="30764.html#30765">30765</a> is equal to 115.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="29184.html#29358">29358</a> if *<a href="30764.html">30765</a> is equal to 115.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29352"></span>29352</td>
@@ -594,12 +592,11 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-2"><span id="29358"></span>29358</td>
 <td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1">No operation.</td>
+<td class="comment-1" rowspan="2">No operation.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29359"></span>29359</td>
 <td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1">No operation.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29360"></span>29360</td>
@@ -624,7 +621,7 @@ Used by the routine at <a href="25856.html">25856</a>.
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="27937.html">27937</a>
+Prev: <a href="29176.html">29176</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#29184">Map</a></td>
 <td class="next">

@@ -57,13 +57,13 @@ Used by the routine at <a href="75AA.html">PrintGameDisplay</a>.
 <span id="7552"></span>
 <div class="comments">
 <div class="paragraph">
-This entry point is used by the routines at <a href="6D21.html">6D21</a>, <a href="763C.html">763C</a> and <a href="ED39.html">ED39</a>.
+"Spend" a life to continue, or move to Game Over.
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame_0</td>
+<td class="asm-label">SpendLife</td>
 <td class="address-2"><span id="7552"></span>7552</td>
 <td class="instruction">LD HL,$7839</td>
 <td class="comment-1" rowspan="2">Decrease *<a href="7839.html">Lives</a> by one.</td>
@@ -122,8 +122,8 @@ Compare the players current lives with the maximum number of lives (04).
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="755f"></span>755F</td>
-<td class="instruction">JR Z,<a href="754F.html#756b">InitialiseGame_2</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="754F.html#756b">InitialiseGame_2</a> if <span class="register">A</span> is zero.</td>
+<td class="instruction">JR Z,<a href="754F.html#756b">InitialiseGame_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="754F.html#756b">InitialiseGame_1</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -137,7 +137,7 @@ Compare the players current lives with the maximum number of lives (04).
 <td class="instruction">LD B,A</td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame_1</td>
+<td class="asm-label">InitialiseGame_0</td>
 <td class="address-2"><span id="7563"></span>7563</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -157,20 +157,19 @@ Compare the players current lives with the maximum number of lives (04).
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7569"></span>7569</td>
-<td class="instruction">DJNZ <a href="754F.html#7563">InitialiseGame_1</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7563">InitialiseGame_1</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="754F.html#7563">InitialiseGame_0</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7563">InitialiseGame_0</a> until counter is zero.</td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame_2</td>
+<td class="asm-label">InitialiseGame_1</td>
 <td class="address-2"><span id="756b"></span>756B</td>
 <td class="instruction">LD A,C</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="757E.html">GameOver</a> if <span class="register">C</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="756c"></span>756C</td>
 <td class="instruction">AND A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="757E.html">GameOver</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

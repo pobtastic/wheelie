@@ -41,7 +41,7 @@ Next: <a href="6414.html">6414</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="64AA.html">64AA</a>, <a href="6500.html">6500</a>, <a href="6D21.html">6D21</a>, <a href="7200.html">7200</a> and <a href="7311.html">7311</a>.
+Used by the routines at <a href="64AA.html">64AA</a>, <a href="6500.html">6500</a>, <a href="7088.html">7088</a>, <a href="709D.html">709D</a>, <a href="7200.html">7200</a> and <a href="73B7.html">DemoModeInput</a>.
 </div>
 </div>
 </td>
@@ -49,62 +49,61 @@ Used by the routines at <a href="64AA.html">64AA</a>, <a href="6500.html">6500</
 <tr>
 <td class="address-2"><span id="6400"></span>6400</td>
 <td class="instruction">PUSH HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Stash <span class="register">HL</span> on the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6401"></span>6401</td>
 <td class="instruction">LD HL,($781E)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="781E.html">781E</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6404"></span>6404</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6405"></span>6405</td>
 <td class="instruction">INC L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6406"></span>6406</td>
 <td class="instruction">JR NZ,<a href="6400.html#640f">$640F</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6400.html#640f">640F</a> if <span class="register">L</span> is not zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6408"></span>6408</td>
 <td class="instruction">INC H</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">H</span> by one.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6409"></span>6409</td>
 <td class="instruction">BIT 2,H</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="6400.html#640f">640F</a> if bit 2 of <span class="register">H</span> is not set.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="640b"></span>640B</td>
 <td class="instruction">JR Z,<a href="6400.html#640f">$640F</a></td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="640d"></span>640D</td>
 <td class="instruction">LD H,$79</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=79.</td>
 </tr>
 <tr>
 <td class="address-2"><span id="640f"></span>640F</td>
 <td class="instruction">LD ($781E),HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="781E.html">781E</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6412"></span>6412</td>
 <td class="instruction">POP HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6413"></span>6413</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">

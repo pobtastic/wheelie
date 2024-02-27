@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 29623</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29457.html">29457</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29623">Map</a></td>
+<td class="next">
+Next: <a href="29681.html">29681</a>
+</td>
+</tr>
+</table>
+<div class="description">29623: Demo Mode Input</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">DemoModeInput</td>
+<td class="address-2"><span id="29623"></span>29623</td>
+<td class="instruction">LD A,4</td>
+<td class="comment-1" rowspan="2">Write 4 to *<a href="30777.html">Lives</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29625"></span>29625</td>
+<td class="instruction">LD (30777),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29628"></span>29628</td>
+<td class="instruction">LD HL,13312</td>
+<td class="comment-1" rowspan="2">Write 13312 to *<a href="30780.html">Fuel</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29631"></span>29631</td>
+<td class="instruction">LD (30780),HL</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29634"></span>29634</td>
+<td class="instruction">CALL <a href="26664.html">KeyboardInput</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26664.html">KeyboardInput</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29637"></span>29637</td>
+<td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="29623.html#29649">DemoModeInput_0</a> if <span class="register">A</span> is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29638"></span>29638</td>
+<td class="instruction">JR Z,<a href="29623.html#29649">DemoModeInput_0</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29640"></span>29640</td>
+<td class="instruction">NOP</td>
+<td class="comment-1" rowspan="6">No operation.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29641"></span>29641</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29642"></span>29642</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29643"></span>29643</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29644"></span>29644</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29645"></span>29645</td>
+<td class="instruction">NOP</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29646"></span>29646</td>
+<td class="instruction">JP <a href="59406.html#59419">StartScreen</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="59406.html#59419">StartScreen</a>.</td>
+</tr>
+<tr>
+<td class="asm-label">DemoModeInput_0</td>
+<td class="address-2"><span id="29649"></span>29649</td>
+<td class="instruction">CALL <a href="25600.html">25600</a></td>
+<td class="comment-1" rowspan="1">Call <a href="25600.html">25600</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29652"></span>29652</td>
+<td class="instruction">AND %00001100</td>
+<td class="comment-1" rowspan="1">Keep only bits 2-3.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29654"></span>29654</td>
+<td class="instruction">JR Z,<a href="29623.html#29649">DemoModeInput_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29649">DemoModeInput_0</a> if the result is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29656"></span>29656</td>
+<td class="instruction">XOR %00001100</td>
+<td class="comment-1" rowspan="1">Flip bits 2-3.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29658"></span>29658</td>
+<td class="instruction">LD HL,(30769)</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30769.html">30769</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29661"></span>29661</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="3">Increment <span class="register">L</span> by three.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29662"></span>29662</td>
+<td class="instruction">INC L</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29663"></span>29663</td>
+<td class="instruction">INC L</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29664"></span>29664</td>
+<td class="instruction">LD D,A</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29665"></span>29665</td>
+<td class="instruction">LD A,(30754)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29668"></span>29668</td>
+<td class="instruction">CP (HL)</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29669"></span>29669</td>
+<td class="instruction">LD A,0</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=0.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29671"></span>29671</td>
+<td class="instruction">JR Z,<a href="29623.html#29679">DemoModeInput_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29679">DemoModeInput_2</a> if <span class="register">A</span> was equal to *<span class="register">HL</span> on line <a href="29623.html#29668">29668</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29673"></span>29673</td>
+<td class="instruction">JR C,<a href="29623.html#29677">DemoModeInput_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29677">DemoModeInput_1</a> if <span class="register">A</span> was lower than *<span class="register">HL</span> on line <a href="29623.html#29668">29668</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29675"></span>29675</td>
+<td class="instruction">LD A,3</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=3.</td>
+</tr>
+<tr>
+<td class="asm-label">DemoModeInput_1</td>
+<td class="address-2"><span id="29677"></span>29677</td>
+<td class="instruction">XOR %00000001</td>
+<td class="comment-1" rowspan="1">Flip bits 0.</td>
+</tr>
+<tr>
+<td class="asm-label">DemoModeInput_2</td>
+<td class="address-2"><span id="29679"></span>29679</td>
+<td class="instruction">OR D</td>
+<td class="comment-1" rowspan="1">Set the bits from <span class="register">D</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="29680"></span>29680</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="29457.html">29457</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#29623">Map</a></td>
+<td class="next">
+Next: <a href="29681.html">29681</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/73B7.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

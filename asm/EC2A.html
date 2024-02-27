@@ -31,7 +31,7 @@ Prev: <a href="EC1E.html">EC1E</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#ec2a">Map</a></td>
 <td class="next">
-Next: <a href="EC6D.html">EC6D</a>
+Next: <a href="EC35.html">EC35</a>
 </td>
 </tr>
 </table>
@@ -41,7 +41,7 @@ Next: <a href="EC6D.html">EC6D</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="763C.html">763C</a>.
+Used by the routine at <a href="76D7.html">76D7</a>.
 </div>
 </div>
 </td>
@@ -62,228 +62,8 @@ Used by the routine at <a href="763C.html">763C</a>.
 </tr>
 <tr>
 <td class="address-1"><span id="ec32"></span>EC32</td>
-<td class="instruction">JP <a href="763C.html#775f">$775F</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="763C.html#775f">775F</a>.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec35"></span>EC35</td>
-<td class="instruction">DI</td>
-<td class="comment-1" rowspan="1">Disable interrupts.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec36"></span>EC36</td>
-<td class="instruction">XOR A</td>
-<td class="comment-1" rowspan="1">Flip the bits according to <span class="register">A</span>.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec37"></span>EC37</td>
-<td class="instruction">LD C,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=*<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec38"></span>EC38</td>
-<td class="instruction">INC C</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">C</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec39"></span>EC39</td>
-<td class="instruction">JR NZ,<a href="EC2A.html#ec3d">$EC3D</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec3d">EC3D</a> if {} is not zero.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec3b"></span>EC3B</td>
-<td class="instruction">EI</td>
-<td class="comment-1" rowspan="1">Enable interrupts.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec3c"></span>EC3C</td>
-<td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec3d"></span>EC3D</td>
-<td class="instruction">DEC C</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">C</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec3e"></span>EC3E</td>
-<td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec3f"></span>EC3F</td>
-<td class="instruction">LD E,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=*<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec40"></span>EC40</td>
-<td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec41"></span>EC41</td>
-<td class="instruction">LD D,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=*<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec42"></span>EC42</td>
-<td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec43"></span>EC43</td>
-<td class="instruction">OUT ($FE),A</td>
-<td class="comment-1" rowspan="1">OUT 41FE</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec45"></span>EC45</td>
-<td class="instruction">LD B,C</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec46"></span>EC46</td>
-<td class="instruction">XOR %00010000</td>
-<td class="comment-1" rowspan="1">Flip bits 4.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec48"></span>EC48</td>
-<td class="instruction">DJNZ <a href="EC2A.html#ec48">$EC48</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="EC2A.html#ec48">EC48</a> until counter is zero.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec4a"></span>EC4A</td>
-<td class="instruction">LD B,A</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec4b"></span>EC4B</td>
-<td class="instruction">DEC DE</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">DE</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec4c"></span>EC4C</td>
-<td class="instruction">LD A,D</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec4d"></span>EC4D</td>
-<td class="instruction">OR E</td>
-<td class="comment-1" rowspan="1">Set the bits from <span class="register">E</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec4e"></span>EC4E</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">B</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec4f"></span>EC4F</td>
-<td class="instruction">JR NZ,<a href="EC2A.html#ec43">$EC43</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec43">EC43</a> if {} is not zero.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec51"></span>EC51</td>
-<td class="instruction">LD D,$0F</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=0F.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec53"></span>EC53</td>
-<td class="instruction">DEC DE</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">DE</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec54"></span>EC54</td>
-<td class="instruction">LD A,D</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec55"></span>EC55</td>
-<td class="instruction">OR E</td>
-<td class="comment-1" rowspan="1">Set the bits from <span class="register">E</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec56"></span>EC56</td>
-<td class="instruction">JR NZ,<a href="EC2A.html#ec53">$EC53</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec53">EC53</a> if {} is not zero.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec58"></span>EC58</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">B</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec59"></span>EC59</td>
-<td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec5a"></span>EC5A</td>
-<td class="instruction">AND %00010111</td>
-<td class="comment-1" rowspan="1">Keep only bits 0-2, 4.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec5c"></span>EC5C</td>
-<td class="instruction">JR <a href="EC2A.html#ec37">$EC37</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec37">EC37</a>.</td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="ec5e"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="763C.html">763C</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec5e"></span>EC5E</td>
-<td class="instruction">LD HL,$EEE8</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EEE8.html">EEE8</a>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec61"></span>EC61</td>
-<td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="ec63"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="763C.html">763C</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec63"></span>EC63</td>
-<td class="instruction">LD HL,$EF4F</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EF4F.html">EF4F</a>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec66"></span>EC66</td>
-<td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="ec68"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="763C.html">763C</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec68"></span>EC68</td>
-<td class="instruction">LD HL,$EFC2</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="EFC2.html">EFC2</a>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec6b"></span>EC6B</td>
-<td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
+<td class="instruction">JP <a href="76D7.html#775f">$775F</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="76D7.html#775f">775F</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -293,7 +73,7 @@ Prev: <a href="EC1E.html">EC1E</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#ec2a">Map</a></td>
 <td class="next">
-Next: <a href="EC6D.html">EC6D</a>
+Next: <a href="EC35.html">EC35</a>
 </td>
 </tr>
 </table>

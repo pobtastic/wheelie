@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 27437</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="27434.html">27434</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#27437">Map</a></td>
+<td class="next">
+Next: <a href="27463.html">27463</a>
+</td>
+</tr>
+</table>
+<div class="description">27437: Routine at 6B2D</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="27977.html">27977</a>, <a href="29457.html">29457</a>, <a href="30268.html">30268</a> and <a href="30423.html">30423</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="27437"></span>27437</td>
+<td class="instruction">LD A,(30754)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27440"></span>27440</td>
+<td class="instruction">LD E,13</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=13.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27442"></span>27442</td>
+<td class="instruction">BIT 7,A</td>
+<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27444"></span>27444</td>
+<td class="instruction">JR NZ,<a href="27437.html#27448">27448</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="27437.html#27448">27448</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27446"></span>27446</td>
+<td class="instruction">LD E,18</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=18.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="27448"></span>27448</td>
+<td class="instruction">LD C,7</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=7.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27450"></span>27450</td>
+<td class="instruction">LD HL,30771</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30769.html#30771">30771</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27453"></span>27453</td>
+<td class="instruction">LD D,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27454"></span>27454</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27455"></span>27455</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27456"></span>27456</td>
+<td class="instruction">CALL <a href="26924.html">26924</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26924.html">26924</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27459"></span>27459</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27460"></span>27460</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27461"></span>27461</td>
+<td class="instruction">LD (HL),E</td>
+<td class="comment-1" rowspan="1">Write <span class="register">E</span> to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="27462"></span>27462</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="27434.html">27434</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#27437">Map</a></td>
+<td class="next">
+Next: <a href="27463.html">27463</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/6B2D.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

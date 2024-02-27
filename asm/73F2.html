@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 73F2</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="73F1.html">73F1</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#73f2">Map</a></td>
+<td class="next">
+Next: <a href="741E.html">741E</a>
+</td>
+</tr>
+</table>
+<div class="description">73F2: Routine at 73F2</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="6910.html">6910</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="73f2"></span>73F2</td>
+<td class="instruction">LD A,($7825)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7825.html">7825</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73f5"></span>73F5</td>
+<td class="instruction">AND A</td>
+<td class="comment-1" rowspan="2">Return if <span class="register">A</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73f6"></span>73F6</td>
+<td class="instruction">RET NZ</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73f7"></span>73F7</td>
+<td class="instruction">LD HL,$FFF8</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="FA00.html#fff8">FFF8</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73fa"></span>73FA</td>
+<td class="instruction">ADD HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73fb"></span>73FB</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73fc"></span>73FC</td>
+<td class="instruction">LD A,L</td>
+<td class="comment-1" rowspan="3"><span class="register">L'</span>-=07.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73fd"></span>73FD</td>
+<td class="instruction">SUB $07</td>
+</tr>
+<tr>
+<td class="address-1"><span id="73ff"></span>73FF</td>
+<td class="instruction">LD L,A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7400"></span>7400</td>
+<td class="instruction">SBC A,A</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7401"></span>7401</td>
+<td class="instruction">ADD A,H</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">H'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7402"></span>7402</td>
+<td class="instruction">LD H,A</td>
+<td class="comment-1" rowspan="1"><span class="register">H'</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7403"></span>7403</td>
+<td class="instruction">LD DE,$0400</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=0400.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="7406"></span>7406</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7407"></span>7407</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7408"></span>7408</td>
+<td class="instruction">OR (HL)</td>
+<td class="comment-1" rowspan="1">Set the bits from *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7409"></span>7409</td>
+<td class="instruction">XOR (HL)</td>
+<td class="comment-1" rowspan="1">Flip the bits according to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="740a"></span>740A</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="2">Increment <span class="register">HL</span> by two.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="740b"></span>740B</td>
+<td class="instruction">INC HL</td>
+</tr>
+<tr>
+<td class="address-1"><span id="740c"></span>740C</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="740d"></span>740D</td>
+<td class="instruction">CP (HL)</td>
+<td class="comment-1" rowspan="2">Jump to <a href="73F2.html#7411">7411</a> if <span class="register">A</span> is equal to *<span class="register">HL'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="740e"></span>740E</td>
+<td class="instruction">JR Z,<a href="73F2.html#7411">$7411</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="7410"></span>7410</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E'</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="7411"></span>7411</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">HL'</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7412"></span>7412</td>
+<td class="instruction">DEC D</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7413"></span>7413</td>
+<td class="instruction">JR NZ,<a href="73F2.html#7406">$7406</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="73F2.html#7406">7406</a> if <span class="register">D'</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7415"></span>7415</td>
+<td class="instruction">INC HL</td>
+<td class="comment-1" rowspan="3">Increment <span class="register">HL'</span> by three.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7416"></span>7416</td>
+<td class="instruction">INC HL</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7417"></span>7417</td>
+<td class="instruction">INC HL</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7418"></span>7418</td>
+<td class="instruction">LD A,E</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E'</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="7419"></span>7419</td>
+<td class="instruction">LD ($7825),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7825.html">7825</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="741c"></span>741C</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="741d"></span>741D</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="73F1.html">73F1</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#73f2">Map</a></td>
+<td class="next">
+Next: <a href="741E.html">741E</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/29682.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>
