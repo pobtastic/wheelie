@@ -301,10 +301,20 @@ This entry point is used by the routine at <a href="76D7.html">76D7</a>.
 <td class="comment-1" rowspan="1"><span class="register">L</span>=10.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6cf3"></span>
+<div class="comments">
+<div class="paragraph">
+See <a href="E800.html">InitialiseDemoMode</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6cf3"></span>6CF3</td>
 <td class="instruction">LD A,($782D)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="6CAA.html#6d11">GameInitialisation_5</a> if *<a href="782C.html">782D</a> is not equal to 73.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="6CAA.html#6d11">GameInitialisation_5</a> if the game is not in "demo mode" (the high-order byte of <a href="782C.html">ControlMethod_Pointer</a> does not contain <a href="73B7.html">73</a>).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

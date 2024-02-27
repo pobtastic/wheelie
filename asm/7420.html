@@ -31,7 +31,7 @@ Prev: <a href="741E.html">741E</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#7420">Map</a></td>
 <td class="next">
-Next: <a href="742C.html">742C</a>
+Next: <a href="7499.html">7499</a>
 </td>
 </tr>
 </table>
@@ -47,34 +47,534 @@ Used by the routines at <a href="757E.html">GameOver</a>, <a href="763C.html">76
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7420"></span>7420</td>
 <td class="instruction">LD HL,($7844)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7844.html">Score</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7423"></span>7423</td>
 <td class="instruction">LD DE,($7846)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=*<a href="7844.html#7846">7846</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7427"></span>7427</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Set flags.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7428"></span>7428</td>
 <td class="instruction">SBC HL,DE</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">DE</span> (with carry).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="742a"></span>742A</td>
 <td class="instruction">RET Z</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return if the result is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="742b"></span>742B</td>
 <td class="instruction">ADD HL,DE</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="742c"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routine at <a href="75AA.html">PrintGameDisplay</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="742c"></span>742C</td>
+<td class="instruction">LD ($7846),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7844.html#7846">7846</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="742f"></span>742F</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7430"></span>7430</td>
+<td class="instruction">LD DE,$51C6</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=51C6 (screen buffer location).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7433"></span>7433</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7434"></span>
+<div class="comments">
+<div class="paragraph">
+This entry point is used by the routines at <a href="757E.html">GameOver</a> and <a href="75AA.html">PrintGameDisplay</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="7434"></span>7434</td>
+<td class="instruction">LD DE,$784B</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="784B.html">Target</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7437"></span>7437</td>
+<td class="instruction">LD BC,$D810</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=D810.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="743a"></span>743A</td>
+<td class="instruction">LD A,$FF</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="743c"></span>743C</td>
+<td class="instruction">INC A</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="743d"></span>743D</td>
+<td class="instruction">ADD HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="743e"></span>743E</td>
+<td class="instruction">JR C,<a href="7420.html#743c">$743C</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7420.html#743c">743C</a> if {} is lower.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7440"></span>7440</td>
+<td class="instruction">SBC HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7442"></span>7442</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7443"></span>7443</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7444"></span>7444</td>
+<td class="instruction">LD BC,$FC18</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=FC18.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7447"></span>7447</td>
+<td class="instruction">LD A,$FF</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="7449"></span>7449</td>
+<td class="instruction">INC A</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="744a"></span>744A</td>
+<td class="instruction">ADD HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="744b"></span>744B</td>
+<td class="instruction">JR C,<a href="7420.html#7449">$7449</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7420.html#7449">7449</a> if {} is lower.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="744d"></span>744D</td>
+<td class="instruction">SBC HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="744f"></span>744F</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7450"></span>7450</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7451"></span>7451</td>
+<td class="instruction">LD BC,$FF9C</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=FF9C.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7454"></span>7454</td>
+<td class="instruction">LD A,$FF</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="7456"></span>7456</td>
+<td class="instruction">INC A</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7457"></span>7457</td>
+<td class="instruction">ADD HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7458"></span>7458</td>
+<td class="instruction">JR C,<a href="7420.html#7456">$7456</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7420.html#7456">7456</a> if {} is lower.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="745a"></span>745A</td>
+<td class="instruction">SBC HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="745c"></span>745C</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="745d"></span>745D</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="745e"></span>745E</td>
+<td class="instruction">LD C,$F6</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=F6.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7460"></span>7460</td>
+<td class="instruction">LD A,$FF</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-2"><span id="7462"></span>7462</td>
+<td class="instruction">INC A</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7463"></span>7463</td>
+<td class="instruction">ADD HL,BC</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7464"></span>7464</td>
+<td class="instruction">JR C,<a href="7420.html#7462">$7462</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7420.html#7462">7462</a> if {} is lower.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7466"></span>7466</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7467"></span>7467</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7468"></span>7468</td>
+<td class="instruction">LD A,L</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7469"></span>7469</td>
+<td class="instruction">ADD A,$0A</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=0A.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="746b"></span>746B</td>
+<td class="instruction">LD (DE),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="746c"></span>746C</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="746d"></span>746D</td>
+<td class="instruction">LD BC,$784B</td>
+<td class="comment-1" rowspan="1"><span class="register">BC'</span>=<a href="784B.html">Target</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7470"></span>
+<div class="comments">
+<div class="paragraph">
+Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">3D89</a>.
+</div>
+<div class="paragraph">
+This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it only copies six bytes/ lines.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PrintTarget</td>
+<td class="address-2"><span id="7470"></span>7470</td>
+<td class="instruction">LD A,(BC)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC'</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7471"></span>7471</td>
+<td class="instruction">ADD A,A</td>
+<td class="comment-1" rowspan="5"><span class="register">L'</span>=81+(<span class="register">A</span>*08).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7472"></span>7472</td>
+<td class="instruction">ADD A,A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7473"></span>7473</td>
+<td class="instruction">ADD A,A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7474"></span>7474</td>
+<td class="instruction">ADD A,$81</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7476"></span>7476</td>
+<td class="instruction">LD L,A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7477"></span>7477</td>
+<td class="instruction">LD H,$3D</td>
+<td class="comment-1" rowspan="1"><span class="register">H'</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">3D</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7479"></span>7479</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="2">Copy a number UDG byte line from the Spectum ROM (*<span class="register">HL'</span>) to the screen buffer (*<span class="register">DE'</span>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="747a"></span>747A</td>
+<td class="instruction">LD (DE),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="747b"></span>747B</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="747c"></span>747C</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="747d"></span>747D</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="2">Copy a number UDG byte line from the Spectum ROM (*<span class="register">HL'</span>) to the screen buffer (*<span class="register">DE'</span>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="747e"></span>747E</td>
+<td class="instruction">LD (DE),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="747f"></span>747F</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7480"></span>7480</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7481"></span>7481</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="2">Copy a number UDG byte line from the Spectum ROM (*<span class="register">HL'</span>) to the screen buffer (*<span class="register">DE'</span>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7482"></span>7482</td>
+<td class="instruction">LD (DE),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7483"></span>7483</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7484"></span>7484</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7485"></span>7485</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="2">Copy a number UDG byte line from the Spectum ROM (*<span class="register">HL'</span>) to the screen buffer (*<span class="register">DE'</span>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7486"></span>7486</td>
+<td class="instruction">LD (DE),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7487"></span>7487</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7488"></span>7488</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7489"></span>7489</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="2">Copy a number UDG byte line from the Spectum ROM (*<span class="register">HL'</span>) to the screen buffer (*<span class="register">DE'</span>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="748a"></span>748A</td>
+<td class="instruction">LD (DE),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="748b"></span>748B</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="748c"></span>748C</td>
+<td class="instruction">INC D</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="748d"></span>748D</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="2">Copy a number UDG byte line from the Spectum ROM (*<span class="register">HL'</span>) to the screen buffer (*<span class="register">DE'</span>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="748e"></span>748E</td>
+<td class="instruction">LD (DE),A</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="748f"></span>
+<div class="comments">
+<div class="paragraph">
+Reset the screen buffer position.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="748f"></span>748F</td>
+<td class="instruction">LD D,$51</td>
+<td class="comment-1" rowspan="1"><span class="register">D'</span>=51.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7491"></span>7491</td>
+<td class="instruction">INC E</td>
+<td class="comment-1" rowspan="1">Move right one character block in the screen buffer, ready to print the next number.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7492"></span>7492</td>
+<td class="instruction">INC C</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">C'</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7493"></span>7493</td>
+<td class="instruction">BIT 3,C</td>
+<td class="comment-1" rowspan="2">Jump to <a href="7420.html#7470">PrintTarget</a> if bit 3 of <span class="register">C'</span> is not zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7495"></span>7495</td>
+<td class="instruction">JR NZ,<a href="7420.html#7470">PrintTarget</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7497"></span>7497</td>
+<td class="instruction">EXX</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7498"></span>7498</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -84,7 +584,7 @@ Prev: <a href="741E.html">741E</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#7420">Map</a></td>
 <td class="next">
-Next: <a href="742C.html">742C</a>
+Next: <a href="7499.html">7499</a>
 </td>
 </tr>
 </table>

@@ -47,10 +47,20 @@ Used by the routines at <a href="29025.html">29025</a>, <a href="30031.html">Ini
 </td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30005"></span>
+<div class="comments">
+<div class="paragraph">
+See <a href="59392.html">InitialiseDemoMode</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label">PrintDemoMode</td>
 <td class="address-2"><span id="30005"></span>30005</td>
 <td class="instruction">LD A,(30765)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="30005.html#30020">NotDemoMode</a> if *<a href="30764.html">30765</a> is not equal to 115.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="30005.html#30020">NotDemoMode</a> if the game is not in "demo mode" (the high-order byte of <a href="30764.html">ControlMethod_Pointer</a> does not contain <a href="29623.html">115</a>).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -61,6 +71,19 @@ Used by the routines at <a href="29025.html">29025</a>, <a href="30031.html">Ini
 <td class="asm-label"></td>
 <td class="address-1"><span id="30010"></span>30010</td>
 <td class="instruction">JR NZ,<a href="30005.html#30020">NotDemoMode</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="30012"></span>
+<div class="comments">
+<div class="paragraph">
+Print the "DEMO MODE-PRESS A KEY TO PLAY" messaging in the footer.
+</div>
+<div class="paragraph">
+<img alt="demo-mode" src="../../images/font/demo-mode.png" />
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

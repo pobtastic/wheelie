@@ -80,7 +80,7 @@ Next: <a href="30005.html">30005</a>
 <tr>
 <td class="address-1"><span id="29993"></span>29993</td>
 <td class="instruction">JR NC,<a href="29978.html#29997">29997</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29978.html#29997">29997</a> if {} is higher.</td>
+<td class="comment-1" rowspan="1">Jump to <a href="29978.html#29997">29997</a> if <span class="register">A</span> was higher than 70 (on line <a href="29978.html#29989">29989</a>).</td>
 </tr>
 <tr>
 <td class="address-1"><span id="29995"></span>29995</td>
@@ -90,12 +90,11 @@ Next: <a href="30005.html">30005</a>
 <tr>
 <td class="address-2"><span id="29997"></span>29997</td>
 <td class="instruction">LD HL,(30788)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30788.html">Score</a>.</td>
+<td class="comment-1" rowspan="2"><span class="register">HL</span>=*<a href="30788.html">Score</a>+<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="30000"></span>30000</td>
 <td class="instruction">ADD HL,DE</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="30001"></span>30001</td>

@@ -49,92 +49,88 @@ Used by the routine at <a href="29379.html">29379</a>.
 <tr>
 <td class="address-2"><span id="59469"></span>59469</td>
 <td class="instruction">LD (30782),HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30780.html#30782">30782</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59472"></span>59472</td>
 <td class="instruction">LD A,(30802)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30802.html">30802</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59475"></span>59475</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="59469.html#59484">59484</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59476"></span>59476</td>
 <td class="instruction">JR Z,<a href="59469.html#59484">59484</a></td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="59478"></span>59478</td>
 <td class="instruction">DEC A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59479"></span>59479</td>
 <td class="instruction">LD (30802),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30802.html">30802</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59482"></span>59482</td>
 <td class="instruction">POP HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59483"></span>59483</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 <tr>
 <td class="address-2"><span id="59484"></span>59484</td>
 <td class="instruction">LD A,(30760)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Return if bit 4 of *<a href="30760.html">30760</a> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59487"></span>59487</td>
 <td class="instruction">BIT 4,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="59489"></span>59489</td>
 <td class="instruction">RET Z</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="59490"></span>59490</td>
 <td class="instruction">LD A,75</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Write 75 to *<a href="30802.html">30802</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59492"></span>59492</td>
 <td class="instruction">LD (30802),A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="59495"></span>59495</td>
 <td class="instruction">LD A,(30781)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30780.html#30781">30781</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59498"></span>59498</td>
 <td class="instruction">SUB 8</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=8.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59500"></span>59500</td>
 <td class="instruction">LD (30781),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30780.html#30781">30781</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59503"></span>59503</td>
 <td class="instruction">POP HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="59504"></span>59504</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">

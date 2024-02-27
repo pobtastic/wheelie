@@ -79,8 +79,8 @@ Used by the routine at <a href="30031.html">InitialiseGame</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30091"></span>30091</td>
-<td class="instruction">JR NC,<a href="30078.html#30105">GameOver_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30078.html#30105">GameOver_0</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="30078.html#30105">Print_GameOver</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30078.html#30105">Print_GameOver</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -104,22 +104,35 @@ Used by the routine at <a href="30031.html">InitialiseGame</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="30098"></span>30098</td>
 <td class="instruction">LD DE,20955</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=20955 (screen buffer location).</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=20955 (screen buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30101"></span>30101</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30102"></span>30102</td>
-<td class="instruction">CALL <a href="29740.html#29748">29748</a></td>
-<td class="comment-1" rowspan="1">Call <a href="29740.html#29748">29748</a>.</td>
+<td class="instruction">CALL <a href="29728.html#29748">29748</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29728.html#29748">29748</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">GameOver_0</td>
+<td class="routine-comment" colspan="5">
+<span id="30105"></span>
+<div class="comments">
+<div class="paragraph">
+Print the "GAME OVER-PRESS KEY TO TRY AGAIN" messaging in the footer.
+</div>
+<div class="paragraph">
+<img alt="game-over" src="../../images/font/game-over.png" />
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Print_GameOver</td>
 <td class="address-2"><span id="30105"></span>30105</td>
 <td class="instruction">LD A,132</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=132 (INK:

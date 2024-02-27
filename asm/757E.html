@@ -79,8 +79,8 @@ Used by the routine at <a href="754F.html">InitialiseGame</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="758b"></span>758B</td>
-<td class="instruction">JR NC,<a href="757E.html#7599">GameOver_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="757E.html#7599">GameOver_0</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="757E.html#7599">Print_GameOver</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="757E.html#7599">Print_GameOver</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -104,22 +104,35 @@ Used by the routine at <a href="754F.html">InitialiseGame</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="7592"></span>7592</td>
 <td class="instruction">LD DE,$51DB</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=51DB (screen buffer location).</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=51DB (screen buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7595"></span>7595</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7596"></span>7596</td>
-<td class="instruction">CALL <a href="742C.html#7434">$7434</a></td>
-<td class="comment-1" rowspan="1">Call <a href="742C.html#7434">7434</a>.</td>
+<td class="instruction">CALL <a href="7420.html#7434">$7434</a></td>
+<td class="comment-1" rowspan="1">Call <a href="7420.html#7434">7434</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">GameOver_0</td>
+<td class="routine-comment" colspan="5">
+<span id="7599"></span>
+<div class="comments">
+<div class="paragraph">
+Print the "GAME OVER-PRESS KEY TO TRY AGAIN" messaging in the footer.
+</div>
+<div class="paragraph">
+<img alt="game-over" src="../images/font/game-over.png" />
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Print_GameOver</td>
 <td class="address-2"><span id="7599"></span>7599</td>
 <td class="instruction">LD A,$84</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=84 (INK:

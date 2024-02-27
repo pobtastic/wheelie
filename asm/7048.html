@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 7048</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6D49.html">6D49</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#7048">Map</a></td>
+<td class="next">
+Next: <a href="7087.html">7087</a>
+</td>
+</tr>
+</table>
+<div class="description">7048: Handler: Refuel</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Refuel</td>
+<td class="address-2"><span id="7048"></span>7048</td>
+<td class="instruction">LD HL,($782E)</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="782E.html">782E</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="704b"></span>704B</td>
+<td class="instruction">LD (HL),$2E</td>
+<td class="comment-1" rowspan="1">Write 2E to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="704d"></span>704D</td>
+<td class="instruction">LD A,($7833)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7831.html#7833">7833</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7050"></span>7050</td>
+<td class="instruction">CP $08</td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 08.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7052"></span>7052</td>
+<td class="instruction">LD H,$42</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=42.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7054"></span>7054</td>
+<td class="instruction">JR C,<a href="7048.html#7058">Handler_Refuel_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7048.html#7058">Handler_Refuel_0</a> if <span class="register">A</span> was lower than 08 (on line <a href="7048.html#7050">7050</a>).</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7056"></span>7056</td>
+<td class="instruction">LD H,$4A</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=4A.</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Refuel_0</td>
+<td class="address-2"><span id="7058"></span>7058</td>
+<td class="instruction">DEC A</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7059"></span>7059</td>
+<td class="instruction">AND %00000110</td>
+<td class="comment-1" rowspan="1">Keep only bits 1-2.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="705b"></span>705B</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="3">RRCA.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="705c"></span>705C</td>
+<td class="instruction">RRCA</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="705d"></span>705D</td>
+<td class="instruction">RRCA</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="705e"></span>705E</td>
+<td class="instruction">ADD A,$0D</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=0D.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7060"></span>7060</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7061"></span>7061</td>
+<td class="instruction">LD C,$03</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=03.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7063"></span>7063</td>
+<td class="instruction">LD E,$02</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=02.</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Refuel_1</td>
+<td class="address-2"><span id="7065"></span>7065</td>
+<td class="instruction">LD B,$06</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=06.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7067"></span>7067</td>
+<td class="instruction">XOR A</td>
+<td class="comment-1" rowspan="2">Write 00 to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Refuel_2</td>
+<td class="address-2"><span id="7068"></span>7068</td>
+<td class="instruction">LD (HL),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7069"></span>7069</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="706a"></span>706A</td>
+<td class="instruction">DJNZ <a href="7048.html#7068">Handler_Refuel_2</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="7048.html#7068">Handler_Refuel_2</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="706c"></span>706C</td>
+<td class="instruction">LD A,L</td>
+<td class="comment-1" rowspan="3"><span class="register">L</span>-=06.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="706d"></span>706D</td>
+<td class="instruction">SUB $06</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="706f"></span>706F</td>
+<td class="instruction">LD L,A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7070"></span>7070</td>
+<td class="instruction">INC H</td>
+<td class="comment-1" rowspan="2">Increment <span class="register">H</span> by two.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7071"></span>7071</td>
+<td class="instruction">INC H</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7072"></span>7072</td>
+<td class="instruction">DEC C</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">C</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7073"></span>7073</td>
+<td class="instruction">JR NZ,<a href="7048.html#7065">Handler_Refuel_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7048.html#7065">Handler_Refuel_1</a> until <span class="register">C</span> is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7075"></span>7075</td>
+<td class="instruction">ADD A,$20</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=20.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7077"></span>7077</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7078"></span>7078</td>
+<td class="instruction">LD A,H</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7079"></span>7079</td>
+<td class="instruction">SUB $08</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=08.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="707b"></span>707B</td>
+<td class="instruction">LD H,A</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="707c"></span>707C</td>
+<td class="instruction">LD C,E</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=<span class="register">E</span>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="707d"></span>707D</td>
+<td class="instruction">DEC E</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">E</span> by one.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="707e"></span>707E</td>
+<td class="instruction">JR NZ,<a href="7048.html#7065">Handler_Refuel_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7048.html#7065">Handler_Refuel_1</a> until <span class="register">E</span> is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7080"></span>7080</td>
+<td class="instruction">LD HL,$3400</td>
+<td class="comment-1" rowspan="2">Write 3400 to *<a href="783C.html">Fuel</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7083"></span>7083</td>
+<td class="instruction">LD ($783C),HL</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="7086"></span>7086</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6D49.html">6D49</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#7048">Map</a></td>
+<td class="next">
+Next: <a href="7087.html">7087</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/28744.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

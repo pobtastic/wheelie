@@ -27,7 +27,7 @@ gtag('config', 'G-75RERFCHBG');
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="659C.html">659C</a>
+Prev: <a href="67DE.html">67DE</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#67e9">Map</a></td>
 <td class="next">
@@ -35,7 +35,7 @@ Next: <a href="6800.html">6800</a>
 </td>
 </tr>
 </table>
-<div class="description">67E9: Routine at 67E9</div>
+<div class="description">67E9: Controller: Scroll Playarea</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,70 +47,83 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 </td>
 </tr>
 <tr>
+<td class="asm-label">Controller_ScrollPlayarea</td>
 <td class="address-2"><span id="67e9"></span>67E9</td>
 <td class="instruction">LD HL,$7814</td>
 <td class="comment-1" rowspan="4">Return if *<a href="7814.html">7814</a> is not equal to 02.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ec"></span>67EC</td>
 <td class="instruction">LD A,(HL)</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ed"></span>67ED</td>
 <td class="instruction">CP $02</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ef"></span>67EF</td>
 <td class="instruction">RET NZ</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f0"></span>67F0</td>
 <td class="instruction">LD (HL),$00</td>
 <td class="comment-1" rowspan="1">Write 00 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f2"></span>67F2</td>
 <td class="instruction">INC HL</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f3"></span>67F3</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f4"></span>67F4</td>
 <td class="instruction">AND A</td>
 <td class="comment-1" rowspan="2">Return if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f5"></span>67F5</td>
 <td class="instruction">RET Z</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f6"></span>67F6</td>
 <td class="instruction">LD (HL),$00</td>
 <td class="comment-1" rowspan="1">Write 00 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67f8"></span>67F8</td>
 <td class="instruction">CP $02</td>
-<td class="comment-1" rowspan="2">Jump to <a href="659C.html#672e">672E</a> if <span class="register">A</span> is equal to 02.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="672E.html">672E</a> if <span class="register">A</span> is equal to 02.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67fa"></span>67FA</td>
-<td class="instruction">JP Z,<a href="659C.html#672e">$672E</a></td>
+<td class="instruction">JP Z,<a href="672E.html">$672E</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67fd"></span>67FD</td>
-<td class="instruction">JP <a href="659C.html#678c">$678C</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="659C.html#678c">678C</a>.</td>
+<td class="instruction">JP <a href="678C.html">$678C</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="678C.html">678C</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
 <tr>
 <td class="prev">
-Prev: <a href="659C.html">659C</a>
+Prev: <a href="67DE.html">67DE</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#67e9">Map</a></td>
 <td class="next">

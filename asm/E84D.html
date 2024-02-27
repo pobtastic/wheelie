@@ -49,92 +49,88 @@ Used by the routine at <a href="72C3.html">72C3</a>.
 <tr>
 <td class="address-2"><span id="e84d"></span>E84D</td>
 <td class="instruction">LD ($783E),HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="783C.html#783e">783E</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e850"></span>E850</td>
 <td class="instruction">LD A,($7852)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7852.html">7852</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e853"></span>E853</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="E84D.html#e85c">E85C</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e854"></span>E854</td>
 <td class="instruction">JR Z,<a href="E84D.html#e85c">$E85C</a></td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="e856"></span>E856</td>
 <td class="instruction">DEC A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e857"></span>E857</td>
 <td class="instruction">LD ($7852),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7852.html">7852</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e85a"></span>E85A</td>
 <td class="instruction">POP HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e85b"></span>E85B</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 <tr>
 <td class="address-2"><span id="e85c"></span>E85C</td>
 <td class="instruction">LD A,($7828)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Return if bit 4 of *<a href="7828.html">7828</a> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e85f"></span>E85F</td>
 <td class="instruction">BIT 4,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="e861"></span>E861</td>
 <td class="instruction">RET Z</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="e862"></span>E862</td>
 <td class="instruction">LD A,$4B</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Write 4B to *<a href="7852.html">7852</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e864"></span>E864</td>
 <td class="instruction">LD ($7852),A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="e867"></span>E867</td>
 <td class="instruction">LD A,($783D)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="783C.html#783d">783D</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e86a"></span>E86A</td>
 <td class="instruction">SUB $08</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=08.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e86c"></span>E86C</td>
 <td class="instruction">LD ($783D),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="783C.html#783d">783D</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e86f"></span>E86F</td>
 <td class="instruction">POP HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="e870"></span>E870</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">

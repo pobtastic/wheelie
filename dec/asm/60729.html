@@ -35,7 +35,7 @@ Next: <a href="60754.html">60754</a>
 </td>
 </tr>
 </table>
-<div class="description">60729: Routine at ED39</div>
+<div class="description">60729: Get Level Password</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,74 +47,92 @@ Used by the routine at <a href="30423.html">30423</a>.
 </td>
 </tr>
 <tr>
+<td class="asm-label">GetLevelPassword</td>
 <td class="address-2"><span id="60729"></span>60729</td>
 <td class="instruction">CALL <a href="30031.html#30034">SpendLife</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Call <a href="30031.html#30034">SpendLife</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60732"></span>
+<div class="comments">
+<div class="paragraph">
+Create an offset using <span class="register">BC</span>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60732"></span>60732</td>
 <td class="instruction">LD A,(30752)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="6"><span class="register">C</span>=*<a href="30752.html">CurrentLevel</a>*5.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60735"></span>60735</td>
 <td class="instruction">LD B,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60736"></span>60736</td>
 <td class="instruction">ADD A,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60737"></span>60737</td>
 <td class="instruction">ADD A,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60738"></span>60738</td>
 <td class="instruction">ADD A,B</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60739"></span>60739</td>
 <td class="instruction">LD C,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60740"></span>60740</td>
 <td class="instruction">LD B,0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=0.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60742"></span>60742</td>
 <td class="instruction">LD HL,61120</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2"><span class="register">HL</span>=<a href="61120.html">Messaging_Passwords</a>+=<span class="register">BC</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60745"></span>60745</td>
 <td class="instruction">ADD HL,BC</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60746"></span>60746</td>
 <td class="instruction">LD DE,47823</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="47814.html">47823</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60749"></span>60749</td>
 <td class="instruction">LD C,5</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=5.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60751"></span>60751</td>
 <td class="instruction">LDIR</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Update the password at <a href="47814.html">Messaging_NewCode</a> with the password for the new level.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60753"></span>60753</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">

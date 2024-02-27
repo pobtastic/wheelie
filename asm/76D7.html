@@ -47,121 +47,147 @@ Used by the routines at <a href="716E.html">716E</a> and <a href="7311.html">731
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="76d7"></span>76D7</td>
 <td class="instruction">CALL <a href="692C.html">$692C</a></td>
 <td class="comment-1" rowspan="1">Call <a href="692C.html">692C</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76da"></span>76DA</td>
 <td class="instruction">LD A,($7825)</td>
 <td class="comment-1" rowspan="3">Return if *<a href="7825.html">7825</a> is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76dd"></span>76DD</td>
 <td class="instruction">AND A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76de"></span>76DE</td>
 <td class="instruction">RET Z</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76df"></span>76DF</td>
 <td class="instruction">XOR A</td>
 <td class="comment-1" rowspan="2">Write 00 to *<a href="7825.html">7825</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76e0"></span>76E0</td>
 <td class="instruction">LD ($7825),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76e3"></span>76E3</td>
 <td class="instruction">LD A,($782A)</td>
 <td class="comment-1" rowspan="3">Return if *<a href="782A.html">782A</a> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76e6"></span>76E6</td>
 <td class="instruction">AND A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76e7"></span>76E7</td>
 <td class="instruction">RET NZ</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76e8"></span>76E8</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76e9"></span>76E9</td>
 <td class="instruction">LD A,C</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C'</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76ea"></span>76EA</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76eb"></span>76EB</td>
 <td class="instruction">CP $44</td>
 <td class="comment-1" rowspan="2">Jump to <a href="76D7.html#7744">7744</a> if <span class="register">A</span> is lower than 44.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76ed"></span>76ED</td>
 <td class="instruction">JR C,<a href="76D7.html#7744">$7744</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76ef"></span>76EF</td>
 <td class="instruction">JR NZ,<a href="76D7.html#7729">$7729</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="76D7.html#7729">7729</a> if <span class="register">A</span> is not equal to 44.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76f1"></span>76F1</td>
 <td class="instruction">LD HL,$7840</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7840.html">7840</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76f4"></span>76F4</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="3">Jump to <a href="EC2A.html">EC2A</a> if *<span class="register">HL</span> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76f5"></span>76F5</td>
 <td class="instruction">AND A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76f6"></span>76F6</td>
 <td class="instruction">JP NZ,<a href="EC2A.html">$EC2A</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76f9"></span>76F9</td>
 <td class="instruction">LD (HL),$01</td>
 <td class="comment-1" rowspan="1">Write 01 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76fb"></span>76FB</td>
 <td class="instruction">CALL <a href="EC0F.html">$EC0F</a></td>
 <td class="comment-1" rowspan="1">Call <a href="EC0F.html">EC0F</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76fe"></span>76FE</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="1">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="76ff"></span>76FF</td>
 <td class="instruction">LD HL,($7844)</td>
 <td class="comment-1" rowspan="3"><span class="register">HL</span>=*<a href="7844.html">Score</a>+01F4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7702"></span>7702</td>
 <td class="instruction">LD DE,$01F4</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7705"></span>7705</td>
 <td class="instruction">ADD HL,DE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7706"></span>7706</td>
 <td class="instruction">LD ($7844),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7844.html">Score</a>.</td>
@@ -180,6 +206,7 @@ Print the "THE RACE IS ON!" messaging in the footer.
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7709"></span>7709</td>
 <td class="instruction">LD A,$96</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=96 (INK:
@@ -190,212 +217,257 @@ RED
 FLASH: ON).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="770b"></span>770B</td>
 <td class="instruction">LD HL,$BAA6</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BAA6.html">Messaging_RaceIsOn</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="770e"></span>770E</td>
 <td class="instruction">CALL <a href="74C3.html">PrintFooterColourString</a></td>
 <td class="comment-1" rowspan="1">Call <a href="74C3.html">PrintFooterColourString</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7711"></span>7711</td>
 <td class="instruction">CALL <a href="EC63.html">Sounds_TheRaceIsOn</a></td>
 <td class="comment-1" rowspan="1">Call <a href="EC63.html">Sounds_TheRaceIsOn</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7714"></span>7714</td>
 <td class="instruction">CALL <a href="7535.html">PrintDemoMode</a></td>
 <td class="comment-1" rowspan="1">Call <a href="7535.html">PrintDemoMode</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7717"></span>7717</td>
 <td class="instruction">XOR A</td>
 <td class="comment-1" rowspan="2">Write 00 to *<a href="7824.html">7824</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7718"></span>7718</td>
 <td class="instruction">LD ($7824),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="771b"></span>771B</td>
 <td class="instruction">INC A</td>
 <td class="comment-1" rowspan="2">Write 01 to *<a href="781A.html">781A</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="771c"></span>771C</td>
 <td class="instruction">LD ($781A),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="771f"></span>771F</td>
 <td class="instruction">LD HL,$0B6E</td>
 <td class="comment-1" rowspan="2">Write 0B6E to *<a href="7841.html">7841</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7722"></span>7722</td>
 <td class="instruction">LD ($7841),HL</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7725"></span>7725</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="1">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7726"></span>7726</td>
 <td class="instruction">CALL <a href="6D49.html">$6D49</a></td>
 <td class="comment-1" rowspan="1">Call <a href="6D49.html">6D49</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7729"></span>7729</td>
 <td class="instruction">CP $46</td>
 <td class="comment-1" rowspan="2">Jump to <a href="76D7.html#7742">7742</a> if <span class="register">A</span> is higher than 46.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="772b"></span>772B</td>
 <td class="instruction">JR NC,<a href="76D7.html#7742">$7742</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="772d"></span>772D</td>
 <td class="instruction">LD DE,$0032</td>
 <td class="comment-1" rowspan="3"><span class="register">HL</span>=*<a href="7844.html">Score</a>+0032.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7730"></span>7730</td>
 <td class="instruction">LD HL,($7844)</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7733"></span>7733</td>
 <td class="instruction">ADD HL,DE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7734"></span>7734</td>
 <td class="instruction">LD ($7844),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7844.html">Score</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7737"></span>7737</td>
 <td class="instruction">POP HL</td>
 <td class="comment-1" rowspan="2">Restore <span class="register">HL</span> and <span class="register">DE</span> from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7738"></span>7738</td>
 <td class="instruction">POP DE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7739"></span>7739</td>
 <td class="instruction">PUSH DE</td>
 <td class="comment-1" rowspan="2">Stash <span class="register">DE</span> and <span class="register">HL</span> on the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="773a"></span>773A</td>
 <td class="instruction">PUSH HL</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="773b"></span>773B</td>
 <td class="instruction">LD HL,$FFFA</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=FFFA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="773e"></span>773E</td>
 <td class="instruction">ADD HL,DE</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="773f"></span>773F</td>
 <td class="instruction">SET 7,(HL)</td>
 <td class="comment-1" rowspan="1">Set bit 7 of *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7741"></span>7741</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7742"></span>7742</td>
 <td class="instruction">JR NZ,<a href="76D7.html#77a2">$77A2</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="76D7.html#77a2">77A2</a> if {} is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7744"></span>7744</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="6">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7745"></span>7745</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7746"></span>7746</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7747"></span>7747</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7748"></span>7748</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7749"></span>7749</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="774a"></span>774A</td>
 <td class="instruction">POP HL</td>
 <td class="comment-1" rowspan="2">Restore <span class="register">HL</span> and <span class="register">DE</span> from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="774b"></span>774B</td>
 <td class="instruction">POP DE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="774c"></span>774C</td>
 <td class="instruction">LD HL,($783E)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="783C.html#783e">783E</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="774f"></span>774F</td>
 <td class="instruction">LD BC,$0008</td>
 <td class="comment-1" rowspan="1"><span class="register">BC</span>=0008.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7752"></span>7752</td>
 <td class="instruction">LD A,C</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7753"></span>7753</td>
 <td class="instruction">SET 7,(HL)</td>
 <td class="comment-1" rowspan="1">Set bit 7 of *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7755"></span>7755</td>
 <td class="instruction">ADD HL,BC</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7756"></span>7756</td>
 <td class="instruction">DEC A</td>
 <td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7757"></span>7757</td>
 <td class="instruction">JR NZ,<a href="76D7.html#7753">$7753</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="76D7.html#7753">7753</a> until <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7759"></span>7759</td>
 <td class="instruction">LD HL,$FFFA</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=FFFA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="775c"></span>775C</td>
 <td class="instruction">ADD HL,DE</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="775d"></span>775D</td>
 <td class="instruction">RES 7,(HL)</td>
 <td class="comment-1" rowspan="1">Reset bit 7 of *<span class="register">HL</span>.</td>
@@ -411,279 +483,334 @@ This entry point is used by the routine at <a href="EC2A.html">EC2A</a>.
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="775f"></span>775F</td>
 <td class="instruction">PUSH HL</td>
 <td class="comment-1" rowspan="1">Stash <span class="register">HL</span> on the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7760"></span>7760</td>
 <td class="instruction">LD B,$06</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=06.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7762"></span>7762</td>
 <td class="instruction">PUSH BC</td>
 <td class="comment-1" rowspan="1">Stash <span class="register">BC</span> on the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7763"></span>7763</td>
 <td class="instruction">CALL <a href="68AD.html">$68AD</a></td>
 <td class="comment-1" rowspan="1">Call <a href="68AD.html">68AD</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7766"></span>7766</td>
 <td class="instruction">CALL <a href="6B2D.html">$6B2D</a></td>
 <td class="comment-1" rowspan="1">Call <a href="6B2D.html">6B2D</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7769"></span>7769</td>
 <td class="instruction">LD C,$28</td>
 <td class="comment-1" rowspan="1"><span class="register">C</span>=28.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="776b"></span>776B</td>
 <td class="instruction">LD HL,$0800</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=0800.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="776e"></span>776E</td>
 <td class="instruction">LD A,$02</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=02.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7770"></span>7770</td>
 <td class="instruction">OUT ($FE),A</td>
-<td class="comment-1" rowspan="1">OUT EEFE</td>
+<td class="comment-1" rowspan="1">OUT FE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7772"></span>7772</td>
 <td class="instruction">XOR %00010000</td>
 <td class="comment-1" rowspan="1">Flip bit 4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7774"></span>7774</td>
 <td class="instruction">LD D,A</td>
 <td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7775"></span>7775</td>
 <td class="instruction">LD B,C</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7776"></span>7776</td>
 <td class="instruction">DJNZ <a href="76D7.html#7776">$7776</a></td>
 <td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="76D7.html#7776">7776</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7778"></span>7778</td>
 <td class="instruction">DEC HL</td>
 <td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7779"></span>7779</td>
 <td class="instruction">LD A,H</td>
 <td class="comment-1" rowspan="2">Is <span class="register">HL</span> zero?</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="777a"></span>777A</td>
 <td class="instruction">OR L</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="777b"></span>777B</td>
 <td class="instruction">LD A,D</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="777c"></span>777C</td>
 <td class="instruction">JR NZ,<a href="76D7.html#7770">$7770</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="76D7.html#7770">7770</a> if <span class="register">HL</span> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="777e"></span>777E</td>
 <td class="instruction">CALL <a href="68AD.html">$68AD</a></td>
 <td class="comment-1" rowspan="1">Call <a href="68AD.html">68AD</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7781"></span>7781</td>
 <td class="instruction">CALL <a href="7311.html#7314">$7314</a></td>
 <td class="comment-1" rowspan="1">Call <a href="7311.html#7314">7314</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7784"></span>7784</td>
 <td class="instruction">LD C,$14</td>
 <td class="comment-1" rowspan="1"><span class="register">C</span>=14.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7786"></span>7786</td>
 <td class="instruction">LD HL,$1000</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=1000.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7789"></span>7789</td>
 <td class="instruction">LD A,$06</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=06.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="778b"></span>778B</td>
 <td class="instruction">OUT ($FE),A</td>
-<td class="comment-1" rowspan="1">OUT EEFE</td>
+<td class="comment-1" rowspan="1">OUT FE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="778d"></span>778D</td>
 <td class="instruction">XOR %00010000</td>
 <td class="comment-1" rowspan="1">Flip bit 4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="778f"></span>778F</td>
 <td class="instruction">LD D,A</td>
 <td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7790"></span>7790</td>
 <td class="instruction">LD B,C</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="7791"></span>7791</td>
 <td class="instruction">DJNZ <a href="76D7.html#7791">$7791</a></td>
 <td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="76D7.html#7791">7791</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7793"></span>7793</td>
 <td class="instruction">DEC HL</td>
 <td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7794"></span>7794</td>
 <td class="instruction">LD A,H</td>
 <td class="comment-1" rowspan="2">Is <span class="register">HL</span> zero?</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7795"></span>7795</td>
 <td class="instruction">OR L</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7796"></span>7796</td>
 <td class="instruction">LD A,D</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7797"></span>7797</td>
 <td class="instruction">JR NZ,<a href="76D7.html#778b">$778B</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="76D7.html#778b">778B</a> if <span class="register">HL</span> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="7799"></span>7799</td>
 <td class="instruction">POP BC</td>
 <td class="comment-1" rowspan="1">Restore <span class="register">BC</span> from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="779a"></span>779A</td>
 <td class="instruction">DJNZ <a href="76D7.html#7762">$7762</a></td>
 <td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="76D7.html#7762">7762</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="779c"></span>779C</td>
 <td class="instruction">POP HL</td>
 <td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="779d"></span>779D</td>
 <td class="instruction">SET 7,(HL)</td>
 <td class="comment-1" rowspan="1">Set bit 7 of *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="779f"></span>779F</td>
 <td class="instruction">JP <a href="6D49.html#6ed4">$6ED4</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="6D49.html#6ed4">6ED4</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="77a2"></span>77A2</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="6">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77a3"></span>77A3</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77a4"></span>77A4</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77a5"></span>77A5</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77a6"></span>77A6</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77a7"></span>77A7</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77a8"></span>77A8</td>
 <td class="instruction">LD DE,$03E8</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=03E8.</td>
+<td class="comment-1" rowspan="3"><span class="register">HL</span>=*<a href="7844.html">Score</a>+03E8.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77ab"></span>77AB</td>
 <td class="instruction">LD HL,($7844)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7844.html">Score</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77ae"></span>77AE</td>
 <td class="instruction">ADD HL,DE</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77af"></span>77AF</td>
 <td class="instruction">LD ($7844),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7844.html">Score</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77b2"></span>77B2</td>
 <td class="instruction">CALL <a href="7420.html">$7420</a></td>
 <td class="comment-1" rowspan="1">Call <a href="7420.html">7420</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77b5"></span>77B5</td>
 <td class="instruction">CALL <a href="68AD.html">$68AD</a></td>
 <td class="comment-1" rowspan="1">Call <a href="68AD.html">68AD</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77b8"></span>77B8</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="4">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77b9"></span>77B9</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77ba"></span>77BA</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77bb"></span>77BB</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77bc"></span>77BC</td>
 <td class="instruction">LD HL,$7839</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7839.html">Lives</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77bf"></span>77BF</td>
 <td class="instruction">LD (HL),$05</td>
 <td class="comment-1" rowspan="1">Write 05 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77c1"></span>77C1</td>
-<td class="instruction">CALL <a href="ED39.html">$ED39</a></td>
-<td class="comment-1" rowspan="1">Call <a href="ED39.html">ED39</a>.</td>
+<td class="instruction">CALL <a href="ED39.html">GetLevelPassword</a></td>
+<td class="comment-1" rowspan="1">Call <a href="ED39.html">GetLevelPassword</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -699,6 +826,7 @@ Print the "NEW CODE ABCDE-PRESS KEY TO PLAY" messaging in the footer.
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77c4"></span>77C4</td>
 <td class="instruction">LD A,$9F</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=9F (INK:
@@ -709,40 +837,48 @@ MAGENTA
 FLASH: ON).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77c6"></span>77C6</td>
 <td class="instruction">LD HL,$BAC6</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BAC6.html">Messaging_NewCode</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77c9"></span>77C9</td>
 <td class="instruction">CALL <a href="74C3.html">PrintFooterColourString</a></td>
 <td class="comment-1" rowspan="1">Call <a href="74C3.html">PrintFooterColourString</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77cc"></span>77CC</td>
 <td class="instruction">CALL <a href="EC5E.html">Sounds_LevelComplete</a></td>
 <td class="comment-1" rowspan="1">Call <a href="EC5E.html">Sounds_LevelComplete</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">LevelComplete_Input</td>
 <td class="address-2"><span id="77cf"></span>77CF</td>
 <td class="instruction">CALL <a href="6828.html">KeyboardInput</a></td>
 <td class="comment-1" rowspan="1">Call <a href="6828.html">KeyboardInput</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77d2"></span>77D2</td>
 <td class="instruction">AND A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="76D7.html#77cf">77CF</a> if <span class="register">A</span> is zero.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="76D7.html#77cf">LevelComplete_Input</a> until any key is pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77d3"></span>77D3</td>
-<td class="instruction">JR Z,<a href="76D7.html#77cf">$77CF</a></td>
+<td class="instruction">JR Z,<a href="76D7.html#77cf">LevelComplete_Input</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77d5"></span>77D5</td>
 <td class="instruction">CALL <a href="7535.html">PrintDemoMode</a></td>
 <td class="comment-1" rowspan="1">Call <a href="7535.html">PrintDemoMode</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="77d8"></span>77D8</td>
 <td class="instruction">JP <a href="6CAA.html#6cad">GameInitialisation_0</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="6CAA.html#6cad">GameInitialisation_0</a>.</td>
