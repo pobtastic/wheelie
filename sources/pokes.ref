@@ -4,7 +4,7 @@
 To gain infinite lives:
 
 <code>
-<div>POKE #R$7552,#N$C9</div>
+<div>POKE #R$7552(#N$7552),#N$C9</div>
 </code>
 
 <hr />
@@ -14,7 +14,7 @@ Just return, instead of decreasing #R$7839 by one:
 <table>
   <tbody>
     <tr>
-      <td class="address-1">#R$7552</td>
+      <td class="address-1">#R$7552(#N$7552)</td>
       <td class="instruction">LD #REGhl,#R$7839(#N$7839)</td>
     </tr>
     <tr>

@@ -23,6 +23,8 @@ c $5D11 Game Entry Point
 
 b $5D27
 
+c $6400
+
 c $6414
   $6414,$03 #HTML(#REGhl=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
   $6417,$01 #REGa=#REGh.
@@ -52,37 +54,96 @@ c $6424
   $6437,$02 #REGa+=#N$20.
   $6439,$01 #REGe=#REGa.
   $643A,$01 Return if #REGa is zero.
-  $643B,$01 #REGa=#REGd.
-  $643C,$02 #REGa-=#N$05.
-  $643E,$01 #REGd=#REGa.
+  $643B,$04 #REGd-=#N$05.
   $643F,$01 Return.
 
 c $6440
 
+u $64A4
+
+c $64AA
+
+u $64FD
+
 c $6500
+  $6500,$03 #REGde=#R$9E00.
+  $6503,$03 #REGhl=#R$8960.
+  $6506,$03 Call #R$6424.
+  $6509,$03 #REGhl=#R$A101.
+  $650C,$02 #REGb=#N$0A.
+  $650E,$02 Write #N$00 to *#REGhl.
+  $6510,$01 Decrease #REGh by one.
+  $6511,$02 Write #N$00 to *#REGhl.
+  $6513,$01 Increment #REGh by one.
+  $6514,$01 Increment #REGl by one.
+  $6515,$02 Decrease counter by one and loop back to #R$650E until counter is zero.
+  $6517,$02 Write #N$23 to *#REGhl.
+  $6519,$01 Switch to the shadow registers.
+  $651A,$02 #REGa=#N$0A.
+  $651C,$01 No operation.
+  $651D,$01 #REGb=#REGa.
+  $651E,$01 Switch to the shadow registers.
+  $651F,$03 Call #R$6400.
+  $6522,$02,b$01 Keep only bits 0-4.
+  $6524,$01 #REGb=#REGa.
+  $6525,$01 #REGa+=#REGa.
+  $6526,$01 #REGa+=#REGa.
+  $6527,$01 #REGa+=#REGb.
+  $6528,$03 RRCA.
+  $652B,$01 #REGl=#REGa.
+  $652C,$02,b$01 Keep only bits 0-4.
+  $652E,$02 #REGa+=#N$8A.
+  $6530,$01 #REGh=#REGa.
+  $6531,$01 #REGa=#REGl.
+  $6532,$02,b$01 Keep only bits 5-7.
+  $6534,$01 #REGl=#REGa.
+  $6535,$03 Call #R$6424.
+  $6538,$01 Switch to the shadow registers.
+  $6539,$02 Decrease counter by one and loop back to #R$651E until counter is zero.
+  $653B,$01 Switch to the shadow registers.
+  $653C,$03 #REGhl=#R$8960.
+  $653F,$03 Call #R$6424.
+  $6542,$01 #REGa=#REGe.
+  $6543,$03 #REGhl=#N$02F4.
+  $6546,$03 Jump to #R$654B if #REGa is not zero.
+  $6549,$02 #REGh=#N$FE.
+  $654B,$01 #REGhl+=#REGde.
+  $654C,$02 Write #N$22 to *#REGhl.
+  $654E,$02 #REGb=#N$0A.
+  $6550,$01 Increment #REGl by one.
+  $6551,$02 Write #N$00 to *#REGhl.
+  $6553,$01 Decrease #REGh by one.
+  $6554,$02 Write #N$00 to *#REGhl.
+  $6556,$01 Increment #REGh by one.
+  $6557,$02 Decrease counter by one and loop back to #R$6550 until counter is zero.
+  $6559,$03 Call #R$6440.
+  $655C,$03 Call #R$64AA.
+  $655F,$03 Call #R$7200.
+  $6562,$01 Return.
+
+u $6563
+
+c $6564
+
+c $659C
 
 c $67E9
-  $67E9,$07 Compare *#R$7814 is not equal to #N$02.
+  $67E9,$07 Return if *#R$7814 is not equal to #N$02.
   $67F0,$02 Write #N$00 to *#REGhl.
   $67F2,$01 Increment #REGhl by one.
   $67F3,$01 #REGa=*#REGhl.
   $67F4,$02 Return if #REGa is zero.
   $67F6,$02 Write #N$00 to *#REGhl.
-  $67F8,$05 Jump to #R$672E #REGa is equal to #N$02.
+  $67F8,$05 Jump to #R$672E if #REGa is equal to #N$02.
   $67FD,$03 Jump to #R$678C.
 
 c $6800
   $6800,$03 Write #REGa to *#R$7819.
-  $6803,$01 #REGa=#REGl.
-  $6804,$02 #REGa-=#N$08.
-  $6806,$01 #REGl=#REGa.
+  $6803,$04 #REGl-=#N$08.
   $6807,$02 Jump to #R$680D if {} is higher.
-  $6809,$01 #REGa=#REGh.
-  $680A,$02 #REGa-=#N$05.
-  $680C,$01 #REGh=#REGa.
+  $6809,$04 #REGh-=#N$05.
   $680D,$03 Write #REGhl to *#R$7817.
-  $6810,$03 #REGhl=#N($0000,$04,$04).
-  $6813,$03 Write #REGhl to *#R$7814.
+  $6810,$06 Write #N($0000,$04,$04) to *#R$7814.
   $6816,$02 #REGb=#N$20.
   $6818,$01 Stash #REGbc on the stack.
   $6819,$03 Call #R$659C.
@@ -156,7 +217,8 @@ b $687D
 
 c $687D
 
-c $6CAA
+c $6CAA Game Initialisation
+@ $6CAA label=GameInitialisation
   $6CAA,$03 Call #R$75AA.
   $6CAD,$06 Write #N$3400 to *#R$783C.
   $6CB3,$03 #REGhl=#R$7815.
@@ -219,6 +281,120 @@ c $6D1E
   $6D1E,$03 Jump to #R$E80E.
 
 c $6D21
+
+c $7200
+  $7200,$03 #REGhl=#R$7820.
+  $7203,$05 Jump to #R$720A if *#REGhl is equal to #N$07.
+  $7208,$01 Increment *#REGhl by one.
+  $7209,$01 Increment #REGa by one.
+  $720A,$02 RRCA.
+  $720C,$01 #REGl=#REGa.
+  $720D,$02,b$01 Keep only bits 0-1.
+  $720F,$02 #REGa+=#N$E6.
+  $7211,$01 #REGh=#REGa.
+  $7212,$01 #REGa=#REGl.
+  $7213,$02,b$01 Keep only bits 6-7.
+  $7215,$01 #REGl=#REGa.
+  $7216,$02 #REGa=#N$0A.
+  $7218,$01 No operation.
+  $7219,$03 #REGde=#R$FA40.
+  $721C,$01 Stash #REGhl on the stack.
+  $721D,$03 #REGbc=#N($0040,$04,$04).
+  $7220,$02 LDIR.
+  $7222,$01 Restore #REGhl from the stack.
+  $7223,$01 Decrease #REGa by one.
+  $7224,$02 Jump to #R$721C if {} is not zero.
+  $7226,$01 #REGh=#REGa.
+  $7227,$02 #REGb=#N$08.
+  $7229,$01 #REGl=#REGb.
+  $722A,$01 Exchange the #REGde and #REGhl registers.
+  $722B,$01 Write #REGh to *#REGhl.
+  $722C,$01 #REGhl+=#REGde.
+  $722D,$02 Decrease counter by one and loop back to #R$722B until counter is zero.
+  $722F,$01 #REGb=#REGe.
+  $7230,$02 #REGh=#N$FA.
+  $7232,$01 Write #REGh to *#REGhl.
+  $7233,$01 #REGhl+=#REGde.
+  $7234,$02 Decrease counter by one and loop back to #R$7232 until counter is zero.
+  $7236,$01 #REGb=#REGe.
+  $7237,$02 #REGe=#N$10.
+  $7239,$01 Write #REGh to *#REGhl.
+  $723A,$01 #REGhl+=#REGde.
+  $723B,$02 Decrease counter by one and loop back to #R$7239 until counter is zero.
+  $723D,$01 Switch to the shadow registers.
+  $723E,$03 #REGbc'=#N$FA46.
+  $7241,$01 Switch back to the normal registers.
+  $7242,$03 #REGde=#R$9F20.
+  $7245,$02 #REGb=#N$0A.
+  $7247,$01 Stash #REGbc on the stack.
+  $7248,$02 #REGb=#N$08.
+  $724A,$03 Call #R$6400.
+  $724D,$02,b$01 Keep only bits 0-4.
+  $724F,$04 Jump to #R$724A if #REGa is equal to #N$1F.
+  $7253,$04 Jump to #R$724A if #REGa is lower than #N$08.
+  $7257,$01 #REGl=#REGa.
+  $7258,$03 Call #R$6400.
+  $725B,$02,b$01 Keep only bits 0-1.
+  $725D,$01 #REGh=#REGa.
+  $725E,$01 #REGhl+=#REGde.
+  $725F,$01 #REGa=*#REGhl.
+  $7260,$01 Decrease #REGa by one.
+  $7261,$02 Jump to #R$726B if #REGa is zero.
+  $7263,$04 Jump to #R$724A if #REGa is higher than #N$31.
+  $7267,$04 Jump to #R$724A if #REGa is lower than #N$2D.
+  $726B,$01 Stash #REGhl on the stack.
+  $726C,$01 Switch to the shadow registers.
+  $726D,$01 #REGh=#REGb.
+  $726E,$01 #REGl=#REGc.
+  $726F,$01 Restore #REGde from the stack.
+  $7270,$01 #REGa=*#REGhl.
+  $7271,$03 Jump to #R$7284 if #REGa is zero.
+  $7274,$01 Increment #REGl by one.
+  $7275,$03 Jump to #R$727E if #REGa is not equal to #REGe.
+  $7278,$01 #REGa=*#REGhl.
+  $7279,$01 Compare #REGa with #REGd.
+  $727A,$01 Switch to the shadow registers.
+  $727B,$02 Jump to #R$724A if {} is zero.
+  $727D,$01 Switch to the shadow registers.
+  $727E,$04 #REGl+=#N$07.
+  $7282,$02 Jump to #R$7270.
+  $7284,$01 Write #REGe to *#REGhl.
+  $7285,$01 Increment #REGl by one.
+  $7286,$01 Write #REGd to *#REGhl.
+  $7287,$01 Switch to the shadow registers.
+  $7288,$02 Decrease counter by one and loop back to #R$724A until counter is zero.
+  $728A,$01 Switch to the shadow registers.
+  $728B,$03 #REGhl=#N($0040,$04,$04).
+  $728E,$01 #REGhl+=#REGbc.
+  $728F,$01 #REGb=#REGh.
+  $7290,$01 #REGc=#REGl.
+  $7291,$01 Switch to the shadow registers.
+  $7292,$01 #REGa=#REGe.
+  $7293,$02 #REGa+=#N$20.
+  $7295,$01 #REGe=#REGa.
+  $7296,$02 Jump to #R$729C if {} is not zero.
+  $7298,$04 #REGd+=#N$05.
+  $729C,$01 Restore #REGbc from the stack.
+  $729D,$02 Decrease counter by one and loop back to #R$7247 until counter is zero.
+  $729F,$03 Call #R$74DC.
+  $72A2,$03 #REGhl=#N$3280.
+  $72A5,$07 Jump to #R$72AE if *#R$782D is equal to #N$73.
+  $72AC,$02 #REGh=#N$0B.
+  $72AE,$01 No operation.
+  $72AF,$01 No operation.
+  $72B0,$03 Write #REGhl to *#R$7841.
+  $72B3,$04 Write #N$00 to *#R$7840.
+  $72B7,$03 Jump to #R$7396.
+
+u $72BA
+
+c $72C3
+
+u $730D
+
+c $7311
+
+u $741E
 
 c $7420
 
@@ -311,8 +487,10 @@ c $749C Clear Screen
 
 b $74A9
 
-c $74AA Print Bike Graphic
-@ $74AA label=PrintBikeGraphic
+c $74AA Print Graphic
+@ $74AA label=PrintGraphic
+R $74AA L The low-order byte to point to a UDG address
+N $74AA Set the high-order byte value for the UDG address.
   $74AA,$02 #REGh=#N$78.
   $74AC,$02 Jump to #R$74B5.
 
@@ -370,7 +548,66 @@ R $74D3 DE' Screen buffer address for output
 
 b $74DB
 
-c $74DC
+c $74DC Print Level Name
+@ $74DC label=PrintLevelName
+D $74DC #UDGTABLE(default,centre) { #PUSHS #SIM(start=$75AA,stop=$7638)#SIM(start=$74DC,stop=$7518) #SCR$02(game) #POPS } UDGTABLE#
+N $74DC This looks confusing but it's basically #REGhl=#N$BBA0+(level*#N$1C).
+N $74DC #TABLE(default,centre,centre,centre,centre)
+. { =h Level | =h Address | =h Attribute | =h Name }
+. #FOR$00,$07,(n,{ #Nn | #R($BBA0+n*$1C)(#N($BBA0+n*$1C)) | #COLOUR(#PEEK($BBA0+n*$1C)) | #HTML(#STR($BBA1+n*$1C,$04,$09)<br />#STR($BBAA+n*$1C,$04,$09)<br />#STR($BBB3+n*$1C,$04,$09)) }, )
+. TABLE#
+  $74DC,$03 #REGa=*#R$7820.
+  $74DF,$02 #REGa*=#N$04.
+  $74E1,$01 #REGl=#REGa (level*#N$04).
+  $74E2,$01 #REGa*=#N$02.
+  $74E3,$01 #REGh=#REGa (level*#N$08).
+  $74E4,$06 #REGl=#N$A0+#REGh+#REGl+(level*#N$10).
+  $74EA,$05 #REGh=#N$BB+carry.
+  $74EF,$03 #REGde=#N$5A57 (attribute buffer location).
+  $74F2,$02 #REGc=#N$03 (counter; three lines).
+@ $74F4 label=LevelName_ColourLineLoop
+  $74F4,$01 #REGa=*#REGhl.
+  $74F5,$02 #REGb=#N$09 (counter; length of each line).
+@ $74F7 label=LevelName_ColourLoop
+  $74F7,$01 Write #REGa to *#REGde.
+  $74F8,$01 Increment #REGe by one.
+  $74F9,$02 Decrease counter by one and loop back to #R$74F7 until counter is zero.
+N $74FB Move down one line (and reset the position - #N$09+#N$17=#N$20).
+  $74FB,$04 #REGe+=#N$17.
+  $74FF,$01 Decrease #REGc by one.
+  $7500,$02 Jump to #R$74F4 until #REGc is zero.
+  $7502,$01 Increment #REGl by one.
+  $7503,$01 Switch to the shadow registers.
+  $7504,$03 #REGde'=#N$5057 (screen buffer location).
+  $7507,$01 Switch back to the normal registers.
+  $7508,$02 #REGc=#N$03 (counter; three lines).
+@ $750A label=PrintLevelName_Loop
+  $750A,$02 #REGb=#N$09 (counter; length of each line).
+  $750C,$03 Call #R$74D3.
+N $750F Move down one line (and reset the position - #N$09+#N$17=#N$20).
+  $750F,$01 Switch to the shadow registers.
+  $7510,$04 #REGe'+=#N$17.
+  $7514,$01 Switch back to the normal registers.
+N $7515 Have we printed all three lines of the level name yet?
+  $7515,$01 Decrease #REGc by one.
+  $7516,$02 Jump to #R$750A until #REGc is zero.
+  $7518,$01 Return.
+
+u $7519
+
+c $751A
+  $751A,$03 #REGhl=*#R$782E.
+  $751D,$03 #REGde=#N($0011,$04,$04).
+  $7520,$01 #REGa=*#REGhl.
+  $7521,$04 Jump to #R$752D if #REGa is lower than #N$28.
+  $7525,$02 Compare #REGa with #N$46.
+  $7527,$02 #REGe=#N$08.
+  $7529,$02 Jump to #R$752D if {} is higher.
+  $752B,$02 #REGe=#N$01.
+  $752D,$03 #REGhl=*#R$7844.
+  $7530,$01 #REGhl+=#REGde.
+  $7531,$03 Write #REGhl to *#R$7844.
+  $7534,$01 Return.
 
 c $7535 Print "Demo Mode"
 @ $7535 label=PrintDemoMode
@@ -541,6 +778,12 @@ c $763C
 g $781E
 W $781E,$02
 
+g $7820 Current Level
+@ $7820 label=CurrentLevel
+B $7820,$01
+
+g $7821
+
 g $782C
 B $782C,$02,$01
 
@@ -555,6 +798,8 @@ g $783C Fuel
 B $783C,$02,$01
 
 g $7840
+
+g $7841
 
 g $7844 Score
 @ $7844 label=Score
@@ -612,6 +857,12 @@ t $78AC Messaging: Ghostrider Is Finished
 
 b $78CC
 
+b $8960
+
+b $9E00
+
+b $A101
+
 b $A1E0
 
 t $A800 Messaging: Start Screen
@@ -656,25 +907,74 @@ t $BAC6 Messaging: New Code
 
 b $BAF3
 
-t $BBA1 Messaging: Level Names
-@ $BBA1 label=Messaging_Level1
-  $BBA1,$1C,$1B:$01 Level 1
-@ $BBBD label=Messaging_Level2
-  $BBBD,$1C,$1B:$01 Level 2
-@ $BBD9 label=Messaging_Level3
-  $BBD9,$1C,$1B:$01 Level 3
-@ $BBF5 label=Messaging_Level4
-  $BBF5,$1C,$1B:$01 Level 4
-@ $BC11 label=Messaging_Level5
-  $BC11,$1C,$1B:$01 Level 5
-@ $BC2D label=Messaging_Level6
-  $BC2D,$1C,$1B:$01 Level 6
-@ $BC49 label=Messaging_Level7
-  $BC49,$1C,$1B:$01 Level 7
-@ $BC65 label=Messaging_Level8
-  $BC65,$1C,$1B:$01 Level 8
+t $BBA0 Messaging: Level Names
+D $BBA0 Used by the routine at #R$74DC.
+N $BBA0 Level 1.
+@ $BBA0 label=Messaging_Level1
+B $BBA0,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BBA1,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:(   THE   )$3D00,attr=$42(level-01-01) }
+. { #FONT:(BOUNCING )$3D00,attr=$42(level-01-02) }
+. { #FONT:(HEDGEHOGS)$3D00,attr=$42(level-01-03) }
+. UDGTABLE#
+N $BBBC Level 2.
+@ $BBBC label=Messaging_Level2
+B $BBBC,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BBBD,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:(   THE   )$3D00,attr=$45(level-02-01) }
+. { #FONT:(  WILY   )$3D00,attr=$45(level-02-02) }
+. { #FONT:(WALLABIES)$3D00,attr=$45(level-02-03) }
+. UDGTABLE#
+N $BBD8 Level 3.
+@ $BBD8 label=Messaging_Level3
+B $BBD8,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BBD9,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:(   THE   )$3D00,attr=$46(level-03-01) }
+. { #FONT:( KILLER  )$3D00,attr=$46(level-03-02) }
+. { #FONT:(  BEES   )$3D00,attr=$46(level-03-03) }
+. UDGTABLE#
+N $BBF4 Level 4.
+@ $BBF4 label=Messaging_Level4
+B $BBF4,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BBF5,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:(   ALL   )$3D00,attr=$50(level-04-01) }
+. { #FONT:(  THAT   )$3D00,attr=$50(level-04-02) }
+. { #FONT:( BOUNCES )$3D00,attr=$50(level-04-03) }
+. UDGTABLE#
+N $BC10 Level 5.
+@ $BC10 label=Messaging_Level5
+B $BC10,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BC11,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:(   THE   )$3D00,attr=$70(level-05-01) }
+. { #FONT:(  SWARM  )$3D00,attr=$70(level-05-02) }
+. { #FONT:(         )$3D00,attr=$70(level-05-03) }
+. UDGTABLE#
+N $BC2C Level 6.
+@ $BC2C label=Messaging_Level6
+B $BC2C,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BC2D,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:( SPRING  )$3D00,attr=$56(level-06-01) }
+. { #FONT:(   AND   )$3D00,attr=$56(level-06-02) }
+. { #FONT:(  STING  )$3D00,attr=$56(level-06-03) }
+. UDGTABLE#
+N $BC48 Level 7.
+@ $BC48 label=Messaging_Level7
+B $BC48,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BC49,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:(NIGHTMARE)$3D00,attr=$44(level-07-01) }
+. { #FONT:(  PARK   )$3D00,attr=$44(level-07-02) }
+. { #FONT:(         )$3D00,attr=$44(level-07-03) }
+. UDGTABLE#
+N $BC64 Level 8.
+@ $BC64 label=Messaging_Level8
+B $BC64,$01 Attribute #COLOUR(#PEEK(#PC)).
+  $BC65,$1B,$09 #UDGTABLE(default,centre)
+. { #FONT:( ABANDON )$3D00,attr=$D6(level-08-01) }
+. { #FONT:(   ALL   )$3D00,attr=$D6(level-08-02) }
+. { #FONT:(  HOPE!  )$3D00,attr=$D6(level-08-03) }
+. UDGTABLE#
 
-b $BC81
+b $BC80
 
 t $C3E0 Messaging: MPH
 @ $C3E0 label=Messaging_MPH
@@ -722,7 +1022,7 @@ c $E800 Initialise Demo Mode
   $E806,$05 Write #N$05 to *#R$7820.
   $E80B,$03 Jump to #R$6CAA.
 
-c $E80E
+c $E80E Game
   $E80E,$04 #REGsp=#N$FFFF.
   $E812,$03 Call #R$6414.
   $E815,$06 Write #R$6828 to #R$7850.
@@ -834,7 +1134,9 @@ b $E8F9
 
 t $E900 Messaging: Control Selection
 @ $E900 label=Messaging_ControlSelection
-  $E900,$100,$20 Wheelie control selection page.
+  $E900,$A0,$20 Wheelie control selection page.
+@ $E9A0 label=Messaging_Blank
+  $E9A0,$40,$20 Empty blanking space.
 @ $EA00 label=Messaging_ChangeControls
   $EA00,$20 Change controls for (#R$EA60, #R$EA80, #R$EAA0, #R$EAC0, #R$EAE0).
 @ $EA20 label=Messaging_Warning
@@ -950,7 +1252,7 @@ N $EBCF Set the screen buffer position.
   $EBD6,$01 No operation.
   $EBD7,$01 No operation.
   $EBD8,$01 No operation.
-  $EBD9,$03 Call #R$EBE6.
+  $EBD9,$03 Debounce using #R$EBE6.
   $EBDC,$01 No operation.
   $EBDD,$01 No operation.
   $EBDE,$02 Restore control messaging pointer and control counter from the stack.
@@ -1053,7 +1355,10 @@ c $EC2A
   $EC66,$02 Jump to #R$EC35.
   $EC68,$03 #REGhl=#R$EFC2.
   $EC6B,$02 Jump to #R$EC35.
-  $EC6D,$01 No operation.
+
+u $EC6D
+
+c $EC6E
   $EC6E,$04 Write #N$07 to *#REGiy+#N$07.
   $EC72,$04 Set bit 3 of *#REGix+#N$30.
   $EC76,$03 #HTML(#REGhl=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
@@ -1061,12 +1366,12 @@ c $EC2A
   $EC7B,$02 Test bit 5 of *#REGhl.
   $EC7D,$02 Jump to #R$EC7B if {} is zero.
   $EC7F,$03 #HTML(#REGa=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
-  $EC82,$02 Compare #REGa with #N$80.
-  $EC84,$02 Jump to #N$EC6F if {} is higher. TODO
-  $EC86,$02 Compare #REGa with #N$60.
-  $EC88,$01 Return if {} is lower.
+  $EC82,$04 Jump to #N$EC6F if #REGa is higher than #N$80.
+  $EC86,$03 Return if #REGa is lower than #N$60.
   $EC89,$02 Reset bit 5 of #REGa.
   $EC8B,$01 Return.
+
+u $EC8C
 
 c $EC8E Print Instructions
 @ $EC8E label=PrintInstructions
@@ -1087,42 +1392,50 @@ R $EC8E HL Instructions page pointer
   $ECA7,$03 Call #R$74D3.
   $ECAA,$01 Return.
 
-c $ECAB Start Game
-@ $ECAB label=StartGame
+c $ECAB Check Password
+@ $ECAB label=CheckPassword
   $ECAB,$06 #HTML(Write #N$0A23 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>/<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
   $ECB1,$03 Call #R$749C.
+N $ECB4 Set the attributes for the code entry messaging.
   $ECB4,$03 #REGhl=#N$5900 (attribute buffer location).
-  $ECB7,$02 #REGb=#N$40.
-  $ECB9,$02 Write #N$04 to *#REGhl.
+  $ECB7,$02 #REGb=#N$40 (counter; two full rows).
+@ $ECB9 label=CheckPassword_GreenLoop
+  $ECB9,$02 Write #N$04 (#COLOUR$04) to *#REGhl.
   $ECBB,$01 Increment #REGl by one.
   $ECBC,$02 Decrease counter by one and loop back to #R$ECB9 until counter is zero.
+N $ECBE Print "#STR($EE14,$03,$20)" to the screen.
   $ECBE,$01 Switch to the shadow registers.
-  $ECBF,$03 #REGde=#N$4800 (screen buffer location).
-  $ECC2,$01 Switch to the shadow registers.
-  $ECC3,$02 #REGb=#N$40.
+  $ECBF,$03 #REGde'=#N$4800 (screen buffer location).
+  $ECC2,$01 Switch back to the normal registers.
+  $ECC3,$02 #REGb=#N$40 (counter; two full rows).
   $ECC5,$03 #REGhl=#R$EE14.
   $ECC8,$03 Call #R$74D3.
   $ECCB,$03 Call #R$EC6E.
-  $ECCE,$02 Compare #REGa with #N$0D.
-  $ECD0,$02 Jump to #R$ECDB if {} is not zero.
+  $ECCE,$04 Jump to #R$ECDB if #REGa is not equal to #N$0D ("ENTER").
+N $ECD2 The player pressed the "ENTER" key to skip entering a code.
+@ $ECD2 label=StartGame
   $ECD2,$06 #HTML(Write #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
 .           and #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
   $ECD8,$03 Jump to #R$6CAA.
+N $ECDB The player is entering a password to access a later level.
+@ $ECDB label=CheckPassword_Input
   $ECDB,$03 #REGde=#R$782E.
   $ECDE,$01 Write #REGa to *#REGde.
   $ECDF,$01 Switch to the shadow registers.
-  $ECE0,$02 #REGe=#N$20.
-  $ECE2,$01 Switch to the shadow registers.
+  $ECE0,$02 #REGe'=#N$20.
+  $ECE2,$01 Switch back to the normal registers.
   $ECE3,$03 #REGhl=#R$E9A0.
   $ECE6,$02 #REGb=#N$20.
   $ECE8,$03 Call #R$74D3.
   $ECEB,$02 #REGb=#N$04.
   $ECED,$03 #REGhl=#R$EEB4.
+N $ECF0 Updates the number suffix in the messaging.
+@ $ECF0 label=NumberSuffix
   $ECF0,$01 Switch to the shadow registers.
-  $ECF1,$02 #REGe=#N$09.
-  $ECF3,$01 Switch to the shadow registers.
+  $ECF1,$02 #REGe'=#N$09.
+  $ECF3,$01 Switch back to the normal registers.
   $ECF4,$01 Stash #REGbc on the stack.
-  $ECF5,$02 #REGb=#N$03.
+  $ECF5,$02 #REGb=#N$03 (counter; length of number suffix messaging).
   $ECF7,$03 Call #R$74D3.
   $ECFA,$01 Restore #REGbc from the stack.
   $ECFB,$01 Stash #REGhl on the stack.
@@ -1131,31 +1444,40 @@ c $ECAB Start Game
   $ED00,$01 Increment #REGe by one.
   $ED01,$01 Write #REGa to *#REGde.
   $ED02,$02 Decrease counter by one and loop back to #R$ECF0 until counter is zero.
-  $ED04,$02 #REGc=#N$07.
+N $ED04 Test if any of the passwords match the input.
+  $ED04,$02 #REGc=#N$07 (counter; there are seven passwords).
   $ED06,$03 #REGhl=#R$EEC0.
-  $ED09,$02 #REGe=#N$2E.
-  $ED0B,$02 #REGb=#N$05.
-  $ED0D,$01 #REGa=*#REGde.
-  $ED0E,$01 Increment #REGe by one.
-  $ED0F,$01 Compare #REGa with *#REGhl.
-  $ED10,$02 Jump to #R$ED1D if {} is not zero.
+@ $ED09 label=CheckPassword_Loop
+  $ED09,$02 Reset the user input held by #REGde back to the start of the string (#R$782E).
+  $ED0B,$02 #REGb=#N$05 (counter; length of a password string).
+@ $ED0D label=CheckLetter_Loop
+  $ED0D,$01 Fetch a letter of the user-entered password string.
+  $ED0E,$01 Increment the user-entered input pointer by one.
+  $ED0F,$03 Jump to #R$ED1D if #REGa is not equal to *#REGhl.
+N $ED12 There's a match, move onto the next letter of this password.
   $ED12,$01 Increment #REGhl by one.
   $ED13,$02 Decrease counter by one and loop back to #R$ED0D until counter is zero.
-  $ED15,$02 #REGa=#N$07.
+N $ED15 Success! This password is a match!
+  $ED15,$02 #REGa=#N$07 (maximum levels).
+N $ED17 The position in the password list counts down from #N$07 so this negatively correlates with the level number.
   $ED17,$01 #REGa-=#REGc.
   $ED18,$03 Write #REGa to *#R$7820.
   $ED1B,$02 Jump to #R$ECD2.
+N $ED1D This password didn't match, move onto the next one.
+@ $ED1D label=NextPassword
   $ED1D,$01 Increment #REGhl by one.
   $ED1E,$02 Decrease counter by one and loop back to #R$ED1D until counter is zero.
+N $ED20 Are we out of passwords to check yet?
   $ED20,$01 Decrease #REGc by one.
-  $ED21,$02 Jump to #R$ED09 if {} is not zero.
+  $ED21,$02 Jump to #R$ED09 until #REGc is zero.
+N $ED23 All passwords have been checked, let the player know their password was entered incorrectly.
   $ED23,$01 Switch to the shadow registers.
-  $ED24,$02 #REGe=#N$00.
-  $ED26,$01 Switch to the shadow registers.
+  $ED24,$02 #REGe'=#N$00.
+  $ED26,$01 Switch back to the normal registers.
   $ED27,$03 #REGhl=#R$EE54.
-  $ED2A,$02 #REGb=#N$20.
+  $ED2A,$02 #REGb=#N$20 (counter; length of mistake string).
   $ED2C,$03 Call #R$74D3.
-  $ED2F,$03 Call #R$EBE6.
+  $ED2F,$03 Debounce using #R$EBE6.
   $ED32,$03 Jump to #R$ECAB.
 
 b $ED35
@@ -1301,9 +1623,10 @@ t $EE94 Messaging: Press Any Key
 t $EE14 Messaging: Code Entry
 @ $EE14 label=Messaging_CodeEntry
   $EE14,$40,$20
+@ $EE54 label=Messaging_Mistake
   $EE54,$20
 
-t $EE74 Messaging: How to play Wheelie
+t $EE74 Messaging: How To Play Wheelie
 @ $EE74 label=Messaging_HowToPlay
   $EE74,$20 "#STR(#PC,$04,$20)".
 
