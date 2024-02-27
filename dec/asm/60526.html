@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 60526</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60525.html">60525</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60526">Map</a></td>
+<td class="next">
+Next: <a href="60556.html">60556</a>
+</td>
+</tr>
+</table>
+<div class="description">60526: Routine at EC6E</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routine at <a href="60587.html">CheckPassword</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60526"></span>60526</td>
+<td class="instruction">LD (IY+7),0</td>
+<td class="comment-1" rowspan="1">Write 7 to *<span class="register">IY</span>+7.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60530"></span>60530</td>
+<td class="instruction">SET 3,(IY+48)</td>
+<td class="comment-1" rowspan="1">Set bit 3 of *<span class="register">IX</span>+48.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60534"></span>60534</td>
+<td class="instruction">LD HL,23611</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60537"></span>60537</td>
+<td class="instruction">RES 5,(HL)</td>
+<td class="comment-1" rowspan="1">Reset bit 5 of *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="60539"></span>60539</td>
+<td class="instruction">BIT 5,(HL)</td>
+<td class="comment-1" rowspan="1">Test bit 5 of *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60541"></span>60541</td>
+<td class="instruction">JR Z,<a href="60526.html#60539">60539</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60526.html#60539">60539</a> if {} is zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60543"></span>60543</td>
+<td class="instruction">LD A,(23560)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60546"></span>60546</td>
+<td class="instruction">CP 128</td>
+<td class="comment-1" rowspan="2">Jump to 60527 if <span class="register">A</span> is higher than 128.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60548"></span>60548</td>
+<td class="instruction">JR NC,60527</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60550"></span>60550</td>
+<td class="instruction">CP 96</td>
+<td class="comment-1" rowspan="2">Return if <span class="register">A</span> is lower than 96.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60552"></span>60552</td>
+<td class="instruction">RET C</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60553"></span>60553</td>
+<td class="instruction">RES 5,A</td>
+<td class="comment-1" rowspan="1">Reset bit 5 of <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="60555"></span>60555</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="60525.html">60525</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#60526">Map</a></td>
+<td class="next">
+Next: <a href="60556.html">60556</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/EC6E.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

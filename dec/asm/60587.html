@@ -35,7 +35,7 @@ Next: <a href="60725.html">60725</a>
 </td>
 </tr>
 </table>
-<div class="description">60587: Start Game</div>
+<div class="description">60587: Check Password</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,7 +47,7 @@ Used by the routine at <a href="59406.html">59406</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label">StartGame</td>
+<td class="asm-label">CheckPassword</td>
 <td class="address-2"><span id="60587"></span>60587</td>
 <td class="instruction">LD HL,2595</td>
 <td class="comment-1" rowspan="2">Write 2595 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>/<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.</td>
@@ -64,6 +64,16 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="comment-1" rowspan="1">Call <a href="29852.html">ClearScreen</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60596"></span>
+<div class="comments">
+<div class="paragraph">
+Set the attributes for the code entry messaging.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60596"></span>60596</td>
 <td class="instruction">LD HL,22784</td>
@@ -73,13 +83,18 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60599"></span>60599</td>
 <td class="instruction">LD B,64</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=64.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=64 (counter; two full rows).</td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_0</td>
+<td class="asm-label">CheckPassword_GreenLoop</td>
 <td class="address-2"><span id="60601"></span>60601</td>
 <td class="instruction">LD (HL),4</td>
-<td class="comment-1" rowspan="1">Write 4 to *<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="1">Write 4 (INK:
+GREEN,
+PAPER:
+BLACK
+
+) to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -90,8 +105,18 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60604"></span>60604</td>
-<td class="instruction">DJNZ <a href="60587.html#60601">StartGame_0</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60601">StartGame_0</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="60587.html#60601">CheckPassword_GreenLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60601">CheckPassword_GreenLoop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60606"></span>
+<div class="comments">
+<div class="paragraph">
+Print "KEY IN 1ST CHARACTER OF CODE" to the screen.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -103,19 +128,19 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60607"></span>60607</td>
 <td class="instruction">LD DE,18432</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=18432 (screen buffer location).</td>
+<td class="comment-1" rowspan="1"><span class="register">DE'</span>=18432 (screen buffer location).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60610"></span>60610</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60611"></span>60611</td>
 <td class="instruction">LD B,64</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=64.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=64 (counter; two full rows).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -132,23 +157,32 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60619"></span>60619</td>
-<td class="instruction">CALL <a href="60458.html#60526">60526</a></td>
-<td class="comment-1" rowspan="1">Call <a href="60458.html#60526">60526</a>.</td>
+<td class="instruction">CALL <a href="60526.html">60526</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60526.html">60526</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60622"></span>60622</td>
 <td class="instruction">CP 13</td>
-<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 13.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60587.html#60635">CheckPassword_Input</a> if <span class="register">A</span> is not equal to 13 ("ENTER").</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60624"></span>60624</td>
-<td class="instruction">JR NZ,<a href="60587.html#60635">StartGame_2</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60635">StartGame_2</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="60587.html#60635">CheckPassword_Input</a></td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_1</td>
+<td class="routine-comment" colspan="5">
+<span id="60626"></span>
+<div class="comments">
+<div class="paragraph">
+The player pressed the "ENTER" key to skip entering a code.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">StartGame</td>
 <td class="address-2"><span id="60626"></span>60626</td>
 <td class="instruction">LD HL,257</td>
 <td class="comment-1" rowspan="2">Write 1 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a> and 1 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.</td>
@@ -161,11 +195,21 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60632"></span>60632</td>
-<td class="instruction">JP <a href="27818.html">27818</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="27818.html">27818</a>.</td>
+<td class="instruction">JP <a href="27818.html">GameInitialisation</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="27818.html">GameInitialisation</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_2</td>
+<td class="routine-comment" colspan="5">
+<span id="60635"></span>
+<div class="comments">
+<div class="paragraph">
+The player is entering a password to access a later level.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">CheckPassword_Input</td>
 <td class="address-2"><span id="60635"></span>60635</td>
 <td class="instruction">LD DE,30766</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="30766.html">30766</a>.</td>
@@ -186,19 +230,19 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60640"></span>60640</td>
 <td class="instruction">LD E,32</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=32.</td>
+<td class="comment-1" rowspan="1"><span class="register">E'</span>=32.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60642"></span>60642</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60643"></span>60643</td>
 <td class="instruction">LD HL,59808</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="59648.html#59808">59808</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="59648.html#59808">Messaging_Blank</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -225,7 +269,17 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61108.html">Messaging_CodeLetterPosition</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_3</td>
+<td class="routine-comment" colspan="5">
+<span id="60656"></span>
+<div class="comments">
+<div class="paragraph">
+Updates the number suffix in the messaging.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">NumberSuffix</td>
 <td class="address-2"><span id="60656"></span>60656</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -234,13 +288,13 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60657"></span>60657</td>
 <td class="instruction">LD E,9</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=9.</td>
+<td class="comment-1" rowspan="1"><span class="register">E'</span>=9.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60659"></span>60659</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -252,7 +306,7 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60661"></span>60661</td>
 <td class="instruction">LD B,3</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=3.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=3 (counter; length of number suffix messaging).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -275,8 +329,8 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60668"></span>60668</td>
-<td class="instruction">CALL <a href="60458.html#60526">60526</a></td>
-<td class="comment-1" rowspan="1">Call <a href="60458.html#60526">60526</a>.</td>
+<td class="instruction">CALL <a href="60526.html">60526</a></td>
+<td class="comment-1" rowspan="1">Call <a href="60526.html">60526</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -299,14 +353,24 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60674"></span>60674</td>
-<td class="instruction">DJNZ <a href="60587.html#60656">StartGame_3</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60656">StartGame_3</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="60587.html#60656">NumberSuffix</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60656">NumberSuffix</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60676"></span>
+<div class="comments">
+<div class="paragraph">
+Test if any of the passwords match the input.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60676"></span>60676</td>
 <td class="instruction">LD C,7</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=7.</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=7 (counter; there are seven passwords).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -315,40 +379,49 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61120.html">Messaging_Passwords</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_4</td>
+<td class="asm-label">CheckPassword_Loop</td>
 <td class="address-2"><span id="60681"></span>60681</td>
 <td class="instruction">LD E,46</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=46.</td>
+<td class="comment-1" rowspan="1">Reset the user input held by <span class="register">DE</span> back to the start of the string (<a href="30766.html">30766</a>).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60683"></span>60683</td>
 <td class="instruction">LD B,5</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=5.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=5 (counter; length of a password string).</td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_5</td>
+<td class="asm-label">CheckLetter_Loop</td>
 <td class="address-2"><span id="60685"></span>60685</td>
 <td class="instruction">LD A,(DE)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Fetch a letter of the user-entered password string.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60686"></span>60686</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the user-entered input pointer by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60687"></span>60687</td>
 <td class="instruction">CP (HL)</td>
-<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with *<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60587.html#60701">NextPassword</a> if <span class="register">A</span> is not equal to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60688"></span>60688</td>
-<td class="instruction">JR NZ,<a href="60587.html#60701">StartGame_6</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60701">StartGame_6</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="60587.html#60701">NextPassword</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60690"></span>
+<div class="comments">
+<div class="paragraph">
+There's a match, move onto the next letter of this password.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -359,14 +432,34 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60691"></span>60691</td>
-<td class="instruction">DJNZ <a href="60587.html#60685">StartGame_5</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60685">StartGame_5</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="60587.html#60685">CheckLetter_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60685">CheckLetter_Loop</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60693"></span>
+<div class="comments">
+<div class="paragraph">
+Success! This password is a match!
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60693"></span>60693</td>
 <td class="instruction">LD A,7</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=7.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=7 (maximum levels).</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60695"></span>
+<div class="comments">
+<div class="paragraph">
+The position in the password list counts down from 7 so this negatively correlates with the level number.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -378,16 +471,26 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60696"></span>60696</td>
 <td class="instruction">LD (30752),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30750.html#30752">30752</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30752.html">CurrentLevel</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60699"></span>60699</td>
-<td class="instruction">JR <a href="60587.html#60626">StartGame_1</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60626">StartGame_1</a>.</td>
+<td class="instruction">JR <a href="60587.html#60626">StartGame</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60626">StartGame</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">StartGame_6</td>
+<td class="routine-comment" colspan="5">
+<span id="60701"></span>
+<div class="comments">
+<div class="paragraph">
+This password didn't match, move onto the next one.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">NextPassword</td>
 <td class="address-2"><span id="60701"></span>60701</td>
 <td class="instruction">INC HL</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">HL</span> by one.</td>
@@ -395,8 +498,18 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60702"></span>60702</td>
-<td class="instruction">DJNZ <a href="60587.html#60701">StartGame_6</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60701">StartGame_6</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="60587.html#60701">NextPassword</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="60587.html#60701">NextPassword</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60704"></span>
+<div class="comments">
+<div class="paragraph">
+Are we out of passwords to check yet?
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -407,8 +520,18 @@ Used by the routine at <a href="59406.html">59406</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60705"></span>60705</td>
-<td class="instruction">JR NZ,<a href="60587.html#60681">StartGame_4</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60681">StartGame_4</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="60587.html#60681">CheckPassword_Loop</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html#60681">CheckPassword_Loop</a> until <span class="register">C</span> is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="60707"></span>
+<div class="comments">
+<div class="paragraph">
+All passwords have been checked, let the player know their password was entered incorrectly.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -420,25 +543,25 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60708"></span>60708</td>
 <td class="instruction">LD E,0</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=0.</td>
+<td class="comment-1" rowspan="1"><span class="register">E'</span>=0.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60710"></span>60710</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60711"></span>60711</td>
 <td class="instruction">LD HL,61012</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="60948.html#61012">61012</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="60948.html#61012">Messaging_Mistake</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60714"></span>60714</td>
 <td class="instruction">LD B,32</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=32.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=32 (counter; length of mistake string).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -450,13 +573,13 @@ Used by the routine at <a href="59406.html">59406</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="60719"></span>60719</td>
 <td class="instruction">CALL <a href="60390.html">PauseLong</a></td>
-<td class="comment-1" rowspan="1">Call <a href="60390.html">PauseLong</a>.</td>
+<td class="comment-1" rowspan="1">Debounce using <a href="60390.html">PauseLong</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="60722"></span>60722</td>
-<td class="instruction">JP <a href="60587.html#60587">StartGame</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60587.html">StartGame</a>.</td>
+<td class="instruction">JP <a href="60587.html#60587">CheckPassword</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="60587.html">CheckPassword</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">

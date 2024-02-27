@@ -31,7 +31,7 @@ Prev: <a href="EC1E.html">EC1E</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#ec2a">Map</a></td>
 <td class="next">
-Next: <a href="EC8E.html">EC8E</a>
+Next: <a href="EC6D.html">EC6D</a>
 </td>
 </tr>
 </table>
@@ -285,96 +285,6 @@ This entry point is used by the routine at <a href="763C.html">763C</a>.
 <td class="instruction">JR <a href="EC2A.html#ec35">$EC35</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec35">EC35</a>.</td>
 </tr>
-<tr>
-<td class="address-1"><span id="ec6d"></span>EC6D</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1">No operation.</td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="ec6e"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="ECAB.html">StartGame</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec6e"></span>EC6E</td>
-<td class="instruction">LD (IY+$07),$00</td>
-<td class="comment-1" rowspan="1">Write 07 to *<span class="register">IY</span>+07.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec72"></span>EC72</td>
-<td class="instruction">SET 3,(IY+$30)</td>
-<td class="comment-1" rowspan="1">Set bit 3 of *<span class="register">IX</span>+30.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec76"></span>EC76</td>
-<td class="instruction">LD HL,$5C3B</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec79"></span>EC79</td>
-<td class="instruction">RES 5,(HL)</td>
-<td class="comment-1" rowspan="1">Reset bit 5 of *<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="address-2"><span id="ec7b"></span>EC7B</td>
-<td class="instruction">BIT 5,(HL)</td>
-<td class="comment-1" rowspan="1">Test bit 5 of *<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec7d"></span>EC7D</td>
-<td class="instruction">JR Z,<a href="EC2A.html#ec7b">$EC7B</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EC2A.html#ec7b">EC7B</a> if {} is zero.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec7f"></span>EC7F</td>
-<td class="instruction">LD A,($5C08)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec82"></span>EC82</td>
-<td class="instruction">CP $80</td>
-<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 80.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec84"></span>EC84</td>
-<td class="instruction">JR NC,$EC6F</td>
-<td class="comment-1" rowspan="1">Jump to EC6F if {} is higher. TODO</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec86"></span>EC86</td>
-<td class="instruction">CP $60</td>
-<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 60.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec88"></span>EC88</td>
-<td class="instruction">RET C</td>
-<td class="comment-1" rowspan="1">Return if {} is lower.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec89"></span>EC89</td>
-<td class="instruction">RES 5,A</td>
-<td class="comment-1" rowspan="1">Reset bit 5 of <span class="register">A</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec8b"></span>EC8B</td>
-<td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec8c"></span>EC8C</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="ec8d"></span>EC8D</td>
-<td class="instruction">NOP</td>
-<td class="comment-1" rowspan="1"></td>
-</tr>
 </table>
 <table class="asm-navigation">
 <tr>
@@ -383,7 +293,7 @@ Prev: <a href="EC1E.html">EC1E</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#ec2a">Map</a></td>
 <td class="next">
-Next: <a href="EC8E.html">EC8E</a>
+Next: <a href="EC6D.html">EC6D</a>
 </td>
 </tr>
 </table>

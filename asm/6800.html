@@ -41,7 +41,7 @@ Next: <a href="6826.html">6826</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="6CAA.html">6CAA</a> and <a href="6D21.html">6D21</a>.
+Used by the routines at <a href="6CAA.html">GameInitialisation</a> and <a href="6D21.html">6D21</a>.
 </div>
 </div>
 </td>
@@ -54,17 +54,15 @@ Used by the routines at <a href="6CAA.html">6CAA</a> and <a href="6D21.html">6D2
 <tr>
 <td class="address-1"><span id="6803"></span>6803</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
+<td class="comment-1" rowspan="3"><span class="register">L</span>-=08.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6804"></span>6804</td>
 <td class="instruction">SUB $08</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=08.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6806"></span>6806</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6807"></span>6807</td>
@@ -74,17 +72,15 @@ Used by the routines at <a href="6CAA.html">6CAA</a> and <a href="6D21.html">6D2
 <tr>
 <td class="address-1"><span id="6809"></span>6809</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="3"><span class="register">H</span>-=05.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="680a"></span>680A</td>
 <td class="instruction">SUB $05</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=05.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="680c"></span>680C</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-2"><span id="680d"></span>680D</td>
@@ -94,12 +90,11 @@ Used by the routines at <a href="6CAA.html">6CAA</a> and <a href="6D21.html">6D2
 <tr>
 <td class="address-1"><span id="6810"></span>6810</td>
 <td class="instruction">LD HL,$0000</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=0000.</td>
+<td class="comment-1" rowspan="2">Write 0000 to *<a href="763C.html#7814">7814</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6813"></span>6813</td>
 <td class="instruction">LD ($7814),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="763C.html#7814">7814</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6816"></span>6816</td>
@@ -113,13 +108,13 @@ Used by the routines at <a href="6CAA.html">6CAA</a> and <a href="6D21.html">6D2
 </tr>
 <tr>
 <td class="address-1"><span id="6819"></span>6819</td>
-<td class="instruction">CALL <a href="6500.html#659c">$659C</a></td>
-<td class="comment-1" rowspan="1">Call <a href="6500.html#659c">659C</a>.</td>
+<td class="instruction">CALL <a href="659C.html">$659C</a></td>
+<td class="comment-1" rowspan="1">Call <a href="659C.html">659C</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="681c"></span>681C</td>
-<td class="instruction">CALL <a href="6500.html#659c">$659C</a></td>
-<td class="comment-1" rowspan="1">Call <a href="6500.html#659c">659C</a>.</td>
+<td class="instruction">CALL <a href="659C.html">$659C</a></td>
+<td class="comment-1" rowspan="1">Call <a href="659C.html">659C</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="681f"></span>681F</td>

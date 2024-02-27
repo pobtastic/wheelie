@@ -35,7 +35,7 @@ Next: <a href="29870.html">29870</a>
 </td>
 </tr>
 </table>
-<div class="description">29866: Print Bike Graphic</div>
+<div class="description">29866: Print Graphic</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,10 +44,29 @@ Next: <a href="29870.html">29870</a>
 Used by the routines at <a href="30031.html">InitialiseGame</a>, <a href="30122.html">PrintGameDisplay</a> and <a href="59537.html">DisplayStartScreen</a>.
 </div>
 </div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">L</td>
+<td class="register-desc">The low-order byte to point to a UDG address</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
-<td class="asm-label">PrintBikeGraphic</td>
+<td class="routine-comment" colspan="5">
+<span id="29866"></span>
+<div class="comments">
+<div class="paragraph">
+Set the high-order byte value for the UDG address.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">PrintGraphic</td>
 <td class="address-2"><span id="29866"></span>29866</td>
 <td class="instruction">LD H,120</td>
 <td class="comment-1" rowspan="1"><span class="register">H</span>=120.</td>

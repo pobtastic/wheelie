@@ -35,7 +35,7 @@ Next: <a href="E84D.html">E84D</a>
 </td>
 </tr>
 </table>
-<div class="description">E80E: Routine at E80E</div>
+<div class="description">E80E: Game</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -79,7 +79,7 @@ Used by the routine at <a href="6D1E.html">6D1E</a>.
 <span id="e81b"></span>
 <div class="comments">
 <div class="paragraph">
-This entry point is used by the routines at <a href="6D21.html">6D21</a> and <a href="757E.html">GameOver</a>.
+This entry point is used by the routines at <a href="7311.html">7311</a> and <a href="757E.html">GameOver</a>.
 </div>
 </div>
 </td>
@@ -123,7 +123,7 @@ This entry point is used by the routines at <a href="6D21.html">6D21</a> and <a 
 <td class="asm-label"></td>
 <td class="address-1"><span id="e829"></span>E829</td>
 <td class="instruction">LD ($7820),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="781E.html#7820">7820</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7820.html">CurrentLevel</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -226,12 +226,12 @@ Should we start a new game?
 <td class="asm-label">TestStartGame</td>
 <td class="address-2"><span id="e843"></span>E843</td>
 <td class="instruction">BIT 2,A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="ECAB.html">StartGame</a> if a key from the third row has not been pressed.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="ECAB.html">CheckPassword</a> if a key from the third row has not been pressed.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="e845"></span>E845</td>
-<td class="instruction">JP Z,<a href="ECAB.html">StartGame</a></td>
+<td class="instruction">JP Z,<a href="ECAB.html">CheckPassword</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
