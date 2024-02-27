@@ -29,8 +29,9 @@ Graphics
 DataTables
 Reference
 
-[Index:Graphics:Graphics]
+[Index:Graphics:Graphics and Sounds]
 Pages
+Sound
 
 [Links]
 Pages=[Pages]
@@ -39,7 +40,7 @@ Pages=[Pages]
 SectionPrefix=Pages
 
 [Paths]
-Scenes=graphics/pages.html
+Pages=graphics/pages.html
 Sound=sound/sound.html
 
 [Expand]

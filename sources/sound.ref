@@ -1,1 +1,16 @@
 ; Copyright 2024 Paul Maddern (paul@arcadegeek.co.uk)
+
+[Page:Sound]
+SectionPrefix=Audio
+
+[Audio:Level Complete]
+
+#AUDIO(level-complete.wav)(#INCLUDE(LevelComplete))
+
+[Audio:The Race Is On!]
+
+#AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn))
+
+[Audio:Ghostrider Has Finished]
+
+#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))

@@ -529,19 +529,20 @@ b$5D27 DEFB $78,$78,$78,$78,$78,$78,$78,$78
 
 ; Routine at 6400
 ;
-; Used by the routines at #R$64AA, #R$6500, #R$6D21, #R$7200 and #R$7311.
-c$6400 PUSH HL       ;
- $6401 LD HL,($781E) ;
- $6404 LD A,(HL)     ;
- $6405 INC L         ;
- $6406 JR NZ,$640F   ;
- $6408 INC H         ;
- $6409 BIT 2,H       ;
- $640B JR Z,$640F    ;
- $640D LD H,$79      ;
-*$640F LD ($781E),HL ;
- $6412 POP HL        ;
- $6413 RET           ;
+; Used by the routines at #R$64AA, #R$6500, #R$7088, #R$709D, #R$7200 and
+; #R$73B7.
+c$6400 PUSH HL       ; Stash #REGhl on the stack.
+ $6401 LD HL,($781E) ; #REGhl=*#R$781E.
+ $6404 LD A,(HL)     ; #REGa=*#REGhl.
+ $6405 INC L         ; Increment #REGl by one.
+ $6406 JR NZ,$640F   ; Jump to #R$640F if #REGl is not zero.
+ $6408 INC H         ; Increment #REGh by one.
+ $6409 BIT 2,H       ; {Jump to #R$640F if bit 2 of #REGh is not set.
+ $640B JR Z,$640F    ; }
+ $640D LD H,$79      ; #REGh=#N$79.
+*$640F LD ($781E),HL ; Write #REGhl to *#R$781E.
+ $6412 POP HL        ; Restore #REGhl from the stack.
+ $6413 RET           ; Return.
 
 ; Routine at 6414
 ;
@@ -845,7 +846,7 @@ c$6564 ADD A,A       ;
 
 ; Routine at 659C
 ;
-; Used by the routines at #R$6800, #R$687D and #R$6D21.
+; Used by the routines at #R$6800, #R$6AAC, #R$6C00 and #R$6D49.
 c$659C LD HL,($7817) ;
  $659F LD D,H        ;
  $65A0 LD E,L        ;
@@ -967,7 +968,7 @@ c$659C LD HL,($7817) ;
  $664D RET           ;
  $664E NOP           ;
  $664F NOP           ;
-; This entry point is used by the routines at #R$687D and #R$6D21.
+; This entry point is used by the routines at #R$6AAC, #R$6C00 and #R$6D49.
 *$6650 LD HL,($7817) ;
  $6653 LD A,($7819)  ;
  $6656 AND A         ;
@@ -1225,7 +1226,7 @@ c$659C LD HL,($7817) ;
 
 ; Routine at 67E9
 ;
-; Used by the routines at #R$6800, #R$687D and #R$6D21.
+; Used by the routines at #R$6800, #R$6AAC, #R$6C00 and #R$6D49.
 c$67E9 LD HL,$7814   ; {Return if *#R$7814 is not equal to #N$02.
  $67EC LD A,(HL)     ;
  $67ED CP $02        ;
@@ -1242,7 +1243,7 @@ c$67E9 LD HL,$7814   ; {Return if *#R$7814 is not equal to #N$02.
 
 ; Routine at 6800
 ;
-; Used by the routines at #R$6CAA and #R$6D21.
+; Used by the routines at #R$6CAA and #R$6D49.
 c$6800 LD ($7819),A  ; Write #REGa to *#R$7819.
  $6803 LD A,L        ; {#REGl-=#N$08.
  $6804 SUB $08       ;
@@ -1269,7 +1270,7 @@ u$6826 DEFB $00,$00
 
 ; Get Keyboard Input
 ;
-; Used by the routines at #R$7311, #R$757E, #R$763C, #R$E80E, #R$EB43 and
+; Used by the routines at #R$73B7, #R$757E, #R$76D7, #R$E80E, #R$EB43 and
 ; #R$ED52.
 @label=KeyboardInput
 c$6828 LD DE,$FE00   ; #REGde=#R$FE00.
@@ -1328,26 +1329,15 @@ c$6828 LD DE,$FE00   ; #REGde=#R$FE00.
 *$687B LD A,D        ; #REGa=#REGd.
  $687C RET           ; Return.
 
-; Routine at 687D
-c$687D NOP           ;
- $687E NOP           ;
- $687F NOP           ;
-*$6880 BIT 7,A       ;
- $6882 JR NZ,$6885   ;
- $6884 CPL           ;
-*$6885 AND $7F       ;
- $6887 RRA           ;
- $6888 LD L,A        ;
- $6889 LD A,$A7      ;
- $688B NOP           ;
- $688C NOP           ;
- $688D NOP           ;
- $688E NOP           ;
- $688F SUB L         ;
- $6890 LD L,A        ;
- $6891 LD H,$B4      ;
-; This entry point is used by the routines at #R$6D21 and #R$763C.
-*$6893 LDI           ;
+; Data block at 687D
+b$687D DEFB $00,$00,$00,$CB,$7F,$20,$01,$2F
+ $6885 DEFB $E6,$7F,$1F,$6F,$3E,$A7,$00,$00
+ $688D DEFB $00,$00,$95,$6F,$26,$B4
+
+; Routine at 6893
+;
+; Used by the routines at #R$6D28 and #R$763C.
+c$6893 LDI           ;
  $6895 LDI           ;
  $6897 LDI           ;
  $6899 LDI           ;
@@ -1359,69 +1349,80 @@ c$687D NOP           ;
  $68A5 LDI           ;
  $68A7 LDI           ;
  $68A9 LDI           ;
- $68AB RET           ;
- $68AC NOP           ;
-; This entry point is used by the routines at #R$6D21 and #R$763C.
-*$68AD LD A,($781B)  ;
+ $68AB RET           ; Return.
+
+; Unused
+u$68AC DEFB $00
+
+; Routine at 68AD
+;
+; Used by the routines at #R$6AAC, #R$6C00, #R$6D49, #R$763C and #R$76D7.
+c$68AD LD A,($781B)  ; {Return if *#R$781B is zero.
  $68B0 AND A         ;
- $68B1 RET Z         ;
- $68B2 LD HL,($781C) ;
- $68B5 LD B,A        ;
- $68B6 LD C,$00      ;
-*$68B8 DEC HL        ;
- $68B9 LD D,(HL)     ;
- $68BA DEC HL        ;
- $68BB LD E,(HL)     ;
- $68BC DEC HL        ;
- $68BD LD A,(HL)     ;
- $68BE LD (DE),A     ;
- $68BF DEC HL        ;
- $68C0 LD A,D        ;
- $68C1 SUB $11       ;
- $68C3 OR $07        ;
- $68C5 LD D,A        ;
- $68C6 EX DE,HL      ;
- $68C7 LD (HL),C     ;
- $68C8 DEC H         ;
- $68C9 LD A,(DE)     ;
- $68CA LD (HL),A     ;
- $68CB DEC DE        ;
- $68CC DEC H         ;
- $68CD LD (HL),C     ;
- $68CE DEC H         ;
- $68CF LD A,(DE)     ;
- $68D0 LD (HL),A     ;
- $68D1 DEC DE        ;
- $68D2 DEC H         ;
- $68D3 LD (HL),C     ;
- $68D4 DEC H         ;
- $68D5 LD A,(DE)     ;
- $68D6 LD (HL),A     ;
- $68D7 DEC DE        ;
- $68D8 DEC H         ;
- $68D9 LD (HL),C     ;
- $68DA DEC H         ;
- $68DB LD A,(DE)     ;
- $68DC LD (HL),A     ;
- $68DD EX DE,HL      ;
- $68DE DJNZ $68B8    ;
- $68E0 LD ($781C),HL ;
- $68E3 XOR A         ;
- $68E4 LD ($781B),A  ;
- $68E7 RET           ;
- $68E8 NOP           ;
- $68E9 NOP           ;
- $68EA NOP           ;
- $68EB NOP           ;
-; This entry point is used by the routine at #R$6D21.
-*$68EC EXX           ;
+ $68B1 RET Z         ; }
+ $68B2 LD HL,($781C) ; #REGhl=*#R$781C.
+ $68B5 LD B,A        ; #REGb=#REGa.
+ $68B6 LD C,$00      ; #REGc=#N$00.
+*$68B8 DEC HL        ; Decrease #REGhl by one.
+ $68B9 LD D,(HL)     ; #REGd=*#REGhl.
+ $68BA DEC HL        ; Decrease #REGhl by one.
+ $68BB LD E,(HL)     ; #REGe=*#REGhl.
+ $68BC DEC HL        ; Decrease #REGhl by one.
+ $68BD LD A,(HL)     ; #REGa=*#REGhl.
+ $68BE LD (DE),A     ; Write #REGa to *#REGde.
+ $68BF DEC HL        ; Decrease #REGhl by one.
+ $68C0 LD A,D        ; #REGa=#REGd.
+ $68C1 SUB $11       ; #REGa-=#N$11.
+ $68C3 OR %00000111  ; Set bits 0-2.
+ $68C5 LD D,A        ; #REGd=#REGa.
+ $68C6 EX DE,HL      ; Exchange the #REGde and #REGhl registers.
+ $68C7 LD (HL),C     ; Write #REGc to *#REGhl.
+ $68C8 DEC H         ; Decrease #REGh by one.
+ $68C9 LD A,(DE)     ; #REGa=*#REGde.
+ $68CA LD (HL),A     ; Write #REGa to *#REGhl.
+ $68CB DEC DE        ; Decrease #REGde by one.
+ $68CC DEC H         ; Decrease #REGh by one.
+ $68CD LD (HL),C     ; Write #REGc to *#REGhl.
+ $68CE DEC H         ; Decrease #REGh by one.
+ $68CF LD A,(DE)     ; #REGa=*#REGde.
+ $68D0 LD (HL),A     ; Write #REGa to *#REGhl.
+ $68D1 DEC DE        ; Decrease #REGde by one.
+ $68D2 DEC H         ; Decrease #REGh by one.
+ $68D3 LD (HL),C     ; Write #REGc to *#REGhl.
+ $68D4 DEC H         ; Decrease #REGh by one.
+ $68D5 LD A,(DE)     ; #REGa=*#REGde.
+ $68D6 LD (HL),A     ; Write #REGa to *#REGhl.
+ $68D7 DEC DE        ; Decrease #REGde by one.
+ $68D8 DEC H         ; Decrease #REGh by one.
+ $68D9 LD (HL),C     ; Write #REGc to *#REGhl.
+ $68DA DEC H         ; Decrease #REGh by one.
+ $68DB LD A,(DE)     ; #REGa=*#REGde.
+ $68DC LD (HL),A     ; Write #REGa to *#REGhl.
+ $68DD EX DE,HL      ; Exchange the #REGde and #REGhl registers.
+ $68DE DJNZ $68B8    ; Decrease counter by one and loop back to #R$68B8 until
+                     ; counter is zero.
+ $68E0 LD ($781C),HL ; Write #REGhl to *#R$781C.
+ $68E3 XOR A         ; {Write #N$00 to *#R$781B.
+ $68E4 LD ($781B),A  ; }
+ $68E7 RET           ; Return.
+
+; Unused
+u$68E8 DEFB $00,$00,$00,$00
+
+; Routine at 68EC
+;
+; Used by the routines at #R$692C and #R$6D49.
+c$68EC EXX           ;
  $68ED LD ($781C),HL ;
  $68F0 LD A,B        ;
  $68F1 LD ($781B),A  ;
  $68F4 EXX           ;
  $68F5 RET           ;
-; This entry point is used by the routine at #R$6D21.
-*$68F6 LD A,(HL)     ;
+
+; Routine at 68F6
+;
+; Used by the routines at #R$692C and #R$6D49.
+c$68F6 LD A,(HL)     ;
  $68F7 EXX           ;
  $68F8 LD (HL),A     ;
  $68F9 INC HL        ;
@@ -1447,8 +1448,11 @@ c$687D NOP           ;
  $690D LD (HL),A     ;
  $690E INC BC        ;
  $690F RET           ;
-; This entry point is used by the routine at #R$6D21.
-*$6910 LD A,H        ;
+
+; Routine at 6910
+;
+; Used by the routines at #R$692C and #R$6D49.
+c$6910 LD A,H        ;
  $6911 SUB $48       ;
  $6913 SBC A,A       ;
  $6914 ADD A,$59     ;
@@ -1457,6 +1461,7 @@ c$687D NOP           ;
  $6918 PUSH HL       ;
  $6919 EXX           ;
  $691A POP DE        ;
+; This entry point is used by the routine at #R$692C.
 *$691B INC B         ;
  $691C LD (HL),A     ;
  $691D INC HL        ;
@@ -1471,8 +1476,11 @@ c$687D NOP           ;
  $6927 RET NZ        ;
  $6928 JP $73F2      ;
  $692B RET           ;
-; This entry point is used by the routine at #R$763C.
-*$692C LD B,A        ;
+
+; Routine at 692C
+;
+; Used by the routines at #R$6B2D and #R$76D7.
+c$692C LD B,A        ;
  $692D LD A,C        ;
  $692E EXX           ;
  $692F LD HL,($781C) ;
@@ -1540,13 +1548,14 @@ c$687D NOP           ;
  $698D LD H,B        ;
  $698E LD L,C        ;
  $698F JP $691B      ;
- $6992 NOP           ;
- $6993 NOP           ;
- $6994 NOP           ;
- $6995 NOP           ;
-*$6996 LD E,A        ;
+
+; Unused
+u$6992 DEFB $00,$00,$00,$00
+
+; Routine at 6996
+c$6996 LD E,A        ;
  $6997 LD A,($7828)  ;
-; This entry point is used by the routine at #R$6D21.
+; This entry point is used by the routine at #R$709D.
 *$699A BIT 2,A       ;
  $699C JR NZ,$69A4   ;
  $699E INC E         ;
@@ -1565,6 +1574,7 @@ c$687D NOP           ;
  $69AF ADD HL,BC     ;
  $69B0 ADD HL,DE     ;
  $69B1 LD A,(HL)     ;
+; This entry point is used by the routine at #R$6AAC.
 *$69B2 ADD A,A       ;
  $69B3 ADD A,A       ;
  $69B4 LD L,A        ;
@@ -1586,6 +1596,7 @@ c$687D NOP           ;
  $69C8 RET Z         ;
  $69C9 INC A         ;
  $69CA RET           ;
+; This entry point is used by the routines at #R$6A00 and #R$6AAC.
 *$69CB CALL $69BE    ;
  $69CE LD E,A        ;
  $69CF LD HL,($782E) ;
@@ -1611,21 +1622,15 @@ c$687D NOP           ;
  $69EB LD ($7831),HL ;
  $69EE LD A,($7830)  ;
  $69F1 RET           ;
- $69F2 NOP           ;
- $69F3 NOP           ;
- $69F4 NOP           ;
- $69F5 NOP           ;
- $69F6 NOP           ;
- $69F7 NOP           ;
- $69F8 NOP           ;
- $69F9 NOP           ;
- $69FA NOP           ;
- $69FB NOP           ;
- $69FC NOP           ;
- $69FD NOP           ;
- $69FE NOP           ;
- $69FF NOP           ;
-*$6A00 LD A,($7830)  ;
+
+; Unused
+u$69F2 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $69FA DEFB $00,$00,$00,$00,$00,$00
+
+; Routine at 6A00
+;
+; Used by the routine at #R$6C00.
+c$6A00 LD A,($7830)  ;
  $6A03 INC A         ;
  $6A04 AND $07       ;
  $6A06 LD ($7830),A  ;
@@ -1636,6 +1641,7 @@ c$687D NOP           ;
  $6A13 LD C,A        ;
  $6A14 JR $6A27      ;
  $6A16 LD A,B        ;
+; This entry point is used by the routine at #R$6AAC.
 *$6A17 AND $7F       ;
  $6A19 SUB $02       ;
  $6A1B JR NC,$6A1E   ;
@@ -1647,6 +1653,7 @@ c$687D NOP           ;
  $6A24 ADC A,H       ;
  $6A25 SUB L         ;
  $6A26 LD H,A        ;
+; This entry point is used by the routine at #R$6AAC.
 *$6A27 LD A,(HL)     ;
  $6A28 RLCA          ;
  $6A29 RLCA          ;
@@ -1736,13 +1743,14 @@ c$687D NOP           ;
  $6AA3 LD H,(HL)     ;
  $6AA4 LD L,A        ;
  $6AA5 JP (HL)       ;
- $6AA6 NOP           ;
- $6AA7 NOP           ;
- $6AA8 NOP           ;
- $6AA9 NOP           ;
- $6AAA NOP           ;
- $6AAB NOP           ;
-*$6AAC LD A,($7830)  ;
+
+; Unused
+u$6AA6 DEFB $00,$00,$00,$00,$00,$00
+
+; Routine at 6AAC
+;
+; Used by the routine at #R$6C00.
+c$6AAC LD A,($7830)  ;
  $6AAF DEC A         ;
  $6AB0 AND $07       ;
  $6AB2 LD ($7830),A  ;
@@ -1755,6 +1763,7 @@ c$687D NOP           ;
  $6AC2 JP $6A27      ;
  $6AC5 CPL           ;
  $6AC6 JP $6A17      ;
+; This entry point is used by the routine at #R$6B4C.
 *$6AC9 NOP           ;
  $6ACA NOP           ;
  $6ACB NOP           ;
@@ -1799,6 +1808,7 @@ c$687D NOP           ;
  $6B0D NOP           ;
  $6B0E NOP           ;
  $6B0F NOP           ;
+; This entry point is used by the routine at #R$6B4C.
 *$6B10 NOP           ;
  $6B11 NOP           ;
  $6B12 NOP           ;
@@ -1814,29 +1824,43 @@ c$687D NOP           ;
  $6B23 DJNZ $6B1B    ;
  $6B25 LD A,$80      ;
  $6B27 JP $6AE0      ;
- $6B2A NOP           ;
- $6B2B NOP           ;
- $6B2C NOP           ;
-; This entry point is used by the routines at #R$6D21, #R$7311 and #R$763C.
-*$6B2D LD A,($7822)  ;
- $6B30 LD E,$0D      ;
- $6B32 BIT 7,A       ;
- $6B34 JR NZ,$6B38   ;
- $6B36 LD E,$12      ;
-*$6B38 LD C,$07      ;
- $6B3A LD HL,$7833   ;
- $6B3D LD D,(HL)     ;
- $6B3E INC L         ;
- $6B3F LD A,(HL)     ;
- $6B40 CALL $692C    ;
- $6B43 RET           ;
- $6B44 INC D         ;
- $6B45 LD (HL),E     ;
- $6B46 RET           ;
- $6B47 NOP           ;
-*$6B48 LD HL,($782C) ;
- $6B4B JP (HL)       ;
-*$6B4C LD ($7828),A  ;
+
+; Unused
+u$6B2A DEFB $00,$00,$00
+
+; Routine at 6B2D
+;
+; Used by the routines at #R$6D49, #R$7311, #R$763C and #R$76D7.
+c$6B2D LD A,($7822)  ; #REGa=*#R$7822.
+ $6B30 LD E,$0D      ; #REGe=#N$0D.
+ $6B32 BIT 7,A       ; Test bit 7 of #REGa.
+ $6B34 JR NZ,$6B38   ; Jump to #R$6B38 if {} is not zero.
+ $6B36 LD E,$12      ; #REGe=#N$12.
+*$6B38 LD C,$07      ; #REGc=#N$07.
+ $6B3A LD HL,$7833   ; #REGhl=#R$7833.
+ $6B3D LD D,(HL)     ; #REGd=*#REGhl.
+ $6B3E INC L         ; Increment #REGl by one.
+ $6B3F LD A,(HL)     ; #REGa=*#REGhl.
+ $6B40 CALL $692C    ; Call #R$692C.
+ $6B43 RET           ; Return.
+ $6B44 INC D         ; Increment #REGd by one.
+ $6B45 LD (HL),E     ; Write #REGe to *#REGhl.
+ $6B46 RET           ; Return.
+
+; Unused
+u$6B47 DEFB $00
+
+; Get Controls
+;
+; Used by the routine at #R$6C00.
+@label=GetControls
+c$6B48 LD HL,($782C) ; #REGhl=*#R$782C.
+ $6B4B JP (HL)       ; Jump to *#REGhl.
+
+; Routine at 6B4C
+;
+; Used by the routine at #R$6C00.
+c$6B4C LD ($7828),A  ;
  $6B4F LD C,$00      ;
  $6B51 LD DE,$0606   ;
  $6B54 BIT 2,A       ;
@@ -1943,12 +1967,14 @@ c$687D NOP           ;
  $6BF4 LD A,($7823)  ;
  $6BF7 LD E,$85      ;
  $6BF9 JP $6D28      ;
- $6BFC NOP           ;
- $6BFD NOP           ;
- $6BFE NOP           ;
- $6BFF NOP           ;
-; This entry point is used by the routines at #R$EBF3 and #R$EC00.
-*$6C00 LD A,($782B)  ;
+
+; Unused
+u$6BFC DEFB $00,$00,$00,$00
+
+; Routine at 6C00
+;
+; Used by the routines at #R$EBF3 and #R$EC00.
+c$6C00 LD A,($782B)  ;
  $6C03 XOR $01       ;
  $6C05 LD ($782B),A  ;
  $6C08 LD HL,$FFFF   ;
@@ -2038,7 +2064,7 @@ c$687D NOP           ;
 ; Used by the routines at #R$6D21, #R$E800 and #R$ECAB.
 @label=GameInitialisation
 c$6CAA CALL $75AA    ; Call #R$75AA.
-; This entry point is used by the routine at #R$763C.
+; This entry point is used by the routine at #R$76D7.
 *$6CAD LD HL,$3400   ; {Write #N$3400 to *#R$783C.
  $6CB0 LD ($783C),HL ; }
  $6CB3 LD HL,$7815   ; #REGhl=#R$7815.
@@ -2081,8 +2107,8 @@ c$6CAA CALL $75AA    ; Call #R$75AA.
  $6CEC LD (HL),$00   ; Write #N$00 to *#REGhl.
  $6CEE CALL $6500    ; Call #R$6500.
  $6CF1 LD L,$10      ; #REGl=#N$10.
- $6CF3 LD A,($782D)  ; {Jump to #R$6D11 if *#R$782D is not equal to #N$73.
- $6CF6 CP $73        ;
+ $6CF3 LD A,($782D)  ; {Jump to #R$6D11 if *#R$782C(#N$782D) is not equal to
+ $6CF6 CP $73        ; #N$73.
  $6CF8 JR NZ,$6D11   ; }
  $6CFA LD HL,$A1E0   ; #REGhl=#R$A1E0.
 *$6CFD LD A,(HL)     ; #REGa=*#REGhl.
@@ -2101,7 +2127,7 @@ c$6CAA CALL $75AA    ; Call #R$75AA.
 *$6D11 LD H,$9E      ; #REGh=#N$9E.
  $6D13 XOR A         ; Flip the bits according to #REGa.
  $6D14 CALL $6800    ; Call #R$6800.
-; This entry point is used by the routine at #R$6D21.
+; This entry point is used by the routine at #R$6D49.
 *$6D17 LD A,($5C78)  ; #HTML(#REGa=*<a
                      ; href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
  $6D1A INC A         ; Increment #REGa by one.
@@ -2113,11 +2139,14 @@ c$6CAA CALL $75AA    ; Call #R$75AA.
 c$6D1E JP $E80E      ; Jump to #R$E80E.
 
 ; Routine at 6D21
-c$6D21 LD HL,$FFFF   ;
- $6D24 LD SP,HL      ;
- $6D25 JP $6CAA      ;
-; This entry point is used by the routine at #R$687D.
-*$6D28 BIT 7,A       ;
+c$6D21 LD HL,$FFFF   ; {#REGsp=#N$FFFF.
+ $6D24 LD SP,HL      ; }
+ $6D25 JP $6CAA      ; Jump to #R$6CAA.
+
+; Routine at 6D28
+;
+; Used by the routine at #R$6B4C.
+c$6D28 BIT 7,A       ;
  $6D2A JR NZ,$6D2D   ;
  $6D2C CPL           ;
 *$6D2D ADD A,$3C     ;
@@ -2135,11 +2164,14 @@ c$6D21 LD HL,$FFFF   ;
 *$6D42 LD A,L        ;
  $6D43 LD ($7835),A  ;
  $6D46 JP $6893      ;
-; This entry point is used by the routines at #R$687D and #R$763C.
-*$6D49 LD A,($5C78)  ;
+
+; Routine at 6D49
+;
+; Used by the routines at #R$6AAC and #R$76D7.
+c$6D49 LD A,($5C78)  ;
  $6D4C INC A         ;
  $6D4D LD ($785A),A  ;
-; This entry point is used by the routines at #R$687D and #R$763C.
+; This entry point is used by the routines at #R$6C00 and #R$763C.
 *$6D50 LD HL,$782A   ;
  $6D53 LD A,(HL)     ;
  $6D54 AND A         ;
@@ -2198,7 +2230,7 @@ c$6D21 LD HL,$FFFF   ;
  $6DA5 EXX           ;
  $6DA6 INC H         ;
  $6DA7 RET           ;
-; This entry point is used by the routine at #R$687D.
+; This entry point is used by the routine at #R$692C.
 *$6DA8 LD A,(BC)     ;
 *$6DA9 INC BC        ;
  $6DAA ADD A,E       ;
@@ -2273,7 +2305,7 @@ c$6D21 LD HL,$FFFF   ;
  $6E11 NOP           ;
  $6E12 LD BC,$0607   ;
  $6E15 LD BC,$0000   ;
-; This entry point is used by the routine at #R$687D.
+; This entry point is used by the routine at #R$6C00.
 *$6E18 CALL $68AD    ;
  $6E1B LD HL,($783A) ;
  $6E1E LD A,(HL)     ;
@@ -2387,7 +2419,7 @@ c$6D21 LD HL,$FFFF   ;
  $6ED0 POP HL        ;
  $6ED1 POP BC        ;
  $6ED2 DJNZ $6EB1    ;
-; This entry point is used by the routine at #R$763C.
+; This entry point is used by the routines at #R$7161 and #R$76D7.
 *$6ED4 CALL $68AD    ;
  $6ED7 LD A,($7838)  ;
  $6EDA BIT 7,A       ;
@@ -2465,7 +2497,7 @@ c$6D21 LD HL,$FFFF   ;
  $6F5F NOP           ;
  $6F60 NOP           ;
  $6F61 NOP           ;
-; This entry point is used by the routine at #R$687D.
+; This entry point is used by the routine at #R$6996.
 *$6F62 LD ($782E),HL ;
  $6F65 LD C,A        ;
  $6F66 LD A,(HL)     ;
@@ -2626,22 +2658,28 @@ c$6D21 LD HL,$FFFF   ;
  $7083 LD ($783C),HL ;
  $7086 RET           ;
  $7087 NOP           ;
-; This entry point is used by the routine at #R$64AA.
-*$7088 CALL $6400    ;
- $708B LD E,A        ;
- $708C LD A,H        ;
-*$708D CP $9F        ;
- $708F JR C,$709B    ;
- $7091 JR Z,$7097    ;
- $7093 SUB $05       ;
- $7095 JR $708D      ;
-*$7097 LD A,E        ;
- $7098 AND $01       ;
- $709A RET           ;
-*$709B LD A,E        ;
- $709C RET           ;
-; This entry point is used by the routine at #R$72C3.
-*$709D LD C,(HL)     ;
+
+; Routine at 7088
+;
+; Used by the routine at #R$64AA.
+c$7088 CALL $6400    ; Call #R$6400.
+ $708B LD E,A        ; #REGe=#REGa.
+ $708C LD A,H        ; #REGa=#REGh.
+*$708D CP $9F        ; {Jump to #R$709B if #REGa is lower than #N$9F.
+ $708F JR C,$709B    ; }
+ $7091 JR Z,$7097    ; Jump to #R$7097 if #REGa is equal to #N$9F.
+ $7093 SUB $05       ; #REGa-=#N$05.
+ $7095 JR $708D      ; Jump to #R$708D.
+*$7097 LD A,E        ; #REGa=#REGe.
+ $7098 AND %00000001 ; Keep only bit 0.
+ $709A RET           ; Return.
+*$709B LD A,E        ; #REGa=#REGe.
+ $709C RET           ; Return.
+
+; Routine at 709D
+;
+; Used by the routine at #R$72C3.
+c$709D LD C,(HL)     ;
  $709E BIT 7,C       ;
  $70A0 RET NZ        ;
  $70A1 INC L         ;
@@ -2791,18 +2829,20 @@ c$6D21 LD HL,$FFFF   ;
  $715E NOP           ;
  $715F NOP           ;
  $7160 NOP           ;
-; This entry point is used by the routine at #R$763C.
-*$7161 CALL $7535    ;
- $7164 JP $6ED4      ;
- $7167 NOP           ;
- $7168 NOP           ;
- $7169 NOP           ;
- $716A NOP           ;
- $716B NOP           ;
- $716C NOP           ;
- $716D NOP           ;
-; This entry point is used by the routine at #R$7311.
-*$716E LD A,($7817)  ;
+
+; Routine at 7161
+;
+; Used by the routine at #R$763C.
+c$7161 CALL $7535    ; Call #R$7535.
+ $7164 JP $6ED4      ; Jump to #R$6ED4.
+
+; Unused
+u$7167 DEFB $00,$00,$00,$00,$00,$00,$00
+
+; Routine at 716E
+;
+; Used by the routine at #R$7311.
+c$716E LD A,($7817)  ;
  $7171 ADD A,A       ;
  $7172 ADD A,A       ;
  $7173 ADD A,A       ;
@@ -2900,14 +2940,9 @@ c$6D21 LD HL,$FFFF   ;
  $71F4 INC L         ;
  $71F5 DJNZ $717F    ;
  $71F7 RET           ;
- $71F8 NOP           ;
- $71F9 NOP           ;
- $71FA NOP           ;
- $71FB NOP           ;
- $71FC NOP           ;
- $71FD NOP           ;
- $71FE NOP           ;
- $71FF NOP           ;
+
+; Unused
+u$71F8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; Routine at 7200
 ;
@@ -2935,7 +2970,7 @@ c$7200 LD HL,$7820   ; #REGhl=#R$7820.
  $7220 LDIR          ; LDIR.
  $7222 POP HL        ; Restore #REGhl from the stack.
  $7223 DEC A         ; Decrease #REGa by one.
- $7224 JR NZ,$721C   ; Jump to #R$721C if {} is not zero.
+ $7224 JR NZ,$721C   ; Jump to #R$721C until #REGa is zero.
  $7226 LD H,A        ; #REGh=#REGa.
  $7227 LD B,$08      ; #REGb=#N$08.
  $7229 LD L,B        ; #REGl=#REGb.
@@ -3013,10 +3048,10 @@ c$7200 LD HL,$7820   ; #REGhl=#R$7820.
  $728F LD B,H        ; #REGb=#REGh.
  $7290 LD C,L        ; #REGc=#REGl.
  $7291 EXX           ; Switch to the shadow registers.
- $7292 LD A,E        ; #REGa=#REGe.
- $7293 ADD A,$20     ; #REGa+=#N$20.
- $7295 LD E,A        ; #REGe=#REGa.
- $7296 JR NZ,$729C   ; Jump to #R$729C if {} is not zero.
+ $7292 LD A,E        ; {#REGe+=#N$20.
+ $7293 ADD A,$20     ;
+ $7295 LD E,A        ; }
+ $7296 JR NZ,$729C   ; Jump to #R$729C if #REGe is not zero.
  $7298 LD A,D        ; {#REGd+=#N$05.
  $7299 ADD A,$05     ;
  $729B LD D,A        ; }
@@ -3025,12 +3060,12 @@ c$7200 LD HL,$7820   ; #REGhl=#R$7820.
                      ; counter is zero.
  $729F CALL $74DC    ; Call #R$74DC.
  $72A2 LD HL,$3280   ; #REGhl=#N$3280.
- $72A5 LD A,($782D)  ; {Jump to #R$72AE if *#R$782D is equal to #N$73.
+ $72A5 LD A,($782D)  ; {Jump to #R$72AE if *#R$782C(#N$782D) is equal to #N$73.
  $72A8 CP $73        ;
  $72AA JR Z,$72AE    ; }
  $72AC LD H,$0B      ; #REGh=#N$0B.
-*$72AE NOP           ; No operation.
- $72AF NOP           ; No operation.
+*$72AE NOP           ; {No operation.
+ $72AF NOP           ; }
  $72B0 LD ($7841),HL ; Write #REGhl to *#R$7841.
  $72B3 XOR A         ; {Write #N$00 to *#R$7840.
  $72B4 LD ($7840),A  ; }
@@ -3042,59 +3077,60 @@ u$72BA DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; Routine at 72C3
 ;
-; Used by the routine at #R$687D.
-c$72C3 LD A,($7840)  ;
+; Used by the routine at #R$6C00.
+c$72C3 LD A,($7840)  ; {Jump to #R$72E2 if *#R$7840 is zero.
  $72C6 AND A         ;
- $72C7 JR Z,$72E2    ;
- $72C9 LD HL,$7843   ;
- $72CC DEC (HL)      ;
- $72CD JR NZ,$72E2   ;
- $72CF LD (HL),$03   ;
- $72D1 LD HL,($7841) ;
- $72D4 DEC HL        ;
- $72D5 LD ($7841),HL ;
- $72D8 LD A,H        ;
+ $72C7 JR Z,$72E2    ; }
+ $72C9 LD HL,$7843   ; #REGhl=#R$7843.
+ $72CC DEC (HL)      ; Decrease *#REGhl by one.
+ $72CD JR NZ,$72E2   ; Jump to #R$72E2 if *#REGhl is not zero.
+ $72CF LD (HL),$03   ; Write #N$03 to *#REGhl.
+ $72D1 LD HL,($7841) ; #REGhl=*#R$7841.
+ $72D4 DEC HL        ; Decrease #REGhl by one.
+ $72D5 LD ($7841),HL ; Write #REGhl to *#R$7841.
+ $72D8 LD A,H        ; {Jump to #R$72E2 if #REGh is not zero.
  $72D9 AND A         ;
- $72DA JR NZ,$72E2   ;
- $72DC LD A,L        ;
+ $72DA JR NZ,$72E2   ; }
+ $72DC LD A,L        ; {Call #R$77E0 if #REGl is equal to #N$80.
  $72DD CP $80        ;
- $72DF CALL Z,$77E0  ;
-*$72E2 LD HL,($7817) ;
- $72E5 LD A,H        ;
- $72E6 SUB $99       ;
- $72E8 LD B,$FE      ;
-*$72EA INC B         ;
- $72EB INC B         ;
- $72EC SUB $05       ;
- $72EE JR NZ,$72EA   ;
- $72F0 LD A,L        ;
- $72F1 AND $E0       ;
- $72F3 ADD A,A       ;
- $72F4 LD L,A        ;
- $72F5 ADC A,B       ;
- $72F6 SUB L         ;
- $72F7 ADD A,$FA     ;
- $72F9 LD H,A        ;
- $72FA CALL $E84D    ;
- $72FD LD B,$08      ;
-*$72FF PUSH HL       ;
- $7300 PUSH BC       ;
- $7301 CALL $709D    ;
- $7304 POP BC        ;
- $7305 POP HL        ;
- $7306 LD DE,$0008   ;
- $7309 ADD HL,DE     ;
- $730A DJNZ $72FF    ;
- $730C RET           ;
+ $72DF CALL Z,$77E0  ; }
+*$72E2 LD HL,($7817) ; #REGhl=*#R$7817.
+ $72E5 LD A,H        ; #REGa=#REGh.
+ $72E6 SUB $99       ; #REGa-=#N$99.
+ $72E8 LD B,$FE      ; #REGb=#N$FE.
+*$72EA INC B         ; {Increment #REGb by two.
+ $72EB INC B         ; }
+ $72EC SUB $05       ; #REGa-=#N$05.
+ $72EE JR NZ,$72EA   ; Jump to #R$72EA if #REGa is not zero.
+ $72F0 LD A,L        ; #REGa=#REGl.
+ $72F1 AND %11100000 ; Keep only bits 5-7.
+ $72F3 ADD A,A       ; #REGa+=#REGa.
+ $72F4 LD L,A        ; #REGl=#REGa.
+ $72F5 ADC A,B       ; #REGa+=#REGb.
+ $72F6 SUB L         ; #REGa-=#REGl.
+ $72F7 ADD A,$FA     ; #REGa+=#N$FA.
+ $72F9 LD H,A        ; #REGh=#REGa.
+ $72FA CALL $E84D    ; Call #R$E84D.
+ $72FD LD B,$08      ; #REGb=#N$08.
+*$72FF PUSH HL       ; {Stash #REGhl and #REGbc on the stack.
+ $7300 PUSH BC       ; }
+ $7301 CALL $709D    ; Call #R$709D.
+ $7304 POP BC        ; {Restore #REGbc and #REGhl from the stack.
+ $7305 POP HL        ; }
+ $7306 LD DE,$0008   ; #REGde=#N($0008,$04,$04).
+ $7309 ADD HL,DE     ; #REGhl+=#REGde.
+ $730A DJNZ $72FF    ; Decrease counter by one and loop back to #R$72FF until
+                     ; counter is zero.
+ $730C RET           ; Return.
 
 ; Unused
 u$730D DEFB $00,$00,$00,$00
 
 ; Routine at 7311
 ;
-; Used by the routine at #R$687D.
+; Used by the routine at #R$6C00.
 c$7311 CALL $6B2D    ;
-; This entry point is used by the routine at #R$763C.
+; This entry point is used by the routine at #R$76D7.
 *$7314 CALL $716E    ;
  $7317 LD HL,($7817) ;
  $731A LD A,L        ;
@@ -3198,80 +3234,90 @@ c$7311 CALL $6B2D    ;
  $73B3 DJNZ $739B    ;
  $73B5 RET           ;
  $73B6 INC BC        ;
- $73B7 LD A,$04      ;
- $73B9 LD ($7839),A  ;
- $73BC LD HL,$3400   ;
- $73BF LD ($783C),HL ;
- $73C2 CALL $6828    ;
- $73C5 AND A         ;
- $73C6 JR Z,$73D1    ;
- $73C8 NOP           ;
+
+; Demo Mode Input
+@label=DemoModeInput
+c$73B7 LD A,$04      ; {Write #N$04 to *#R$7839.
+ $73B9 LD ($7839),A  ; }
+ $73BC LD HL,$3400   ; {Write #N$3400 to *#R$783C.
+ $73BF LD ($783C),HL ; }
+ $73C2 CALL $6828    ; Call #R$6828.
+ $73C5 AND A         ; {Jump to #R$73D1 if #REGa is zero.
+ $73C6 JR Z,$73D1    ; }
+ $73C8 NOP           ; {No operation.
  $73C9 NOP           ;
  $73CA NOP           ;
  $73CB NOP           ;
  $73CC NOP           ;
- $73CD NOP           ;
- $73CE JP $E81B      ;
-*$73D1 CALL $6400    ;
- $73D4 AND $0C       ;
- $73D6 JR Z,$73D1    ;
- $73D8 XOR $0C       ;
- $73DA LD HL,($7831) ;
- $73DD INC L         ;
+ $73CD NOP           ; }
+ $73CE JP $E81B      ; Jump to #R$E81B.
+*$73D1 CALL $6400    ; Call #R$6400.
+ $73D4 AND %00001100 ; Keep only bits 2-3.
+ $73D6 JR Z,$73D1    ; Jump to #R$73D1 if the result is zero.
+ $73D8 XOR %00001100 ; Flip bits 2-3.
+ $73DA LD HL,($7831) ; #REGhl=*#R$7831.
+ $73DD INC L         ; {Increment #REGl by three.
  $73DE INC L         ;
- $73DF INC L         ;
- $73E0 LD D,A        ;
- $73E1 LD A,($7822)  ;
- $73E4 CP (HL)       ;
- $73E5 LD A,$00      ;
- $73E7 JR Z,$73EF    ;
- $73E9 JR C,$73ED    ;
- $73EB LD A,$03      ;
-*$73ED XOR $01       ;
-*$73EF OR D          ;
- $73F0 RET           ;
- $73F1 NOP           ;
-; This entry point is used by the routine at #R$687D.
-*$73F2 LD A,($7825)  ;
- $73F5 AND A         ;
- $73F6 RET NZ        ;
- $73F7 LD HL,$FFF8   ;
- $73FA ADD HL,BC     ;
- $73FB EXX           ;
- $73FC LD A,L        ;
+ $73DF INC L         ; }
+ $73E0 LD D,A        ; #REGd=#REGa.
+ $73E1 LD A,($7822)  ; #REGa=*#R$7822.
+ $73E4 CP (HL)       ; Compare #REGa with *#REGhl.
+ $73E5 LD A,$00      ; #REGa=#N$00.
+ $73E7 JR Z,$73EF    ; Jump to #R$73EF if #REGa was equal to *#REGhl on line
+                     ; #R$73E4.
+ $73E9 JR C,$73ED    ; Jump to #R$73ED if #REGa was lower than *#REGhl on line
+                     ; #R$73E4.
+ $73EB LD A,$03      ; #REGa=#N$03.
+*$73ED XOR %00000001 ; Flip bits 0.
+*$73EF OR D          ; Set the bits from #REGd.
+ $73F0 RET           ; Return.
+
+; Unused
+u$73F1 DEFB $00
+
+; Routine at 73F2
+;
+; Used by the routine at #R$6910.
+c$73F2 LD A,($7825)  ; #REGa=*#R$7825.
+ $73F5 AND A         ; {Return if #REGa is not zero.
+ $73F6 RET NZ        ; }
+ $73F7 LD HL,$FFF8   ; #REGhl=#R$FFF8.
+ $73FA ADD HL,BC     ; #REGhl+=#REGbc.
+ $73FB EXX           ; Switch to the shadow registers.
+ $73FC LD A,L        ; {#REGl'-=#N$07.
  $73FD SUB $07       ;
- $73FF LD L,A        ;
- $7400 SBC A,A       ;
- $7401 ADD A,H       ;
- $7402 LD H,A        ;
- $7403 LD DE,$0400   ;
-*$7406 LD A,(HL)     ;
- $7407 EXX           ;
- $7408 OR (HL)       ;
- $7409 XOR (HL)      ;
- $740A INC HL        ;
- $740B INC HL        ;
- $740C EXX           ;
- $740D CP (HL)       ;
- $740E JR Z,$7411    ;
- $7410 INC E         ;
-*$7411 INC HL        ;
- $7412 DEC D         ;
- $7413 JR NZ,$7406   ;
- $7415 INC HL        ;
+ $73FF LD L,A        ; }
+ $7400 SBC A,A       ; #REGa-=#REGa.
+ $7401 ADD A,H       ; #REGa+=#REGh'.
+ $7402 LD H,A        ; #REGh'=#REGa.
+ $7403 LD DE,$0400   ; #REGde'=#N$0400.
+*$7406 LD A,(HL)     ; #REGa=*#REGhl'.
+ $7407 EXX           ; Switch back to the normal registers.
+ $7408 OR (HL)       ; Set the bits from *#REGhl.
+ $7409 XOR (HL)      ; Flip the bits according to *#REGhl.
+ $740A INC HL        ; {Increment #REGhl by two.
+ $740B INC HL        ; }
+ $740C EXX           ; Switch to the shadow registers.
+ $740D CP (HL)       ; {Jump to #R$7411 if #REGa is equal to *#REGhl'.
+ $740E JR Z,$7411    ; }
+ $7410 INC E         ; Increment #REGe' by one.
+*$7411 INC HL        ; Increment #REGhl' by one.
+ $7412 DEC D         ; Decrease #REGd' by one.
+ $7413 JR NZ,$7406   ; Jump to #R$7406 if #REGd' is not zero.
+ $7415 INC HL        ; {Increment #REGhl' by three.
  $7416 INC HL        ;
- $7417 INC HL        ;
- $7418 LD A,E        ;
- $7419 LD ($7825),A  ;
- $741C EXX           ;
- $741D RET           ;
+ $7417 INC HL        ; }
+ $7418 LD A,E        ; #REGa=#REGe'.
+ $7419 LD ($7825),A  ; Write #REGa to *#R$7825.
+ $741C EXX           ; Switch back to the normal registers.
+ $741D RET           ; Return.
 
 ; Unused
 u$741E DEFB $00,$00
 
 ; Routine at 7420
 ;
-; Used by the routines at #R$757E and #R$763C.
+; Used by the routines at #R$757E, #R$763C and #R$76D7.
 c$7420 LD HL,($7844) ;
  $7423 LD DE,($7846) ;
  $7427 AND A         ;
@@ -3547,10 +3593,10 @@ c$751A LD HL,($782E) ; #REGhl=*#R$782E.
 
 ; Print "Demo Mode"
 ;
-; Used by the routines at #R$6D21, #R$754F and #R$763C.
+; Used by the routines at #R$7161, #R$754F and #R$76D7.
 @label=PrintDemoMode
-c$7535 LD A,($782D)  ; {Jump to #R$7544 if *#R$782D is not equal to #N$73.
- $7538 CP $73        ;
+c$7535 LD A,($782D)  ; {Jump to #R$7544 if *#R$782C(#N$782D) is not equal to
+ $7538 CP $73        ; #N$73.
  $753A JR NZ,$7544   ; }
  $753C LD A,$82      ; #REGa=#N$82 (#COLOUR$82).
  $753E LD HL,$BA66   ; #REGhl=#R$BA66.
@@ -3572,7 +3618,8 @@ c$7535 LD A,($782D)  ; {Jump to #R$7544 if *#R$782D is not equal to #N$73.
 ; Used by the routine at #R$75AA.
 @label=InitialiseGame
 c$754F CALL $7535    ; Call #R$7535.
-; This entry point is used by the routines at #R$6D21, #R$763C and #R$ED39.
+; "Spend" a life to continue, or move to Game Over.
+@label=SpendLife
 *$7552 LD HL,$7839   ; {Decrease *#R$7839 by one.
  $7555 DEC (HL)      ; }
 ; Compare the players current lives with the maximum number of lives (#N$04).
@@ -3590,8 +3637,8 @@ c$754F CALL $7535    ; Call #R$7535.
  $7566 CALL $74AA    ; Call #R$74AA.
  $7569 DJNZ $7563    ; Decrease counter by one and loop back to #R$7563 until
                      ; counter is zero.
-*$756B LD A,C        ; #REGa=#REGc.
- $756C AND A         ; {Jump to #R$757E if #REGa is zero.
+*$756B LD A,C        ; {Jump to #R$757E if #REGc is zero.
+ $756C AND A         ;
  $756D JR Z,$757E    ; }
 ; Display the bike graphic for each remaining life.
  $756F LD B,C        ; #REGb=#REGc (counter; current number of lives).
@@ -3746,275 +3793,292 @@ u$763B DEFB $00
 
 ; Routine at 763C
 ;
-; Used by the routine at #R$687D.
-c$763C CALL $7420    ;
- $763F LD HL,($783C) ;
- $7642 LD A,H        ;
+; Used by the routine at #R$6C00.
+c$763C CALL $7420    ; Call #R$7420.
+ $763F LD HL,($783C) ; #REGhl=*#R$783C.
+ $7642 LD A,H        ; {Jump to #R$769A if #REGh is lower than #N$80.
  $7643 CP $80        ;
- $7645 JR C,$769A    ;
- $7647 LD HL,($782E) ;
- $764A LD A,(HL)     ;
- $764B DEC A         ;
- $764C JR Z,$765C    ;
- $764E CP $31        ;
- $7650 CALL NC,$EBF3 ;
- $7653 CP $2D        ;
- $7655 CALL C,$EBF3  ;
- $7658 NOP           ;
+ $7645 JR C,$769A    ; }
+ $7647 LD HL,($782E) ; #REGhl=*#R$782E.
+ $764A LD A,(HL)     ; #REGa=*#REGhl.
+ $764B DEC A         ; Decrease #REGa by one.
+ $764C JR Z,$765C    ; Jump to #R$765C if #REGa is zero.
+ $764E CP $31        ; {Call #R$EBF3 if #REGa is higher than #N$31.
+ $7650 CALL NC,$EBF3 ; }
+ $7653 CP $2D        ; {Call #R$EBF3 if #REGa is lower than #N$2D.
+ $7655 CALL C,$EBF3  ; }
+ $7658 NOP           ; {No operation.
  $7659 NOP           ;
  $765A NOP           ;
- $765B NOP           ;
-*$765C CALL $68AD    ;
- $765F LD A,($7822)  ;
- $7662 BIT 7,A       ;
- $7664 LD A,$87      ;
- $7666 JR NZ,$766A   ;
- $7668 ADD A,$40     ;
-*$766A LD ($7834),A  ;
- $766D CALL $6B2D    ;
- $7670 LD A,$A9      ;
- $7672 LD HL,$BA86   ;
- $7675 CALL $74C3    ;
- $7678 LD D,$10      ;
- $767A LD C,$01      ;
-*$767C LD HL,$1E00   ;
- $767F LD A,C        ;
-*$7680 LD B,C        ;
- $7681 OUT ($FE),A   ;
- $7683 XOR $10       ;
-*$7685 DJNZ $7685    ;
- $7687 DEC L         ;
- $7688 JR NZ,$7680   ;
- $768A DEC H         ;
- $768B JR NZ,$7680   ;
- $768D INC C         ;
- $768E DEC D         ;
- $768F JR NZ,$767C   ;
- $7691 LD HL,$3400   ;
- $7694 LD ($783C),HL ;
- $7697 JP $7161      ;
-*$769A LD A,($7822)  ;
- $769D BIT 7,A       ;
- $769F JR NZ,$76A2   ;
- $76A1 CPL           ;
-*$76A2 SUB $7E       ;
- $76A4 SRL A         ;
- $76A6 LD E,A        ;
- $76A7 LD D,$00      ;
- $76A9 AND A         ;
- $76AA SBC HL,DE     ;
- $76AC LD ($783C),HL ;
- $76AF JR C,$76D0    ;
- $76B1 LD A,H        ;
- $76B2 SRL A         ;
- $76B4 SRL A         ;
- $76B6 CPL           ;
- $76B7 SUB $0C       ;
- $76B9 LD L,A        ;
- $76BA LD H,$BA      ;
- $76BC LD DE,$5A65   ;
- $76BF CALL $6893    ;
- $76C2 LD HL,($783C) ;
- $76C5 LD A,H        ;
- $76C6 CP $04        ;
- $76C8 CALL NC,$6D50 ;
- $76CB BIT 6,L       ;
- $76CD CALL NZ,$6D50 ;
-*$76D0 JP $EBF3      ;
- $76D3 NOP           ;
- $76D4 NOP           ;
- $76D5 NOP           ;
- $76D6 NOP           ;
-; This entry point is used by the routines at #R$6D21 and #R$7311.
-*$76D7 CALL $692C    ;
- $76DA LD A,($7825)  ;
+ $765B NOP           ; }
+*$765C CALL $68AD    ; Call #R$68AD.
+ $765F LD A,($7822)  ; #REGa=*#R$7822.
+ $7662 BIT 7,A       ; Test bit 7 of #REGa.
+ $7664 LD A,$87      ; #REGa=#N$87.
+ $7666 JR NZ,$766A   ; Jump to #R$766A if {} is not zero.
+ $7668 ADD A,$40     ; #REGa+=#N$40.
+*$766A LD ($7834),A  ; Write #REGa to *#R$7834.
+ $766D CALL $6B2D    ; Call #R$6B2D.
+; Print the "#STR($BA86,$03,$20)" messaging in the footer.
+; .
+; #HTML(#FONT:(OUT OF FUEL)$3D00,attr=$A9(out-of-fuel))
+ $7670 LD A,$A9      ; #REGa=#N$A9 (#COLOUR$A9).
+ $7672 LD HL,$BA86   ; #REGhl=#R$BA86.
+ $7675 CALL $74C3    ; Call #R$74C3.
+ $7678 LD D,$10      ; #REGd=#N$10.
+ $767A LD C,$01      ; #REGc=#N$01.
+*$767C LD HL,$1E00   ; #REGhl=#N$1E00.
+ $767F LD A,C        ; #REGa=#REGc.
+*$7680 LD B,C        ; #REGb=#REGc.
+ $7681 OUT ($FE),A   ; OUT #N$EEFE
+ $7683 XOR %00010000 ; Flip bits 4.
+*$7685 DJNZ $7685    ; Decrease counter by one and loop back to #R$7685 until
+                     ; counter is zero.
+ $7687 DEC L         ; Decrease #REGl by one.
+ $7688 JR NZ,$7680   ; Jump to #R$7680 if #REGl is not zero.
+ $768A DEC H         ; Decrease #REGh by one.
+ $768B JR NZ,$7680   ; Jump to #R$7680 if #REGh is not zero.
+ $768D INC C         ; Increment #REGc by one.
+ $768E DEC D         ; Decrease #REGd by one.
+ $768F JR NZ,$767C   ; Jump to #R$767C if #REGd is not zero.
+ $7691 LD HL,$3400   ; {Write #N$3400 to *#R$783C.
+ $7694 LD ($783C),HL ; }
+ $7697 JP $7161      ; Jump to #R$7161.
+*$769A LD A,($7822)  ; #REGa=*#R$7822.
+ $769D BIT 7,A       ; Test bit 7 of #REGa.
+ $769F JR NZ,$76A2   ; Jump to #R$76A2 if {} is not zero.
+ $76A1 CPL           ; Invert the bits in #REGa.
+*$76A2 SUB $7E       ; #REGa-=#N$7E.
+ $76A4 SRL A         ; Shift #REGa right.
+ $76A6 LD E,A        ; #REGe=#REGa.
+ $76A7 LD D,$00      ; #REGd=#N$00.
+ $76A9 AND A         ; Set flags.
+ $76AA SBC HL,DE     ; #REGhl-=#REGde (with carry).
+ $76AC LD ($783C),HL ; Write #REGhl to *#R$783C.
+ $76AF JR C,$76D0    ; Jump to #R$76D0 if {} is lower.
+ $76B1 LD A,H        ; #REGa=#REGh.
+ $76B2 SRL A         ; Shift #REGa right.
+ $76B4 SRL A         ; Shift #REGa right.
+ $76B6 CPL           ; Invert the bits in #REGa.
+ $76B7 SUB $0C       ; #REGa-=#N$0C.
+ $76B9 LD L,A        ; #REGl=#REGa.
+ $76BA LD H,$BA      ; #REGh=#N$BA.
+ $76BC LD DE,$5A65   ; #REGde=#N$5A65 (attribute buffer location).
+ $76BF CALL $6893    ; Call #R$6893.
+ $76C2 LD HL,($783C) ; #REGhl=*#R$783C.
+ $76C5 LD A,H        ; #REGa=#REGh.
+ $76C6 CP $04        ; Compare #REGa with #N$04.
+ $76C8 CALL NC,$6D50 ; Call #R$6D50 is higher.
+ $76CB BIT 6,L       ; Test bit 6 of #REGl.
+ $76CD CALL NZ,$6D50 ; Call #R$6D50 not zero.
+*$76D0 JP $EBF3      ; Jump to #R$EBF3.
+
+; Unused
+u$76D3 DEFB $00,$00,$00,$00
+
+; Routine at 76D7
+;
+; Used by the routines at #R$716E and #R$7311.
+c$76D7 CALL $692C    ; Call #R$692C.
+ $76DA LD A,($7825)  ; {Return if *#R$7825 is zero.
  $76DD AND A         ;
- $76DE RET Z         ;
- $76DF XOR A         ;
- $76E0 LD ($7825),A  ;
- $76E3 LD A,($782A)  ;
+ $76DE RET Z         ; }
+ $76DF XOR A         ; {Write #N$00 to *#R$7825.
+ $76E0 LD ($7825),A  ; }
+ $76E3 LD A,($782A)  ; {Return if *#R$782A is not zero.
  $76E6 AND A         ;
- $76E7 RET NZ        ;
- $76E8 EXX           ;
- $76E9 LD A,C        ;
- $76EA EXX           ;
- $76EB CP $44        ;
- $76ED JR C,$7744    ;
- $76EF JR NZ,$7729   ;
- $76F1 LD HL,$7840   ;
- $76F4 LD A,(HL)     ;
+ $76E7 RET NZ        ; }
+ $76E8 EXX           ; Switch to the shadow registers.
+ $76E9 LD A,C        ; #REGa=#REGc'.
+ $76EA EXX           ; Switch back to the normal registers.
+ $76EB CP $44        ; {Jump to #R$7744 if #REGa is lower than #N$44.
+ $76ED JR C,$7744    ; }
+ $76EF JR NZ,$7729   ; Jump to #R$7729 if #REGa is not equal to #N$44.
+ $76F1 LD HL,$7840   ; #REGhl=#R$7840.
+ $76F4 LD A,(HL)     ; {Jump to #R$EC2A if *#REGhl is not zero.
  $76F5 AND A         ;
- $76F6 JP NZ,$EC2A   ;
- $76F9 LD (HL),$01   ;
- $76FB CALL $EC0F    ;
- $76FE NOP           ;
- $76FF LD HL,($7844) ;
+ $76F6 JP NZ,$EC2A   ; }
+ $76F9 LD (HL),$01   ; Write #N$01 to *#REGhl.
+ $76FB CALL $EC0F    ; Call #R$EC0F.
+ $76FE NOP           ; No operation.
+ $76FF LD HL,($7844) ; {#REGhl=*#R$7844+#N$01F4.
  $7702 LD DE,$01F4   ;
- $7705 ADD HL,DE     ;
- $7706 LD ($7844),HL ;
- $7709 LD A,$96      ;
- $770B LD HL,$BAA6   ;
- $770E CALL $74C3    ;
- $7711 CALL $EC63    ;
- $7714 CALL $7535    ;
- $7717 XOR A         ;
- $7718 LD ($7824),A  ;
- $771B INC A         ;
- $771C LD ($781A),A  ;
- $771F LD HL,$0B6E   ;
- $7722 LD ($7841),HL ;
- $7725 NOP           ;
- $7726 CALL $6D49    ;
-*$7729 CP $46        ;
- $772B JR NC,$7742   ;
- $772D LD DE,$0032   ;
+ $7705 ADD HL,DE     ; }
+ $7706 LD ($7844),HL ; Write #REGhl to *#R$7844.
+; Print the "#STR($BAA6,$03,$20)" messaging in the footer.
+; .
+; #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
+ $7709 LD A,$96      ; #REGa=#N$96 (#COLOUR$96).
+ $770B LD HL,$BAA6   ; #REGhl=#R$BAA6.
+ $770E CALL $74C3    ; Call #R$74C3.
+ $7711 CALL $EC63    ; Call #R$EC63.
+ $7714 CALL $7535    ; Call #R$7535.
+ $7717 XOR A         ; {Write #N$00 to *#R$7824.
+ $7718 LD ($7824),A  ; }
+ $771B INC A         ; {Write #N$01 to *#R$781A.
+ $771C LD ($781A),A  ; }
+ $771F LD HL,$0B6E   ; {Write #N$0B6E to *#R$7841.
+ $7722 LD ($7841),HL ; }
+ $7725 NOP           ; No operation.
+ $7726 CALL $6D49    ; Call #R$6D49.
+*$7729 CP $46        ; {Jump to #R$7742 if #REGa is higher than #N$46.
+ $772B JR NC,$7742   ; }
+ $772D LD DE,$0032   ; {#REGhl=*#R$7844+#N($0032,$04,$04).
  $7730 LD HL,($7844) ;
- $7733 ADD HL,DE     ;
- $7734 LD ($7844),HL ;
- $7737 POP HL        ;
- $7738 POP DE        ;
- $7739 PUSH DE       ;
- $773A PUSH HL       ;
- $773B LD HL,$FFFA   ;
- $773E ADD HL,DE     ;
- $773F SET 7,(HL)    ;
- $7741 RET           ;
-*$7742 JR NZ,$77A2   ;
-*$7744 NOP           ;
+ $7733 ADD HL,DE     ; }
+ $7734 LD ($7844),HL ; Write #REGhl to *#R$7844.
+ $7737 POP HL        ; {Restore #REGhl and #REGde from the stack.
+ $7738 POP DE        ; }
+ $7739 PUSH DE       ; {Stash #REGde and #REGhl on the stack.
+ $773A PUSH HL       ; }
+ $773B LD HL,$FFFA   ; #REGhl=#N$FFFA.
+ $773E ADD HL,DE     ; #REGhl+=#REGde.
+ $773F SET 7,(HL)    ; Set bit 7 of *#REGhl.
+ $7741 RET           ; Return.
+*$7742 JR NZ,$77A2   ; Jump to #R$77A2 if {} is not zero.
+*$7744 NOP           ; {No operation.
  $7745 NOP           ;
  $7746 NOP           ;
  $7747 NOP           ;
  $7748 NOP           ;
- $7749 NOP           ;
- $774A POP HL        ;
- $774B POP DE        ;
- $774C LD HL,($783E) ;
- $774F LD BC,$0008   ;
- $7752 LD A,C        ;
-*$7753 SET 7,(HL)    ;
- $7755 ADD HL,BC     ;
- $7756 DEC A         ;
- $7757 JR NZ,$7753   ;
- $7759 LD HL,$FFFA   ;
- $775C ADD HL,DE     ;
- $775D RES 7,(HL)    ;
+ $7749 NOP           ; }
+ $774A POP HL        ; {Restore #REGhl and #REGde from the stack.
+ $774B POP DE        ; }
+ $774C LD HL,($783E) ; #REGhl=*#R$783E.
+ $774F LD BC,$0008   ; #REGbc=#N($0008,$04,$04).
+ $7752 LD A,C        ; #REGa=#REGc.
+*$7753 SET 7,(HL)    ; Set bit 7 of *#REGhl.
+ $7755 ADD HL,BC     ; #REGhl+=#REGbc.
+ $7756 DEC A         ; Decrease #REGa by one.
+ $7757 JR NZ,$7753   ; Jump to #R$7753 until #REGa is zero.
+ $7759 LD HL,$FFFA   ; #REGhl=#N$FFFA.
+ $775C ADD HL,DE     ; #REGhl+=#REGde.
+ $775D RES 7,(HL)    ; Reset bit 7 of *#REGhl.
 ; This entry point is used by the routine at #R$EC2A.
-*$775F PUSH HL       ;
- $7760 LD B,$06      ;
-*$7762 PUSH BC       ;
- $7763 CALL $68AD    ;
- $7766 CALL $6B2D    ;
- $7769 LD C,$28      ;
- $776B LD HL,$0800   ;
- $776E LD A,$02      ;
-*$7770 OUT ($FE),A   ;
- $7772 XOR $10       ;
- $7774 LD D,A        ;
- $7775 LD B,C        ;
-*$7776 DJNZ $7776    ;
- $7778 DEC HL        ;
- $7779 LD A,H        ;
- $777A OR L          ;
- $777B LD A,D        ;
- $777C JR NZ,$7770   ;
- $777E CALL $68AD    ;
- $7781 CALL $7314    ;
- $7784 LD C,$14      ;
- $7786 LD HL,$1000   ;
- $7789 LD A,$06      ;
-*$778B OUT ($FE),A   ;
- $778D XOR $10       ;
- $778F LD D,A        ;
- $7790 LD B,C        ;
-*$7791 DJNZ $7791    ;
- $7793 DEC HL        ;
- $7794 LD A,H        ;
- $7795 OR L          ;
- $7796 LD A,D        ;
- $7797 JR NZ,$778B   ;
- $7799 POP BC        ;
- $779A DJNZ $7762    ;
- $779C POP HL        ;
- $779D SET 7,(HL)    ;
- $779F JP $6ED4      ;
-*$77A2 NOP           ;
+*$775F PUSH HL       ; Stash #REGhl on the stack.
+ $7760 LD B,$06      ; #REGb=#N$06.
+*$7762 PUSH BC       ; Stash #REGbc on the stack.
+ $7763 CALL $68AD    ; Call #R$68AD.
+ $7766 CALL $6B2D    ; Call #R$6B2D.
+ $7769 LD C,$28      ; #REGc=#N$28.
+ $776B LD HL,$0800   ; #REGhl=#N$0800.
+ $776E LD A,$02      ; #REGa=#N$02.
+*$7770 OUT ($FE),A   ; OUT #N$EEFE
+ $7772 XOR %00010000 ; Flip bit 4.
+ $7774 LD D,A        ; #REGd=#REGa.
+ $7775 LD B,C        ; #REGb=#REGc.
+*$7776 DJNZ $7776    ; Decrease counter by one and loop back to #R$7776 until
+                     ; counter is zero.
+ $7778 DEC HL        ; Decrease #REGhl by one.
+ $7779 LD A,H        ; {Is #REGhl zero?
+ $777A OR L          ; }
+ $777B LD A,D        ; #REGa=#REGd.
+ $777C JR NZ,$7770   ; Jump to #R$7770 if #REGhl is not zero.
+ $777E CALL $68AD    ; Call #R$68AD.
+ $7781 CALL $7314    ; Call #R$7314.
+ $7784 LD C,$14      ; #REGc=#N$14.
+ $7786 LD HL,$1000   ; #REGhl=#N($1000,$04,$04).
+ $7789 LD A,$06      ; #REGa=#N$06.
+*$778B OUT ($FE),A   ; OUT #N$EEFE
+ $778D XOR %00010000 ; Flip bit 4.
+ $778F LD D,A        ; #REGd=#REGa.
+ $7790 LD B,C        ; #REGb=#REGc.
+*$7791 DJNZ $7791    ; Decrease counter by one and loop back to #R$7791 until
+                     ; counter is zero.
+ $7793 DEC HL        ; Decrease #REGhl by one.
+ $7794 LD A,H        ; {Is #REGhl zero?
+ $7795 OR L          ; }
+ $7796 LD A,D        ; #REGa=#REGd.
+ $7797 JR NZ,$778B   ; Jump to #R$778B if #REGhl is not zero.
+ $7799 POP BC        ; Restore #REGbc from the stack.
+ $779A DJNZ $7762    ; Decrease counter by one and loop back to #R$7762 until
+                     ; counter is zero.
+ $779C POP HL        ; Restore #REGhl from the stack.
+ $779D SET 7,(HL)    ; Set bit 7 of *#REGhl.
+ $779F JP $6ED4      ; Jump to #R$6ED4.
+*$77A2 NOP           ; {No operation.
  $77A3 NOP           ;
  $77A4 NOP           ;
  $77A5 NOP           ;
  $77A6 NOP           ;
- $77A7 NOP           ;
- $77A8 LD DE,$03E8   ;
- $77AB LD HL,($7844) ;
- $77AE ADD HL,DE     ;
- $77AF LD ($7844),HL ;
- $77B2 CALL $7420    ;
- $77B5 CALL $68AD    ;
- $77B8 NOP           ;
+ $77A7 NOP           ; }
+ $77A8 LD DE,$03E8   ; #REGde=#N$03E8.
+ $77AB LD HL,($7844) ; #REGhl=*#R$7844.
+ $77AE ADD HL,DE     ; #REGhl+=#REGde.
+ $77AF LD ($7844),HL ; Write #REGhl to *#R$7844.
+ $77B2 CALL $7420    ; Call #R$7420.
+ $77B5 CALL $68AD    ; Call #R$68AD.
+ $77B8 NOP           ; {No operation.
  $77B9 NOP           ;
  $77BA NOP           ;
- $77BB NOP           ;
- $77BC LD HL,$7839   ;
- $77BF LD (HL),$05   ;
- $77C1 CALL $ED39    ;
- $77C4 LD A,$9F      ;
- $77C6 LD HL,$BAC6   ;
- $77C9 CALL $74C3    ;
- $77CC CALL $EC5E    ;
-*$77CF CALL $6828    ;
- $77D2 AND A         ;
- $77D3 JR Z,$77CF    ;
- $77D5 CALL $7535    ;
- $77D8 JP $6CAD      ;
- $77DB NOP           ;
- $77DC NOP           ;
- $77DD NOP           ;
- $77DE NOP           ;
- $77DF NOP           ;
-; This entry point is used by the routine at #R$72C3.
-*$77E0 NOP           ;
+ $77BB NOP           ; }
+ $77BC LD HL,$7839   ; #REGhl=#R$7839.
+ $77BF LD (HL),$05   ; Write #N$05 to *#REGhl.
+ $77C1 CALL $ED39    ; Call #R$ED39.
+; Print the "#STR($BAC6,$03,$20)" messaging in the footer.
+; .
+; #HTML(#FONT:(NEW CODE ABCDE-PRESS KEY TO PLAY)$3D00,attr=$96(new-code))
+ $77C4 LD A,$9F      ; #REGa=#N$9F (#COLOUR$9F).
+ $77C6 LD HL,$BAC6   ; #REGhl=#R$BAC6.
+ $77C9 CALL $74C3    ; Call #R$74C3.
+ $77CC CALL $EC5E    ; Call #R$EC5E.
+*$77CF CALL $6828    ; Call #R$6828.
+ $77D2 AND A         ; {Jump to #R$77CF if #REGa is zero.
+ $77D3 JR Z,$77CF    ; }
+ $77D5 CALL $7535    ; Call #R$7535.
+ $77D8 JP $6CAD      ; Jump to #R$6CAD.
+
+; Unused
+u$77DB DEFB $00,$00,$00,$00,$00
+
+; Routine at 77E0
+;
+; Used by the routine at #R$72C3.
+c$77E0 NOP           ; {No operation.
  $77E1 NOP           ;
  $77E2 NOP           ;
  $77E3 NOP           ;
  $77E4 NOP           ;
- $77E5 NOP           ;
- $77E6 LD A,$87      ;
- $77E8 LD HL,$78AC   ;
- $77EB CALL $74C3    ;
- $77EE CALL $EC68    ;
- $77F1 LD HL,$7839   ;
- $77F4 LD (HL),$01   ;
- $77F6 JP $7552      ;
- $77F9 NOP           ;
- $77FA DEC B         ;
- $77FB NOP           ;
- $77FC INC BC        ;
- $77FD LD (BC),A     ;
- $77FE LD (BC),A     ;
- $77FF LD (BC),A     ;
- $7800 NOP           ;
- $7801 INC BC        ;
- $7802 NOP           ;
- $7803 INC BC        ;
- $7804 INC BC        ;
- $7805 NOP           ;
- $7806 NOP           ;
- $7807 LD BC,$0400   ;
- $780A NOP           ;
- $780B NOP           ;
- $780C INC B         ;
- $780D LD (BC),A     ;
- $780E LD (BC),A     ;
- $780F NOP           ;
- $7810 NOP           ;
- $7811 LD BC,$0000   ;
- $7814 NOP           ;
- $7815 LD B,$1E      ;
- $7817 LD B,$06      ;
- $7819 NOP           ;
- $781A NOP           ;
- $781B NOP           ;
- $781C INC B         ;
- $781D INC B         ;
+ $77E5 NOP           ; }
+; Print the "#STR($78AC,$03,$20)" messaging in the footer.
+; .
+; #HTML(#FONT:(THE GHOSTRIDER HAS FINISHED)$3D00,attr=$87(ghostrider-finished))
+ $77E6 LD A,$87      ; #REGa=#N$87 (#COLOUR$87).
+ $77E8 LD HL,$78AC   ; #REGhl=#R$78AC.
+ $77EB CALL $74C3    ; Call #R$74C3.
+ $77EE CALL $EC68    ; Call #R$EC68.
+; Set the player lives to #N$01 this is decreased to #N$00 by #R$7552 so is how
+; the player receives a "Game Over".
+ $77F1 LD HL,$7839   ; {Write #N$01 to #R$7839.
+ $77F4 LD (HL),$01   ; }
+ $77F6 JP $7552      ; Jump to #R$7552.
+
+; Data block at 77F9
+b$77F9 DEFB $00,$05,$00,$03,$02,$02,$02,$00
+ $7801 DEFB $03,$00,$03,$03,$00,$00,$01,$00
+ $7809 DEFB $04,$00,$00,$04,$02,$02,$00,$00
+ $7811 DEFB $01,$00,$00
+
+; Game status buffer entry at 7814
+g$7814 DEFB $00
+
+; Game status buffer entry at 7815
+g$7815 DEFB $06,$1E
+
+; Game status buffer entry at 7817
+g$7817 DEFB $06,$06
+
+; Game status buffer entry at 7819
+g$7819 DEFB $00
+
+; Game status buffer entry at 781A
+g$781A DEFB $00
+
+; Game status buffer entry at 781B
+g$781B DEFB $00
+
+; Game status buffer entry at 781C
+g$781C DEFW $0404
 
 ; Game status buffer entry at 781E
 g$781E DEFW $0000
@@ -4024,16 +4088,33 @@ g$781E DEFW $0000
 g$7820 DEFB $00
 
 ; Game status buffer entry at 7821
-g$7821 DEFB $04,$00,$00,$02,$00,$00,$07,$07
- $7829 DEFB $07,$00,$00
+g$7821 DEFB $04
 
-; Game status buffer entry at 782C
-g$782C DEFB $28
- $782D DEFB $68
+; Game status buffer entry at 7822
+g$7822 DEFB $00,$00
+
+; Game status buffer entry at 7824
+g$7824 DEFB $02
+
+; Game status buffer entry at 7825
+g$7825 DEFB $00,$00,$07,$07,$07
+
+; Game status buffer entry at 782A
+g$782A DEFB $00,$00
+
+; Control Method Pointer
+@label=ControlMethod_Pointer
+g$782C DEFW $6828
 
 ; Game status buffer entry at 782E
-g$782E DEFB $00,$00,$00,$03,$03,$00,$00,$04
- $7836 DEFB $04,$04,$00
+g$782E DEFB $00,$00,$00
+
+; Game status buffer entry at 7831
+g$7831 DEFW $0303
+ $7833 DEFB $00
+
+; Game status buffer entry at 7834
+g$7834 DEFB $00,$04,$04,$04,$00
 
 ; Lives
 @label=Lives
@@ -4050,7 +4131,10 @@ g$783C DEFB $00
 g$7840 DEFB $00
 
 ; Game status buffer entry at 7841
-g$7841 DEFB $00,$06,$04
+g$7841 DEFB $00,$06
+
+; Game status buffer entry at 7843
+g$7843 DEFB $04
 
 ; Score
 @label=Score
@@ -7563,7 +7647,7 @@ c$E80E LD HL,$FFFF   ; {#REGsp=#N$FFFF.
  $E812 CALL $6414    ; Call #R$6414.
  $E815 LD HL,$6828   ; {Write #R$6828 to #R$7850.
  $E818 LD ($7850),HL ; }
-; This entry point is used by the routines at #R$7311 and #R$757E.
+; This entry point is used by the routines at #R$73B7 and #R$757E.
 @label=StartScreen
 *$E81B LD HL,($7850) ; {Write *#R$7850 to *#R$782C.
  $E81E LD ($782C),HL ; }
@@ -7938,7 +8022,7 @@ u$EBFF DEFB $00
 
 ; Routine at EC00
 ;
-; Used by the routine at #R$6D21.
+; Used by the routine at #R$6D49.
 c$EC00 EXX           ; Switch to the shadow registers.
  $EC01 LD C,A        ; #REGc=#REGa.
  $EC02 LD A,($785A)  ; #REGa=*#R$785A.
@@ -7953,7 +8037,7 @@ c$EC00 EXX           ; Switch to the shadow registers.
 
 ; Routine at EC0F
 ;
-; Used by the routine at #R$763C.
+; Used by the routine at #R$76D7.
 c$EC0F LD HL,$FA40   ; #REGhl=#R$FA40.
  $EC12 LD DE,$0008   ; #REGde=#N($0008,$04,$04).
  $EC15 LD B,$50      ; #REGb=#N$50.
@@ -7979,52 +8063,91 @@ c$EC1E LD HL,$785B   ; #REGhl=#R$785B.
 
 ; Routine at EC2A
 ;
-; Used by the routine at #R$763C.
+; Used by the routine at #R$76D7.
 c$EC2A LD HL,$7839   ; {Write #N$01 to *#R$7839.
  $EC2D LD (HL),$01   ; }
  $EC2F LD HL,$7840   ; #REGhl=#R$7840.
  $EC32 JP $775F      ; Jump to #R$775F.
-*$EC35 DI            ; Disable interrupts.
- $EC36 XOR A         ; Flip the bits according to #REGa.
+
+; Play Melody
+;
+; Used by the routines at #R$EC5E, #R$EC63 and #R$EC68.
+;
+; HL Pointer to music data
+@label=PlayMelody
+c$EC35 DI            ; Disable interrupts.
+ $EC36 XOR A         ; #REGa=#N$00.
+@label=FetchNote
 *$EC37 LD C,(HL)     ; #REGc=*#REGhl.
+; Check for the terminator (#N$FF).
  $EC38 INC C         ; Increment #REGc by one.
- $EC39 JR NZ,$EC3D   ; Jump to #R$EC3D if {} is not zero.
+ $EC39 JR NZ,$EC3D   ; Jump to #R$EC3D if #REGc is not zero.
+; The terminator (#N$FF) was reached so return.
  $EC3B EI            ; Enable interrupts.
  $EC3C RET           ; Return.
+; Restore the real value of the note after the terminator check.
+@label=PlayingMelody
 *$EC3D DEC C         ; Decrease #REGc by one.
- $EC3E INC HL        ; Increment #REGhl by one.
+ $EC3E INC HL        ; Increment the music data pointer by one.
  $EC3F LD E,(HL)     ; #REGe=*#REGhl.
- $EC40 INC HL        ; Increment #REGhl by one.
+ $EC40 INC HL        ; Increment the music data pointer by one.
  $EC41 LD D,(HL)     ; #REGd=*#REGhl.
- $EC42 INC HL        ; Increment #REGhl by one.
-*$EC43 OUT ($FE),A   ; OUT #N$41FE
+ $EC42 INC HL        ; Increment the music data pointer by one.
+@label=PlayMelody_Speaker
+*$EC43 OUT ($FE),A   ; OUT #N$FE
  $EC45 LD B,C        ; #REGb=#REGc.
- $EC46 XOR %00010000 ; Flip bits 4.
+ $EC46 XOR %00010000 ; Flip bit 4.
+@label=PlayMelody_Loop
 *$EC48 DJNZ $EC48    ; Decrease counter by one and loop back to #R$EC48 until
                      ; counter is zero.
  $EC4A LD B,A        ; #REGb=#REGa.
  $EC4B DEC DE        ; Decrease #REGde by one.
- $EC4C LD A,D        ; #REGa=#REGd.
- $EC4D OR E          ; Set the bits from #REGe.
+ $EC4C LD A,D        ; {Is #REGde zero?
+ $EC4D OR E          ; }
  $EC4E LD A,B        ; #REGa=#REGb.
- $EC4F JR NZ,$EC43   ; Jump to #R$EC43 if {} is not zero.
+ $EC4F JR NZ,$EC43   ; Jump to #R$EC43 if #REGde is not zero.
  $EC51 LD D,$0F      ; #REGd=#N$0F.
+@label=PlayMelody_Pause
 *$EC53 DEC DE        ; Decrease #REGde by one.
- $EC54 LD A,D        ; #REGa=#REGd.
- $EC55 OR E          ; Set the bits from #REGe.
- $EC56 JR NZ,$EC53   ; Jump to #R$EC53 if {} is not zero.
+ $EC54 LD A,D        ; {Is #REGde zero?
+ $EC55 OR E          ; }
+ $EC56 JR NZ,$EC53   ; Jump to #R$EC53 if #REGde is not zero.
  $EC58 LD A,B        ; #REGa=#REGb.
  $EC59 INC A         ; Increment #REGa by one.
  $EC5A AND %00010111 ; Keep only bits 0-2, 4.
  $EC5C JR $EC37      ; Jump to #R$EC37.
-; This entry point is used by the routine at #R$763C.
-*$EC5E LD HL,$EEE8   ; #REGhl=#R$EEE8.
+
+; Sounds: Level Complete
+;
+; Used by the routine at #R$76D7.
+;
+; .
+;
+; #AUDIO(level-complete.wav)(#INCLUDE(LevelComplete))
+@label=Sounds_LevelComplete
+c$EC5E LD HL,$EEE8   ; #REGhl=#R$EEE8.
  $EC61 JR $EC35      ; Jump to #R$EC35.
-; This entry point is used by the routine at #R$763C.
-*$EC63 LD HL,$EF4F   ; #REGhl=#R$EF4F.
+
+; Sounds: The Race Is On!
+;
+; Used by the routine at #R$76D7.
+;
+; .
+;
+; #AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn))
+@label=Sounds_TheRaceIsOn
+c$EC63 LD HL,$EF4F   ; #REGhl=#R$EF4F.
  $EC66 JR $EC35      ; Jump to #R$EC35.
-; This entry point is used by the routine at #R$763C.
-*$EC68 LD HL,$EFC2   ; #REGhl=#R$EFC2.
+
+; Sounds: Ghostrider Has Finished
+;
+; Used by the routine at #R$77E0.
+;
+; .
+;
+; #AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))
+@label=Sounds_GhostriderFinished
+c$EC68 LD HL,$EFC2   ; #REGhl=#R$EFC2.
  $EC6B JR $EC35      ; Jump to #R$EC35.
 
 ; Unused
@@ -8183,7 +8306,7 @@ b$ED35 DEFB $00,$00,$00,$00
 
 ; Routine at ED39
 ;
-; Used by the routine at #R$763C.
+; Used by the routine at #R$76D7.
 c$ED39 CALL $7552    ;
  $ED3C LD A,($7820)  ;
  $ED3F LD B,A        ;
@@ -8396,47 +8519,118 @@ t$EEC0 DEFM "WITTY"
 ; Data block at EEE3
 b$EEE3 DEFB $48,$52,$4D,$45,$32
 
-; Data block at EEE8
-b$EEE8 DEFB $78,$B0,$01,$6A,$E5,$01,$5E,$21
- $EEF0 DEFB $02,$59,$41,$02,$78,$B0,$01,$6A
- $EEF8 DEFB $E5,$01,$5E,$21,$02,$59,$41,$02
- $EF00 DEFB $59,$41,$02,$5E,$21,$02,$59,$41
- $EF08 DEFB $02,$4F,$88,$02,$6A,$E5,$01,$5E
- $EF10 DEFB $21,$02,$54,$63,$02,$4F,$88,$02
- $EF18 DEFB $78,$B0,$01,$6A,$E5,$01,$5E,$21
- $EF20 DEFB $02,$59,$D5,$04,$78,$9F,$03,$01
- $EF28 DEFB $01,$00,$01,$01,$00,$01,$01,$00
- $EF30 DEFB $01,$01,$00,$01,$01,$00,$01,$01
- $EF38 DEFB $00,$01,$01,$00,$01,$01,$00,$59
- $EF40 DEFB $41,$02,$5E,$21,$02,$59,$41,$02
- $EF48 DEFB $4F,$6D,$05,$6A,$00,$0F,$FF
+; Melody Data: "Level Complete"
+;
+; Used by the routine at #R$EC5E.
+@label=MelodyData_LevelComplete
+b$EEE8 DEFB $78,$B0,$01
+ $EEEB DEFB $6A,$E5,$01
+ $EEEE DEFB $5E,$21,$02
+ $EEF1 DEFB $59,$41,$02
+ $EEF4 DEFB $78,$B0,$01
+ $EEF7 DEFB $6A,$E5,$01
+ $EEFA DEFB $5E,$21,$02
+ $EEFD DEFB $59,$41,$02
+ $EF00 DEFB $59,$41,$02
+ $EF03 DEFB $5E,$21,$02
+ $EF06 DEFB $59,$41,$02
+ $EF09 DEFB $4F,$88,$02
+ $EF0C DEFB $6A,$E5,$01
+ $EF0F DEFB $5E,$21,$02
+ $EF12 DEFB $54,$63,$02
+ $EF15 DEFB $4F,$88,$02
+ $EF18 DEFB $78,$B0,$01
+ $EF1B DEFB $6A,$E5,$01
+ $EF1E DEFB $5E,$21,$02
+ $EF21 DEFB $59,$D5,$04
+ $EF24 DEFB $78,$9F,$03
+ $EF27 DEFB $01,$01,$00
+ $EF2A DEFB $01,$01,$00
+ $EF2D DEFB $01,$01,$00
+ $EF30 DEFB $01,$01,$00
+ $EF33 DEFB $01,$01,$00
+ $EF36 DEFB $01,$01,$00
+ $EF39 DEFB $01,$01,$00
+ $EF3C DEFB $01,$01,$00
+ $EF3F DEFB $59,$41,$02
+ $EF42 DEFB $5E,$21,$02
+ $EF45 DEFB $59,$41,$02
+ $EF48 DEFB $4F,$6D,$05
+ $EF4B DEFB $6A,$00,$0F
+ $EF4E DEFB $FF         ; Terminator.
 
-; Data block at EF4F
-b$EF4F DEFB $F0,$5E,$00,$E2,$E9,$00,$01,$01
- $EF57 DEFB $00,$01,$01,$00,$01,$01,$00,$01
- $EF5F DEFB $01,$00,$6F,$C8,$00,$6F,$D2,$01
- $EF67 DEFB $01,$01,$00,$01,$01,$00,$01,$01
- $EF6F DEFB $00,$01,$01,$00,$C9,$70,$00,$BE
- $EF77 DEFB $15,$01,$01,$01,$00,$01,$01,$00
- $EF7F DEFB $01,$01,$00,$01,$01,$00,$5D,$ED
- $EF87 DEFB $00,$5D,$2B,$02,$01,$01,$00,$01
- $EF8F DEFB $01,$00,$01,$01,$00,$01,$01,$00
- $EF97 DEFB $F0,$5E,$00,$E2,$E9,$00,$01,$01
- $EF9F DEFB $00,$01,$01,$00,$01,$01,$00,$01
- $EFA7 DEFB $01,$00,$C9,$70,$00,$BE,$15,$01
- $EFAF DEFB $01,$01,$00,$01,$01,$00,$01,$01
- $EFB7 DEFB $00,$01,$01,$00,$8D,$9E,$00,$96
- $EFBF DEFB $00,$0F,$FF
+; Melody Data: "The Race Is On!"
+;
+; Used by the routine at #R$EC63.
+@label=MelodyData_RaceIsOn
+b$EF4F DEFB $F0,$5E,$00
+ $EF52 DEFB $E2,$E9,$00
+ $EF55 DEFB $01,$01,$00
+ $EF58 DEFB $01,$01,$00
+ $EF5B DEFB $01,$01,$00
+ $EF5E DEFB $01,$01,$00
+ $EF61 DEFB $6F,$C8,$00
+ $EF64 DEFB $6F,$D2,$01
+ $EF67 DEFB $01,$01,$00
+ $EF6A DEFB $01,$01,$00
+ $EF6D DEFB $01,$01,$00
+ $EF70 DEFB $01,$01,$00
+ $EF73 DEFB $C9,$70,$00
+ $EF76 DEFB $BE,$15,$01
+ $EF79 DEFB $01,$01,$00
+ $EF7C DEFB $01,$01,$00
+ $EF7F DEFB $01,$01,$00
+ $EF82 DEFB $01,$01,$00
+ $EF85 DEFB $5D,$ED,$00
+ $EF88 DEFB $5D,$2B,$02
+ $EF8B DEFB $01,$01,$00
+ $EF8E DEFB $01,$01,$00
+ $EF91 DEFB $01,$01,$00
+ $EF94 DEFB $01,$01,$00
+ $EF97 DEFB $F0,$5E,$00
+ $EF9A DEFB $E2,$E9,$00
+ $EF9D DEFB $01,$01,$00
+ $EFA0 DEFB $01,$01,$00
+ $EFA3 DEFB $01,$01,$00
+ $EFA6 DEFB $01,$01,$00
+ $EFA9 DEFB $C9,$70,$00
+ $EFAC DEFB $BE,$15,$01
+ $EFAF DEFB $01,$01,$00
+ $EFB2 DEFB $01,$01,$00
+ $EFB5 DEFB $01,$01,$00
+ $EFB8 DEFB $01,$01,$00
+ $EFBB DEFB $8D,$9E,$00
+ $EFBE DEFB $96,$00,$0F
+ $EFC1 DEFB $FF         ; Terminator.
 
-; Data block at EFC2
-b$EFC2 DEFB $84,$4D,$03,$9E,$C7,$02,$75,$B5
- $EFCA DEFB $03,$84,$4D,$03,$9E,$C7,$02,$75
- $EFD2 DEFB $B5,$03,$84,$4D,$03,$9E,$C7,$02
- $EFDA DEFB $75,$B5,$03,$84,$4D,$03,$9E,$C7
- $EFE2 DEFB $02,$75,$B5,$03,$84,$59,$0A,$84
- $EFEA DEFB $59,$0A,$84,$4D,$03,$9E,$C7,$02
- $EFF2 DEFB $75,$B5,$03,$84,$4D,$03,$9E,$C7
- $EFFA DEFB $02,$C8,$F6,$0D,$FF,$78
+; Melody Data: "Ghostrider Has Finished"
+;
+; Used by the routine at #R$EC68.
+@label=MelodyData_GhostriderFinished
+b$EFC2 DEFB $84,$4D,$03
+ $EFC5 DEFB $9E,$C7,$02
+ $EFC8 DEFB $75,$B5,$03
+ $EFCB DEFB $84,$4D,$03
+ $EFCE DEFB $9E,$C7,$02
+ $EFD1 DEFB $75,$B5,$03
+ $EFD4 DEFB $84,$4D,$03
+ $EFD7 DEFB $9E,$C7,$02
+ $EFDA DEFB $75,$B5,$03
+ $EFDD DEFB $84,$4D,$03
+ $EFE0 DEFB $9E,$C7,$02
+ $EFE3 DEFB $75,$B5,$03
+ $EFE6 DEFB $84,$59,$0A
+ $EFE9 DEFB $84,$59,$0A
+ $EFEC DEFB $84,$4D,$03
+ $EFEF DEFB $9E,$C7,$02
+ $EFF2 DEFB $75,$B5,$03
+ $EFF5 DEFB $84,$4D,$03
+ $EFF8 DEFB $9E,$C7,$02
+ $EFFB DEFB $C8,$F6,$0D
+ $EFFE DEFB $FF         ; Terminator.
+
+; Data block at EFFF
+b$EFFF DEFB $78
 
 ; Messaging: Instructions (Page 1)
 @label=Messaging_InstructionsPage1
