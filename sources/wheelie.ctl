@@ -10,6 +10,8 @@ D $4000 #UDGTABLE { =h Wheelie Loading Screen. } { #SCR$02(loading) } UDGTABLE#
   $4000,$1800,$20 Pixels.
   $5800,$0300,$20 Attributes.
 
+b $5B00
+
 c $5D11 Game Entry Point
 @ $5D11 label=GameEntryPoint
   $5D11,$04 #REGsp=#N$FFFF.
@@ -73,6 +75,53 @@ c $6440
 u $64A4
 
 c $64AA
+  $64AA,$03 #REGhl=#R$9E00.
+  $64AD,$03 #REGbc=#N$0A00.
+  $64B0,$02 #REGa=#N$32.
+  $64B2,$02 CPIR.
+  $64B4,$03 Return if #REGbc is zero.
+  $64B7,$02 Stash #REGhl and #REGbc on the stack.
+  $64B9,$01 #REGa=#N$00.
+  $64BA,$02 No operation.
+  $64BC,$02 #REGb=#N$04.
+  $64BE,$01 #REGe=#REGa.
+  $64BF,$01 Decrease #REGl by one.
+  $64C0,$03 Call #R$6400.
+  $64C3,$02,b$01 Keep only bits 0-2.
+  $64C5,$03 Jump to #R$64F4 if #REGa is lower than #REGe.
+  $64C8,$03 Call #R$7088.
+  $64CB,$02,b$01 Keep only bits 0-2.
+  $64CD,$01 #REGa+=#REGa.
+  $64CE,$01 #REGe=#REGa.
+  $64CF,$01 #REGa+=#REGa.
+  $64D0,$01 #REGa+=#REGe.
+  $64D1,$02 #REGa+=#N$6C.
+  $64D3,$01 #REGe=#REGa.
+  $64D4,$02 #REGd=#N$B4.
+  $64D6,$01 #REGa=*#REGde.
+  $64D7,$01 Write #REGa to *#REGhl.
+  $64D8,$01 Increment #REGe by one.
+  $64D9,$01 Increment #REGl by one.
+  $64DA,$02 Decrease counter by one and loop back to #R$64D6 until counter is zero.
+  $64DC,$04 Jump to #R$64F9 if *#REGde is zero.
+  $64E0,$03 Decrease #REGl by three.
+  $64E3,$01 Increment #REGh by one.
+  $64E4,$02 #REGb=#N$02.
+  $64E6,$01 #REGa=*#REGhl.
+  $64E7,$01 Set flags.
+  $64E8,$01 #REGa=*#REGde.
+  $64E9,$02 Jump to #R$64ED if *#REGhl is zero.
+  $64EB,$02 Increment #REGa by two.
+  $64ED,$01 Write #REGa to *#REGhl.
+  $64EE,$01 Increment #REGl by one.
+  $64EF,$01 Increment #REGe by one.
+  $64F0,$02 Decrease counter by one and loop back to #R$64E6 until counter is zero.
+  $64F2,$02 Jump to #R$64F9.
+  $64F4,$02 Write #N$01 to *#REGhl.
+  $64F6,$01 Increment #REGl by one.
+  $64F7,$02 Decrease counter by one and loop back to #R$64F4 until counter is zero.
+  $64F9,$02 Restore #REGbc and #REGhl from the stack.
+  $64FB,$02 Jump to #R$64B0.
 
 u $64FD
 
@@ -137,8 +186,284 @@ u $6563
 c $6564
 
 c $659C
+  $659C,$03 #REGhl=*#R$7817.
+  $659F,$01 #REGd=#REGh.
+  $65A0,$01 #REGe=#REGl.
+  $65A1,$03 #REGa=*#R$7819.
+  $65A4,$01 #REGc=#REGa.
+  $65A5,$01 Increment #REGa by one.
+  $65A6,$02,b$01 Keep only bits 0-2.
+  $65A8,$03 Write #REGa to *#R$7819.
+  $65AB,$02 Jump to #R$65B7 if #REGa is not zero.
+  $65AD,$01 Increment #REGl by one.
+  $65AE,$02 Jump to #R$65B4 if #REGl is not zero.
+  $65B0,$04 #REGh+=#N$05.
+  $65B4,$03 Write #REGhl to *#R$7817.
+  $65B7,$04 #REGe+=#N$08.
+  $65BB,$02 Jump to #R$65C1 if {} is higher.
+  $65BD,$04 #REGd+=#N$05.
+  $65C1,$01 #REGa=#REGc.
+  $65C2,$02 #REGb=#N$01.
+  $65C4,$03 Call #R$6564.
+  $65C7,$03 #REGhl=#N$401F (screen buffer location).
+  $65CA,$01 #REGd=#REGh.
+  $65CB,$01 #REGe=#REGl.
+  $65CC,$01 Switch to the shadow registers.
+  $65CD,$01 #REGa=*#REGde.
+  $65CE,$01 Increment #REGe by one.
+  $65CF,$01 #REGl=#REGa.
+  $65D0,$02 #REGh=#N$1F.
+  $65D2,$01 #REGhl+=#REGhl.
+  $65D3,$01 #REGhl+=#REGhl.
+  $65D4,$01 Switch to the shadow registers.
+  $65D5,$02 #REGb=#N$04.
+  $65D7,$01 Switch to the shadow registers.
+  $65D8,$01 #REGa=*#REGhl.
+  $65D9,$01 Increment #REGl by one.
+  $65DA,$01 Switch to the shadow registers.
+  $65DB,$02 RLD.
+  $65DD,$01 Decrease #REGl by one.
+  $65DE,$02 RLD.
+  $65E0,$01 Decrease #REGl by one.
+  $65E1,$02 RLD.
+  $65E3,$01 Decrease #REGl by one.
+  $65E4,$02 RLD.
+  $65E6,$01 Decrease #REGl by one.
+  $65E7,$02 RLD.
+  $65E9,$01 Decrease #REGl by one.
+  $65EA,$02 RLD.
+  $65EC,$01 Decrease #REGl by one.
+  $65ED,$02 RLD.
+  $65EF,$01 Decrease #REGl by one.
+  $65F0,$02 RLD.
+  $65F2,$01 Decrease #REGl by one.
+  $65F3,$02 RLD.
+  $65F5,$01 Decrease #REGl by one.
+  $65F6,$02 RLD.
+  $65F8,$01 Decrease #REGl by one.
+  $65F9,$02 RLD.
+  $65FB,$01 Decrease #REGl by one.
+  $65FC,$02 RLD.
+  $65FE,$01 Decrease #REGl by one.
+  $65FF,$02 RLD.
+  $6601,$01 Decrease #REGl by one.
+  $6602,$02 RLD.
+  $6604,$01 Decrease #REGl by one.
+  $6605,$02 RLD.
+  $6607,$01 Decrease #REGl by one.
+  $6608,$02 RLD.
+  $660A,$01 Decrease #REGl by one.
+  $660B,$02 RLD.
+  $660D,$01 Decrease #REGl by one.
+  $660E,$02 RLD.
+  $6610,$01 Decrease #REGl by one.
+  $6611,$02 RLD.
+  $6613,$01 Decrease #REGl by one.
+  $6614,$02 RLD.
+  $6616,$01 Decrease #REGl by one.
+  $6617,$02 RLD.
+  $6619,$01 Decrease #REGl by one.
+  $661A,$02 RLD.
+  $661C,$01 Decrease #REGl by one.
+  $661D,$02 RLD.
+  $661F,$01 Decrease #REGl by one.
+  $6620,$02 RLD.
+  $6622,$01 Decrease #REGl by one.
+  $6623,$02 RLD.
+  $6625,$01 Decrease #REGl by one.
+  $6626,$02 RLD.
+  $6628,$01 Decrease #REGl by one.
+  $6629,$02 RLD.
+  $662B,$01 Decrease #REGl by one.
+  $662C,$02 RLD.
+  $662E,$01 Decrease #REGl by one.
+  $662F,$02 RLD.
+  $6631,$01 Decrease #REGl by one.
+  $6632,$02 RLD.
+  $6634,$01 Decrease #REGl by one.
+  $6635,$02 RLD.
+  $6637,$01 Decrease #REGl by one.
+  $6638,$02 RLD.
+  $663A,$01 #REGl=#REGe.
+  $663B,$02 Increment #REGh by two.
+  $663D,$02 Decrease counter by one and loop back to #R$65D7 until counter is zero.
+  $663F,$04 #REGe+=#N$20.
+  $6643,$01 #REGl=#REGa.
+  $6644,$02 Jump to #R$6648 if {} is higher.
+  $6646,$02 #REGd=#N$48.
+  $6648,$01 #REGh=#REGd.
+  $6649,$01 Switch to the shadow registers.
+  $664A,$02 Decrease counter by one and loop back to #R$65CD until counter is zero.
+  $664C,$01 Switch to the shadow registers.
+  $664D,$01 Return.
 
-c $67E9
+u $664E
+
+c $6650
+  $6650,$03 #REGhl=*#R$7817.
+  $6653,$06 Jump to #R$6667 if *#R$7819 is not zero.
+  $6659,$04 Jump to #R$6661 if #REGl is not zero.
+  $665D,$04 #REGh-=#N$05.
+  $6661,$01 Decrease #REGl by one.
+  $6662,$03 Write #REGhl to *#R$7817.
+  $6665,$02 #REGa=#N$08.
+  $6667,$01 Decrease #REGa by one.
+  $6668,$03 Write #REGa to *#R$7819.
+  $666B,$01 #REGd=#REGh.
+  $666C,$01 #REGe=#REGl.
+  $666D,$02 #REGb=#N$FF.
+  $666F,$03 Call #R$6564.
+  $6672,$03 #REGhl=#R$4000(#N$4000) (screen buffer).
+  $6675,$01 #REGd=#REGh.
+  $6676,$01 #REGe=#REGl.
+  $6677,$01 Switch to the shadow registers.
+  $6678,$01 #REGa=*#REGde.
+  $6679,$01 Increment #REGe by one.
+  $667A,$01 #REGl=#REGa.
+  $667B,$02 #REGh=#N$1F.
+  $667D,$01 #REGhl+=#REGhl.
+  $667E,$01 #REGhl+=#REGhl.
+  $667F,$01 Switch to the shadow registers.
+  $6680,$02 #REGb=#N$04.
+  $6682,$01 Switch to the shadow registers.
+  $6683,$01 #REGa=*#REGhl.
+  $6684,$01 Increment #REGl by one.
+  $6685,$01 Switch to the shadow registers.
+  $6686,$02 RRD.
+  $6688,$01 Increment #REGl by one.
+  $6689,$02 RRD.
+  $668B,$01 Increment #REGl by one.
+  $668C,$02 RRD.
+  $668E,$01 Increment #REGl by one.
+  $668F,$02 RRD.
+  $6691,$01 Increment #REGl by one.
+  $6692,$02 RRD.
+  $6694,$01 Increment #REGl by one.
+  $6695,$02 RRD.
+  $6697,$01 Increment #REGl by one.
+  $6698,$02 RRD.
+  $669A,$01 Increment #REGl by one.
+  $669B,$02 RRD.
+  $669D,$01 Increment #REGl by one.
+  $669E,$02 RRD.
+  $66A0,$01 Increment #REGl by one.
+  $66A1,$02 RRD.
+  $66A3,$01 Increment #REGl by one.
+  $66A4,$02 RRD.
+  $66A6,$01 Increment #REGl by one.
+  $66A7,$02 RRD.
+  $66A9,$01 Increment #REGl by one.
+  $66AA,$02 RRD.
+  $66AC,$01 Increment #REGl by one.
+  $66AD,$02 RRD.
+  $66AF,$01 Increment #REGl by one.
+  $66B0,$02 RRD.
+  $66B2,$01 Increment #REGl by one.
+  $66B3,$02 RRD.
+  $66B5,$01 Increment #REGl by one.
+  $66B6,$02 RRD.
+  $66B8,$01 Increment #REGl by one.
+  $66B9,$02 RRD.
+  $66BB,$01 Increment #REGl by one.
+  $66BC,$02 RRD.
+  $66BE,$01 Increment #REGl by one.
+  $66BF,$02 RRD.
+  $66C1,$01 Increment #REGl by one.
+  $66C2,$02 RRD.
+  $66C4,$01 Increment #REGl by one.
+  $66C5,$02 RRD.
+  $66C7,$01 Increment #REGl by one.
+  $66C8,$02 RRD.
+  $66CA,$01 Increment #REGl by one.
+  $66CB,$02 RRD.
+  $66CD,$01 Increment #REGl by one.
+  $66CE,$02 RRD.
+  $66D0,$01 Increment #REGl by one.
+  $66D1,$02 RRD.
+  $66D3,$01 Increment #REGl by one.
+  $66D4,$02 RRD.
+  $66D6,$01 Increment #REGl by one.
+  $66D7,$02 RRD.
+  $66D9,$01 Increment #REGl by one.
+  $66DA,$02 RRD.
+  $66DC,$01 Increment #REGl by one.
+  $66DD,$02 RRD.
+  $66DF,$01 Increment #REGl by one.
+  $66E0,$02 RRD.
+  $66E2,$01 Increment #REGl by one.
+  $66E3,$02 RRD.
+  $66E5,$01 #REGl=#REGe.
+  $66E6,$02 Increment #REGh by two.
+  $66E8,$02 Decrease counter by one and loop back to #R$6682 until counter is zero.
+  $66EA,$04 #REGe+=#N$20.
+  $66EE,$01 #REGl=#REGa.
+  $66EF,$02 Jump to #R$66F3 if {} is higher.
+  $66F1,$02 #REGd=#N$48.
+  $66F3,$01 #REGh=#REGd.
+  $66F4,$01 Switch to the shadow registers.
+  $66F5,$02 Decrease counter by one and loop back to #R$6678 until counter is zero.
+  $66F7,$01 Switch to the shadow registers.
+  $66F8,$01 Return.
+
+u $66F9
+
+c $6700
+  $6700,$03 #REGde=#R$7802.
+  $6703,$02 #REGb=#N$10.
+  $6705,$01 #REGa=*#REGde.
+  $6706,$01 Increment #REGe by one.
+  $6707,$02 #REGc=#N$04.
+  $6709,$04 Jump to #R$6722 if #REGa is lower than #N$0F.
+  $670D,$04 Jump to #R$6722 if #REGa is higher than #N$90.
+  $6711,$01 Increment #REGc by one.
+  $6712,$04 Jump to #R$6722 if #REGa is lower than #N$3D.
+  $6716,$01 Increment #REGc by one.
+  $6717,$04 Jump to #R$6722 if #REGa is lower than #N$51.
+  $671B,$02 #REGc=#N$02.
+  $671D,$04 Jump to #R$6722 if #REGa is lower than #N$6F.
+  $6721,$01 Increment #REGc by one.
+  $6722,$01 Write #REGc to *#REGhl.
+  $6723,$02 #REGa=#N$20.
+  $6725,$01 #REGa+=#REGl.
+  $6726,$01 #REGl=#REGa.
+  $6727,$01 #REGa+=#REGh.
+  $6728,$01 #REGa-=#REGl.
+  $6729,$01 #REGh=#REGa.
+  $672A,$02 Decrease counter by one and loop back to #R$6705 until counter is zero.
+  $672C,$01 Return.
+
+u $672D
+
+c $672E
+  $672E,$03 #REGhl=#N$5801 (attribute buffer location).
+  $6731,$03 #REGde=#R$5800(#N$5800) (attribute buffer location).
+  $6734,$02 #REGb=#N$10.
+  $6736,$02 #REGc=#N$FF.
+  $6738,$3E LDI.
+  $6776,$01 Increment #REGhl by one.
+  $6777,$01 Increment #REGde by one.
+  $6778,$02 Decrease counter by one and loop back to #R$6736 until counter is zero.
+  $677A,$03 #REGhl=#N$581F (attribute buffer location).
+  $677D,$03 Jump to #R$6700.
+
+u $6780
+
+c $678C
+  $678C,$03 #REGhl=#N$59FE (attribute buffer location).
+  $678F,$03 #REGde=#N$59FF (attribute buffer location).
+  $6792,$02 #REGb=#N$10.
+  $6794,$02 #REGc=#N$FF.
+  $6796,$3E LDD.
+  $67D4,$01 Decrease #REGhl by one.
+  $67D5,$01 Decrease #REGde by one.
+  $67D6,$02 Decrease counter by one and loop back to #R$6794 until counter is zero.
+  $67D8,$03 #REGhl=#R$5800(#N$5800) (attribute buffer location).
+  $67DB,$03 Jump to #R$6700.
+
+u $67DE
+
+c $67E9 Controller: Scroll Playarea
+@ $67E9 label=Controller_ScrollPlayarea
   $67E9,$07 Return if *#R$7814 is not equal to #N$02.
   $67F0,$02 Write #N$00 to *#REGhl.
   $67F2,$01 Increment #REGhl by one.
@@ -281,8 +606,40 @@ c $68AD
 u $68E8
 
 c $68EC
+  $68EC,$01 Switch to the shadow registers.
+  $68ED,$03 Write #REGhl' to *#R$781C.
+  $68F0,$01 #REGa=#REGb'.
+  $68F1,$03 Write #REGa to *#R$781B.
+  $68F4,$01 Switch back to the normal registers.
+  $68F5,$01 Return.
 
 c $68F6
+  $68F6,$01 #REGa=*#REGhl.
+  $68F7,$01 Switch to the shadow registers.
+  $68F8,$01 Write #REGa to *#REGhl'.
+  $68F9,$01 Increment #REGhl' by one.
+  $68FA,$01 Switch back to the normal registers.
+  $68FB,$01 #REGa=*#REGbc.
+  $68FC,$01 Write #REGa to *#REGhl.
+  $68FD,$01 Increment #REGbc by one.
+  $68FE,$01 Increment #REGh by one.
+  $68FF,$01 #REGa=*#REGbc.
+  $6900,$01 Write #REGa to *#REGhl.
+  $6901,$01 Increment #REGbc by one.
+  $6902,$01 Increment #REGh by one.
+  $6903,$01 #REGa=*#REGhl.
+  $6904,$01 Switch to the shadow registers.
+  $6905,$01 Write #REGa to *#REGhl'.
+  $6906,$01 Increment #REGhl' by one.
+  $6907,$01 Switch back to the normal registers.
+  $6908,$01 #REGa=*#REGbc.
+  $6909,$01 Write #REGa to *#REGhl.
+  $690A,$01 Increment #REGbc by one.
+  $690B,$01 Increment #REGh by one.
+  $690C,$01 #REGa=*#REGbc.
+  $690D,$01 Write #REGa to *#REGhl.
+  $690E,$01 Increment #REGbc by one.
+  $690F,$01 Return.
 
 c $6910
 
@@ -373,7 +730,8 @@ c $6CAA Game Initialisation
   $6CEC,$02 Write #N$00 to *#REGhl.
   $6CEE,$03 Call #R$6500.
   $6CF1,$02 #REGl=#N$10.
-  $6CF3,$07 Jump to #R$6D11 if *#R$782C(#N$782D) is not equal to #N$73.
+N $6CF3 See #R$E800.
+  $6CF3,$07 Jump to #R$6D11 if the game is not in "demo mode" (the high-order byte of #R$782C does not contain #R$73B7(#N$73)).
   $6CFA,$03 #REGhl=#R$A1E0.
   $6CFD,$01 #REGa=*#REGhl.
   $6CFE,$01 Decrease #REGl by one.
@@ -403,6 +761,43 @@ c $6D28
 
 c $6D49
 
+c $7048 Handler: Refuel
+@ $7048 label=Handler_Refuel
+  $7048,$03 #REGhl=*#R$782E.
+  $704B,$02 Write #N$2E to *#REGhl.
+  $704D,$03 #REGa=*#R$7833.
+  $7050,$02 Compare #REGa with #N$08.
+  $7052,$02 #REGh=#N$42.
+  $7054,$02 Jump to #R$7058 if #REGa was lower than #N$08 (on line #R$7050).
+  $7056,$02 #REGh=#N$4A.
+  $7058,$01 Decrease #REGa by one.
+  $7059,$02,b$01 Keep only bits 1-2.
+  $705B,$03 RRCA.
+  $705E,$02 #REGa+=#N$0D.
+  $7060,$01 #REGl=#REGa.
+  $7061,$02 #REGc=#N$03.
+  $7063,$02 #REGe=#N$02.
+  $7065,$02 #REGb=#N$06.
+  $7067,$02 Write #N$00 to *#REGhl.
+  $7069,$01 Increment #REGl by one.
+  $706A,$02 Decrease counter by one and loop back to #R$7068 until counter is zero.
+  $706C,$04 #REGl-=#N$06.
+  $7070,$02 Increment #REGh by two.
+  $7072,$01 Decrease #REGc by one.
+  $7073,$02 Jump to #R$7065 until #REGc is zero.
+  $7075,$02 #REGa+=#N$20.
+  $7077,$01 #REGl=#REGa.
+  $7078,$01 #REGa=#REGh.
+  $7079,$02 #REGa-=#N$08.
+  $707B,$01 #REGh=#REGa.
+  $707C,$01 #REGc=#REGe.
+  $707D,$01 Decrease #REGe by one.
+  $707E,$02 Jump to #R$7065 until #REGe is zero.
+  $7080,$06 Write #N$3400 to *#R$783C.
+  $7086,$01 Return.
+
+u $7087
+
 c $7088
   $7088,$03 Call #R$6400.
   $708B,$01 #REGe=#REGa.
@@ -429,12 +824,25 @@ c $716E
 
 u $71F8
 
-c $7200
+c $7200 Initialise New Level
+@ $7200 label=InitialiseNewLevel
   $7200,$03 #REGhl=#R$7820.
-  $7203,$05 Jump to #R$720A if *#REGhl is equal to #N$07.
+  $7203,$05 Jump to #R$720A if the current level is equal to #N$07. After level #N$07 the game just repeats this level.
+N $7208 Increments both #R$7820 and #REGa as we use this as an offset for pointing to the level data.
   $7208,$01 Increment *#REGhl by one.
   $7209,$01 Increment #REGa by one.
-  $720A,$02 RRCA.
+N $720A #TABLE(default,centre,centre)
+. { #N$00 | #R$E600 }
+. { #N$01 | #R$E640 }
+. { #N$02 | #R$E680 }
+. { #N$03 | #R$E6C0 }
+. { #N$04 | #R$E700 }
+. { #N$05 | #R$E740 }
+. { #N$06 | #R$E780 }
+. { #N$07 | #R$E7C0 }
+. TABLE#
+@ $720A label=InitialiseLevel
+  $720A,$02 Rotate #REGa right two positions (bits 2 to 5 are now in positions 0 to 3) using the carry flag.
   $720C,$01 #REGl=#REGa.
   $720D,$02,b$01 Keep only bits 0-1.
   $720F,$02 #REGa+=#N$E6.
@@ -442,12 +850,12 @@ c $7200
   $7212,$01 #REGa=#REGl.
   $7213,$02,b$01 Keep only bits 6-7.
   $7215,$01 #REGl=#REGa.
-  $7216,$02 #REGa=#N$0A.
+  $7216,$02 #REGa=#N$0A (counter).
   $7218,$01 No operation.
   $7219,$03 #REGde=#R$FA40.
   $721C,$01 Stash #REGhl on the stack.
   $721D,$03 #REGbc=#N($0040,$04,$04).
-  $7220,$02 LDIR.
+  $7220,$02 Copy #N($0040,$04,$04) bytes of data from *#REGhl to *#REGde.
   $7222,$01 Restore #REGhl from the stack.
   $7223,$01 Decrease #REGa by one.
   $7224,$02 Jump to #R$721C until #REGa is zero.
@@ -523,8 +931,10 @@ c $7200
   $729D,$02 Decrease counter by one and loop back to #R$7247 until counter is zero.
   $729F,$03 Call #R$74DC.
   $72A2,$03 #REGhl=#N$3280.
-  $72A5,$07 Jump to #R$72AE if *#R$782C(#N$782D) is equal to #N$73.
+N $72A5 See #R$E800.
+  $72A5,$07 Jump to #R$72AE if the game is in "demo mode" (the high-order byte of #R$782C contains #R$73B7(#N$73)).
   $72AC,$02 #REGh=#N$0B.
+@ $72AE label=InitialiseNewLevel_InDemoMode
   $72AE,$02 No operation.
   $72B0,$03 Write #REGhl to *#R$7841.
   $72B3,$04 Write #N$00 to *#R$7840.
@@ -571,6 +981,29 @@ c $72C3
 u $730D
 
 c $7311
+
+u $7390
+
+c $7396
+  $7396,$03 #REGhl=#R$FA47.
+  $7399,$02 #REGb=#N$50.
+  $739B,$01 #REGa=*#REGhl.
+  $739C,$02 Decrease #REGl by two.
+  $739E,$02 #REGa-=#N$9A.
+  $73A0,$02 #REGa-=#N$05.
+  $73A2,$02 Jump to #R$73A0 if {} is higher.
+  $73A4,$02 #REGa+=#N$06.
+  $73A6,$04 Jump to #R$73AF if #REGa is equal to #N$05.
+  $73AA,$01 #REGa+=#REGa.
+  $73AB,$01 #REGa+=#REGa.
+  $73AC,$01 Decrease #REGa by one.
+  $73AD,$01 #REGa+=*#REGhl.
+  $73AE,$01 Write #REGa to *#REGhl.
+  $73AF,$03 #REGde=#N($000A,$04,$04).
+  $73B2,$01 #REGhl+=#REGde.
+  $73B3,$02 Decrease counter by one and loop back to #R$739B until counter is zero.
+  $73B5,$01 Return.
+B $73B6,$01
 
 c $73B7 Demo Mode Input
 @ $73B7 label=DemoModeInput
@@ -630,8 +1063,12 @@ c $73F2
 u $741E
 
 c $7420
-
-c $742C
+  $7420,$03 #REGhl=*#R$7844.
+  $7423,$04 #REGde=*#R$7846.
+  $7427,$01 Set flags.
+  $7428,$02 #REGhl-=#REGde (with carry).
+  $742A,$01 Return if the result is zero.
+  $742B,$01 #REGhl+=#REGde.
   $742C,$03 Write #REGhl to *#R$7846.
   $742F,$01 Switch to the shadow registers.
   $7430,$03 #REGde'=#N$51C6 (screen buffer location).
@@ -672,42 +1109,40 @@ c $742C
   $7469,$02 #REGa+=#N$0A.
   $746B,$01 Write #REGa to *#REGde.
   $746C,$01 Switch to the shadow registers.
-  $746D,$03 #REGbc=#R$784B.
-  $7470,$01 #REGa=*#REGbc.
-  $7471,$01 #REGa+=#REGa.
-  $7472,$01 #REGa+=#REGa.
-  $7473,$01 #REGa+=#REGa.
-  $7474,$02 #REGa+=#N$81.
-  $7476,$01 #REGl=#REGa.
-  $7477,$02 #REGh=#N$3D.
-  $7479,$01 #REGa=*#REGhl.
-  $747A,$01 Write #REGa to *#REGde.
-  $747B,$01 Increment #REGl by one.
-  $747C,$01 Increment #REGd by one.
-  $747D,$01 #REGa=*#REGhl.
-  $747E,$01 Write #REGa to *#REGde.
-  $747F,$01 Increment #REGl by one.
-  $7480,$01 Increment #REGd by one.
-  $7481,$01 #REGa=*#REGhl.
-  $7482,$01 Write #REGa to *#REGde.
-  $7483,$01 Increment #REGl by one.
-  $7484,$01 Increment #REGd by one.
-  $7485,$01 #REGa=*#REGhl.
-  $7486,$01 Write #REGa to *#REGde.
-  $7487,$01 Increment #REGl by one.
-  $7488,$01 Increment #REGd by one.
-  $7489,$01 #REGa=*#REGhl.
-  $748A,$01 Write #REGa to *#REGde.
-  $748B,$01 Increment #REGl by one.
-  $748C,$01 Increment #REGd by one.
-  $748D,$01 #REGa=*#REGhl.
-  $748E,$01 Write #REGa to *#REGde.
-  $748F,$02 #REGd=#N$51.
-  $7491,$01 Increment #REGe by one.
-  $7492,$01 Increment #REGc by one.
-  $7493,$04 Jump to #R$7470 if bit 3 of #REGc is not zero.
-  $7497,$01 Switch to the shadow registers.
+  $746D,$03 #REGbc'=#R$784B.
+N $7470 #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
+.       <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
+N $7470 This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
+.       only copies six bytes/ lines.
+@ $7470 label=PrintTarget
+  $7470,$01 #REGa=*#REGbc'.
+  $7471,$06 #REGl'=#N$81+(#REGa*#N$08).
+  $7477,$02 #HTML(#REGh'=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">#N$3D</a>.)
+  $7479,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
+  $747B,$01 Increment #REGl' by one.
+  $747C,$01 Increment #REGd' by one.
+  $747D,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
+  $747F,$01 Increment #REGl' by one.
+  $7480,$01 Increment #REGd' by one.
+  $7481,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
+  $7483,$01 Increment #REGl' by one.
+  $7484,$01 Increment #REGd' by one.
+  $7485,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
+  $7487,$01 Increment #REGl' by one.
+  $7488,$01 Increment #REGd' by one.
+  $7489,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
+  $748B,$01 Increment #REGl' by one.
+  $748C,$01 Increment #REGd' by one.
+  $748D,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
+N $748F Reset the screen buffer position.
+  $748F,$02 #REGd'=#N$51.
+  $7491,$01 Move right one character block in the screen buffer, ready to print the next number.
+  $7492,$01 Increment #REGc' by one.
+  $7493,$04 Jump to #R$7470 if bit 3 of #REGc' is not zero.
+  $7497,$01 Switch back to the normal registers.
   $7498,$01 Return.
+
+u $7499
 
 c $749C Clear Screen
 @ $749C label=ClearScreen
@@ -751,9 +1186,8 @@ b $74C2
 
 c $74C3 Print Footer Colour String
 @ $74C3 label=PrintFooterColourString
-D $74C3 Given an attribute value and a pointer to a string of #N$20 bytes, this routine will print a string to the
+N $74C3 Given an attribute value and a pointer to a string of #N$20 bytes, this routine will print a string to the
 .       footer of the screen buffer using the given attribute colour.
-D $74C3 Used by the routines at #R$74DC, #R$75AA and #R$ED52.
 E $74C3 Continue on to #R$74D3.
 R $74C3 A Attribute
 R $74C3 HL Address of the string
@@ -835,16 +1269,18 @@ c $751A
   $7521,$04 Jump to #R$752D if #REGa is lower than #N$28.
   $7525,$02 Compare #REGa with #N$46.
   $7527,$02 #REGe=#N$08.
-  $7529,$02 Jump to #R$752D if {} is higher.
+  $7529,$02 Jump to #R$752D if #REGa was higher than #N$46 (on line #R$7525).
   $752B,$02 #REGe=#N$01.
-  $752D,$03 #REGhl=*#R$7844.
-  $7530,$01 #REGhl+=#REGde.
+  $752D,$04 #REGhl=*#R$7844+#REGde.
   $7531,$03 Write #REGhl to *#R$7844.
   $7534,$01 Return.
 
 c $7535 Print "Demo Mode"
 @ $7535 label=PrintDemoMode
-  $7535,$07 Jump to #R$7544 if *#R$782C(#N$782D) is not equal to #N$73.
+N $7535 See #R$E800.
+  $7535,$07 Jump to #R$7544 if the game is not in "demo mode" (the high-order byte of #R$782C does not contain #R$73B7(#N$73)).
+N $753C Print the "#STR($BA66,$03,$20)" messaging in the footer.
+N $753C #HTML(#FONT:(DEMO MODE-PRESS A KEY TO PLAY)$3D00,attr=$82(demo-mode))
   $753C,$02 #REGa=#N$82 (#COLOUR$82).
   $753E,$03 #REGhl=#R$BA66.
   $7541,$03 Jump to #R$74C3.
@@ -906,9 +1342,12 @@ c $757E Game Over
   $758D,$01 Exchange the #REGde and #REGhl registers.
   $758E,$03 Write #REGhl to *#R$7848.
   $7591,$01 Switch to the shadow registers.
-  $7592,$03 #REGde=#N$51DB (screen buffer location).
-  $7595,$01 Switch to the shadow registers.
+  $7592,$03 #REGde'=#N$51DB (screen buffer location).
+  $7595,$01 Switch back to the normal registers.
   $7596,$03 Call #R$7434.
+N $7599 Print the "#STR($BA46,$03,$20)" messaging in the footer.
+N $7599 #HTML(#FONT:(GAME OVER-PRESS KEY TO TRY AGAIN)$3D00,attr=$84(game-over))
+@ $7599 label=Print_GameOver
   $7599,$02 #REGa=#N$84 (#COLOUR$84).
   $759B,$03 #REGhl=#R$BA46.
   $759E,$03 Call #R$74C3.
@@ -1036,7 +1475,7 @@ N $7670 #HTML(#FONT:(OUT OF FUEL)$3D00,attr=$A9(out-of-fuel))
   $767C,$03 #REGhl=#N$1E00.
   $767F,$01 #REGa=#REGc.
   $7680,$01 #REGb=#REGc.
-  $7681,$02 OUT #N$EEFE
+  $7681,$02 OUT #N$FE
   $7683,$02,b$01 Flip bits 4.
   $7685,$02 Decrease counter by one and loop back to #R$7685 until counter is zero.
   $7687,$01 Decrease #REGl by one.
@@ -1138,7 +1577,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $7769,$02 #REGc=#N$28.
   $776B,$03 #REGhl=#N$0800.
   $776E,$02 #REGa=#N$02.
-  $7770,$02 OUT #N$EEFE
+  $7770,$02 OUT #N$FE
   $7772,$02,b$01 Flip bit 4.
   $7774,$01 #REGd=#REGa.
   $7775,$01 #REGb=#REGc.
@@ -1152,7 +1591,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $7784,$02 #REGc=#N$14.
   $7786,$03 #REGhl=#N($1000,$04,$04).
   $7789,$02 #REGa=#N$06.
-  $778B,$02 OUT #N$EEFE
+  $778B,$02 OUT #N$FE
   $778D,$02,b$01 Flip bit 4.
   $778F,$01 #REGd=#REGa.
   $7790,$01 #REGb=#REGc.
@@ -1167,9 +1606,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $779D,$02 Set bit 7 of *#REGhl.
   $779F,$03 Jump to #R$6ED4.
   $77A2,$06 No operation.
-  $77A8,$03 #REGde=#N$03E8.
-  $77AB,$03 #REGhl=*#R$7844.
-  $77AE,$01 #REGhl+=#REGde.
+  $77A8,$07 #REGhl=*#R$7844+#N$03E8.
   $77AF,$03 Write #REGhl to *#R$7844.
   $77B2,$03 Call #R$7420.
   $77B5,$03 Call #R$68AD.
@@ -1178,13 +1615,14 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $77BF,$02 Write #N$05 to *#REGhl.
   $77C1,$03 Call #R$ED39.
 N $77C4 Print the "#STR($BAC6,$03,$20)" messaging in the footer.
-N $77C4 #HTML(#FONT:(NEW CODE ABCDE-PRESS KEY TO PLAY)$3D00,attr=$96(new-code))
+N $77C4 #HTML(#FONT:(NEW CODE ABCDE-PRESS KEY TO PLAY)$3D00,attr=$9F(new-code))
   $77C4,$02 #REGa=#N$9F (#COLOUR$9F).
   $77C6,$03 #REGhl=#R$BAC6.
   $77C9,$03 Call #R$74C3.
   $77CC,$03 Call #R$EC5E.
+@ $77CF label=LevelComplete_Input
   $77CF,$03 Call #R$6828.
-  $77D2,$03 Jump to #R$77CF if #REGa is zero.
+  $77D2,$03 Jump to #R$77CF until any key is pressed.
   $77D5,$03 Call #R$7535.
   $77D8,$03 Jump to #R$6CAD.
 
@@ -1203,6 +1641,8 @@ N $77F1 Set the player lives to #N$01 this is decreased to #N$00 by #R$7552 so i
   $77F6,$03 Jump to #R$7552.
 
 b $77F9
+
+b $7802
 
 g $7814
 B $7814,$01
@@ -1239,6 +1679,8 @@ B $7824,$01
 
 g $7825
 
+g $7828
+
 g $782A
 
 g $782C Control Method Pointer
@@ -1270,7 +1712,10 @@ g $7844 Score
 @ $7844 label=Score
   $7846
   $7848
-  $784B
+
+g $784B Target
+@ $784B label=Target
+  $784B,$05
 
 g $7850 Control Method
 @ $7850 label=ControlMethod
@@ -1348,6 +1793,10 @@ D $A900 #SCR$02,$00,$00,$20,$08,$A900,$B100(footer)
   $B100,$0100,$20 Attributes.
 
 b $B200
+
+w $B4DC
+
+b $B4EA
 
 t $BA46 Messaging: Game Over
 @ $BA46 label=Messaging_GameOver
@@ -1481,6 +1930,8 @@ B $D5A2 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-2)
 B $D5A3 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-3)
 B $D5A4 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-4)
 
+b $E600
+
 c $E800 Initialise Demo Mode
 @ $E800 label=InitialiseDemoMode
   $E800,$06 Write #R$73B7 to *#R$782C.
@@ -1517,6 +1968,20 @@ N $E848 Else a key from the third row was pressed so handle changing the control
   $E84B,$02 Jump to #R$E81B.
 
 c $E84D
+  $E84D,$03 Write #REGhl to *#R$783E.
+  $E850,$03 #REGa=*#R$7852.
+  $E853,$03 Jump to #R$E85C if #REGa is zero.
+  $E856,$01 Decrease #REGa by one.
+  $E857,$03 Write #REGa to *#R$7852.
+  $E85A,$01 Restore #REGhl from the stack.
+  $E85B,$01 Return.
+  $E85C,$06 Return if bit 4 of *#R$7828 is zero.
+  $E862,$05 Write #N$4B to *#R$7852.
+  $E867,$03 #REGa=*#R$783D.
+  $E86A,$02 #REGa-=#N$08.
+  $E86C,$03 Write #REGa to *#R$783D.
+  $E86F,$01 Restore #REGhl from the stack.
+  $E870,$01 Return.
 
 t $E871 Messaging: Welcome
 @ $E871 label=Messaging_Welcome
@@ -1967,9 +2432,19 @@ N $ED23 All passwords have been checked, let the player know their password was 
   $ED2F,$03 Debounce using #R$EBE6.
   $ED32,$03 Jump to #R$ECAB.
 
-b $ED35
+u $ED35
 
-c $ED39
+c $ED39 Get Level Password
+@ $ED39 label=GetLevelPassword
+  $ED39,$03 Call #R$7552.
+N $ED3C Create an offset using #REGbc.
+  $ED3C,$08 #REGc=*#R$7820*#N$05.
+  $ED44,$02 #REGb=#N$00.
+  $ED46,$04 #REGhl=#R$EEC0+=#REGbc.
+  $ED4A,$03 #REGde=#R$BAC6(#N$BACF).
+  $ED4D,$02 #REGc=#N$05.
+  $ED4F,$02 Update the password at #R$BAC6 with the password for the new level.
+  $ED51,$01 Return.
 
 c $ED52 Display Playing Instructions
 @ $ED52 label=DisplayInstructions
@@ -2123,9 +2598,12 @@ t $EEB4 Messaging: Code Letter Position
 
 t $EEC0 Messaging: Passwords
 @ $EEC0 label=Messaging_Passwords
-  $EEC0,$23,$05
+D $EEC0 Used by the routine at #R$ECAB.
+  $EEC0,$05 Password for level #N($01+(#PC-$EEC0)/$05).
+L $EEC0,$05,$07
 
-b $EEE3
+t $EEE3
+  $EEE3,$05
 
 b $EEE8 Melody Data: "Level Complete"
 @ $EEE8 label=MelodyData_LevelComplete
@@ -2164,3 +2642,5 @@ t $F780 Messaging: Instructions (Page 4)
   $F780,$0280,$20 Page 4.
 
 b $FA00
+  $FA47
+  $FE00

@@ -3,6 +3,13 @@
 [Page:Changelog]
 SectionType=BulletPoints
 
+[Changelog:20240227]
+-
+
+- Added melodies.
+- Added images for footer messaging.
+- Commented a few unknown routines.
+
 [Changelog:20240226]
 -
 
