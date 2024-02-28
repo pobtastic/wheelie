@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 28608</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="28607.html">28607</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#28608">Map</a></td>
+<td class="next">
+Next: <a href="28668.html">28668</a>
+</td>
+</tr>
+</table>
+<div class="description">28608: Routine at 6FC0</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="28608"></span>28608</td>
+<td class="instruction">LD DE,0</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=0000.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28611"></span>28611</td>
+<td class="instruction">LD A,(30754)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28614"></span>28614</td>
+<td class="instruction">CP 150</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28608.html#28638">28638</a> if <span class="register">A</span> is higher than 150.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28616"></span>28616</td>
+<td class="instruction">JR NC,<a href="28608.html#28638">28638</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="28618"></span>28618</td>
+<td class="instruction">LD E,66</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=66.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28620"></span>28620</td>
+<td class="instruction">CP 106</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28608.html#28638">28638</a> if <span class="register">A</span> is lower than 106.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28622"></span>28622</td>
+<td class="instruction">JR C,<a href="28608.html#28638">28638</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="28624"></span>28624</td>
+<td class="instruction">LD E,35</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=35.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28626"></span>28626</td>
+<td class="instruction">CP 144</td>
+<td class="comment-1" rowspan="2">Return if <span class="register">A</span> is higher than 144.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28628"></span>28628</td>
+<td class="instruction">RET NC</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28629"></span>28629</td>
+<td class="instruction">CP 112</td>
+<td class="comment-1" rowspan="2">Return if <span class="register">A</span> is lower than 112.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28631"></span>28631</td>
+<td class="instruction">RET C</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28632"></span>28632</td>
+<td class="instruction">BIT 7,A</td>
+<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28634"></span>28634</td>
+<td class="instruction">JR NZ,<a href="28608.html#28638">28638</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28608.html#28638">28638</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28636"></span>28636</td>
+<td class="instruction">LD E,101</td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=101.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="28638"></span>28638</td>
+<td class="instruction">RLCA</td>
+<td class="comment-1" rowspan="1">RLCA.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28639"></span>28639</td>
+<td class="instruction">LD HL,(30766)</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">30766</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28642"></span>28642</td>
+<td class="instruction">JR C,<a href="28608.html#28646">28646</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28608.html#28646">28646</a> if {} is lower.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28644"></span>28644</td>
+<td class="instruction">DEC L</td>
+<td class="comment-1" rowspan="2">Decrease <span class="register">L</span> by two.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28645"></span>28645</td>
+<td class="instruction">DEC L</td>
+</tr>
+<tr>
+<td class="address-2"><span id="28646"></span>28646</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28647"></span>28647</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28648"></span>28648</td>
+<td class="instruction">LD HL,48436</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="48436.html">48436</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28651"></span>28651</td>
+<td class="instruction">CP 67</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28608.html#28658">28658</a> if <span class="register">A</span> is lower than 67.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28653"></span>28653</td>
+<td class="instruction">JR C,<a href="28608.html#28658">28658</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="28655"></span>28655</td>
+<td class="instruction">LD HL,50176</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="50176.html">50176</a>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="28658"></span>28658</td>
+<td class="instruction">ADD HL,DE</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28659"></span>28659</td>
+<td class="instruction">LD (30778),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30777.html#30778">30778</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28662"></span>28662</td>
+<td class="instruction">LD A,4</td>
+<td class="comment-1" rowspan="2">Write 4 to *<a href="30762.html">30762</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28664"></span>28664</td>
+<td class="instruction">LD (30762),A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="28667"></span>28667</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="28607.html">28607</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#28608">Map</a></td>
+<td class="next">
+Next: <a href="28668.html">28668</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/6FC0.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 6F99</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6F98.html">6F98</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#6f99">Map</a></td>
+<td class="next">
+Next: <a href="6FBF.html">6FBF</a>
+</td>
+</tr>
+</table>
+<div class="description">6F99: Routine at 6F99</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6f99"></span>6F99</td>
+<td class="instruction">LD A,($7822)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">7822</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6f9c"></span>6F9C</td>
+<td class="instruction">CP $90</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6F99.html#6faa">6FAA</a> if <span class="register">A</span> is higher than 90.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6f9e"></span>6F9E</td>
+<td class="instruction">JR NC,<a href="6F99.html#6faa">$6FAA</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fa0"></span>6FA0</td>
+<td class="instruction">CP $6F</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6F99.html#6faa">6FAA</a> if <span class="register">A</span> is lower than 6F.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fa2"></span>6FA2</td>
+<td class="instruction">JR C,<a href="6F99.html#6faa">$6FAA</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fa4"></span>6FA4</td>
+<td class="instruction">LD A,($7828)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7828.html">7828</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fa7"></span>6FA7</td>
+<td class="instruction">AND %00000011</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fa9"></span>6FA9</td>
+<td class="instruction">RET Z</td>
+<td class="comment-1" rowspan="1">Return if the result is zero.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6faa"></span>6FAA</td>
+<td class="instruction">LD A,$06</td>
+<td class="comment-1" rowspan="2">Write 06 to *<a href="782A.html">782A</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fac"></span>6FAC</td>
+<td class="instruction">LD ($782A),A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6faf"></span>6FAF</td>
+<td class="instruction">LD HL,$BDB8</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BDB8.html">BDB8</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fb2"></span>6FB2</td>
+<td class="instruction">LD A,($7822)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">7822</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fb5"></span>6FB5</td>
+<td class="instruction">BIT 7,A</td>
+<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fb7"></span>6FB7</td>
+<td class="instruction">JR NZ,<a href="6F99.html#6fbb">$6FBB</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6F99.html#6fbb">6FBB</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fb9"></span>6FB9</td>
+<td class="instruction">LD L,$C7</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=C7.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6fbb"></span>6FBB</td>
+<td class="instruction">LD ($783A),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7839.html#783a">783A</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6fbe"></span>6FBE</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6F98.html">6F98</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#6f99">Map</a></td>
+<td class="next">
+Next: <a href="6FBF.html">6FBF</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/28569.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

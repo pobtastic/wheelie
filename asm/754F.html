@@ -122,8 +122,8 @@ Compare the players current lives with the maximum number of lives (04).
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="755f"></span>755F</td>
-<td class="instruction">JR Z,<a href="754F.html#756b">InitialiseGame_1</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="754F.html#756b">InitialiseGame_1</a> if <span class="register">A</span> is zero.</td>
+<td class="instruction">JR Z,<a href="754F.html#756b">TestGameOver</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="754F.html#756b">TestGameOver</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -161,7 +161,7 @@ Compare the players current lives with the maximum number of lives (04).
 <td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7563">InitialiseGame_0</a> until counter is zero.</td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame_1</td>
+<td class="asm-label">TestGameOver</td>
 <td class="address-2"><span id="756b"></span>756B</td>
 <td class="instruction">LD A,C</td>
 <td class="comment-1" rowspan="3">Jump to <a href="757E.html">GameOver</a> if <span class="register">C</span> is zero.</td>
@@ -193,7 +193,7 @@ Display the bike graphic for each remaining life.
 <td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span> (counter; current number of lives).</td>
 </tr>
 <tr>
-<td class="asm-label">Print_Lives</td>
+<td class="asm-label">PrintLives</td>
 <td class="address-2"><span id="7570"></span>7570</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -245,8 +245,8 @@ Print the right side of the bike graphic.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="757a"></span>757A</td>
-<td class="instruction">DJNZ <a href="754F.html#7570">Print_Lives</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7570">Print_Lives</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="754F.html#7570">PrintLives</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7570">PrintLives</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
