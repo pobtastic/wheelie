@@ -14,3 +14,7 @@ SectionPrefix=Audio
 [Audio:Ghostrider Has Finished]
 
 #AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))
+
+[Audio:Dead]
+
+#AUDIO(dead.wav)(#INCLUDE(Dead))
