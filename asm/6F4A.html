@@ -35,7 +35,7 @@ Next: <a href="6F5F.html">6F5F</a>
 </td>
 </tr>
 </table>
-<div class="description">6F4A: Routine at 6F4A</div>
+<div class="description">6F4A: Handler: Hit Wall</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,45 +44,52 @@ Next: <a href="6F5F.html">6F5F</a>
 </td>
 </tr>
 <tr>
+<td class="asm-label">Handler_HitWall</td>
 <td class="address-2"><span id="6f4a"></span>6F4A</td>
 <td class="instruction">LD HL,$BC80</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BC80.html">BC80</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f4d"></span>6F4D</td>
 <td class="instruction">LD A,($7822)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">7822</a>.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="6F4A.html#6f56">HitWallMovingRight</a> if *<a href="7822.html">Speed</a> is higher than 80 (i.e. moving right).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f50"></span>6F50</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f52"></span>6F52</td>
-<td class="instruction">JR NZ,<a href="6F4A.html#6f56">$6F56</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6F4A.html#6f56">6F56</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="6F4A.html#6f56">HitWallMovingRight</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f54"></span>6F54</td>
 <td class="instruction">LD L,$8F</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=8F.</td>
 </tr>
 <tr>
+<td class="asm-label">HitWallMovingRight</td>
 <td class="address-2"><span id="6f56"></span>6F56</td>
 <td class="instruction">LD ($783A),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7839.html#783a">783A</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="783A.html">783A</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f59"></span>6F59</td>
 <td class="instruction">LD A,$04</td>
-<td class="comment-1" rowspan="2">Write 04 to *<a href="782A.html">782A</a>.</td>
+<td class="comment-1" rowspan="2">Write 04 to *<a href="782A.html">Action</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f5b"></span>6F5B</td>
 <td class="instruction">LD ($782A),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f5e"></span>6F5E</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

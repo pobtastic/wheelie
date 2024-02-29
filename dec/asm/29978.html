@@ -35,7 +35,7 @@ Next: <a href="30005.html">30005</a>
 </td>
 </tr>
 </table>
-<div class="description">29978: Routine at 751A</div>
+<div class="description">29978: Handler: Hump Jump</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,64 +44,87 @@ Next: <a href="30005.html">30005</a>
 </td>
 </tr>
 <tr>
+<td class="asm-label">Handler_HumpJump</td>
 <td class="address-2"><span id="29978"></span>29978</td>
 <td class="instruction">LD HL,(30766)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">30766</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29981"></span>29981</td>
 <td class="instruction">LD DE,17</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=0017.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29984"></span>29984</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29985"></span>29985</td>
 <td class="instruction">CP 40</td>
-<td class="comment-1" rowspan="2">Jump to <a href="29978.html#29997">29997</a> if <span class="register">A</span> is lower than 40.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="29978.html#29997">Handler_HumpJump_0</a> if <span class="register">A</span> is lower than 40.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29987"></span>29987</td>
-<td class="instruction">JR C,<a href="29978.html#29997">29997</a></td>
+<td class="instruction">JR C,<a href="29978.html#29997">Handler_HumpJump_0</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29989"></span>29989</td>
 <td class="instruction">CP 70</td>
 <td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 70.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29991"></span>29991</td>
 <td class="instruction">LD E,8</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=8.</td>
+<td class="comment-1" rowspan="1">Alter awarded score to 0008.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29993"></span>29993</td>
-<td class="instruction">JR NC,<a href="29978.html#29997">29997</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29978.html#29997">29997</a> if <span class="register">A</span> was higher than 70 (on line <a href="29978.html#29989">29989</a>).</td>
+<td class="instruction">JR NC,<a href="29978.html#29997">Handler_HumpJump_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29978.html#29997">Handler_HumpJump_0</a> if <span class="register">A</span> was higher than 70 (on line <a href="29978.html#29989">29989</a>).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="29995"></span>29995</td>
 <td class="instruction">LD E,1</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=1.</td>
+<td class="comment-1" rowspan="1">Alter awarded score to 0001.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="29997"></span>
+<div class="comments">
+<div class="paragraph">
+Award the score.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_HumpJump_0</td>
 <td class="address-2"><span id="29997"></span>29997</td>
 <td class="instruction">LD HL,(30788)</td>
 <td class="comment-1" rowspan="2"><span class="register">HL</span>=*<a href="30788.html">Score</a>+<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30000"></span>30000</td>
 <td class="instruction">ADD HL,DE</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30001"></span>30001</td>
 <td class="instruction">LD (30788),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30004"></span>30004</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

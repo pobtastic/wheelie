@@ -49,7 +49,7 @@ Used by the routine at <a href="6C00.html">6C00</a>.
 <tr>
 <td class="address-2"><span id="7311"></span>7311</td>
 <td class="instruction">CALL <a href="6B2D.html">$6B2D</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Call <a href="6B2D.html">6B2D</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -64,377 +64,359 @@ This entry point is used by the routine at <a href="76D7.html">76D7</a>.
 <tr>
 <td class="address-2"><span id="7314"></span>7314</td>
 <td class="instruction">CALL <a href="716E.html">$716E</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Call <a href="716E.html">716E</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7317"></span>7317</td>
 <td class="instruction">LD HL,($7817)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7817.html">7817</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="731a"></span>731A</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="731b"></span>731B</td>
 <td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">RLCA.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="731c"></span>731C</td>
 <td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="731d"></span>731D</td>
 <td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="731e"></span>731E</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="731f"></span>731F</td>
-<td class="instruction">AND $07</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">AND %00000111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7321"></span>7321</td>
 <td class="instruction">LD B,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7322"></span>7322</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7323"></span>7323</td>
-<td class="instruction">AND $F8</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">AND %11111000</td>
+<td class="comment-1" rowspan="1">Keep only bits 3-7.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7325"></span>7325</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7326"></span>7326</td>
 <td class="instruction">LD A,($7819)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7819.html">7819</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7329"></span>7329</td>
 <td class="instruction">ADD A,L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="732a"></span>732A</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="732b"></span>732B</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="732c"></span>732C</td>
 <td class="instruction">LD H,$F8</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=F8.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="732e"></span>732E</td>
 <td class="instruction">LD DE,$0800</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=0800.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7331"></span>7331</td>
 <td class="instruction">SUB $99</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=99.</td>
 </tr>
 <tr>
 <td class="address-2"><span id="7333"></span>7333</td>
 <td class="instruction">ADD HL,DE</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7334"></span>7334</td>
 <td class="instruction">SUB $05</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=05.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7336"></span>7336</td>
 <td class="instruction">JR NZ,<a href="7311.html#7333">$7333</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Jump to <a href="7311.html#7333">7333</a> if <span class="register">A</span> is not zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7338"></span>7338</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7339"></span>7339</td>
 <td class="instruction">ADD A,B</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">B</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="733a"></span>733A</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="733b"></span>733B</td>
 <td class="instruction">PUSH HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Stash <span class="register">HL</span> on the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="733c"></span>733C</td>
 <td class="instruction">LD DE,$0008</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=0008.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="733f"></span>733F</td>
 <td class="instruction">SBC HL,DE</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">DE</span> (with carry).</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7341"></span>7341</td>
 <td class="instruction">EX DE,HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Exchange the <span class="register">DE</span> and <span class="register">HL</span> registers.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7342"></span>7342</td>
 <td class="instruction">LD HL,($7841)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7841.html">7841</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7345"></span>7345</td>
 <td class="instruction">SBC HL,DE</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">DE</span> (with carry).</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7347"></span>7347</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Jump to <a href="7311.html#736c">736C</a> if <span class="register">H</span> is not zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7348"></span>7348</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7349"></span>7349</td>
 <td class="instruction">JR NZ,<a href="7311.html#736c">$736C</a></td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="734b"></span>734B</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="734c"></span>734C</td>
 <td class="instruction">CP $50</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="7311.html#736c">736C</a> if <span class="register">A</span> is higher than 50.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="734e"></span>734E</td>
 <td class="instruction">JR NC,<a href="7311.html#736c">$736C</a></td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7350"></span>7350</td>
 <td class="instruction">SUB $08</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=08.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7352"></span>7352</td>
 <td class="instruction">SRA A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7354"></span>7354</td>
 <td class="instruction">LD C,$44</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=44.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7356"></span>7356</td>
 <td class="instruction">LD E,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7357"></span>7357</td>
 <td class="instruction">LD D,$0B</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=0B.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7359"></span>7359</td>
 <td class="instruction">LD A,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=00.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="735b"></span>735B</td>
 <td class="instruction">ADC A,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="735d"></span>735D</td>
 <td class="instruction">CALL <a href="76D7.html">$76D7</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Call <a href="76D7.html">76D7</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7360"></span>7360</td>
 <td class="instruction">LD A,($7825)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Jump to <a href="7311.html#736c">736C</a> if *<a href="7825.html">7825</a> is not equal to 44.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7363"></span>7363</td>
 <td class="instruction">CP $44</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7365"></span>7365</td>
 <td class="instruction">JR NZ,<a href="7311.html#736c">$736C</a></td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7367"></span>7367</td>
 <td class="instruction">LD A,$01</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Write 01 to *<a href="7840.html">7840</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7369"></span>7369</td>
 <td class="instruction">LD ($7840),A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-2"><span id="736c"></span>736C</td>
 <td class="instruction">POP HL</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Restore <span class="register">HL</span> from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="736d"></span>736D</td>
 <td class="instruction">LD A,($7840)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Return if *<a href="7840.html">7840</a> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7370"></span>7370</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7371"></span>7371</td>
 <td class="instruction">RET Z</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7372"></span>7372</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Return if <span class="register">H</span> is not zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7373"></span>7373</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7374"></span>7374</td>
 <td class="instruction">RET NZ</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7375"></span>7375</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Return if <span class="register">L</span> is higher than 80.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7376"></span>7376</td>
 <td class="instruction">CP $80</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7378"></span>7378</td>
 <td class="instruction">RET NC</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7379"></span>7379</td>
 <td class="instruction">LD A,$80</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=80.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="737b"></span>737B</td>
 <td class="instruction">SUB L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="737c"></span>737C</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="5">No operation.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="737d"></span>737D</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="737e"></span>737E</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="737f"></span>737F</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7380"></span>7380</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7381"></span>7381</td>
 <td class="instruction">LD C,$47</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=47.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7383"></span>7383</td>
 <td class="instruction">LD D,$0B</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">D</span>=0B.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7385"></span>7385</td>
 <td class="instruction">SRA A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="7387"></span>7387</td>
 <td class="instruction">LD E,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7388"></span>7388</td>
 <td class="instruction">LD A,$40</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=40.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="738a"></span>738A</td>
 <td class="instruction">ADC A,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="738c"></span>738C</td>
 <td class="instruction">CALL <a href="76D7.html">$76D7</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Call <a href="76D7.html">76D7</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="738f"></span>738F</td>
 <td class="instruction">RET</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Return.</td>
 </tr>
 </table>
 <table class="asm-navigation">

@@ -40,6 +40,19 @@ Next: <a href="29681.html">29681</a>
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Input method; used by the routine at <a href="27464.html">GetControls</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="29623"></span>
+<div class="comments">
+<div class="paragraph">
+In demo mode, we never let the game run out of fuel or lives.
+</div>
 </div>
 </td>
 </tr>
@@ -75,12 +88,12 @@ Next: <a href="29681.html">29681</a>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29637"></span>29637</td>
 <td class="instruction">AND A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="29623.html#29649">DemoModeInput_0</a> if <span class="register">A</span> is zero.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="29623.html#29649">DemoModeControls</a> if no keys are being pressed.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29638"></span>29638</td>
-<td class="instruction">JR Z,<a href="29623.html#29649">DemoModeInput_0</a></td>
+<td class="instruction">JR Z,<a href="29623.html#29649">DemoModeControls</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -114,34 +127,53 @@ Next: <a href="29681.html">29681</a>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="29646"></span>
+<div class="comments">
+<div class="paragraph">
+Any input jumps back to the start screen.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29646"></span>29646</td>
 <td class="instruction">JP <a href="59406.html#59419">StartScreen</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="59406.html#59419">StartScreen</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">DemoModeInput_0</td>
+<td class="routine-comment" colspan="5">
+<span id="29649"></span>
+<div class="comments">
+<div class="paragraph">
+Randomly send controls for the game.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">DemoModeControls</td>
 <td class="address-2"><span id="29649"></span>29649</td>
-<td class="instruction">CALL <a href="25600.html">25600</a></td>
-<td class="comment-1" rowspan="1">Call <a href="25600.html">25600</a>.</td>
+<td class="instruction">CALL <a href="25600.html">GetRandomNumber</a></td>
+<td class="comment-1" rowspan="1">Call <a href="25600.html">GetRandomNumber</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29652"></span>29652</td>
 <td class="instruction">AND %00001100</td>
-<td class="comment-1" rowspan="1">Keep only bits 2-3.</td>
+<td class="comment-1" rowspan="2">Ensure the random number is either 4, 8 or 12.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29654"></span>29654</td>
-<td class="instruction">JR Z,<a href="29623.html#29649">DemoModeInput_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29649">DemoModeInput_0</a> if the result is zero.</td>
+<td class="instruction">JR Z,<a href="29623.html#29649">DemoModeControls</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29656"></span>29656</td>
 <td class="instruction">XOR %00001100</td>
-<td class="comment-1" rowspan="1">Flip bits 2-3.</td>
+<td class="comment-1" rowspan="1">Flip bits 2-3 so 4 becomes 8, 8 becomes 4 and 12 becomes 0.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -175,7 +207,7 @@ Next: <a href="29681.html">29681</a>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29665"></span>29665</td>
 <td class="instruction">LD A,(30754)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -192,14 +224,14 @@ Next: <a href="29681.html">29681</a>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29671"></span>29671</td>
-<td class="instruction">JR Z,<a href="29623.html#29679">DemoModeInput_2</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29679">DemoModeInput_2</a> if <span class="register">A</span> was equal to *<span class="register">HL</span> on line <a href="29623.html#29668">29668</a>.</td>
+<td class="instruction">JR Z,<a href="29623.html#29679">DemoModeInput_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29679">DemoModeInput_1</a> if <span class="register">A</span> was equal to *<span class="register">HL</span> on line <a href="29623.html#29668">29668</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29673"></span>29673</td>
-<td class="instruction">JR C,<a href="29623.html#29677">DemoModeInput_1</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29677">DemoModeInput_1</a> if <span class="register">A</span> was lower than *<span class="register">HL</span> on line <a href="29623.html#29668">29668</a>.</td>
+<td class="instruction">JR C,<a href="29623.html#29677">DemoModeInput_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29623.html#29677">DemoModeInput_0</a> if <span class="register">A</span> was lower than *<span class="register">HL</span> on line <a href="29623.html#29668">29668</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -208,13 +240,13 @@ Next: <a href="29681.html">29681</a>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=3.</td>
 </tr>
 <tr>
-<td class="asm-label">DemoModeInput_1</td>
+<td class="asm-label">DemoModeInput_0</td>
 <td class="address-2"><span id="29677"></span>29677</td>
 <td class="instruction">XOR %00000001</td>
 <td class="comment-1" rowspan="1">Flip bits 0.</td>
 </tr>
 <tr>
-<td class="asm-label">DemoModeInput_2</td>
+<td class="asm-label">DemoModeInput_1</td>
 <td class="address-2"><span id="29679"></span>29679</td>
 <td class="instruction">OR D</td>
 <td class="comment-1" rowspan="1">Set the bits from <span class="register">D</span>.</td>

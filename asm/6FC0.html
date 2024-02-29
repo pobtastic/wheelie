@@ -35,7 +35,7 @@ Next: <a href="6FFC.html">6FFC</a>
 </td>
 </tr>
 </table>
-<div class="description">6FC0: Routine at 6FC0</div>
+<div class="description">6FC0: Handler: Jumps</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,149 +44,259 @@ Next: <a href="6FFC.html">6FFC</a>
 </td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6fc0"></span>
+<div class="comments">
+<div class="paragraph">
+If you hit a jump too fast or too slow the bike will crash.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Jumps</td>
 <td class="address-2"><span id="6fc0"></span>6FC0</td>
 <td class="instruction">LD DE,$0000</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=0000.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fc3"></span>6FC3</td>
 <td class="instruction">LD A,($7822)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">7822</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">Speed</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6fc6"></span>
+<div class="comments">
+<div class="paragraph">
+Check if the speed was too fast.
+</div>
+<div class="paragraph">
+The parameters are quite wide; <table class="default">
+<tr>
+<th colspan="1" rowspan="2">Direction</th>
+<th colspan="2" rowspan="1">Bike Range</th>
+<th colspan="1" rowspan="2">Crash Point</th>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Lowest</th>
+<th colspan="1" rowspan="1">Highest</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Left</td>
+<td class="centre" colspan="1" rowspan="1">69</td>
+<td class="centre" colspan="1" rowspan="1">7F</td>
+<td class="centre" colspan="1" rowspan="1">&lt; 6A</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Right</td>
+<td class="centre" colspan="1" rowspan="1">80</td>
+<td class="centre" colspan="1" rowspan="1">96</td>
+<td class="centre" colspan="1" rowspan="1">&gt; 96</td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fc6"></span>6FC6</td>
 <td class="instruction">CP $96</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6fde">6FDE</a> if <span class="register">A</span> is higher than 96.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6fde">Initialise_CrashJumpTooFast</a> if <span class="register">A</span> is higher than 96.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fc8"></span>6FC8</td>
-<td class="instruction">JR NC,<a href="6FC0.html#6fde">$6FDE</a></td>
+<td class="instruction">JR NC,<a href="6FC0.html#6fde">Initialise_CrashJumpTooFast</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fca"></span>6FCA</td>
 <td class="instruction">LD E,$42</td>
 <td class="comment-1" rowspan="1"><span class="register">E</span>=42.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fcc"></span>6FCC</td>
 <td class="instruction">CP $6A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6fde">6FDE</a> if <span class="register">A</span> is lower than 6A.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6fde">Initialise_CrashJumpTooFast</a> if <span class="register">A</span> is lower than 6A.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fce"></span>6FCE</td>
-<td class="instruction">JR C,<a href="6FC0.html#6fde">$6FDE</a></td>
+<td class="instruction">JR C,<a href="6FC0.html#6fde">Initialise_CrashJumpTooFast</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fd0"></span>6FD0</td>
 <td class="instruction">LD E,$23</td>
 <td class="comment-1" rowspan="1"><span class="register">E</span>=23.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6fd2"></span>
+<div class="comments">
+<div class="paragraph">
+Check if the speed was too slow.
+</div>
+<div class="paragraph">
+The parameters are again, quite wide; <table class="default">
+<tr>
+<th colspan="1" rowspan="2">Direction</th>
+<th colspan="2" rowspan="1">Bike Range</th>
+<th colspan="1" rowspan="2">Crash Point</th>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Lowest</th>
+<th colspan="1" rowspan="1">Highest</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Left</td>
+<td class="centre" colspan="1" rowspan="1">69</td>
+<td class="centre" colspan="1" rowspan="1">7F</td>
+<td class="centre" colspan="1" rowspan="1">&gt; 70</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Right</td>
+<td class="centre" colspan="1" rowspan="1">80</td>
+<td class="centre" colspan="1" rowspan="1">96</td>
+<td class="centre" colspan="1" rowspan="1">&lt; 90</td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fd2"></span>6FD2</td>
 <td class="instruction">CP $90</td>
 <td class="comment-1" rowspan="2">Return if <span class="register">A</span> is higher than 90.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fd4"></span>6FD4</td>
 <td class="instruction">RET NC</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fd5"></span>6FD5</td>
 <td class="instruction">CP $70</td>
 <td class="comment-1" rowspan="2">Return if <span class="register">A</span> is lower than 70.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fd7"></span>6FD7</td>
 <td class="instruction">RET C</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fd8"></span>6FD8</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6fde">Initialise_CrashJumpTooFast</a> if *<a href="7822.html">Speed</a> is higher than 80 (i.e. moving right).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fda"></span>6FDA</td>
-<td class="instruction">JR NZ,<a href="6FC0.html#6fde">$6FDE</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6FC0.html#6fde">6FDE</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="6FC0.html#6fde">Initialise_CrashJumpTooFast</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fdc"></span>6FDC</td>
 <td class="instruction">LD E,$65</td>
 <td class="comment-1" rowspan="1"><span class="register">E</span>=65.</td>
 </tr>
 <tr>
+<td class="asm-label">Initialise_CrashJumpTooFast</td>
 <td class="address-2"><span id="6fde"></span>6FDE</td>
 <td class="instruction">RLCA</td>
 <td class="comment-1" rowspan="1">RLCA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fdf"></span>6FDF</td>
 <td class="instruction">LD HL,($782E)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="782E.html">782E</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fe2"></span>6FE2</td>
-<td class="instruction">JR C,<a href="6FC0.html#6fe6">$6FE6</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6FC0.html#6fe6">6FE6</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="6FC0.html#6fe6">Handler_Jumps_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6FC0.html#6fe6">Handler_Jumps_0</a> if {} is lower.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fe4"></span>6FE4</td>
 <td class="instruction">DEC L</td>
 <td class="comment-1" rowspan="2">Decrease <span class="register">L</span> by two.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fe5"></span>6FE5</td>
 <td class="instruction">DEC L</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_Jumps_0</td>
 <td class="address-2"><span id="6fe6"></span>6FE6</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fe7"></span>6FE7</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fe8"></span>6FE8</td>
 <td class="instruction">LD HL,$BD34</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BD34.html">BD34</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6feb"></span>6FEB</td>
 <td class="instruction">CP $43</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6ff2">6FF2</a> if <span class="register">A</span> is lower than 43.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6FC0.html#6ff2">Handler_Jumps_1</a> if <span class="register">A</span> is lower than 43.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fed"></span>6FED</td>
-<td class="instruction">JR C,<a href="6FC0.html#6ff2">$6FF2</a></td>
+<td class="instruction">JR C,<a href="6FC0.html#6ff2">Handler_Jumps_1</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fef"></span>6FEF</td>
 <td class="instruction">LD HL,$C400</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="C400.html">C400</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_Jumps_1</td>
 <td class="address-2"><span id="6ff2"></span>6FF2</td>
 <td class="instruction">ADD HL,DE</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ff3"></span>6FF3</td>
 <td class="instruction">LD ($783A),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7839.html#783a">783A</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="783A.html">783A</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ff6"></span>6FF6</td>
 <td class="instruction">LD A,$04</td>
-<td class="comment-1" rowspan="2">Write 04 to *<a href="782A.html">782A</a>.</td>
+<td class="comment-1" rowspan="2">Write 04 to *<a href="782A.html">Action</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ff8"></span>6FF8</td>
 <td class="instruction">LD ($782A),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ffb"></span>6FFB</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

@@ -31,7 +31,7 @@ Prev: <a href="27122.html">27122</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#27136">Map</a></td>
 <td class="next">
-Next: <a href="27302.html">27302</a>
+Next: <a href="27158.html">27158</a>
 </td>
 </tr>
 </table>
@@ -49,577 +49,51 @@ Used by the routine at <a href="27648.html">27648</a>.
 <tr>
 <td class="address-2"><span id="27136"></span>27136</td>
 <td class="instruction">LD A,(30768)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30768.html">30768</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27139"></span>27139</td>
 <td class="instruction">INC A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27140"></span>27140</td>
-<td class="instruction">AND 7</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">AND %00000111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27142"></span>27142</td>
 <td class="instruction">LD (30768),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30768.html">30768</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27145"></span>27145</td>
 <td class="instruction">LD HL,(30769)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30769.html">30769</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27148"></span>27148</td>
 <td class="instruction">LD BC,1</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=0001.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27151"></span>27151</td>
 <td class="instruction">CALL Z,<a href="27070.html#27083">27083</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Call <a href="27070.html#27083">27083</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27154"></span>27154</td>
 <td class="instruction">ADD A,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2"><span class="register">C</span>=<span class="register">A</span>*2.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27155"></span>27155</td>
 <td class="instruction">LD C,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
 <td class="address-1"><span id="27156"></span>27156</td>
-<td class="instruction">JR <a href="27136.html#27175">27175</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27158"></span>27158</td>
-<td class="instruction">LD A,B</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="27159"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="27308.html">27308</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="27159"></span>27159</td>
-<td class="instruction">AND 127</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27161"></span>27161</td>
-<td class="instruction">SUB 2</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27163"></span>27163</td>
-<td class="instruction">JR NC,<a href="27136.html#27166">27166</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27165"></span>27165</td>
-<td class="instruction">XOR A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27166"></span>27166</td>
-<td class="instruction">SRL A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27168"></span>27168</td>
-<td class="instruction">SRL A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27170"></span>27170</td>
-<td class="instruction">ADD A,L</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27171"></span>27171</td>
-<td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27172"></span>27172</td>
-<td class="instruction">ADC A,H</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27173"></span>27173</td>
-<td class="instruction">SUB L</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27174"></span>27174</td>
-<td class="instruction">LD H,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="routine-comment" colspan="5">
-<span id="27175"></span>
-<div class="comments">
-<div class="paragraph">
-This entry point is used by the routine at <a href="27308.html">27308</a>.
-</div>
-</div>
-</td>
-</tr>
-<tr>
-<td class="address-2"><span id="27175"></span>27175</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27176"></span>27176</td>
-<td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27177"></span>27177</td>
-<td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27178"></span>27178</td>
-<td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27179"></span>27179</td>
-<td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27180"></span>27180</td>
-<td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27181"></span>27181</td>
-<td class="instruction">AND 15</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27183"></span>27183</td>
-<td class="instruction">ADD A,192</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27185"></span>27185</td>
-<td class="instruction">LD H,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27186"></span>27186</td>
-<td class="instruction">LD A,L</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27187"></span>27187</td>
-<td class="instruction">AND 240</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27189"></span>27189</td>
-<td class="instruction">ADD A,C</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27190"></span>27190</td>
-<td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27191"></span>27191</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27192"></span>27192</td>
-<td class="instruction">INC L</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27193"></span>27193</td>
-<td class="instruction">LD (30772),A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27196"></span>27196</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27197"></span>27197</td>
-<td class="instruction">LD HL,30758</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27200"></span>27200</td>
-<td class="instruction">LD (HL),0</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27202"></span>27202</td>
-<td class="instruction">RRCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27203"></span>27203</td>
-<td class="instruction">JR NC,<a href="27136.html#27206">27206</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27205"></span>27205</td>
-<td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27206"></span>27206</td>
-<td class="instruction">RRCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27207"></span>27207</td>
-<td class="instruction">LD C,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27208"></span>27208</td>
-<td class="instruction">JR NC,<a href="27136.html#27245">27245</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27210"></span>27210</td>
-<td class="instruction">AND 3</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27212"></span>27212</td>
-<td class="instruction">LD L,51</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27214"></span>27214</td>
-<td class="instruction">JR NZ,<a href="27136.html#27217">27217</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27216"></span>27216</td>
-<td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27217"></span>27217</td>
-<td class="instruction">DEC A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27218"></span>27218</td>
-<td class="instruction">JR NZ,<a href="27136.html#27221">27221</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27220"></span>27220</td>
-<td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27221"></span>27221</td>
-<td class="instruction">LD L,38</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27223"></span>27223</td>
-<td class="instruction">LD B,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27224"></span>27224</td>
-<td class="instruction">LD A,35</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27226"></span>27226</td>
-<td class="instruction">SUB (HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27227"></span>27227</td>
-<td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27228"></span>27228</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27229"></span>27229</td>
-<td class="instruction">DEC B</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27230"></span>27230</td>
-<td class="instruction">JR NZ,<a href="27136.html#27237">27237</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27232"></span>27232</td>
-<td class="instruction">CP 105</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27234"></span>27234</td>
-<td class="instruction">JR Z,<a href="27136.html#27237">27237</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27236"></span>27236</td>
-<td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27237"></span>27237</td>
-<td class="instruction">DEC B</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27238"></span>27238</td>
-<td class="instruction">JR NZ,<a href="27136.html#27245">27245</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27240"></span>27240</td>
-<td class="instruction">CP 150</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27242"></span>27242</td>
-<td class="instruction">JR Z,<a href="27136.html#27245">27245</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27244"></span>27244</td>
-<td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27245"></span>27245</td>
-<td class="instruction">LD L,38</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27247"></span>27247</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27248"></span>27248</td>
-<td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27249"></span>27249</td>
-<td class="instruction">JR NZ,<a href="27136.html#27284">27284</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27251"></span>27251</td>
-<td class="instruction">LD L,34</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27253"></span>27253</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27254"></span>27254</td>
-<td class="instruction">BIT 7,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27256"></span>27256</td>
-<td class="instruction">JR NZ,<a href="27136.html#27259">27259</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27258"></span>27258</td>
-<td class="instruction">CPL</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27259"></span>27259</td>
-<td class="instruction">LD B,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27260"></span>27260</td>
-<td class="instruction">DEC L</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27261"></span>27261</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27262"></span>27262</td>
-<td class="instruction">BIT 7,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27264"></span>27264</td>
-<td class="instruction">JR NZ,<a href="27136.html#27267">27267</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27266"></span>27266</td>
-<td class="instruction">CPL</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27267"></span>27267</td>
-<td class="instruction">SUB B</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27268"></span>27268</td>
-<td class="instruction">JR NC,<a href="27136.html#27284">27284</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27270"></span>27270</td>
-<td class="instruction">CPL</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27271"></span>27271</td>
-<td class="instruction">SRL A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27273"></span>27273</td>
-<td class="instruction">SRL A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27275"></span>27275</td>
-<td class="instruction">LD L,52</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27277"></span>27277</td>
-<td class="instruction">ADD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27278"></span>27278</td>
-<td class="instruction">BIT 4,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27280"></span>27280</td>
-<td class="instruction">JR Z,<a href="27136.html#27283">27283</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27282"></span>27282</td>
-<td class="instruction">DEC A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27283"></span>27283</td>
-<td class="instruction">LD (HL),A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-2"><span id="27284"></span>27284</td>
-<td class="instruction">LD A,C</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27285"></span>27285</td>
-<td class="instruction">RRCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27286"></span>27286</td>
-<td class="instruction">RRCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27287"></span>27287</td>
-<td class="instruction">RRCA</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27288"></span>27288</td>
-<td class="instruction">RET NC</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27289"></span>27289</td>
-<td class="instruction">AND 7</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27291"></span>27291</td>
-<td class="instruction">ADD A,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27292"></span>27292</td>
-<td class="instruction">ADD A,220</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27294"></span>27294</td>
-<td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27295"></span>27295</td>
-<td class="instruction">LD H,180</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27297"></span>27297</td>
-<td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27298"></span>27298</td>
-<td class="instruction">INC L</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27299"></span>27299</td>
-<td class="instruction">LD H,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27300"></span>27300</td>
-<td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="27301"></span>27301</td>
-<td class="instruction">JP (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR <a href="27175.html">27175</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="27175.html">27175</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -629,7 +103,7 @@ Prev: <a href="27122.html">27122</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#27136">Map</a></td>
 <td class="next">
-Next: <a href="27302.html">27302</a>
+Next: <a href="27158.html">27158</a>
 </td>
 </tr>
 </table>

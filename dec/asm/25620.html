@@ -35,7 +35,7 @@ Next: <a href="25636.html">25636</a>
 </td>
 </tr>
 </table>
-<div class="description">25620: Routine at 6414</div>
+<div class="description">25620: Set Random Number Seed?</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,46 +47,50 @@ Used by the routine at <a href="59406.html">59406</a>.
 </td>
 </tr>
 <tr>
+<td class="asm-label">SetRandomNumberSeed</td>
 <td class="address-2"><span id="25620"></span>25620</td>
 <td class="instruction">LD HL,(23672)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25623"></span>25623</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="6"><span class="register">H</span>=random number between 121-123.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25624"></span>25624</td>
 <td class="instruction">AND %00000011</td>
-<td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25626"></span>25626</td>
-<td class="instruction">JR NZ,<a href="25620.html#25629">25629</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="25620.html#25629">25629</a> if the result is not zero.</td>
+<td class="instruction">JR NZ,<a href="25620.html#25629">SkipNonZero</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25628"></span>25628</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label">SkipNonZero</td>
 <td class="address-2"><span id="25629"></span>25629</td>
 <td class="instruction">ADD A,120</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=120.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25631"></span>25631</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25632"></span>25632</td>
 <td class="instruction">LD (30750),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30750.html">30750</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30750.html">RandomNumberSeed</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="25635"></span>25635</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

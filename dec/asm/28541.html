@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 28541</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="28514.html">28514</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#28541">Map</a></td>
+<td class="next">
+Next: <a href="28568.html">28568</a>
+</td>
+</tr>
+</table>
+<div class="description">28541: Handler: Hit Hump</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_HitHump</td>
+<td class="address-2"><span id="28541"></span>28541</td>
+<td class="instruction">LD A,(30772)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30772.html">30772</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28544"></span>28544</td>
+<td class="instruction">AND %00000111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28546"></span>28546</td>
+<td class="instruction">RET NZ</td>
+<td class="comment-1" rowspan="1">Return if the result is not zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28547"></span>28547</td>
+<td class="instruction">LD A,5</td>
+<td class="comment-1" rowspan="2">Write 5 to *<a href="30762.html">Action</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28549"></span>28549</td>
+<td class="instruction">LD (30762),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28552"></span>28552</td>
+<td class="instruction">LD A,(30772)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30772.html">30772</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28555"></span>28555</td>
+<td class="instruction">AND %01000000</td>
+<td class="comment-1" rowspan="1">Keep only bit 6.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28557"></span>28557</td>
+<td class="instruction">LD HL,48398</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="48398.html">48398</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28560"></span>28560</td>
+<td class="instruction">JR Z,<a href="28541.html#28564">Handler_HitHump_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28541.html#28564">Handler_HitHump_0</a> if {} is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28562"></span>28562</td>
+<td class="instruction">LD L,33</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=33.</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_HitHump_0</td>
+<td class="address-2"><span id="28564"></span>28564</td>
+<td class="instruction">LD (30778),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30778.html">30778</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="28567"></span>28567</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="28514.html">28514</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#28541">Map</a></td>
+<td class="next">
+Next: <a href="28568.html">28568</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../../asm/6F7D.html">Switch to hexadecimal</a>.</div>
+</footer>
+</body>
+</html>

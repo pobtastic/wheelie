@@ -35,7 +35,7 @@ Next: <a href="6FBF.html">6FBF</a>
 </td>
 </tr>
 </table>
-<div class="description">6F99: Routine at 6F99</div>
+<div class="description">6F99: Handler: Ice</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,83 +44,133 @@ Next: <a href="6FBF.html">6FBF</a>
 </td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6f99"></span>
+<div class="comments">
+<div class="paragraph">
+If you hit ice too fast the bike will slide (crash) and you fall off.
+</div>
+<div class="paragraph">
+The parameters are; <table class="default">
+<tr>
+<th colspan="1" rowspan="2">Direction</th>
+<th colspan="2" rowspan="1">Bike Range</th>
+<th colspan="1" rowspan="2">Crash Point</th>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Lowest</th>
+<th colspan="1" rowspan="1">Highest</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Left</td>
+<td class="centre" colspan="1" rowspan="1">69</td>
+<td class="centre" colspan="1" rowspan="1">7F</td>
+<td class="centre" colspan="1" rowspan="1">&lt; 6F</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Right</td>
+<td class="centre" colspan="1" rowspan="1">80</td>
+<td class="centre" colspan="1" rowspan="1">96</td>
+<td class="centre" colspan="1" rowspan="1">&gt; 90</td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Ice</td>
 <td class="address-2"><span id="6f99"></span>6F99</td>
 <td class="instruction">LD A,($7822)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">7822</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">Speed</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f9c"></span>6F9C</td>
 <td class="instruction">CP $90</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6F99.html#6faa">6FAA</a> if <span class="register">A</span> is higher than 90.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6F99.html#6faa">Initialise_CrashIce</a> if <span class="register">A</span> is higher than 90.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6f9e"></span>6F9E</td>
-<td class="instruction">JR NC,<a href="6F99.html#6faa">$6FAA</a></td>
+<td class="instruction">JR NC,<a href="6F99.html#6faa">Initialise_CrashIce</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fa0"></span>6FA0</td>
 <td class="instruction">CP $6F</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6F99.html#6faa">6FAA</a> if <span class="register">A</span> is lower than 6F.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6F99.html#6faa">Initialise_CrashIce</a> if <span class="register">A</span> is lower than 6F.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fa2"></span>6FA2</td>
-<td class="instruction">JR C,<a href="6F99.html#6faa">$6FAA</a></td>
+<td class="instruction">JR C,<a href="6F99.html#6faa">Initialise_CrashIce</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fa4"></span>6FA4</td>
 <td class="instruction">LD A,($7828)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7828.html">7828</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fa7"></span>6FA7</td>
 <td class="instruction">AND %00000011</td>
 <td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fa9"></span>6FA9</td>
 <td class="instruction">RET Z</td>
 <td class="comment-1" rowspan="1">Return if the result is zero.</td>
 </tr>
 <tr>
+<td class="asm-label">Initialise_CrashIce</td>
 <td class="address-2"><span id="6faa"></span>6FAA</td>
 <td class="instruction">LD A,$06</td>
-<td class="comment-1" rowspan="2">Write 06 to *<a href="782A.html">782A</a>.</td>
+<td class="comment-1" rowspan="2">Write 06 to *<a href="782A.html">Action</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fac"></span>6FAC</td>
 <td class="instruction">LD ($782A),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6faf"></span>6FAF</td>
 <td class="instruction">LD HL,$BDB8</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BDB8.html">BDB8</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fb2"></span>6FB2</td>
 <td class="instruction">LD A,($7822)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html">7822</a>.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="6F99.html#6fbb">CrashIceMovingRight</a> if *<a href="7822.html">Speed</a> is higher than 80 (i.e. moving right).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fb5"></span>6FB5</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fb7"></span>6FB7</td>
-<td class="instruction">JR NZ,<a href="6F99.html#6fbb">$6FBB</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6F99.html#6fbb">6FBB</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="6F99.html#6fbb">CrashIceMovingRight</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fb9"></span>6FB9</td>
 <td class="instruction">LD L,$C7</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=C7.</td>
 </tr>
 <tr>
+<td class="asm-label">CrashIceMovingRight</td>
 <td class="address-2"><span id="6fbb"></span>6FBB</td>
 <td class="instruction">LD ($783A),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7839.html#783a">783A</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="783A.html">783A</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6fbe"></span>6FBE</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

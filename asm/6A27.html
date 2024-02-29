@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 6A27</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6A17.html">6A17</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#6a27">Map</a></td>
+<td class="next">
+Next: <a href="6AA6.html">6AA6</a>
+</td>
+</tr>
+</table>
+<div class="description">6A27: Routine at 6A27</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+<div class="paragraph">
+Used by the routines at <a href="6A00.html">6A00</a> and <a href="6AAC.html">6AAC</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a27"></span>6A27</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a28"></span>6A28</td>
+<td class="instruction">RLCA</td>
+<td class="comment-1" rowspan="4">RLCA.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a29"></span>6A29</td>
+<td class="instruction">RLCA</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a2a"></span>6A2A</td>
+<td class="instruction">RLCA</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a2b"></span>6A2B</td>
+<td class="instruction">RLCA</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a2c"></span>6A2C</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a2d"></span>6A2D</td>
+<td class="instruction">AND %00001111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-3.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a2f"></span>6A2F</td>
+<td class="instruction">ADD A,$C0</td>
+<td class="comment-1" rowspan="2"><span class="register">H</span>=C0+<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a31"></span>6A31</td>
+<td class="instruction">LD H,A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a32"></span>6A32</td>
+<td class="instruction">LD A,L</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a33"></span>6A33</td>
+<td class="instruction">AND %11110000</td>
+<td class="comment-1" rowspan="1">Keep only bits 4-7.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a35"></span>6A35</td>
+<td class="instruction">ADD A,C</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a36"></span>6A36</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a37"></span>6A37</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a38"></span>6A38</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a39"></span>6A39</td>
+<td class="instruction">LD ($7834),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7834.html">7834</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a3c"></span>6A3C</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a3d"></span>6A3D</td>
+<td class="instruction">LD HL,$7826</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7826.html">7826</a>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a40"></span>6A40</td>
+<td class="instruction">LD (HL),$00</td>
+<td class="comment-1" rowspan="1">Write 00 to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a42"></span>6A42</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a43"></span>6A43</td>
+<td class="instruction">JR NC,<a href="6A27.html#6a46">$6A46</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a46">6A46</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a45"></span>6A45</td>
+<td class="instruction">INC (HL)</td>
+<td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a46"></span>6A46</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="1">RRCA.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a47"></span>6A47</td>
+<td class="instruction">LD C,A</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a48"></span>6A48</td>
+<td class="instruction">JR NC,<a href="6A27.html#6a6d">$6A6D</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a6d">6A6D</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a4a"></span>6A4A</td>
+<td class="instruction">AND %00000011</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a4c"></span>6A4C</td>
+<td class="instruction">LD L,$33</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=33.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a4e"></span>6A4E</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a51">$6A51</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a51">6A51</a> if {} is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a50"></span>6A50</td>
+<td class="instruction">DEC (HL)</td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a51"></span>6A51</td>
+<td class="instruction">DEC A</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a52"></span>6A52</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a55">$6A55</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a55">6A55</a> if <span class="register">A</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a54"></span>6A54</td>
+<td class="instruction">INC (HL)</td>
+<td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a55"></span>6A55</td>
+<td class="instruction">LD L,$26</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=26.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a57"></span>6A57</td>
+<td class="instruction">LD B,A</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a58"></span>6A58</td>
+<td class="instruction">LD A,$23</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=23.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a5a"></span>6A5A</td>
+<td class="instruction">SUB (HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a5b"></span>6A5B</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a5c"></span>6A5C</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a5d"></span>6A5D</td>
+<td class="instruction">DEC B</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">B</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a5e"></span>6A5E</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a65">$6A65</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a65">6A65</a> if <span class="register">B</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a60"></span>6A60</td>
+<td class="instruction">CP $69</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6A27.html#6a65">6A65</a> if <span class="register">A</span> is equal to 69.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a62"></span>6A62</td>
+<td class="instruction">JR Z,<a href="6A27.html#6a65">$6A65</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a64"></span>6A64</td>
+<td class="instruction">DEC (HL)</td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a65"></span>6A65</td>
+<td class="instruction">DEC B</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">B</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a66"></span>6A66</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a6d">$6A6D</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a6d">6A6D</a> if <span class="register">B</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a68"></span>6A68</td>
+<td class="instruction">CP $96</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6A27.html#6a6d">6A6D</a> if <span class="register">A</span> is equal to 96.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a6a"></span>6A6A</td>
+<td class="instruction">JR Z,<a href="6A27.html#6a6d">$6A6D</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a6c"></span>6A6C</td>
+<td class="instruction">INC (HL)</td>
+<td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a6d"></span>6A6D</td>
+<td class="instruction">LD L,$26</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=26.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a6f"></span>6A6F</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="3">Jump to <a href="6A27.html#6a94">6A94</a> if *<span class="register">HL</span> is not zero.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a70"></span>6A70</td>
+<td class="instruction">AND A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a71"></span>6A71</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a94">$6A94</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a73"></span>6A73</td>
+<td class="instruction">LD L,$22</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=22.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a75"></span>6A75</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="3">Jump to <a href="6A27.html#6a7b">6A7B</a> if bit 7 of *<span class="register">HL</span> is set.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a76"></span>6A76</td>
+<td class="instruction">BIT 7,A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a78"></span>6A78</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a7b">$6A7B</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a7a"></span>6A7A</td>
+<td class="instruction">CPL</td>
+<td class="comment-1" rowspan="1">Invert the bits in <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a7b"></span>6A7B</td>
+<td class="instruction">LD B,A</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a7c"></span>6A7C</td>
+<td class="instruction">DEC L</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a7d"></span>6A7D</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="3">Jump to <a href="6A27.html#6a83">6A83</a> if bit 7 of *<span class="register">HL</span> is set.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a7e"></span>6A7E</td>
+<td class="instruction">BIT 7,A</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a80"></span>6A80</td>
+<td class="instruction">JR NZ,<a href="6A27.html#6a83">$6A83</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a82"></span>6A82</td>
+<td class="instruction">CPL</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=00.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a83"></span>6A83</td>
+<td class="instruction">SUB B</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">B</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a84"></span>6A84</td>
+<td class="instruction">JR NC,<a href="6A27.html#6a94">$6A94</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6A27.html#6a94">6A94</a> if {} is higher.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a86"></span>6A86</td>
+<td class="instruction">CPL</td>
+<td class="comment-1" rowspan="1">Invert the bits in <span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a87"></span>6A87</td>
+<td class="instruction">SRL A</td>
+<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a89"></span>6A89</td>
+<td class="instruction">SRL A</td>
+<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a8b"></span>6A8B</td>
+<td class="instruction">LD L,$34</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=34.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a8d"></span>6A8D</td>
+<td class="instruction">ADD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a8e"></span>6A8E</td>
+<td class="instruction">BIT 4,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6A27.html#6a93">6A93</a> if bit 4 of <span class="register">A</span> is not set.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a90"></span>6A90</td>
+<td class="instruction">JR Z,<a href="6A27.html#6a93">$6A93</a></td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a92"></span>6A92</td>
+<td class="instruction">DEC A</td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a93"></span>6A93</td>
+<td class="instruction">LD (HL),A</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-2"><span id="6a94"></span>6A94</td>
+<td class="instruction">LD A,C</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a95"></span>6A95</td>
+<td class="instruction">RRCA</td>
+<td class="comment-1" rowspan="3">RRCA.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a96"></span>6A96</td>
+<td class="instruction">RRCA</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a97"></span>6A97</td>
+<td class="instruction">RRCA</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a98"></span>6A98</td>
+<td class="instruction">RET NC</td>
+<td class="comment-1" rowspan="1">Return if {} is higher.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a99"></span>6A99</td>
+<td class="instruction">AND %00000111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a9b"></span>6A9B</td>
+<td class="instruction">ADD A,A</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a9c"></span>6A9C</td>
+<td class="instruction">ADD A,$DC</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>+=DC.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a9e"></span>6A9E</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6a9f"></span>6A9F</td>
+<td class="instruction">LD H,$B4</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=B4.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6aa1"></span>6AA1</td>
+<td class="instruction">LD A,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6aa2"></span>6AA2</td>
+<td class="instruction">INC L</td>
+<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6aa3"></span>6AA3</td>
+<td class="instruction">LD H,(HL)</td>
+<td class="comment-1" rowspan="1"><span class="register">H</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6aa4"></span>6AA4</td>
+<td class="instruction">LD L,A</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="address-1"><span id="6aa5"></span>6AA5</td>
+<td class="instruction">JP (HL)</td>
+<td class="comment-1" rowspan="1">Jump to *<span class="register">HL</span>.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6A17.html">6A17</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#6a27">Map</a></td>
+<td class="next">
+Next: <a href="6AA6.html">6AA6</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/27175.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

@@ -35,7 +35,7 @@ Next: <a href="28607.html">28607</a>
 </td>
 </tr>
 </table>
-<div class="description">28569: Routine at 6F99</div>
+<div class="description">28569: Handler: Ice</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,83 +44,133 @@ Next: <a href="28607.html">28607</a>
 </td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="28569"></span>
+<div class="comments">
+<div class="paragraph">
+If you hit ice too fast the bike will slide (crash) and you fall off.
+</div>
+<div class="paragraph">
+The parameters are; <table class="default">
+<tr>
+<th colspan="1" rowspan="2">Direction</th>
+<th colspan="2" rowspan="1">Bike Range</th>
+<th colspan="1" rowspan="2">Crash Point</th>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Lowest</th>
+<th colspan="1" rowspan="1">Highest</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Left</td>
+<td class="centre" colspan="1" rowspan="1">105</td>
+<td class="centre" colspan="1" rowspan="1">127</td>
+<td class="centre" colspan="1" rowspan="1">&lt; 111</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">Right</td>
+<td class="centre" colspan="1" rowspan="1">128</td>
+<td class="centre" colspan="1" rowspan="1">150</td>
+<td class="centre" colspan="1" rowspan="1">&gt; 144</td>
+</tr>
+</table>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_Ice</td>
 <td class="address-2"><span id="28569"></span>28569</td>
 <td class="instruction">LD A,(30754)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28572"></span>28572</td>
 <td class="instruction">CP 144</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28569.html#28586">28586</a> if <span class="register">A</span> is higher than 144.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28569.html#28586">Initialise_CrashIce</a> if <span class="register">A</span> is higher than 144.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28574"></span>28574</td>
-<td class="instruction">JR NC,<a href="28569.html#28586">28586</a></td>
+<td class="instruction">JR NC,<a href="28569.html#28586">Initialise_CrashIce</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28576"></span>28576</td>
 <td class="instruction">CP 111</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28569.html#28586">28586</a> if <span class="register">A</span> is lower than 111.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28569.html#28586">Initialise_CrashIce</a> if <span class="register">A</span> is lower than 111.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28578"></span>28578</td>
-<td class="instruction">JR C,<a href="28569.html#28586">28586</a></td>
+<td class="instruction">JR C,<a href="28569.html#28586">Initialise_CrashIce</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28580"></span>28580</td>
 <td class="instruction">LD A,(30760)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30760.html">30760</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28583"></span>28583</td>
 <td class="instruction">AND %00000011</td>
 <td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28585"></span>28585</td>
 <td class="instruction">RET Z</td>
 <td class="comment-1" rowspan="1">Return if the result is zero.</td>
 </tr>
 <tr>
+<td class="asm-label">Initialise_CrashIce</td>
 <td class="address-2"><span id="28586"></span>28586</td>
 <td class="instruction">LD A,6</td>
-<td class="comment-1" rowspan="2">Write 6 to *<a href="30762.html">30762</a>.</td>
+<td class="comment-1" rowspan="2">Write 6 to *<a href="30762.html">Action</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28588"></span>28588</td>
 <td class="instruction">LD (30762),A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28591"></span>28591</td>
 <td class="instruction">LD HL,48568</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="48568.html">48568</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28594"></span>28594</td>
 <td class="instruction">LD A,(30754)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="28569.html#28603">CrashIceMovingRight</a> if *<a href="30754.html">Speed</a> is higher than 128 (i.e. moving right).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28597"></span>28597</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28599"></span>28599</td>
-<td class="instruction">JR NZ,<a href="28569.html#28603">28603</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28569.html#28603">28603</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="28569.html#28603">CrashIceMovingRight</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28601"></span>28601</td>
 <td class="instruction">LD L,199</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=199.</td>
 </tr>
 <tr>
+<td class="asm-label">CrashIceMovingRight</td>
 <td class="address-2"><span id="28603"></span>28603</td>
 <td class="instruction">LD (30778),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30777.html#30778">30778</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30778.html">30778</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28606"></span>28606</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wheelie: Routine at 6F7D</title>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../wheelie.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-wide.css" />
+<link rel="stylesheet" type="text/css" href="../skoolkit-dark.css" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-75RERFCHBG"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-75RERFCHBG');
+</script>
+</head>
+<body class="Asm-c">
+<table class="header">
+<tr>
+<td class="logo"><a href="../index.html"><img alt="logo" src="../images/logo.png" /></a></td>
+<td class="page-header">Routines</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6F62.html">6F62</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#6f7d">Map</a></td>
+<td class="next">
+Next: <a href="6F98.html">6F98</a>
+</td>
+</tr>
+</table>
+<div class="description">6F7D: Handler: Hit Hump</div>
+<table class="disassembly">
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="details">
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_HitHump</td>
+<td class="address-2"><span id="6f7d"></span>6F7D</td>
+<td class="instruction">LD A,($7834)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7834.html">7834</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f80"></span>6F80</td>
+<td class="instruction">AND %00000111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f82"></span>6F82</td>
+<td class="instruction">RET NZ</td>
+<td class="comment-1" rowspan="1">Return if the result is not zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f83"></span>6F83</td>
+<td class="instruction">LD A,$05</td>
+<td class="comment-1" rowspan="2">Write 05 to *<a href="782A.html">Action</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f85"></span>6F85</td>
+<td class="instruction">LD ($782A),A</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f88"></span>6F88</td>
+<td class="instruction">LD A,($7834)</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7834.html">7834</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f8b"></span>6F8B</td>
+<td class="instruction">AND %01000000</td>
+<td class="comment-1" rowspan="1">Keep only bit 6.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f8d"></span>6F8D</td>
+<td class="instruction">LD HL,$BD0E</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="BD0E.html">BD0E</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f90"></span>6F90</td>
+<td class="instruction">JR Z,<a href="6F7D.html#6f94">Handler_HitHump_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6F7D.html#6f94">Handler_HitHump_0</a> if {} is zero.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f92"></span>6F92</td>
+<td class="instruction">LD L,$21</td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=21.</td>
+</tr>
+<tr>
+<td class="asm-label">Handler_HitHump_0</td>
+<td class="address-2"><span id="6f94"></span>6F94</td>
+<td class="instruction">LD ($783A),HL</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="783A.html">783A</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="6f97"></span>6F97</td>
+<td class="instruction">RET</td>
+<td class="comment-1" rowspan="1">Return.</td>
+</tr>
+</table>
+<table class="asm-navigation">
+<tr>
+<td class="prev">
+Prev: <a href="6F62.html">6F62</a>
+</td>
+<td class="up">Up: <a href="../maps/all.html#6f7d">Map</a></td>
+<td class="next">
+Next: <a href="6F98.html">6F98</a>
+</td>
+</tr>
+</table>
+<footer>
+<div class="release"></div>
+<div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div><a href="../dec/asm/28541.html">Switch to decimal</a>.</div>
+</footer>
+</body>
+</html>

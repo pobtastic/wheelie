@@ -35,7 +35,7 @@ Next: <a href="30756.html">30756</a>
 </td>
 </tr>
 </table>
-<div class="description">30754: Game status buffer entry at 7822</div>
+<div class="description">30754: Speed?</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,9 +44,16 @@ Next: <a href="30756.html">30756</a>
 </td>
 </tr>
 <tr>
+<td class="asm-label">Speed</td>
 <td class="address-1"><span id="30754"></span>30754</td>
-<td class="instruction">DEFB 0,0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Pivots around 128 for direction - right &gt;= 128 left is &lt; 128.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="30755"></span>30755</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Mirror of speed? Doesn't seem to be used. TODO.</td>
 </tr>
 </table>
 <table class="asm-navigation">

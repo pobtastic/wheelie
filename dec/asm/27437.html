@@ -31,7 +31,7 @@ Prev: <a href="27434.html">27434</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#27437">Map</a></td>
 <td class="next">
-Next: <a href="27463.html">27463</a>
+Next: <a href="27460.html">27460</a>
 </td>
 </tr>
 </table>
@@ -49,7 +49,7 @@ Used by the routines at <a href="28184.html">28184</a>, <a href="29457.html">294
 <tr>
 <td class="address-2"><span id="27437"></span>27437</td>
 <td class="instruction">LD A,(30754)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">30754</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27440"></span>27440</td>
@@ -59,7 +59,7 @@ Used by the routines at <a href="28184.html">28184</a>, <a href="29457.html">294
 <tr>
 <td class="address-1"><span id="27442"></span>27442</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="27437.html#27448">27448</a> if bit 7 of <span class="register">A</span> is set.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="27437.html#27448">27448</a> if *<a href="30754.html">Speed</a> is higher than 128 (i.e. moving right).</td>
 </tr>
 <tr>
 <td class="address-1"><span id="27444"></span>27444</td>
@@ -105,21 +105,6 @@ Used by the routines at <a href="28184.html">28184</a>, <a href="29457.html">294
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>
 </tr>
-<tr>
-<td class="address-1"><span id="27460"></span>27460</td>
-<td class="instruction">INC D</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">D</span> by one.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="27461"></span>27461</td>
-<td class="instruction">LD (HL),E</td>
-<td class="comment-1" rowspan="1">Write <span class="register">E</span> to *<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="address-1"><span id="27462"></span>27462</td>
-<td class="instruction">RET</td>
-<td class="comment-1" rowspan="1">Return.</td>
-</tr>
 </table>
 <table class="asm-navigation">
 <tr>
@@ -128,7 +113,7 @@ Prev: <a href="27434.html">27434</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#27437">Map</a></td>
 <td class="next">
-Next: <a href="27463.html">27463</a>
+Next: <a href="27460.html">27460</a>
 </td>
 </tr>
 </table>
