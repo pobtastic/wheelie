@@ -43,7 +43,7 @@ To gain infinite lives:
 <hr />
 </div>
 <div class="paragraph">
-Just return, instead of decreasing <a href="../asm/30777.html">Lives</a> by one:
+Just RETurn, instead of decreasing <a href="../asm/30777.html">Lives</a> by one:
 </div>
 <div class="paragraph">
 <table>
@@ -51,10 +51,11 @@ Just return, instead of decreasing <a href="../asm/30777.html">Lives</a> by one:
 <tr>
 <td class="address-1"><a href="../asm/30031.html#30034">30034</a></td>
 <td class="instruction">LD <span class="register">HL</span>,<a href="../asm/30777.html">30777</a></td>
+<td class="comment-2" rowspan="2">Decrease *<a href="../asm/30777.html">Lives</a> by one.</td>
 </tr>
 <tr>
 <td class="address-1"><a href="../asm/30031.html#30037">30037</a></td>
-<td class="instruction">LD (<span class="register">HL</span>)</td>
+<td class="instruction">DEC (<span class="register">HL</span>)</td>
 </tr>
 </tbody>
 </table>
@@ -148,7 +149,7 @@ For a similar outcome (LoaDing into <span class="register">A</span> instead of w
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
 <div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
-<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../reference/pokes.html">Switch to hexadecimal</a>.</div>
 </footer>
 </body>

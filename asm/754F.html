@@ -35,7 +35,7 @@ Next: <a href="757D.html">757D</a>
 </td>
 </tr>
 </table>
-<div class="description">754F: Initialise Game</div>
+<div class="description">754F: Initialise New Game</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,7 +47,7 @@ Used by the routine at <a href="75AA.html">PrintGameDisplay</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame</td>
+<td class="asm-label">InitialiseNewGame</td>
 <td class="address-2"><span id="754f"></span>754F</td>
 <td class="instruction">CALL <a href="7535.html">PrintDemoMode</a></td>
 <td class="comment-1" rowspan="1">Call <a href="7535.html">PrintDemoMode</a>.</td>
@@ -137,7 +137,7 @@ Compare the players current lives with the maximum number of lives (04).
 <td class="instruction">LD B,A</td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame_0</td>
+<td class="asm-label">InitialiseNewGame_0</td>
 <td class="address-2"><span id="7563"></span>7563</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -157,8 +157,8 @@ Compare the players current lives with the maximum number of lives (04).
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7569"></span>7569</td>
-<td class="instruction">DJNZ <a href="754F.html#7563">InitialiseGame_0</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7563">InitialiseGame_0</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="754F.html#7563">InitialiseNewGame_0</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="754F.html#7563">InitialiseNewGame_0</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label">TestGameOver</td>
@@ -270,7 +270,7 @@ Next: <a href="757D.html">757D</a>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
 <div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
-<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/30031.html">Switch to decimal</a>.</div>
 </footer>
 </body>

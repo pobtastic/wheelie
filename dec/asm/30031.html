@@ -35,7 +35,7 @@ Next: <a href="30077.html">30077</a>
 </td>
 </tr>
 </table>
-<div class="description">30031: Initialise Game</div>
+<div class="description">30031: Initialise New Game</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,7 +47,7 @@ Used by the routine at <a href="30122.html">PrintGameDisplay</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame</td>
+<td class="asm-label">InitialiseNewGame</td>
 <td class="address-2"><span id="30031"></span>30031</td>
 <td class="instruction">CALL <a href="30005.html">PrintDemoMode</a></td>
 <td class="comment-1" rowspan="1">Call <a href="30005.html">PrintDemoMode</a>.</td>
@@ -137,7 +137,7 @@ Compare the players current lives with the maximum number of lives (4).
 <td class="instruction">LD B,A</td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseGame_0</td>
+<td class="asm-label">InitialiseNewGame_0</td>
 <td class="address-2"><span id="30051"></span>30051</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -157,8 +157,8 @@ Compare the players current lives with the maximum number of lives (4).
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30057"></span>30057</td>
-<td class="instruction">DJNZ <a href="30031.html#30051">InitialiseGame_0</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30031.html#30051">InitialiseGame_0</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="30031.html#30051">InitialiseNewGame_0</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30031.html#30051">InitialiseNewGame_0</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label">TestGameOver</td>
@@ -270,7 +270,7 @@ Next: <a href="30077.html">30077</a>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
 <div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
-<div class="repository">Link to <a href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
+<div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/754F.html">Switch to hexadecimal</a>.</div>
 </footer>
 </body>
