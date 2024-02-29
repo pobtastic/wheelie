@@ -1780,8 +1780,8 @@ c$6A27 LD A,(HL)     ; #REGa=*#REGhl.
 *$6A83 SUB B         ; #REGa-=#REGb.
  $6A84 JR NC,$6A94   ; Jump to #R$6A94 if {} is higher.
  $6A86 CPL           ; Invert the bits in #REGa.
- $6A87 SRL A         ; Shift #REGa right.
- $6A89 SRL A         ; Shift #REGa right.
+ $6A87 SRL A         ; {Shift #REGa right twice.
+ $6A89 SRL A         ; }
  $6A8B LD L,$34      ; #REGl=#N$34.
  $6A8D ADD A,(HL)    ; #REGa+=*#REGhl.
  $6A8E BIT 4,A       ; {Jump to #R$6A93 if bit 4 of #REGa is not set.
@@ -1793,11 +1793,14 @@ c$6A27 LD A,(HL)     ; #REGa=*#REGhl.
  $6A96 RRCA          ;
  $6A97 RRCA          ; }
  $6A98 RET NC        ; Return if {} is higher.
+; There are #N$07 actions. They are contained in a jump table at: #R$B4DC
+; onwards.
  $6A99 AND %00000111 ; Keep only bits 0-2.
- $6A9B ADD A,A       ; #REGa+=#REGa.
- $6A9C ADD A,$DC     ; #REGa+=#N$DC.
- $6A9E LD L,A        ; #REGl=#REGa.
+ $6A9B ADD A,A       ; {#REGl=#N$DC+(#REGa*#N$02).
+ $6A9C ADD A,$DC     ;
+ $6A9E LD L,A        ; }
  $6A9F LD H,$B4      ; #REGh=#N$B4.
+; Fetch the related action from the jump table and jump to it.
  $6AA1 LD A,(HL)     ; #REGa=*#REGhl.
  $6AA2 INC L         ; Increment #REGl by one.
  $6AA3 LD H,(HL)     ; #REGh=*#REGhl.
@@ -3423,7 +3426,9 @@ c$7396 LD HL,$FA47   ; #REGhl=#R$FA47.
  $73B3 DJNZ $739B    ; Decrease counter by one and loop back to #R$739B until
                      ; counter is zero.
  $73B5 RET           ; Return.
- $73B6 DEFB $03      ;
+
+; Unused
+u$73B6 DEFB $03
 
 ; Demo Mode Input
 ;
@@ -6192,14 +6197,17 @@ b$B200 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $B4D0 DEFB $A0,$9F,$9E,$9D,$00,$00,$00,$00
  $B4D8 DEFB $00,$00,$00,$00
 
-; Data block at B4DC
-w$B4DC DEFW $6F4A
- $B4DE DEFW $6FFD
- $B4E0 DEFW $6FC0
- $B4E2 DEFW $6F99
- $B4E4 DEFW $6F7D
- $B4E6 DEFW $7048
- $B4E8 DEFW $751A
+; Actions Jump Table
+;
+; Used by the routine at #R$6A27.
+@label=JumpTable_Actions
+w$B4DC DEFW $6F4A    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+ $B4DE DEFW $6FFD    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+ $B4E0 DEFW $6FC0    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+ $B4E2 DEFW $6F99    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+ $B4E4 DEFW $6F7D    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+ $B4E6 DEFW $7048    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+ $B4E8 DEFW $751A    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
 
 ; Data block at B4EA
 b$B4EA DEFB $78,$78,$78,$78,$78,$78,$78,$78
@@ -6396,8 +6404,8 @@ t$BAA6 DEFM "         THE RACE IS ON!        " ; "#STR(#PC,$04,$20)".
 t$BAC6 DEFM "NEW CODE ABCDE-PRESS KEY TO PLAY" ; "#STR(#PC,$04,$20)".
  $BAE6 DEFM "-------------"                    ; "#STR(#PC,$04,$0D)".
 
-; Data block at BAF3
-b$BAF3 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+; Unused
+u$BAF3 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $BAFB DEFB $00,$00,$00,$00,$00
 
 ; Data block at BB00
@@ -9657,8 +9665,8 @@ c$E891 LD HL,$5800   ; #REGhl=#R$5800(#N$5800) (attribute buffer location).
  $E8DB JR NZ,$E8CA   ; Jump to #R$E8CA until #REGc is zero.
  $E8DD JP $EBE6      ; Jump to #R$EBE6.
 
-; Data block at E8E0
-b$E8E0 DEFB $20,$E3,$C9,$00
+; Unused
+u$E8E0 DEFB $20,$E3,$C9,$00
 
 ; Display Pink Footer
 ;
@@ -9687,8 +9695,8 @@ c$E8E4 LD DE,$5000   ; #REGde=#N$5000 (screen buffer location).
 c$E8F6 IN A,($1F)    ; Read Kempston Joystick input.
  $E8F8 RET           ; Return.
 
-; Data block at E8F9
-b$E8F9 DEFB $78,$78,$78,$78,$78,$78,$78
+; Unused
+u$E8F9 DEFB $78,$78,$78,$78,$78,$78,$78
 
 ; Messaging: Control Selection
 @label=Messaging_ControlSelection
@@ -10368,8 +10376,8 @@ c$ED52 EXX           ; Switch to the shadow registers.
  $EE06 JR Z,$EE02    ; }
  $EE08 RET           ; Return.
 
-; Data block at EE09
-b$EE09 DEFB $78,$78,$78,$78,$78,$78,$78,$78
+; Unused
+u$EE09 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $EE11 DEFB $78,$78,$78
 
 ; Messaging: Code Entry
@@ -10519,8 +10527,8 @@ b$EFC2 DEFB $84,$4D,$03
  $EFFB DEFB $C8,$F6,$0D
  $EFFE DEFB $FF         ; Terminator.
 
-; Data block at EFFF
-b$EFFF DEFB $78
+; Unused
+u$EFFF DEFB $78
 
 ; Messaging: Instructions (Page 1)
 @label=Messaging_InstructionsPage1

@@ -1,0 +1,4 @@
+GAME=wheelie
+SRCFILES=$(echo wheelie.skool {wheelie,analytics,bases,changelog,data,pages,pokes,sound}.ref {wheelie,dark,wide}.css)
+SKOOL2BINOPTS="-i -S 27934"
+WAVCONVERT="dead.wav ghostrider-finished.wav level-complete.wav race-is-on.wav"

@@ -26,7 +26,7 @@ def run_skool2asm():
     skool2asm.main(sys.argv[1:] + [WHEELIE_SKOOL])
 
 def run_skool2html():
-    options = '-c Config/InitModule={}:publish -d {}/build/html'.format(SKOOLKIT_TOOLS, WHEELIE_HOME)
+    options = "-c Config/InitModule={}:publish -d {}/build/html".format(SKOOLKIT_TOOLS, WHEELIE_HOME)
     art.tprint("Wheelie")
     hex = '-H -c Config/GameDir=wheelie --var pub=2'
     dec = '-D -c Config/GameDir=wheelie/dec --var pub=4'

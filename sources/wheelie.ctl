@@ -891,8 +891,7 @@ c $6A27
   $6A83,$01 #REGa-=#REGb.
   $6A84,$02 Jump to #R$6A94 if {} is higher.
   $6A86,$01 Invert the bits in #REGa.
-  $6A87,$02 Shift #REGa right.
-  $6A89,$02 Shift #REGa right.
+  $6A87,$04 Shift #REGa right twice.
   $6A8B,$02 #REGl=#N$34.
   $6A8D,$01 #REGa+=*#REGhl.
   $6A8E,$04 Jump to #R$6A93 if bit 4 of #REGa is not set.
@@ -901,11 +900,11 @@ c $6A27
   $6A94,$01 #REGa=#REGc.
   $6A95,$03 RRCA.
   $6A98,$01 Return if {} is higher.
+N $6A99 There are #N$07 actions. They are contained in a jump table at: #R$B4DC onwards.
   $6A99,$02,b$01 Keep only bits 0-2.
-  $6A9B,$01 #REGa+=#REGa.
-  $6A9C,$02 #REGa+=#N$DC.
-  $6A9E,$01 #REGl=#REGa.
+  $6A9B,$04 #REGl=#N$DC+(#REGa*#N$02).
   $6A9F,$02 #REGh=#N$B4.
+N $6AA1 Fetch the related action from the jump table and jump to it.
   $6AA1,$01 #REGa=*#REGhl.
   $6AA2,$01 Increment #REGl by one.
   $6AA3,$01 #REGh=*#REGhl.
@@ -1700,7 +1699,8 @@ c $7396
   $73B2,$01 #REGhl+=#REGde.
   $73B3,$02 Decrease counter by one and loop back to #R$739B until counter is zero.
   $73B5,$01 Return.
-B $73B6,$01
+
+u $73B6
 
 c $73B7 Demo Mode Input
 @ $73B7 label=DemoModeInput
@@ -2542,7 +2542,11 @@ D $A900 #SCR$02,$00,$00,$20,$08,$A900,$B100(footer)
 b $B200 Shadow Buffer?
 @ $B200 label=ShadowBuffer
 
-w $B4DC
+w $B4DC Actions Jump Table
+@ $B4DC label=JumpTable_Actions
+D $B4DC Used by the routine at #R$6A27.
+  $B4DC,$02 #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+L $B4DC,$02,$07
 
 b $B4EA
 
@@ -2567,7 +2571,7 @@ t $BAC6 Messaging: New Code
   $BAC6,$20 "#STR(#PC,$04,$20)".
   $BAE6,$0D "#STR(#PC,$04,$0D)".
 
-b $BAF3
+u $BAF3
 
 b $BB00
 
@@ -4088,7 +4092,7 @@ N $E8C0 The start screen messaging at #R$A800 is split into #N$04 blocks of text
   $E8DB,$02 Jump to #R$E8CA until #REGc is zero.
   $E8DD,$03 Jump to #R$EBE6.
 
-b $E8E0
+u $E8E0
 
 c $E8E4 Display Pink Footer
 @ $E8E4 label=DisplayPinkFooter
@@ -4108,7 +4112,7 @@ D $E8F6 Input method; used by the routine at #R$6B48.
   $E8F6,$02 Read Kempston Joystick input.
   $E8F8,$01 Return.
 
-b $E8F9
+u $E8F9
 
 t $E900 Messaging: Control Selection
 @ $E900 label=Messaging_ControlSelection
@@ -4624,11 +4628,7 @@ N $EDFB Now display the text for page four on the screen.
   $EE05,$03 Jump to #R$EE02 until any key is pressed.
   $EE08,$01 Return.
 
-b $EE09
-
-t $EE94 Messaging: Press Any Key
-@ $EE94 label=Messaging_PressAnyKey
-  $EE94,$20 "#STR(#PC,$04,$20)".
+u $EE09
 
 t $EE14 Messaging: Code Entry
 @ $EE14 label=Messaging_CodeEntry
@@ -4639,6 +4639,10 @@ t $EE14 Messaging: Code Entry
 t $EE74 Messaging: How To Play Wheelie
 @ $EE74 label=Messaging_HowToPlay
   $EE74,$20 "#STR(#PC,$04,$20)".
+
+t $EE94 Messaging: Press Any Key
+@ $EE94 label=Messaging_PressAnyKey
+  $EE94,$20 "#STR(#PC,$04,$20)".
 
 t $EEB4 Messaging: Code Letter Position
 @ $EEB4 label=Messaging_CodeLetterPosition
@@ -4671,7 +4675,7 @@ D $EFC2 Used by the routine at #R$EC68.
   $EFC2,$3C,$03
   $EFFE,$01 Terminator.
 
-b $EFFF
+u $EFFF
 
 t $F000 Messaging: Instructions (Page 1)
 @ $F000 label=Messaging_InstructionsPage1

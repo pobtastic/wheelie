@@ -8,7 +8,7 @@
 
 [Config]
 Expand=#INCLUDE(Expand)
-RefFiles=analytics.ref;bases.ref;changelog.ref;data.ref;pages.ref;pokes.ref;sound.ref
+RefFiles=bases.ref;analytics.ref;changelog.ref;data.ref;pages.ref;pokes.ref;sound.ref
 GameDir=wheelie
 
 [Game]
