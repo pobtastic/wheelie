@@ -367,12 +367,11 @@ Used by the routines at <a href="6A00.html">6A00</a> and <a href="6AAC.html">6AA
 <tr>
 <td class="address-1"><span id="6a87"></span>6A87</td>
 <td class="instruction">SRL A</td>
-<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
+<td class="comment-1" rowspan="2">Shift <span class="register">A</span> right twice.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6a89"></span>6A89</td>
 <td class="instruction">SRL A</td>
-<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6a8b"></span>6A8B</td>
@@ -427,6 +426,16 @@ Used by the routines at <a href="6A00.html">6A00</a> and <a href="6AAC.html">6AA
 <td class="comment-1" rowspan="1">Return if {} is higher.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6a99"></span>
+<div class="comments">
+<div class="paragraph">
+There are 07 actions. They are contained in a jump table at: <a href="B4DC.html">JumpTable_Actions</a> onwards.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="address-1"><span id="6a99"></span>6A99</td>
 <td class="instruction">AND %00000111</td>
 <td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
@@ -434,22 +443,30 @@ Used by the routines at <a href="6A00.html">6A00</a> and <a href="6AAC.html">6AA
 <tr>
 <td class="address-1"><span id="6a9b"></span>6A9B</td>
 <td class="instruction">ADD A,A</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="3"><span class="register">L</span>=DC+(<span class="register">A</span>*02).</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6a9c"></span>6A9C</td>
 <td class="instruction">ADD A,$DC</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=DC.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6a9e"></span>6A9E</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6a9f"></span>6A9F</td>
 <td class="instruction">LD H,$B4</td>
 <td class="comment-1" rowspan="1"><span class="register">H</span>=B4.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6aa1"></span>
+<div class="comments">
+<div class="paragraph">
+Fetch the related action from the jump table and jump to it.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="address-1"><span id="6aa1"></span>6AA1</td>
