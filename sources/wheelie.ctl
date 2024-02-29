@@ -3,7 +3,7 @@
 ; Label naming is loosely based on Action_ActionName_SubAction e.g. Print_HighScore_Loop.
 
 > $4000 @rom
-> $4000 @org=$4000
+> $4000 @start
 b $4000 Loading Screen
 D $4000 #UDGTABLE { =h Wheelie Loading Screen. } { #SCR$02(loading) } UDGTABLE#
 @ $4000 label=Loading
@@ -15,7 +15,7 @@ b $5B00
 c $5D11 Game Entry Point
 @ $5D11 label=GameEntryPoint
   $5D11,$04 #REGsp=#N$FFFF.
-  $5D15,$03 #HTML(#REGhl=*<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C53.html">PROG</a>.)
+  $5D15,$03 #HTML(#REGhl=*<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C53.html">PROG</a>.)
   $5D18,$03 #REGbc=#N$9B94.
   $5D1B,$03 #REGde=#N$FE00.
   $5D1E,$01 #REGhl+=#REGbc.
@@ -42,7 +42,7 @@ R $6400 O:A Random number
 
 c $6414 Set Random Number Seed?
 @ $6414 label=SetRandomNumberSeed
-  $6414,$03 #HTML(#REGhl=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $6414,$03 #HTML(#REGhl=*<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
   $6417,$01 #REGa=#REGh.
   $6418,$02,b$01 Keep only bits 0-1.
   $641A,$02 Jump to #R$641D if the result is not zero.
@@ -1005,11 +1005,13 @@ N $6CF3 See #R$E800.
   $6D11,$02 #REGh=#N$9E.
   $6D13,$01 #REGa=#N$00.
   $6D14,$03 Call #R$6800.
-  $6D17,$03 #HTML(#REGa=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $6D17,$03 #HTML(#REGa=*<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
   $6D1A,$01 Increment #REGa by one.
   $6D1B,$03 Jump to #R$EBF6.
 
+> $6D1E @org
 c $6D1E
+@ $6D1E label=Alias_InitialiseGame
   $6D1E,$03 Jump to #R$E80E.
 
 c $6D21
@@ -1019,7 +1021,7 @@ c $6D21
 c $6D28
 
 c $6D49
-  $6D49,$03 #HTML(#REGa=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $6D49,$03 #HTML(#REGa=*<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
   $6D4C,$01 Increment #REGa by one.
   $6D4D,$03 Write #REGa to *#R$785A.
   $6D50,$03 #REGhl=#R$782A.
@@ -1161,7 +1163,7 @@ c $6E18 Remove Sprite?
   $6EAC,$02 Decrease counter by one and loop back to #R$6EAA until counter is zero.
   $6EAE,$01 Restore #REGhl from the stack.
 N $6EAF Play the "player dead" audio.
-N $6EAF #AUDIO(dead.wav)(#INCLUDE(Dead))
+N $6EAF #HTML(#AUDIO(dead.wav)(#INCLUDE(Dead)))
   $6EAF,$02 #REGb=#N$14 (counter; #N$14 loops).
 @ $6EB1 label=Handler_PlayerDead
   $6EB1,$02 Stash #REGbc and #REGhl on the stack.
@@ -1814,13 +1816,13 @@ c $7420
   $746C,$01 Switch to the shadow registers.
   $746D,$03 #REGbc'=#R$784B.
 N $7470 #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
-.       <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
+.       <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
 N $7470 This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
 .       only copies six bytes/ lines.
 @ $7470 label=PrintTarget
   $7470,$01 #REGa=*#REGbc'.
   $7471,$06 #REGl'=#N$81+(#REGa*#N$08).
-  $7477,$02 #HTML(#REGh'=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">#N$3D</a>.)
+  $7477,$02 #HTML(#REGh'=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">#N$3D</a>.)
   $7479,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
   $747B,$01 Increment #REGl' by one.
   $747C,$01 Increment #REGd' by one.
@@ -2000,8 +2002,8 @@ N $7544 If this is not demo mode then set the attributes to #COLOUR$00 where it 
   $754C,$02 Decrease counter by one and loop back to #R$7549 until counter is zero.
   $754E,$01 Return.
 
-c $754F Initialise Game
-@ $754F label=InitialiseGame
+c $754F Initialise New Game
+@ $754F label=InitialiseNewGame
   $754F,$03 Call #R$7535.
 N $7552 "Spend" a life to continue, or move to Game Over.
 @ $7552 label=SpendLife
@@ -3989,7 +3991,8 @@ c $E800 Initialise Demo Mode
   $E806,$05 Write #N$05 to *#R$7820.
   $E80B,$03 Jump to #R$6CAA.
 
-c $E80E Game
+c $E80E Initialise Game
+@ $E80E label=InitialiseGame
   $E80E,$04 #REGsp=#N$FFFF.
   $E812,$03 Call #R$6414.
   $E815,$06 Write #R$6828 to #R$7850.
@@ -4148,8 +4151,8 @@ D $EB43 Used by the routine at #R$E80E.
   $EB4C,$01 Switch to the shadow registers.
 N $EB4D Re-use the same printing routine as the start screen.
   $EB4D,$03 Call #R$E8CA.
-  $EB50,$06 #HTML(Write #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
-.           and #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+  $EB50,$06 #HTML(Write #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
+.           and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
 N $EB56 Add a little pause to debounce the keypress from the previous page.
   $EB56,$03 #REGhl=#N($0000,$04,$04).
 @ $EB59 label=ChangeControls_DebounceLoop
@@ -4213,13 +4216,13 @@ N $EBA7 Reset the screen buffer position.
   $EBB0,$03 Call #R$74D3.
   $EBB3,$04 Write #N$07 to *#REGiy+#N$07.
   $EBB7,$04 Set bit 3 of *#REGix+#N$30.
-  $EBBB,$03 #HTML(#REGhl=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
+  $EBBB,$03 #HTML(#REGhl=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
   $EBBE,$02 Reset bit 5 of *#REGhl.
 @ $EBC0 label=UserDefinedControls_InputLoop
-  $EBC0,$01 #HTML(Call <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/0038.html">MASK_INT</a>)
+  $EBC0,$01 #HTML(Call <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/0038.html">MASK_INT</a>)
   $EBC1,$04 Jump to #R$EBC0 until any key is pressed.
 N $EBC5 Fetch the user keypress.
-  $EBC5,$03 #HTML(#REGa=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
+  $EBC5,$03 #HTML(#REGa=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
   $EBC8,$01 Write the keypress to the current position in *#R$7853.
   $EBC9,$01 Move onto the next control key.
 N $EBCA Warn the user that we debounce using pauses rather than wait for the key to be released.
@@ -4259,7 +4262,7 @@ N $EBE6 Countdown from #N$FFFF to #N($0000,$04,$04) a total of #N$05 times. This
 
 c $EBF3
   $EBF3,$03 #REGa=*#R$785A.
-  $EBF6,$03 #HTML(#REGhl=<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $EBF6,$03 #HTML(#REGhl=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
   $EBF9,$03 Jump to #R$EBF9 if #REGa is not equal to *#REGhl.
   $EBFC,$03 Jump to #R$6C00.
 
@@ -4269,7 +4272,7 @@ c $EC00
   $EC00,$01 Switch to the shadow registers.
   $EC01,$01 #REGc'=#REGa.
   $EC02,$03 #REGa=*#R$785A.
-  $EC05,$03 #HTML(#REGhl'=<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $EC05,$03 #HTML(#REGhl'=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
   $EC08,$01 Compare #REGa with *#REGhl'.
   $EC09,$01 #REGa=#REGc'.
   $EC0A,$01 Switch back to the normal registers.
@@ -4344,19 +4347,19 @@ N $EC3D Restore the real value of the note after the terminator check.
 
 c $EC5E Sounds: Level Complete
 @ $EC5E label=Sounds_LevelComplete
-N $EC5E #AUDIO(level-complete.wav)(#INCLUDE(LevelComplete))
+N $EC5E #HTML(#AUDIO(level-complete.wav)(#INCLUDE(LevelComplete)))
   $EC5E,$03 #REGhl=#R$EEE8.
   $EC61,$02 Jump to #R$EC35.
 
 c $EC63 Sounds: The Race Is On!
 @ $EC63 label=Sounds_TheRaceIsOn
-N $EC63 #AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn))
+N $EC63 #HTML(#AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn)))
   $EC63,$03 #REGhl=#R$EF4F.
   $EC66,$02 Jump to #R$EC35.
 
 c $EC68 Sounds: Ghostrider Has Finished
 @ $EC68 label=Sounds_GhostriderFinished
-N $EC68 #AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))
+N $EC68 #HTML(#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
   $EC68,$03 #REGhl=#R$EFC2.
   $EC6B,$02 Jump to #R$EC35.
 
@@ -4365,11 +4368,11 @@ u $EC6D
 c $EC6E
   $EC6E,$04 Write #N$07 to *#REGiy+#N$07.
   $EC72,$04 Set bit 3 of *#REGix+#N$30.
-  $EC76,$03 #HTML(#REGhl=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
+  $EC76,$03 #HTML(#REGhl=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
   $EC79,$02 Reset bit 5 of *#REGhl.
   $EC7B,$02 Test bit 5 of *#REGhl.
   $EC7D,$02 Jump to #R$EC7B if {} is zero.
-  $EC7F,$03 #HTML(#REGa=<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
+  $EC7F,$03 #HTML(#REGa=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
   $EC82,$04 Jump to #N$EC6F if #REGa is higher than #N$80.
   $EC86,$03 Return if #REGa is lower than #N$60.
   $EC89,$02 Reset bit 5 of #REGa.
@@ -4398,7 +4401,7 @@ R $EC8E HL Instructions page pointer
 
 c $ECAB Check Password
 @ $ECAB label=CheckPassword
-  $ECAB,$06 #HTML(Write #N$0A23 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>/<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+  $ECAB,$06 #HTML(Write #N$0A23 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>/<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
   $ECB1,$03 Call #R$749C.
 N $ECB4 Set the attributes for the code entry messaging.
   $ECB4,$03 #REGhl=#N$5900 (attribute buffer location).
@@ -4418,8 +4421,8 @@ N $ECBE Print "#STR($EE14,$03,$20)" to the screen.
   $ECCE,$04 Jump to #R$ECDB if #REGa is not equal to #N$0D ("ENTER").
 N $ECD2 The player pressed the "ENTER" key to skip entering a code.
 @ $ECD2 label=StartGame
-  $ECD2,$06 #HTML(Write #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
-.           and #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+  $ECD2,$06 #HTML(Write #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
+.           and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
   $ECD8,$03 Jump to #R$6CAA.
 N $ECDB The player is entering a password to access a later level.
 @ $ECDB label=CheckPassword_Input

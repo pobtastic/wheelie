@@ -1,5 +1,5 @@
 @rom
-@org=$4000
+@start
 
 ; Loading Screen
 ;
@@ -298,7 +298,7 @@ b$5B00 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 @label=GameEntryPoint
 c$5D11 LD HL,$FFFF   ; {#REGsp=#N$FFFF.
  $5D14 LD SP,HL      ; }
- $5D15 LD HL,($5C53) ; #HTML(#REGhl=*<a
+ $5D15 LD HL,($5C53) ; #HTML(#REGhl=*<a rel="noopener nofollow"
                      ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C53.html">PROG</a>.)
  $5D18 LD BC,$9B94   ; #REGbc=#N$9B94.
  $5D1B LD DE,$FE00   ; #REGde=#N$FE00.
@@ -553,8 +553,8 @@ c$6400 PUSH HL       ; Stash #REGhl on the stack.
 ;
 ; Used by the routine at #R$E80E.
 @label=SetRandomNumberSeed
-c$6414 LD HL,($5C78) ; #HTML(#REGhl=*<a
-                     ; href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+c$6414 LD HL,($5C78) ; #HTML(#REGhl=*<a rel="noopener nofollow"
+                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
  $6417 LD A,H        ; {#REGh=random number between #N$79-#N$7B.
  $6418 AND %00000011 ;
  $641A JR NZ,$641D   ;
@@ -2194,14 +2194,17 @@ c$6CAA CALL $75AA    ; Call #R$75AA.
  $6D13 XOR A         ; #REGa=#N$00.
  $6D14 CALL $6800    ; Call #R$6800.
 ; This entry point is used by the routine at #R$6E18.
-*$6D17 LD A,($5C78)  ; #HTML(#REGa=*<a
-                     ; href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+*$6D17 LD A,($5C78)  ; #HTML(#REGa=*<a rel="noopener nofollow"
+                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
  $6D1A INC A         ; Increment #REGa by one.
  $6D1B JP $EBF6      ; Jump to #R$EBF6.
+
+@org
 
 ; Routine at 6D1E
 ;
 ; Used by the routine at #R$5D11.
+@label=Alias_InitialiseGame
 c$6D1E JP $E80E      ; Jump to #R$E80E.
 
 ; Routine at 6D21
@@ -2234,8 +2237,8 @@ c$6D28 BIT 7,A       ;
 ; Routine at 6D49
 ;
 ; Used by the routines at #R$6AAC and #R$76D7.
-c$6D49 LD A,($5C78)  ; #HTML(#REGa=*<a
-                     ; href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+c$6D49 LD A,($5C78)  ; #HTML(#REGa=*<a rel="noopener nofollow"
+                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
  $6D4C INC A         ; Increment #REGa by one.
  $6D4D LD ($785A),A  ; Write #REGa to *#R$785A.
 ; This entry point is used by the routines at #R$6C00, #R$6E18 and #R$763C.
@@ -2477,7 +2480,7 @@ c$6E18 CALL $68AD    ; Call #R$68AD.
  $6EAE POP HL        ; Restore #REGhl from the stack.
 ; Play the "player dead" audio.
 ; .
-; #AUDIO(dead.wav)(#INCLUDE(Dead))
+; #HTML(#AUDIO(dead.wav)(#INCLUDE(Dead)))
  $6EAF LD B,$14      ; #REGb=#N$14 (counter; #N$14 loops).
 @label=Handler_PlayerDead
 *$6EB1 PUSH BC       ; {Stash #REGbc and #REGhl on the stack.
@@ -3573,7 +3576,7 @@ c$7420 LD HL,($7844) ; #REGhl=*#R$7844.
  $746C EXX           ; Switch to the shadow registers.
  $746D LD BC,$784B   ; #REGbc'=#R$784B.
 ; #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
-;       <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
+;       <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
 ; .
 ; This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
 ;       only copies six bytes/ lines.
@@ -3584,7 +3587,7 @@ c$7420 LD HL,($7844) ; #REGhl=*#R$7844.
  $7473 ADD A,A       ;
  $7474 ADD A,$81     ;
  $7476 LD L,A        ; }
- $7477 LD H,$3D      ; #HTML(#REGh'=<a
+ $7477 LD H,$3D      ; #HTML(#REGh'=<a rel="noopener nofollow"
                      ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">#N$3D</a>.)
  $7479 LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $747A LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
@@ -3835,10 +3838,10 @@ c$7535 LD A,($782D)  ; {Jump to #R$7544 if the game is not in "demo mode" (the
                      ; counter is zero.
  $754E RET           ; Return.
 
-; Initialise Game
+; Initialise New Game
 ;
 ; Used by the routine at #R$75AA.
-@label=InitialiseGame
+@label=InitialiseNewGame
 c$754F CALL $7535    ; Call #R$7535.
 ; "Spend" a life to continue, or move to Game Over.
 @label=SpendLife
@@ -9530,9 +9533,10 @@ c$E800 LD HL,$73B7   ; {Write #R$73B7 to *#R$782C.
  $E808 LD ($7820),A  ; }
  $E80B JP $6CAA      ; Jump to #R$6CAA.
 
-; Game
+; Initialise Game
 ;
 ; Used by the routine at #R$6D1E.
+@label=InitialiseGame
 c$E80E LD HL,$FFFF   ; {#REGsp=#N$FFFF.
  $E811 LD SP,HL      ; }
  $E812 CALL $6414    ; Call #R$6414.
@@ -9751,8 +9755,8 @@ c$EB43 LD HL,$E900     ; #REGhl=#R$E900.
  $EB4C EXX             ; Switch to the shadow registers.
 ; Re-use the same printing routine as the start screen.
  $EB4D CALL $E8CA      ; Call #R$E8CA.
- $EB50 LD HL,$0101     ; {#HTML(Write #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
- $EB53 LD ($5C09),HL   ;           and #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+ $EB50 LD HL,$0101     ; {#HTML(Write #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
+ $EB53 LD ($5C09),HL   ;           and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
                        ; }
 ; Add a little pause to debounce the keypress from the previous page.
  $EB56 LD HL,$0000     ; #REGhl=#N($0000,$04,$04).
@@ -9830,16 +9834,16 @@ c$EB43 LD HL,$E900     ; #REGhl=#R$E900.
  $EBB0 CALL $74D3      ; Call #R$74D3.
  $EBB3 LD (IY+$07),$00 ; Write #N$07 to *#REGiy+#N$07.
  $EBB7 SET 3,(IY+$30)  ; Set bit 3 of *#REGix+#N$30.
- $EBBB LD HL,$5C3B     ; #HTML(#REGhl=<a
+ $EBBB LD HL,$5C3B     ; #HTML(#REGhl=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
  $EBBE RES 5,(HL)      ; Reset bit 5 of *#REGhl.
 @label=UserDefinedControls_InputLoop
-*$EBC0 RST $38         ; #HTML(Call <a
+*$EBC0 RST $38         ; #HTML(Call <a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/0038.html">MASK_INT</a>)
  $EBC1 BIT 5,(HL)      ; {Jump to #R$EBC0 until any key is pressed.
  $EBC3 JR Z,$EBC0      ; }
 ; Fetch the user keypress.
- $EBC5 LD A,($5C08)    ; #HTML(#REGa=<a
+ $EBC5 LD A,($5C08)    ; #HTML(#REGa=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
  $EBC8 LD (DE),A       ; Write the keypress to the current position in
                        ; *#R$7853.
@@ -9904,8 +9908,8 @@ c$EBE6 LD B,$05      ; #REGb=#N$05 (counter).
 ; Used by the routine at #R$763C.
 c$EBF3 LD A,($785A)  ; #REGa=*#R$785A.
 ; This entry point is used by the routine at #R$6CAA.
-*$EBF6 LD HL,$5C78   ; #HTML(#REGhl=<a
-                     ; href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+*$EBF6 LD HL,$5C78   ; #HTML(#REGhl=<a rel="noopener nofollow"
+                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
 *$EBF9 CP (HL)       ; {Jump to #R$EBF9 if #REGa is not equal to *#REGhl.
  $EBFA JR NZ,$EBF9   ; }
  $EBFC JP $6C00      ; Jump to #R$6C00.
@@ -9919,8 +9923,8 @@ u$EBFF DEFB $00
 c$EC00 EXX           ; Switch to the shadow registers.
  $EC01 LD C,A        ; #REGc'=#REGa.
  $EC02 LD A,($785A)  ; #REGa=*#R$785A.
- $EC05 LD HL,$5C78   ; #HTML(#REGhl'=<a
-                     ; href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+ $EC05 LD HL,$5C78   ; #HTML(#REGhl'=<a rel="noopener nofollow"
+                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
  $EC08 CP (HL)       ; Compare #REGa with *#REGhl'.
  $EC09 LD A,C        ; #REGa=#REGc'.
  $EC0A EXX           ; Switch back to the normal registers.
@@ -10016,7 +10020,7 @@ c$EC35 DI            ; Disable interrupts.
 ;
 ; .
 ;
-; #AUDIO(level-complete.wav)(#INCLUDE(LevelComplete))
+; #HTML(#AUDIO(level-complete.wav)(#INCLUDE(LevelComplete)))
 @label=Sounds_LevelComplete
 c$EC5E LD HL,$EEE8   ; #REGhl=#R$EEE8.
  $EC61 JR $EC35      ; Jump to #R$EC35.
@@ -10027,7 +10031,7 @@ c$EC5E LD HL,$EEE8   ; #REGhl=#R$EEE8.
 ;
 ; .
 ;
-; #AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn))
+; #HTML(#AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn)))
 @label=Sounds_TheRaceIsOn
 c$EC63 LD HL,$EF4F   ; #REGhl=#R$EF4F.
  $EC66 JR $EC35      ; Jump to #R$EC35.
@@ -10038,7 +10042,7 @@ c$EC63 LD HL,$EF4F   ; #REGhl=#R$EF4F.
 ;
 ; .
 ;
-; #AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))
+; #HTML(#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
 @label=Sounds_GhostriderFinished
 c$EC68 LD HL,$EFC2   ; #REGhl=#R$EFC2.
  $EC6B JR $EC35      ; Jump to #R$EC35.
@@ -10051,12 +10055,12 @@ u$EC6D DEFB $00
 ; Used by the routine at #R$ECAB.
 c$EC6E LD (IY+$07),$00 ; Write #N$07 to *#REGiy+#N$07.
  $EC72 SET 3,(IY+$30)  ; Set bit 3 of *#REGix+#N$30.
- $EC76 LD HL,$5C3B     ; #HTML(#REGhl=<a
+ $EC76 LD HL,$5C3B     ; #HTML(#REGhl=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
  $EC79 RES 5,(HL)      ; Reset bit 5 of *#REGhl.
 *$EC7B BIT 5,(HL)      ; Test bit 5 of *#REGhl.
  $EC7D JR Z,$EC7B      ; Jump to #R$EC7B if {} is zero.
- $EC7F LD A,($5C08)    ; #HTML(#REGa=<a
+ $EC7F LD A,($5C08)    ; #HTML(#REGa=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
  $EC82 CP $80          ; {Jump to #N$EC6F if #REGa is higher than #N$80.
  $EC84 JR NC,$EC6F     ; }
@@ -10094,8 +10098,9 @@ c$EC8E EXX           ; Switch to the shadow registers.
 ;
 ; Used by the routine at #R$E80E.
 @label=CheckPassword
-c$ECAB LD HL,$0A23   ; {#HTML(Write #N$0A23 to <a
+c$ECAB LD HL,$0A23   ; {#HTML(Write #N$0A23 to <a rel="noopener nofollow"
  $ECAE LD ($5C09),HL ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>/<a
+                     ; rel="noopener nofollow"
                      ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
                      ; }
  $ECB1 CALL $749C    ; Call #R$749C.
@@ -10119,8 +10124,8 @@ c$ECAB LD HL,$0A23   ; {#HTML(Write #N$0A23 to <a
  $ECD0 JR NZ,$ECDB   ; ("ENTER").}
 ; The player pressed the "ENTER" key to skip entering a code.
 @label=StartGame
-*$ECD2 LD HL,$0101   ; {#HTML(Write #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
- $ECD5 LD ($5C09),HL ;           and #N$01 to <a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+*$ECD2 LD HL,$0101   ; {#HTML(Write #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
+ $ECD5 LD ($5C09),HL ;           and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
                      ; }
  $ECD8 JP $6CAA      ; Jump to #R$6CAA.
 ; The player is entering a password to access a later level.

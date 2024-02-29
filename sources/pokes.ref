@@ -9,17 +9,18 @@ To gain infinite lives:
 
 <hr />
 
-Just return, instead of decreasing #R$7839 by one:
+Just RETurn, instead of decreasing #R$7839 by one:
 
 <table>
   <tbody>
     <tr>
       <td class="address-1">#R$7552(#N$7552)</td>
       <td class="instruction">LD #REGhl,#R$7839(#N$7839)</td>
+      <td class="comment-2" rowspan="2">Decrease *#R$7839 by one.</td>
     </tr>
     <tr>
       <td class="address-1">#R$7555</td>
-      <td class="instruction">LD (#REGhl)</td>
+      <td class="instruction">DEC (#REGhl)</td>
     </tr>
   </tbody>
 </table>
