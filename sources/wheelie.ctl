@@ -25,7 +25,9 @@ c $5D11 Game Entry Point
 
 b $5D27
 
-c $6400
+c $6400 Get Random Number
+@ $6400 label=GetRandomNumber
+R $6400 O:A Random number
   $6400,$01 Stash #REGhl on the stack.
   $6401,$03 #REGhl=*#R$781E.
   $6404,$01 #REGa=*#REGhl.
@@ -38,14 +40,17 @@ c $6400
   $6412,$01 Restore #REGhl from the stack.
   $6413,$01 Return.
 
-c $6414
+c $6414 Set Random Number Seed?
+@ $6414 label=SetRandomNumberSeed
   $6414,$03 #HTML(#REGhl=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
   $6417,$01 #REGa=#REGh.
   $6418,$02,b$01 Keep only bits 0-1.
   $641A,$02 Jump to #R$641D if the result is not zero.
   $641C,$01 Increment #REGa by one.
+@ $641D label=SkipNonZero
   $641D,$02 #REGa+=#N$78.
   $641F,$01 #REGh=#REGa.
+M $6417,$09 #REGh=random number between #N$79-#N$7B.
   $6420,$03 Write #REGhl to *#R$781E.
   $6423,$01 Return.
 
@@ -615,7 +620,8 @@ c $68EC
   $68F4,$01 Switch back to the normal registers.
   $68F5,$01 Return.
 
-c $68F6
+c $68F6 Draw Sprite
+@ $68F6 label=DrawSprite
   $68F6,$01 #REGa=*#REGhl.
   $68F7,$01 Switch to the shadow registers.
   $68F8,$01 Write #REGa to *#REGhl'.
@@ -643,9 +649,104 @@ c $68F6
   $690E,$01 Increment #REGbc by one.
   $690F,$01 Return.
 
-c $6910
+c $6910 Convert Screen Buffer Address To Attribute Buffer
+@ $6910 label=ScreenBufferToAttributeBuffer
+E $6910 Continue on to #R$691B.
+  $6910,$01 #REGa=#REGh.
+  $6911,$02 #REGa-=#N$48.
+  $6913,$01 #REGa-=#REGa (with carry).
+  $6914,$02 #REGa+=#N$59.
+  $6916,$01 #REGh=#REGa.
+  $6917,$01 #REGa=*#REGhl.
+  $6918,$01 Stash #REGhl on the stack.
+  $6919,$01 Switch to the shadow registers.
+  $691A,$01 Restore #REGde' from the stack.
+M $6918,$03 #REGde'=#REGhl (using the stack).
+
+c $691B Colourise Sprite
+@ $691B label=ColouriseSprite
+  $691B,$01 Increment #REGb' by one.
+  $691C,$01 Write #REGa to *#REGhl'.
+  $691D,$01 Increment #REGhl' by one.
+  $691E,$01 Write #REGe to *#REGhl'.
+  $691F,$01 Increment #REGhl' by one.
+  $6920,$01 Write #REGd to *#REGhl'.
+  $6921,$01 Increment #REGhl' by one.
+  $6922,$02 Compare #REGa with #N$07.
+  $6924,$01 #REGa=#REGc'.
+  $6925,$01 Switch back to the normal registers.
+  $6926,$01 Write #REGa to *#REGhl.
+  $6927,$01 Return if #REGa was not equal to #N$07 on line #R$6922.
+  $6928,$03 Jump to #R$73F2.
+
+u $692B
+  $692B,$01 Return.
 
 c $692C
+  $692C,$01 #REGb=#REGa.
+  $692D,$01 #REGa=#REGc.
+  $692E,$01 Switch to the shadow registers.
+  $692F,$03 #REGhl'=*#R$781C.
+  $6932,$01 #REGc'=#REGa.
+  $6933,$03 #REGa=*#R$781B.
+  $6936,$01 #REGb'=#REGa.
+  $6937,$01 Switch back to the normal registers.
+  $6938,$01 #REGa=#REGb.
+  $6939,$01 #REGa+=#REGa.
+  $693A,$01 #REGl=#REGa.
+  $693B,$02 #REGa+=#N$BE (including carry).
+  $693D,$01 #REGa-=#REGl.
+  $693E,$01 #REGh=#REGa.
+  $693F,$01 #REGa=#REGb.
+  $6940,$01 #REGc=*#REGhl.
+  $6941,$01 Increment #REGl by one.
+  $6942,$01 #REGb=*#REGhl.
+  $6943,$02 Test bit 5 of #REGa.
+  $6945,$03 Jump to #R$6DA8 if {} is not zero.
+  $6948,$01 #REGa=*#REGbc.
+  $6949,$01 Increment #REGbc by one.
+  $694A,$01 #REGa+=#REGe.
+  $694B,$01 #REGe=#REGa.
+  $694C,$01 #REGa=*#REGbc.
+  $694D,$01 Increment #REGbc by one.
+  $694E,$01 #REGa+=#REGd.
+  $694F,$01 #REGd=#REGa.
+  $6950,$04 Jump to #R$6959 if #REGa is higher than #N$10.
+  $6954,$05 Jump to #R$696E if #REGe is lower than #N$20.
+  $6959,$03 #REGhl=#N($0008,$04,$04).
+  $695C,$01 #REGhl+=#REGbc.
+  $695D,$01 #REGb=#REGh.
+  $695E,$01 #REGc=#REGl.
+M $6959,$06 #REGbc+=#N($0008,$04,$04).
+  $695F,$01 #REGa=*#REGbc.
+N $6960 Check for the terminator (#N$FF+#N$01 will set the Z flag).
+  $6960,$01 Increment #REGa by one.
+  $6961,$02 #REGa=#N$01.
+  $6963,$02 Jump to #R$694E if #REGa was not zero (on line #R$6960).
+N $6965 We reached the terminator.
+  $6965,$01 Increment #REGbc by one.
+  $6966,$05 Jump to #R$6949 if *#REGbc is not equal to #N$80.
+  $696B,$03 Jump to #R$68EC.
+  $696E,$01 #REGa=#REGd.
+  $696F,$02 #REGa+=#N$40.
+  $6971,$02,b$01 Keep only bits 3 and 6.
+  $6973,$01 #REGh=#REGa.
+  $6974,$01 #REGa=#REGd.
+  $6975,$03 Rotate #REGa right three positions (bits 0 to 2 are now in positions 5 to 7).
+  $6978,$02,b$01 Keep only bits 5-7.
+  $697A,$01 #REGa+=#REGe.
+  $697B,$01 #REGl=#REGa.
+  $697C,$03 Call #R$68F6.
+  $697F,$01 Increment #REGh by one.
+  $6980,$03 Call #R$68F6.
+  $6983,$03 Call #R$6910.
+  $6986,$02 Jump to #R$695F.
+  $6988,$03 Write #REGa to *#R$7825.
+  $698B,$01 Switch to the shadow registers.
+  $698C,$01 Write #REGa to *#REGhl.
+  $698D,$01 #REGh=#REGb.
+  $698E,$01 #REGl=#REGc.
+  $698F,$03 Jump to #R$691B.
 
 u $6992
 
@@ -721,6 +822,95 @@ c $69BE
 u $69F2
 
 c $6A00
+  $6A00,$03 #REGa=*#R$7830.
+  $6A03,$01 Increment #REGa by one.
+  $6A04,$02,b$01 Keep only bits 0-2.
+  $6A06,$03 Write #REGa to *#R$7830.
+  $6A09,$03 #REGhl=*#R$7831.
+  $6A0C,$03 #REGbc=#N($0001,$04,$04).
+  $6A0F,$03 Call #R$69CB if #REGa is zero.
+  $6A12,$02 #REGc=#REGa*#N$02.
+  $6A14,$02 Jump to #R$6A27.
+
+u $6A16
+
+c $6A17
+
+c $6A27
+  $6A27,$01 #REGa=*#REGhl.
+  $6A28,$04 RLCA.
+  $6A2C,$01 #REGl=#REGa.
+  $6A2D,$02,b$01 Keep only bits 0-3.
+  $6A2F,$03 #REGh=#N$C0+#REGa.
+  $6A32,$01 #REGa=#REGl.
+  $6A33,$02,b$01 Keep only bits 4-7.
+  $6A35,$01 #REGa+=#REGc.
+  $6A36,$01 #REGl=#REGa.
+  $6A37,$01 #REGa=*#REGhl.
+  $6A38,$01 Increment #REGl by one.
+  $6A39,$03 Write #REGa to *#R$7834.
+  $6A3C,$01 #REGa=*#REGhl.
+  $6A3D,$03 #REGhl=#R$7826.
+  $6A40,$02 Write #N$00 to *#REGhl.
+  $6A42,$01 RRCA.
+  $6A43,$02 Jump to #R$6A46 if {} is higher.
+  $6A45,$01 Increment *#REGhl by one.
+  $6A46,$01 RRCA.
+  $6A47,$01 #REGc=#REGa.
+  $6A48,$02 Jump to #R$6A6D if {} is higher.
+  $6A4A,$02,b$01 Keep only bits 0-1.
+  $6A4C,$02 #REGl=#N$33.
+  $6A4E,$02 Jump to #R$6A51 if {} is not zero.
+  $6A50,$01 Decrease *#REGhl by one.
+  $6A51,$01 Decrease #REGa by one.
+  $6A52,$02 Jump to #R$6A55 if #REGa is not zero.
+  $6A54,$01 Increment *#REGhl by one.
+  $6A55,$02 #REGl=#N$26.
+  $6A57,$01 #REGb=#REGa.
+  $6A58,$02 #REGa=#N$23.
+  $6A5A,$01 #REGa-=*#REGhl.
+  $6A5B,$01 #REGl=#REGa.
+  $6A5C,$01 #REGa=*#REGhl.
+  $6A5D,$01 Decrease #REGb by one.
+  $6A5E,$02 Jump to #R$6A65 if #REGb is not zero.
+  $6A60,$04 Jump to #R$6A65 if #REGa is equal to #N$69.
+  $6A64,$01 Decrease *#REGhl by one.
+  $6A65,$01 Decrease #REGb by one.
+  $6A66,$02 Jump to #R$6A6D if #REGb is not zero.
+  $6A68,$04 Jump to #R$6A6D if #REGa is equal to #N$96.
+  $6A6C,$01 Increment *#REGhl by one.
+  $6A6D,$02 #REGl=#N$26.
+  $6A6F,$04 Jump to #R$6A94 if *#REGhl is not zero.
+  $6A73,$02 #REGl=#N$22.
+  $6A75,$05 Jump to #R$6A7B if bit 7 of *#REGhl is set.
+  $6A7A,$01 Invert the bits in #REGa.
+  $6A7B,$01 #REGb=#REGa.
+  $6A7C,$01 Decrease #REGl by one.
+  $6A7D,$05 Jump to #R$6A83 if bit 7 of *#REGhl is set.
+  $6A82,$01 #REGa=#N$00.
+  $6A83,$01 #REGa-=#REGb.
+  $6A84,$02 Jump to #R$6A94 if {} is higher.
+  $6A86,$01 Invert the bits in #REGa.
+  $6A87,$02 Shift #REGa right.
+  $6A89,$02 Shift #REGa right.
+  $6A8B,$02 #REGl=#N$34.
+  $6A8D,$01 #REGa+=*#REGhl.
+  $6A8E,$04 Jump to #R$6A93 if bit 4 of #REGa is not set.
+  $6A92,$01 Decrease #REGa by one.
+  $6A93,$01 Write #REGa to *#REGhl.
+  $6A94,$01 #REGa=#REGc.
+  $6A95,$03 RRCA.
+  $6A98,$01 Return if {} is higher.
+  $6A99,$02,b$01 Keep only bits 0-2.
+  $6A9B,$01 #REGa+=#REGa.
+  $6A9C,$02 #REGa+=#N$DC.
+  $6A9E,$01 #REGl=#REGa.
+  $6A9F,$02 #REGh=#N$B4.
+  $6AA1,$01 #REGa=*#REGhl.
+  $6AA2,$01 Increment #REGl by one.
+  $6AA3,$01 #REGh=*#REGhl.
+  $6AA4,$01 #REGl=#REGa.
+  $6AA5,$01 Jump to *#REGhl.
 
 u $6AA6
 
@@ -731,7 +921,7 @@ u $6B2A
 c $6B2D
   $6B2D,$03 #REGa=*#R$7822.
   $6B30,$02 #REGe=#N$0D.
-  $6B32,$04 Jump to #R$6B38 if bit 7 of #REGa is set.
+  $6B32,$04 Jump to #R$6B38 if *#R$7822 is higher than #N$80 (i.e. moving right).
   $6B36,$02 #REGe=#N$12.
   $6B38,$02 #REGc=#N$07.
   $6B3A,$03 #REGhl=#R$7833.
@@ -740,6 +930,8 @@ c $6B2D
   $6B3F,$01 #REGa=*#REGhl.
   $6B40,$03 Call #R$692C.
   $6B43,$01 Return.
+
+c $6B44 Unused?
   $6B44,$01 Increment #REGd by one.
   $6B45,$01 Write #REGe to *#REGhl.
   $6B46,$01 Return.
@@ -828,6 +1020,66 @@ c $6D21
 c $6D28
 
 c $6D49
+  $6D49,$03 #HTML(#REGa=*<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $6D4C,$01 Increment #REGa by one.
+  $6D4D,$03 Write #REGa to *#R$785A.
+  $6D50,$03 #REGhl=#R$782A.
+  $6D53,$04 Jump to #R$6D5E if *#REGhl is not zero.
+  $6D57,$01 Decrease #REGl by one.
+  $6D58,$04 Jump to #R$6D77 if *#REGhl is zero.
+  $6D5C,$02 #REGa=#N$02.
+  $6D5E,$02 #REGl=#N$CC.
+  $6D60,$02 #REGb=#N$02.
+  $6D62,$01 #REGd=*#REGhl.
+  $6D63,$01 Increment #REGl by one.
+  $6D64,$01 #REGe=*#REGhl.
+  $6D65,$02 OUT #N$FE
+  $6D67,$02,b$01 Flip bits 4.
+  $6D69,$01 Decrease #REGe by one.
+  $6D6A,$02 Jump to #R$6D69 until #REGe is zero.
+  $6D6C,$03 Call #R$EC00.
+  $6D6F,$01 Decrease #REGd by one.
+  $6D70,$02 Jump to #R$6D64 until #REGd is zero.
+  $6D72,$01 Increment #REGl by one.
+  $6D73,$02 Decrease counter by one and loop back to #R$6D62 until counter is zero.
+  $6D75,$02 Jump to #R$6D5E.
+  $6D77,$03 #REGa=*#R$7835.
+  $6D7A,$02 #REGa-=#N$9B.
+  $6D7C,$01 #REGc=#REGa.
+  $6D7D,$02 #REGd=#N$14.
+  $6D7F,$02 #REGl=#N$CC.
+  $6D81,$01 #REGa=#N$00.
+  $6D82,$01 #REGb=#REGc.
+  $6D83,$02 OUT #N$FE
+  $6D85,$02,b$01 Flip bits 4.
+  $6D87,$01 #REGe=*#REGhl.
+  $6D88,$01 Decrease #REGe by one.
+  $6D89,$02 Jump to #R$6D88 until #REGe is zero.
+  $6D8B,$03 Call #R$EC00.
+  $6D8E,$02 Decrease counter by one and loop back to #R$6D87 until counter is zero.
+  $6D90,$01 Increment #REGl by one.
+  $6D91,$01 Decrease #REGd by one.
+  $6D92,$02 Jump to #R$6D82 until #REGd is zero.
+  $6D94,$02 Jump to #R$6D7D.
+
+c $6D96
+  $6D96,$01 #REGa=*#REGhl.
+  $6D97,$02 Write #N$00 to *#REGhl.
+  $6D99,$01 Switch to the shadow registers.
+  $6D9A,$01 Write #REGa to *#REGhl'.
+  $6D9B,$01 Increment #REGhl' by one.
+  $6D9C,$01 Switch back to the normal registers.
+  $6D9D,$02 Increment #REGh by two.
+  $6D9F,$01 #REGa=*#REGhl.
+  $6DA0,$02 Write #N$00 to *#REGhl.
+  $6DA2,$01 Switch to the shadow registers.
+  $6DA3,$01 Write #REGa to *#REGhl'.
+  $6DA4,$01 Increment #REGhl' by one.
+  $6DA5,$01 Switch back to the normal registers.
+  $6DA6,$01 Increment #REGh by one.
+  $6DA7,$01 Return.
+
+c $6DA8
 
 c $6E18 Remove Sprite?
 @ $68AD label=RemoveSprite
@@ -994,12 +1246,12 @@ N $6EAF #AUDIO(dead.wav)(#INCLUDE(Dead))
 
 u $6F43
 
-c $6F4A
+c $6F4A Handler: Hit Wall
+@ $6F4A label=Handler_HitWall
   $6F4A,$03 #REGhl=#R$BC80.
-  $6F4D,$03 #REGa=*#R$7822.
-  $6F50,$02 Test bit 7 of #REGa.
-  $6F52,$02 Jump to #R$6F56 if {} is not zero.
+  $6F4D,$07 Jump to #R$6F56 if *#R$7822 is higher than #N$80 (i.e. moving right).
   $6F54,$02 #REGl=#N$8F.
+@ $6F56 label=HitWallMovingRight
   $6F56,$03 Write #REGhl to *#R$783A.
   $6F59,$05 Write #N$04 to *#R$782A.
   $6F5E,$01 Return.
@@ -1018,12 +1270,15 @@ c $6F62
   $6F75,$06 Write *#R$7822 to *#R$7838.
   $6F7B,$01 #REGa=#REGc.
   $6F7C,$01 Return.
+
+c $6F7D Handler: Hit Hump
+@ $6F7D label=Handler_HitHump
   $6F7D,$03 #REGa=*#R$7834.
   $6F80,$02,b$01 Keep only bits 0-2.
   $6F82,$01 Return if the result is not zero.
   $6F83,$05 Write #N$05 to *#R$782A.
   $6F88,$03 #REGa=*#R$7834.
-  $6F8B,$02,b$01 Keep only bits 6.
+  $6F8B,$02,b$01 Keep only bit 6.
   $6F8D,$03 #REGhl=#R$BD0E.
   $6F90,$02 Jump to #R$6F94 if {} is zero.
   $6F92,$02 #REGl=#N$21.
@@ -1032,36 +1287,60 @@ c $6F62
 
 u $6F98
 
-c $6F99
+c $6F99 Handler: Ice
+@ $6F99 label=Handler_Ice
+N $6F99 If you hit ice too fast the bike will slide (crash) and you fall off.
+N $6F99 The parameters are; #TABLE(default,centre,centre,centre,centre)
+. { =h,r2 Direction | =h,c2 Bike Range | =h,r2 Crash Point }
+. { =h Lowest | =h Highest }
+. { Left | #N$69 | #N$7F | < #N$6F }
+. { Right | #N$80 | #N$96 | > #N$90 }
+. TABLE#
   $6F99,$03 #REGa=*#R$7822.
   $6F9C,$04 Jump to #R$6FAA if #REGa is higher than #N$90.
   $6FA0,$04 Jump to #R$6FAA if #REGa is lower than #N$6F.
   $6FA4,$03 #REGa=*#R$7828.
   $6FA7,$02,b$01 Keep only bits 0-1.
   $6FA9,$01 Return if the result is zero.
+@ $6FAA label=Initialise_CrashIce
   $6FAA,$05 Write #N$06 to *#R$782A.
   $6FAF,$03 #REGhl=#R$BDB8.
-  $6FB2,$03 #REGa=*#R$7822.
-  $6FB5,$02 Test bit 7 of #REGa.
-  $6FB7,$02 Jump to #R$6FBB if {} is not zero.
+  $6FB2,$07 Jump to #R$6FBB if *#R$7822 is higher than #N$80 (i.e. moving right).
   $6FB9,$02 #REGl=#N$C7.
+@ $6FBB label=CrashIceMovingRight
   $6FBB,$03 Write #REGhl to *#R$783A.
   $6FBE,$01 Return.
 
 u $6FBF
 
-c $6FC0
+c $6FC0 Handler: Jumps
+@ $6FC0 label=Handler_Jumps
+N $6FC0 If you hit a jump too fast or too slow the bike will crash.
   $6FC0,$03 #REGde=#N($0000,$04,$04).
   $6FC3,$03 #REGa=*#R$7822.
+N $6FC6 Check if the speed was too fast.
+N $6FC6 The parameters are quite wide; #TABLE(default,centre,centre,centre,centre)
+. { =h,r2 Direction | =h,c2 Bike Range | =h,r2 Crash Point }
+. { =h Lowest | =h Highest }
+. { Left | #N$69 | #N$7F | < #N$6A }
+. { Right | #N$80 | #N$96 | > #N$96 }
+. TABLE#
   $6FC6,$04 Jump to #R$6FDE if #REGa is higher than #N$96.
   $6FCA,$02 #REGe=#N$42.
   $6FCC,$04 Jump to #R$6FDE if #REGa is lower than #N$6A.
   $6FD0,$02 #REGe=#N$23.
+N $6FD2 Check if the speed was too slow.
+N $6FD2 The parameters are again, quite wide; #TABLE(default,centre,centre,centre,centre)
+. { =h,r2 Direction | =h,c2 Bike Range | =h,r2 Crash Point }
+. { =h Lowest | =h Highest }
+. { Left | #N$69 | #N$7F | > #N$70 }
+. { Right | #N$80 | #N$96 | < #N$90 }
+. TABLE#
   $6FD2,$03 Return if #REGa is higher than #N$90.
   $6FD5,$03 Return if #REGa is lower than #N$70.
-  $6FD8,$02 Test bit 7 of #REGa.
-  $6FDA,$02 Jump to #R$6FDE if {} is not zero.
+  $6FD8,$04 Jump to #R$6FDE if *#R$7822 is higher than #N$80 (i.e. moving right).
   $6FDC,$02 #REGe=#N$65.
+@ $6FDE label=Initialise_CrashJumpTooFast
   $6FDE,$01 RLCA.
   $6FDF,$03 #REGhl=*#R$782E.
   $6FE2,$02 Jump to #R$6FE6 if {} is lower.
@@ -1078,16 +1357,25 @@ c $6FC0
 
 u $6FFC
 
-c $6FFD
+c $6FFD Handler: Downhill
+@ $6FFD label=Handler_Downhill
+N $6FFD If you hit a downhill too fast the bike will launch (crash) and you fall off.
+N $6FFD The parameters are quite wide though; #TABLE(default,centre,centre,centre,centre)
+. { =h,r2 Direction | =h,c2 Bike Range | =h,r2 Crash Point }
+. { =h Lowest | =h Highest }
+. { Left | #N$69 | #N$7F | < #N$6A }
+. { Right | #N$80 | #N$96 | > #N$96 }
+. TABLE#
   $6FFD,$03 #REGa=*#R$7822.
-  $7000,$04 Jump to #R$7007 if #REGa is higher than #N$96.
+  $7000,$04 Jump to #R$7007 if the players speed is higher than or equal to #N$96.
   $7004,$03 Return if #REGa is higher than #N$6A.
+@ $7007 label=Initialise_CrashDownhill
   $7007,$03 #REGhl=#R$BC9E.
   $700A,$04 #REGde=*#R$782E.
   $700E,$01 Increment #REGd by one.
-  $700F,$01 #REGb=#REGa.
+  $700F,$01 Store speed in #REGb temporarily.
   $7010,$05 Write #N$03 to *#R$782A.
-  $7015,$01 #REGa=#REGb.
+  $7015,$01 Restore the current speed back to #REGa.
   $7016,$01 RLCA.
   $7017,$02 Jump to #R$702D if #REGa is higher.
   $7019,$01 Increment #REGe by one.
@@ -1332,6 +1620,64 @@ c $72C3
 u $730D
 
 c $7311
+  $7311,$03 Call #R$6B2D.
+  $7314,$03 Call #R$716E.
+  $7317,$03 #REGhl=*#R$7817.
+  $731A,$01 #REGa=#REGl.
+  $731B,$03 RLCA.
+  $731E,$01 #REGl=#REGa.
+  $731F,$02,b$01 Keep only bits 0-2.
+  $7321,$01 #REGb=#REGa.
+  $7322,$01 #REGa=#REGl.
+  $7323,$02,b$01 Keep only bits 3-7.
+  $7325,$01 #REGl=#REGa.
+  $7326,$03 #REGa=*#R$7819.
+  $7329,$01 #REGa+=#REGl.
+  $732A,$01 #REGl=#REGa.
+  $732B,$01 #REGa=#REGh.
+  $732C,$02 #REGh=#N$F8.
+  $732E,$03 #REGde=#N$0800.
+  $7331,$02 #REGa-=#N$99.
+  $7333,$01 #REGhl+=#REGde.
+  $7334,$02 #REGa-=#N$05.
+  $7336,$02 Jump to #R$7333 if #REGa is not zero.
+  $7338,$01 #REGa=#REGh.
+  $7339,$01 #REGa+=#REGb.
+  $733A,$01 #REGh=#REGa.
+  $733B,$01 Stash #REGhl on the stack.
+  $733C,$03 #REGde=#N($0008,$04,$04).
+  $733F,$02 #REGhl-=#REGde (with carry).
+  $7341,$01 Exchange the #REGde and #REGhl registers.
+  $7342,$03 #REGhl=*#R$7841.
+  $7345,$02 #REGhl-=#REGde (with carry).
+  $7347,$04 Jump to #R$736C if #REGh is not zero.
+  $734B,$01 #REGa=#REGl.
+  $734C,$04 Jump to #R$736C if #REGa is higher than #N$50.
+  $7350,$02 #REGa-=#N$08.
+  $7352,$02
+  $7354,$02 #REGc=#N$44.
+  $7356,$01 #REGe=#REGa.
+  $7357,$02 #REGd=#N$0B.
+  $7359,$02 #REGa=#N$00.
+  $735B,$02
+  $735D,$03 Call #R$76D7.
+  $7360,$07 Jump to #R$736C if *#R$7825 is not equal to #N$44.
+  $7367,$05 Write #N$01 to *#R$7840.
+  $736C,$01 Restore #REGhl from the stack.
+  $736D,$05 Return if *#R$7840 is zero.
+  $7372,$03 Return if #REGh is not zero.
+  $7375,$04 Return if #REGl is higher than #N$80.
+  $7379,$02 #REGa=#N$80.
+  $737B,$01 #REGa-=#REGl.
+  $737C,$05 No operation.
+  $7381,$02 #REGc=#N$47.
+  $7383,$02 #REGd=#N$0B.
+  $7385,$02
+  $7387,$01 #REGe=#REGa.
+  $7388,$02 #REGa=#N$40.
+  $738A,$02
+  $738C,$03 Call #R$76D7.
+  $738F,$01 Return.
 
 u $7390
 
@@ -1358,16 +1704,22 @@ B $73B6,$01
 
 c $73B7 Demo Mode Input
 @ $73B7 label=DemoModeInput
+D $73B7 Input method; used by the routine at #R$6B48.
+N $73B7 In demo mode, we never let the game run out of fuel or lives.
   $73B7,$05 Write #N$04 to *#R$7839.
   $73BC,$06 Write #N$3400 to *#R$783C.
   $73C2,$03 Call #R$6828.
-  $73C5,$03 Jump to #R$73D1 if #REGa is zero.
+  $73C5,$03 Jump to #R$73D1 if no keys are being pressed.
   $73C8,$06 No operation.
+N $73CE Any input jumps back to the start screen.
   $73CE,$03 Jump to #R$E81B.
+N $73D1 Randomly send controls for the game.
+@ $73D1 label=DemoModeControls
   $73D1,$03 Call #R$6400.
   $73D4,$02,b$01 Keep only bits 2-3.
   $73D6,$02 Jump to #R$73D1 if the result is zero.
-  $73D8,$02,b$01 Flip bits 2-3.
+M $73D4,$04 Ensure the random number is either #N$04#RAW(,) #N$08 or #N$0C.
+  $73D8,$02,b$01 Flip bits 2-3 so #N$04 becomes #N$08#RAW(,) #N$08 becomes #N$04 and #N$0C becomes #N$00.
   $73DA,$03 #REGhl=*#R$7831.
   $73DD,$03 Increment #REGl by three.
   $73E0,$01 #REGd=#REGa.
@@ -1613,15 +1965,17 @@ N $7515 Have we printed all three lines of the level name yet?
 
 u $7519
 
-c $751A
+c $751A Handler: Hump Jump
+@ $751A label=Handler_HumpJump
   $751A,$03 #REGhl=*#R$782E.
   $751D,$03 #REGde=#N($0011,$04,$04).
   $7520,$01 #REGa=*#REGhl.
   $7521,$04 Jump to #R$752D if #REGa is lower than #N$28.
   $7525,$02 Compare #REGa with #N$46.
-  $7527,$02 #REGe=#N$08.
+  $7527,$02 Alter awarded score to #N($0008,$04,$04).
   $7529,$02 Jump to #R$752D if #REGa was higher than #N$46 (on line #R$7525).
-  $752B,$02 #REGe=#N$01.
+  $752B,$02 Alter awarded score to #N($0001,$04,$04).
+N $752D Award the score.
   $752D,$04 #REGhl=*#R$7844+#REGde.
   $7531,$03 Write #REGhl to *#R$7844.
   $7534,$01 Return.
@@ -2014,7 +2368,9 @@ B $781B,$01
 g $781C
 W $781C,$02
 
-g $781E
+g $781E Random Number Seed?
+@ $781E label=RandomNumberSeed
+D $781E See #R$6414 for how this is generated.
 W $781E,$02
 
 g $7820 Current Level
@@ -2023,16 +2379,28 @@ B $7820,$01
 
 g $7821
 
-g $7822
+g $7822 Speed?
+@ $7822 label=Speed
+B $7822,$01 Pivots around #N$80 for direction - right >= #N$80, left is < #N$80.
+B $7823,$01 Mirror of speed? Doesn't seem to be used. TODO.
 
 g $7824
 B $7824,$01
 
 g $7825
 
-g $7828
+g $7826
 
-g $782A
+g $7828
+B $7828,$01
+
+u $7829
+
+g $782A Action
+@ $782A label=Action
+B $782A,$01
+
+u $782B
 
 g $782C Control Method Pointer
 @ $782C label=ControlMethod_Pointer
@@ -2047,6 +2415,9 @@ g $7831
 W $7831,$02
 
 g $7834
+B $7834
+
+g $7835
 
 g $7836
 
@@ -2055,6 +2426,9 @@ g $7838
 g $7839 Lives
 @ $7839 label=Lives
 B $7839,$01
+
+g $783A
+W $783A,$02
 
 g $783C Fuel
 @ $783C label=Fuel
@@ -2165,7 +2539,8 @@ D $A900 #SCR$02,$00,$00,$20,$08,$A900,$B100(footer)
   $A900,$0800,$20 Pixels.
   $B100,$0100,$20 Attributes.
 
-b $B200
+b $B200 Shadow Buffer?
+@ $B200 label=ShadowBuffer
 
 w $B4DC
 
@@ -2313,11 +2688,1294 @@ t $C3F8 Messaging: Target
 
 b $C400
 
-b $D5A0
-B $D5A0 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-1)
-B $D5A2 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-2)
-B $D5A3 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-3)
-B $D5A4 #UDGARRAY1,attr=7,scale=4,step=1;(#PC)-(#PC+$11)-$01-$10(kangaroo-4)
+b $C500 Data: Graphics
+@ $C500 label=Graphics_Data
+N $C500 Graphic #N$01.
+  $C50A,$01 Terminator.
+N $C50B Graphic #N$02.
+  $C515,$01 Terminator.
+N $C516 Graphic #N$03.
+  $C521,$01 Terminator.
+N $C522 Graphic #N$04.
+  $C52C,$01 Terminator.
+N $C52D Graphic #N$05.
+  $C540,$01 Terminator.
+N $C541 Graphic #N$06.
+  $C542,$01 Terminator.
+N $C543 Graphic #N$07.
+  $C54B,$01 Terminator.
+N $C54C Graphic #N$08.
+  $C55F,$01 Terminator.
+N $C560 Graphic #N$09.
+  $C561,$01 Terminator.
+N $C562 Graphic #N$0A.
+  $C572,$01 Terminator.
+N $C573 Graphic #N$0B.
+  $C57F,$01 Terminator.
+N $C580 Graphic #N$0C.
+  $C581,$01 Terminator.
+N $C582 Graphic #N$0D.
+  $C592,$01 Terminator.
+N $C593 Graphic #N$0E.
+  $C5A6,$01 Terminator.
+N $C5A7 Graphic #N$0F.
+  $C5A8,$01 Terminator.
+N $C5A9 Graphic #N$10.
+  $C5C1,$01 Terminator.
+N $C5C2 Graphic #N$11.
+  $C5DC,$01 Terminator.
+N $C5DD Graphic #N$12.
+  $C5E8,$01 Terminator.
+N $C5E9 Graphic #N$13.
+  $C603,$01 Terminator.
+N $C604 Graphic #N$14.
+  $C61E,$01 Terminator.
+N $C61F Graphic #N$15.
+  $C62A,$01 Terminator.
+N $C62B Graphic #N$16.
+  $C645,$01 Terminator.
+N $C646 Graphic #N$17.
+  $C660,$01 Terminator.
+N $C661 Graphic #N$18.
+  $C663,$01 Terminator.
+N $C664 Graphic #N$19.
+  $C674,$01 Terminator.
+N $C675 Graphic #N$1A.
+  $C687,$01 Terminator.
+N $C688 Graphic #N$1B.
+  $C689,$01 Terminator.
+N $C68A Graphic #N$1C.
+  $C6A2,$01 Terminator.
+N $C6A3 Graphic #N$1D.
+  $C6A5,$01 Terminator.
+N $C6A6 Graphic #N$1E.
+  $C6B6,$01 Terminator.
+N $C6B7 Graphic #N$1F.
+  $C6C9,$01 Terminator.
+N $C6CA Graphic #N$20.
+  $C6E4,$01 Terminator.
+N $C6E5 Graphic #N$21.
+  $C6EF,$01 Terminator.
+N $C6F0 Graphic #N$22.
+  $C6F2,$01 Terminator.
+N $C6F3 Graphic #N$23.
+  $C703,$01 Terminator.
+N $C704 Graphic #N$24.
+  $C705,$01 Terminator.
+N $C706 Graphic #N$25.
+  $C716,$01 Terminator.
+N $C717 Graphic #N$26.
+  $C718,$01 Terminator.
+N $C719 Graphic #N$27.
+  $C731,$01 Terminator.
+N $C732 Graphic #N$28.
+  $C733,$01 Terminator.
+N $C734 Graphic #N$29.
+  $C73C,$01 Terminator.
+N $C73D Graphic #N$2A.
+  $C73F,$01 Terminator.
+N $C740 Graphic #N$2B.
+  $C750,$01 Terminator.
+N $C751 Graphic #N$2C.
+  $C752,$01 Terminator.
+N $C753 Graphic #N$2D.
+  $C763,$01 Terminator.
+N $C764 Graphic #N$2E.
+  $C765,$01 Terminator.
+N $C766 Graphic #N$2F.
+  $C776,$01 Terminator.
+N $C777 Graphic #N$30.
+  $C781,$01 Terminator.
+N $C782 Graphic #N$31.
+  $C784,$01 Terminator.
+N $C785 Graphic #N$32.
+  $C795,$01 Terminator.
+N $C796 Graphic #N$33.
+  $C7B0,$01 Terminator.
+N $C7B1 Graphic #N$34.
+  $C7B2,$01 Terminator.
+N $C7B3 Graphic #N$35.
+  $C7C3,$01 Terminator.
+N $C7C4 Graphic #N$36.
+  $C7C5,$01 Terminator.
+N $C7C6 Graphic #N$37.
+  $C7D6,$01 Terminator.
+N $C7D7 Graphic #N$38.
+  $C7D9,$01 Terminator.
+N $C7DA Graphic #N$39.
+  $C7EA,$01 Terminator.
+N $C7EB Graphic #N$3A.
+  $C805,$01 Terminator.
+N $C806 Graphic #N$3B.
+  $C807,$01 Terminator.
+N $C808 Graphic #N$3C.
+  $C818,$01 Terminator.
+N $C819 Graphic #N$3D.
+  $C81A,$01 Terminator.
+N $C81B Graphic #N$3E.
+  $C823,$01 Terminator.
+N $C824 Graphic #N$3F.
+  $C826,$01 Terminator.
+N $C827 Graphic #N$40.
+  $C837,$01 Terminator.
+N $C838 Graphic #N$41.
+  $C852,$01 Terminator.
+N $C853 Graphic #N$42.
+  $C865,$01 Terminator.
+N $C866 Graphic #N$43.
+  $C881,$01 Terminator.
+N $C882 Graphic #N$44.
+  $C89C,$01 Terminator.
+N $C89D Graphic #N$45.
+  $C8AF,$01 Terminator.
+N $C8B0 Graphic #N$46.
+  $C8CB,$01 Terminator.
+N $C8CC Graphic #N$47.
+  $C8E6,$01 Terminator.
+N $C8E7 Graphic #N$48.
+  $C8F9,$01 Terminator.
+N $C8FA Graphic #N$49.
+  $C915,$01 Terminator.
+N $C916 Graphic #N$4A.
+  $C930,$01 Terminator.
+N $C931 Graphic #N$4B.
+  $C93B,$01 Terminator.
+N $C93C Graphic #N$4C.
+  $C93D,$01 Terminator.
+N $C93E Graphic #N$4D.
+  $C94F,$01 Terminator.
+N $C950 Graphic #N$4E.
+  $C951,$01 Terminator.
+N $C952 Graphic #N$4F.
+  $C96A,$01 Terminator.
+N $C96B Graphic #N$50.
+  $C985,$01 Terminator.
+N $C986 Graphic #N$51.
+  $C991,$01 Terminator.
+N $C992 Graphic #N$52.
+  $C99C,$01 Terminator.
+N $C99D Graphic #N$53.
+  $C9A8,$01 Terminator.
+N $C9A9 Graphic #N$54.
+  $C9B3,$01 Terminator.
+N $C9B4 Graphic #N$55.
+  $C9C7,$01 Terminator.
+N $C9C8 Graphic #N$56.
+  $C9C9,$01 Terminator.
+N $C9CA Graphic #N$57.
+  $C9D2,$01 Terminator.
+N $C9D3 Graphic #N$58.
+  $C9E6,$01 Terminator.
+N $C9E7 Graphic #N$59.
+  $C9E8,$01 Terminator.
+N $C9E9 Graphic #N$5A.
+  $C9F9,$01 Terminator.
+N $C9FA Graphic #N$5B.
+  $CA06,$01 Terminator.
+N $CA07 Graphic #N$5C.
+  $CA08,$01 Terminator.
+N $CA09 Graphic #N$5D.
+  $CA19,$01 Terminator.
+N $CA1A Graphic #N$5E.
+  $CA2D,$01 Terminator.
+N $CA2E Graphic #N$5F.
+  $CA2F,$01 Terminator.
+N $CA30 Graphic #N$60.
+  $CA48,$01 Terminator.
+N $CA49 Graphic #N$61.
+  $CA63,$01 Terminator.
+N $CA64 Graphic #N$62.
+  $CA6F,$01 Terminator.
+N $CA70 Graphic #N$63.
+  $CA8A,$01 Terminator.
+N $CA8B Graphic #N$64.
+  $CAA5,$01 Terminator.
+N $CAA6 Graphic #N$65.
+  $CAB1,$01 Terminator.
+N $CAB2 Graphic #N$66.
+  $CACC,$01 Terminator.
+N $CACD Graphic #N$67.
+  $CAE7,$01 Terminator.
+N $CAE8 Graphic #N$68.
+  $CAEA,$01 Terminator.
+N $CAEB Graphic #N$69.
+  $CAFB,$01 Terminator.
+N $CAFC Graphic #N$6A.
+  $CB0E,$01 Terminator.
+N $CB0F Graphic #N$6B.
+  $CB10,$01 Terminator.
+N $CB11 Graphic #N$6C.
+  $CB29,$01 Terminator.
+N $CB2A Graphic #N$6D.
+  $CB2C,$01 Terminator.
+N $CB2D Graphic #N$6E.
+  $CB3D,$01 Terminator.
+N $CB3E Graphic #N$6F.
+  $CB50,$01 Terminator.
+N $CB51 Graphic #N$70.
+  $CB6B,$01 Terminator.
+N $CB6C Graphic #N$71.
+  $CB76,$01 Terminator.
+N $CB77 Graphic #N$72.
+  $CB79,$01 Terminator.
+N $CB7A Graphic #N$73.
+  $CB8A,$01 Terminator.
+N $CB8B Graphic #N$74.
+  $CB8C,$01 Terminator.
+N $CB8D Graphic #N$75.
+  $CB9D,$01 Terminator.
+N $CB9E Graphic #N$76.
+  $CB9F,$01 Terminator.
+N $CBA0 Graphic #N$77.
+  $CBB8,$01 Terminator.
+N $CBB9 Graphic #N$78.
+  $CBBA,$01 Terminator.
+N $CBBB Graphic #N$79.
+  $CBC3,$01 Terminator.
+N $CBC4 Graphic #N$7A.
+  $CBC6,$01 Terminator.
+N $CBC7 Graphic #N$7B.
+  $CBD7,$01 Terminator.
+N $CBD8 Graphic #N$7C.
+  $CBD9,$01 Terminator.
+N $CBDA Graphic #N$7D.
+  $CBEA,$01 Terminator.
+N $CBEB Graphic #N$7E.
+  $CBEC,$01 Terminator.
+N $CBED Graphic #N$7F.
+  $CBFD,$01 Terminator.
+N $CBFE Graphic #N$80.
+  $CC08,$01 Terminator.
+N $CC09 Graphic #N$81.
+  $CC0B,$01 Terminator.
+N $CC0C Graphic #N$82.
+  $CC1C,$01 Terminator.
+N $CC1D Graphic #N$83.
+  $CC37,$01 Terminator.
+N $CC38 Graphic #N$84.
+  $CC39,$01 Terminator.
+N $CC3A Graphic #N$85.
+  $CC4A,$01 Terminator.
+N $CC4B Graphic #N$86.
+  $CC4C,$01 Terminator.
+N $CC4D Graphic #N$87.
+  $CC5D,$01 Terminator.
+N $CC5E Graphic #N$88.
+  $CC60,$01 Terminator.
+N $CC61 Graphic #N$89.
+  $CC71,$01 Terminator.
+N $CC72 Graphic #N$8A.
+  $CC8C,$01 Terminator.
+N $CC8D Graphic #N$8B.
+  $CC8E,$01 Terminator.
+N $CC8F Graphic #N$8C.
+  $CC9F,$01 Terminator.
+N $CCA0 Graphic #N$8D.
+  $CCA1,$01 Terminator.
+N $CCA2 Graphic #N$8E.
+  $CCAA,$01 Terminator.
+N $CCAB Graphic #N$8F.
+  $CCAD,$01 Terminator.
+N $CCAE Graphic #N$90.
+  $CCBE,$01 Terminator.
+N $CCBF Graphic #N$91.
+  $CCD9,$01 Terminator.
+N $CCDA Graphic #N$92.
+  $CCEC,$01 Terminator.
+N $CCED Graphic #N$93.
+  $CD08,$01 Terminator.
+N $CD09 Graphic #N$94.
+  $CD23,$01 Terminator.
+N $CD24 Graphic #N$95.
+  $CD36,$01 Terminator.
+N $CD37 Graphic #N$96.
+  $CD52,$01 Terminator.
+N $CD53 Graphic #N$97.
+  $CD6D,$01 Terminator.
+N $CD6E Graphic #N$98.
+  $CD80,$01 Terminator.
+N $CD81 Graphic #N$99.
+  $CD9C,$01 Terminator.
+N $CD9D Graphic #N$9A.
+  $CDB7,$01 Terminator.
+N $CDB8 Graphic #N$9B.
+  $CDC2,$01 Terminator.
+N $CDC3 Graphic #N$9C.
+  $CDD6,$01 Terminator.
+N $CDD7 Graphic #N$9D.
+  $CDD8,$01 Terminator.
+N $CDD9 Graphic #N$9E.
+  $CDF1,$01 Terminator.
+N $CDF2 Graphic #N$9F.
+  $CE0C,$01 Terminator.
+N $CE0D Graphic #N$A0.
+  $CE28,$01 Terminator.
+N $CE29 Graphic #N$A1.
+  $CE43,$01 Terminator.
+N $CE44 Graphic #N$A2.
+  $CE45,$01 Terminator.
+N $CE46 Graphic #N$A3.
+  $CE56,$01 Terminator.
+N $CE57 Graphic #N$A4.
+  $CE72,$01 Terminator.
+N $CE73 Graphic #N$A5.
+  $CE8D,$01 Terminator.
+N $CE8E Graphic #N$A6.
+  $CE8F,$01 Terminator.
+N $CE90 Graphic #N$A7.
+  $CEA0,$01 Terminator.
+N $CEA1 Graphic #N$A8.
+  $CEA3,$01 Terminator.
+N $CEA4 Graphic #N$A9.
+  $CEB4,$01 Terminator.
+N $CEB5 Graphic #N$AA.
+  $CECF,$01 Terminator.
+N $CED0 Graphic #N$AB.
+  $CEEA,$01 Terminator.
+N $CEEB Graphic #N$AC.
+  $CEF5,$01 Terminator.
+N $CEF6 Graphic #N$AD.
+  $CEF8,$01 Terminator.
+N $CEF9 Graphic #N$AE.
+  $CF09,$01 Terminator.
+N $CF0A Graphic #N$AF.
+  $CF0B,$01 Terminator.
+N $CF0C Graphic #N$B0.
+  $CF1C,$01 Terminator.
+N $CF1D Graphic #N$B1.
+  $CF1E,$01 Terminator.
+N $CF1F Graphic #N$B2.
+  $CF2F,$01 Terminator.
+N $CF30 Graphic #N$B3.
+  $CF3A,$01 Terminator.
+N $CF3B Graphic #N$B4.
+  $CF4E,$01 Terminator.
+N $CF4F Graphic #N$B5.
+  $CF69,$01 Terminator.
+N $CF6A Graphic #N$B6.
+  $CF84,$01 Terminator.
+N $CF85 Graphic #N$B7.
+  $CF98,$01 Terminator.
+N $CF99 Graphic #N$B8.
+  $CFB3,$01 Terminator.
+N $CFB4 Graphic #N$B9.
+  $CFCE,$01 Terminator.
+N $CFCF Graphic #N$BA.
+  $CFE2,$01 Terminator.
+N $CFE3 Graphic #N$BB.
+  $CFE4,$01 Terminator.
+N $CFE5 Graphic #N$BC.
+  $CFFD,$01 Terminator.
+N $CFFE Graphic #N$BD.
+  $D018,$01 Terminator.
+N $D019 Graphic #N$BE.
+  $D034,$01 Terminator.
+N $D035 Graphic #N$BF.
+  $D04F,$01 Terminator.
+N $D050 Graphic #N$C0.
+  $D062,$01 Terminator.
+N $D063 Graphic #N$C1.
+  $D064,$01 Terminator.
+N $D065 Graphic #N$C2.
+  $D075,$01 Terminator.
+N $D076 Graphic #N$C3.
+  $D081,$01 Terminator.
+N $D082 Graphic #N$C4.
+  $D083,$01 Terminator.
+N $D084 Graphic #N$C5.
+  $D094,$01 Terminator.
+N $D095 Graphic #N$C6.
+  $D096,$01 Terminator.
+N $D097 Graphic #N$C7.
+  $D0A7,$01 Terminator.
+N $D0A8 Graphic #N$C8.
+  $D0A9,$01 Terminator.
+N $D0AA Graphic #N$C9.
+  $D0BA,$01 Terminator.
+N $D0BB Graphic #N$CA.
+  $D0BC,$01 Terminator.
+N $D0BD Graphic #N$CB.
+  $D0CD,$01 Terminator.
+N $D0CE Graphic #N$CC.
+  $D0E1,$01 Terminator.
+N $D0E2 Graphic #N$CD.
+  $D0E3,$01 Terminator.
+N $D0E4 Graphic #N$CE.
+  $D0FC,$01 Terminator.
+N $D0FD Graphic #N$CF.
+  $D0FE,$01 Terminator.
+N $D0FF Graphic #N$D0.
+  $D10F,$01 Terminator.
+N $D110 Graphic #N$D1.
+  $D123,$01 Terminator.
+N $D124 Graphic #N$D2.
+  $D125,$01 Terminator.
+N $D126 Graphic #N$D3.
+  $D13E,$01 Terminator.
+N $D13F Graphic #N$D4.
+  $D159,$01 Terminator.
+N $D15A Graphic #N$D5.
+  $D16C,$01 Terminator.
+N $D16D Graphic #N$D6.
+  $D16F,$01 Terminator.
+N $D170 Graphic #N$D7.
+  $D178,$01 Terminator.
+N $D179 Graphic #N$D8.
+  $D18B,$01 Terminator.
+N $D18C Graphic #N$D9.
+  $D18D,$01 Terminator.
+N $D18E Graphic #N$DA.
+  $D19E,$01 Terminator.
+N $D19F Graphic #N$DB.
+  $D1A0,$01 Terminator.
+N $D1A1 Graphic #N$DC.
+  $D1B1,$01 Terminator.
+N $D1B2 Graphic #N$DD.
+  $D1BC,$01 Terminator.
+N $D1BD Graphic #N$DE.
+  $D1C7,$01 Terminator.
+N $D1C8 Graphic #N$DF.
+  $D1DA,$01 Terminator.
+N $D1DB Graphic #N$E0.
+  $D1E6,$01 Terminator.
+N $D1E7 Graphic #N$E1.
+  $D1F1,$01 Terminator.
+N $D1F2 Graphic #N$E2.
+  $D1F3,$01 Terminator.
+N $D1F4 Graphic #N$E3.
+  $D204,$01 Terminator.
+N $D205 Graphic #N$E4.
+  $D20F,$01 Terminator.
+N $D210 Graphic #N$E5.
+  $D21A,$01 Terminator.
+N $D21B Graphic #N$E6.
+  $D22D,$01 Terminator.
+N $D22E Graphic #N$E7.
+  $D22F,$01 Terminator.
+N $D230 Graphic #N$E8.
+  $D240,$01 Terminator.
+N $D241 Graphic #N$E9.
+  $D243,$01 Terminator.
+N $D244 Graphic #N$EA.
+  $D24C,$01 Terminator.
+N $D24D Graphic #N$EB.
+  $D25F,$01 Terminator.
+N $D260 Graphic #N$EC.
+  $D261,$01 Terminator.
+N $D262 Graphic #N$ED.
+  $D272,$01 Terminator.
+N $D273 Graphic #N$EE.
+  $D274,$01 Terminator.
+N $D275 Graphic #N$EF.
+  $D285,$01 Terminator.
+N $D286 Graphic #N$F0.
+  $D290,$01 Terminator.
+N $D291 Graphic #N$F1.
+  $D2AB,$01 Terminator.
+N $D2AC Graphic #N$F2.
+  $D2C6,$01 Terminator.
+N $D2C7 Graphic #N$F3.
+  $D2D2,$01 Terminator.
+N $D2D3 Graphic #N$F4.
+  $D2DD,$01 Terminator.
+N $D2DE Graphic #N$F5.
+  $D2DF,$01 Terminator.
+N $D2E0 Graphic #N$F6.
+  $D2F0,$01 Terminator.
+N $D2F1 Graphic #N$F7.
+  $D2FB,$01 Terminator.
+N $D2FC Graphic #N$F8.
+  $D306,$01 Terminator.
+N $D307 Graphic #N$F9.
+  $D321,$01 Terminator.
+N $D322 Graphic #N$FA.
+  $D32D,$01 Terminator.
+N $D32E Graphic #N$FB.
+  $D338,$01 Terminator.
+N $D339 Graphic #N$FC.
+  $D33A,$01 Terminator.
+N $D33B Graphic #N$FD.
+  $D34B,$01 Terminator.
+N $D34C Graphic #N$FE.
+  $D356,$01 Terminator.
+N $D357 Graphic #N$FF.
+  $D358,$01 Terminator.
+N $D359 Graphic #N$100.
+  $D369,$01 Terminator.
+N $D36A Graphic #N$101.
+  $D384,$01 Terminator.
+N $D385 Graphic #N$102.
+  $D390,$01 Terminator.
+N $D391 Graphic #N$103.
+  $D39B,$01 Terminator.
+N $D39C Graphic #N$104.
+  $D39D,$01 Terminator.
+N $D39E Graphic #N$105.
+  $D3AE,$01 Terminator.
+N $D3AF Graphic #N$106.
+  $D3B9,$01 Terminator.
+N $D3BA Graphic #N$107.
+  $D3C4,$01 Terminator.
+N $D3C5 Graphic #N$108.
+  $D3CF,$01 Terminator.
+N $D3D0 Graphic #N$109.
+  $D3DA,$01 Terminator.
+N $D3DB Graphic #N$10A.
+  $D3EE,$01 Terminator.
+N $D3EF Graphic #N$10B.
+  $D3F0,$01 Terminator.
+N $D3F1 Graphic #N$10C.
+  $D409,$01 Terminator.
+N $D40A Graphic #N$10D.
+  $D424,$01 Terminator.
+N $D425 Graphic #N$10E.
+  $D430,$01 Terminator.
+N $D431 Graphic #N$10F.
+  $D44B,$01 Terminator.
+N $D44C Graphic #N$110.
+  $D466,$01 Terminator.
+N $D467 Graphic #N$111.
+  $D468,$01 Terminator.
+N $D469 Graphic #N$112.
+  $D479,$01 Terminator.
+N $D47A Graphic #N$113.
+  $D47C,$01 Terminator.
+N $D47D Graphic #N$114.
+  $D48D,$01 Terminator.
+N $D48E Graphic #N$115.
+  $D4A8,$01 Terminator.
+N $D4A9 Graphic #N$116.
+  $D4C3,$01 Terminator.
+N $D4C4 Graphic #N$117.
+  $D4CF,$01 Terminator.
+N $D4D0 Graphic #N$118.
+  $D4DA,$01 Terminator.
+N $D4DB Graphic #N$119.
+  $D4DC,$01 Terminator.
+N $D4DD Graphic #N$11A.
+  $D4ED,$01 Terminator.
+N $D4EE Graphic #N$11B.
+  $D508,$01 Terminator.
+N $D509 Graphic #N$11C.
+  $D523,$01 Terminator.
+N $D524 Graphic #N$11D.
+  $D52F,$01 Terminator.
+N $D530 Graphic #N$11E.
+  $D53A,$01 Terminator.
+N $D53B Graphic #N$11F.
+  $D555,$01 Terminator.
+N $D556 Graphic #N$120.
+  $D570,$01 Terminator.
+N $D571 Graphic #N$121.
+  $D572,$01 Terminator.
+N $D573 Graphic #N$122.
+  $D583,$01 Terminator.
+N $D584 Graphic #N$123.
+  $D58F,$01 Terminator.
+N $D590 Graphic #N$124.
+  $D59A,$01 Terminator.
+N $D59B Graphic #N$125.
+  $D5B5,$01 Terminator.
+N $D5B6 Graphic #N$126.
+  $D5B7,$01 Terminator.
+N $D5B8 Graphic #N$127.
+  $D5C8,$01 Terminator.
+N $D5C9 Graphic #N$128.
+  $D5CB,$01 Terminator.
+N $D5CC Graphic #N$129.
+  $D5DC,$01 Terminator.
+N $D5DD Graphic #N$12A.
+  $D5F7,$01 Terminator.
+N $D5F8 Graphic #N$12B.
+  $D5F9,$01 Terminator.
+N $D5FA Graphic #N$12C.
+  $D60A,$01 Terminator.
+N $D60B Graphic #N$12D.
+  $D615,$01 Terminator.
+N $D616 Graphic #N$12E.
+  $D618,$01 Terminator.
+N $D619 Graphic #N$12F.
+  $D629,$01 Terminator.
+N $D62A Graphic #N$130.
+  $D62B,$01 Terminator.
+N $D62C Graphic #N$131.
+  $D63C,$01 Terminator.
+N $D63D Graphic #N$132.
+  $D63F,$01 Terminator.
+N $D640 Graphic #N$133.
+  $D650,$01 Terminator.
+N $D651 Graphic #N$134.
+  $D653,$01 Terminator.
+N $D654 Graphic #N$135.
+  $D664,$01 Terminator.
+N $D665 Graphic #N$136.
+  $D666,$01 Terminator.
+N $D667 Graphic #N$137.
+  $D677,$01 Terminator.
+N $D678 Graphic #N$138.
+  $D67A,$01 Terminator.
+N $D67B Graphic #N$139.
+  $D68B,$01 Terminator.
+N $D68C Graphic #N$13A.
+  $D68D,$01 Terminator.
+N $D68E Graphic #N$13B.
+  $D69E,$01 Terminator.
+N $D69F Graphic #N$13C.
+  $D6A1,$01 Terminator.
+N $D6A2 Graphic #N$13D.
+  $D6AA,$01 Terminator.
+N $D6AB Graphic #N$13E.
+  $D6BD,$01 Terminator.
+N $D6BE Graphic #N$13F.
+  $D6BF,$01 Terminator.
+N $D6C0 Graphic #N$140.
+  $D6D0,$01 Terminator.
+N $D6D1 Graphic #N$141.
+  $D6DC,$01 Terminator.
+N $D6DD Graphic #N$142.
+  $D6DE,$01 Terminator.
+N $D6DF Graphic #N$143.
+  $D6EF,$01 Terminator.
+N $D6F0 Graphic #N$144.
+  $D6F1,$01 Terminator.
+N $D6F2 Graphic #N$145.
+  $D702,$01 Terminator.
+N $D703 Graphic #N$146.
+  $D70E,$01 Terminator.
+N $D70F Graphic #N$147.
+  $D719,$01 Terminator.
+N $D71A Graphic #N$148.
+  $D71B,$01 Terminator.
+N $D71C Graphic #N$149.
+  $D72C,$01 Terminator.
+N $D72D Graphic #N$14A.
+  $D72E,$01 Terminator.
+N $D72F Graphic #N$14B.
+  $D73F,$01 Terminator.
+N $D740 Graphic #N$14C.
+  $D741,$01 Terminator.
+N $D742 Graphic #N$14D.
+  $D74B,$01 Terminator.
+N $D74C Graphic #N$14E.
+  $D74D,$01 Terminator.
+N $D74E Graphic #N$14F.
+  $D75E,$01 Terminator.
+N $D75F Graphic #N$150.
+  $D761,$01 Terminator.
+N $D762 Graphic #N$151.
+  $D772,$01 Terminator.
+N $D773 Graphic #N$152.
+  $D774,$01 Terminator.
+N $D775 Graphic #N$153.
+  $D785,$01 Terminator.
+N $D786 Graphic #N$154.
+  $D787,$01 Terminator.
+N $D788 Graphic #N$155.
+  $D791,$01 Terminator.
+N $D792 Graphic #N$156.
+  $D793,$01 Terminator.
+N $D794 Graphic #N$157.
+  $D7A4,$01 Terminator.
+N $D7A5 Graphic #N$158.
+  $D7A7,$01 Terminator.
+N $D7A8 Graphic #N$159.
+  $D7B8,$01 Terminator.
+N $D7B9 Graphic #N$15A.
+  $D7BA,$01 Terminator.
+N $D7BB Graphic #N$15B.
+  $D7CB,$01 Terminator.
+N $D7CC Graphic #N$15C.
+  $D7D7,$01 Terminator.
+N $D7D8 Graphic #N$15D.
+  $D7E2,$01 Terminator.
+N $D7E3 Graphic #N$15E.
+  $D7EE,$01 Terminator.
+N $D7EF Graphic #N$15F.
+  $D7F9,$01 Terminator.
+N $D7FA Graphic #N$160.
+  $D80D,$01 Terminator.
+N $D80E Graphic #N$161.
+  $D80F,$01 Terminator.
+N $D810 Graphic #N$162.
+  $D820,$01 Terminator.
+N $D821 Graphic #N$163.
+  $D834,$01 Terminator.
+N $D835 Graphic #N$164.
+  $D836,$01 Terminator.
+N $D837 Graphic #N$165.
+  $D847,$01 Terminator.
+N $D848 Graphic #N$166.
+  $D849,$01 Terminator.
+N $D84A Graphic #N$167.
+  $D853,$01 Terminator.
+N $D854 Graphic #N$168.
+  $D855,$01 Terminator.
+N $D856 Graphic #N$169.
+  $D865,$01 Terminator.
+N $D866 Graphic #N$16A.
+  $D868,$01 Terminator.
+N $D869 Graphic #N$16B.
+  $D879,$01 Terminator.
+N $D87A Graphic #N$16C.
+  $D87C,$01 Terminator.
+N $D87D Graphic #N$16D.
+  $D88D,$01 Terminator.
+N $D88E Graphic #N$16E.
+  $D88F,$01 Terminator.
+N $D890 Graphic #N$16F.
+  $D89F,$01 Terminator.
+N $D8A0 Graphic #N$170.
+  $D8A2,$01 Terminator.
+N $D8A3 Graphic #N$171.
+  $D8B3,$01 Terminator.
+N $D8B4 Graphic #N$172.
+  $D8B5,$01 Terminator.
+N $D8B6 Graphic #N$173.
+  $D8C7,$01 Terminator.
+N $D8C8 Graphic #N$174.
+  $D8C9,$01 Terminator.
+N $D8CA Graphic #N$175.
+  $D8D5,$01 Terminator.
+N $D8D6 Graphic #N$176.
+  $D8DA,$01 Terminator.
+N $D8DB Graphic #N$177.
+  $D8DC,$01 Terminator.
+N $D8DD Graphic #N$178.
+  $D8ED,$01 Terminator.
+N $D8EE Graphic #N$179.
+  $D8F0,$01 Terminator.
+N $D8F1 Graphic #N$17A.
+  $D901,$01 Terminator.
+N $D902 Graphic #N$17B.
+  $D903,$01 Terminator.
+N $D904 Graphic #N$17C.
+  $D90F,$01 Terminator.
+N $D910 Graphic #N$17D.
+  $D914,$01 Terminator.
+N $D915 Graphic #N$17E.
+  $D916,$01 Terminator.
+N $D917 Graphic #N$17F.
+  $D927,$01 Terminator.
+N $D928 Graphic #N$180.
+  $D92A,$01 Terminator.
+N $D92B Graphic #N$181.
+  $D93B,$01 Terminator.
+N $D93C Graphic #N$182.
+  $D93D,$01 Terminator.
+N $D93E Graphic #N$183.
+  $D94E,$01 Terminator.
+N $D94F Graphic #N$184.
+  $D951,$01 Terminator.
+N $D952 Graphic #N$185.
+  $D962,$01 Terminator.
+N $D963 Graphic #N$186.
+  $D964,$01 Terminator.
+N $D965 Graphic #N$187.
+  $D968,$01 Terminator.
+N $D969 Graphic #N$188.
+  $D971,$01 Terminator.
+N $D972 Graphic #N$189.
+  $D975,$01 Terminator.
+N $D976 Graphic #N$18A.
+  $D978,$01 Terminator.
+N $D979 Graphic #N$18B.
+  $D989,$01 Terminator.
+N $D98A Graphic #N$18C.
+  $D9A4,$01 Terminator.
+N $D9A5 Graphic #N$18D.
+  $D9A6,$01 Terminator.
+N $D9A7 Graphic #N$18E.
+  $D9B7,$01 Terminator.
+N $D9B8 Graphic #N$18F.
+  $D9B9,$01 Terminator.
+N $D9BA Graphic #N$190.
+  $D9CA,$01 Terminator.
+N $D9CB Graphic #N$191.
+  $D9E1,$01 Terminator.
+N $D9E2 Graphic #N$192.
+  $D9E6,$01 Terminator.
+N $D9E7 Graphic #N$193.
+  $D9E8,$01 Terminator.
+N $D9E9 Graphic #N$194.
+  $D9F9,$01 Terminator.
+N $D9FA Graphic #N$195.
+  $D9FB,$01 Terminator.
+N $D9FC Graphic #N$196.
+  $DA0C,$01 Terminator.
+N $DA0D Graphic #N$197.
+  $DA0E,$01 Terminator.
+N $DA0F Graphic #N$198.
+  $DA1F,$01 Terminator.
+N $DA20 Graphic #N$199.
+  $DA21,$01 Terminator.
+N $DA22 Graphic #N$19A.
+  $DA3B,$01 Terminator.
+N $DA3C Graphic #N$19B.
+  $DA56,$01 Terminator.
+N $DA57 Graphic #N$19C.
+  $DA58,$01 Terminator.
+N $DA59 Graphic #N$19D.
+  $DA69,$01 Terminator.
+N $DA6A Graphic #N$19E.
+  $DA6B,$01 Terminator.
+N $DA6C Graphic #N$19F.
+  $DA85,$01 Terminator.
+N $DA86 Graphic #N$1A0.
+  $DAA0,$01 Terminator.
+N $DAA1 Graphic #N$1A1.
+  $DAA2,$01 Terminator.
+N $DAA3 Graphic #N$1A2.
+  $DAB3,$01 Terminator.
+N $DAB4 Graphic #N$1A3.
+  $DAB5,$01 Terminator.
+N $DAB6 Graphic #N$1A4.
+  $DAC7,$01 Terminator.
+N $DAC8 Graphic #N$1A5.
+  $DAE2,$01 Terminator.
+N $DAE3 Graphic #N$1A6.
+  $DAFD,$01 Terminator.
+N $DAFE Graphic #N$1A7.
+  $DB08,$01 Terminator.
+N $DB09 Graphic #N$1A8.
+  $DB0A,$01 Terminator.
+N $DB0B Graphic #N$1A9.
+  $DB1C,$01 Terminator.
+N $DB1D Graphic #N$1AA.
+  $DB1E,$01 Terminator.
+N $DB1F Graphic #N$1AB.
+  $DB2F,$01 Terminator.
+N $DB30 Graphic #N$1AC.
+  $DB31,$01 Terminator.
+N $DB32 Graphic #N$1AD.
+  $DB42,$01 Terminator.
+N $DB43 Graphic #N$1AE.
+  $DB4D,$01 Terminator.
+N $DB4E Graphic #N$1AF.
+  $DB4F,$01 Terminator.
+N $DB50 Graphic #N$1B0.
+  $DB61,$01 Terminator.
+N $DB62 Graphic #N$1B1.
+  $DB7C,$01 Terminator.
+N $DB7D Graphic #N$1B2.
+  $DB97,$01 Terminator.
+N $DB98 Graphic #N$1B3.
+  $DB99,$01 Terminator.
+N $DB9A Graphic #N$1B4.
+  $DBAB,$01 Terminator.
+N $DBAC Graphic #N$1B5.
+  $DBC6,$01 Terminator.
+N $DBC7 Graphic #N$1B6.
+  $DBE1,$01 Terminator.
+N $DBE2 Graphic #N$1B7.
+  $DBE3,$01 Terminator.
+N $DBE4 Graphic #N$1B8.
+  $DBF5,$01 Terminator.
+N $DBF6 Graphic #N$1B9.
+  $DBF7,$01 Terminator.
+N $DBF8 Graphic #N$1BA.
+  $DC10,$01 Terminator.
+N $DC11 Graphic #N$1BB.
+  $DC2B,$01 Terminator.
+N $DC2C Graphic #N$1BC.
+  $DC2D,$01 Terminator.
+N $DC2E Graphic #N$1BD.
+  $DC47,$01 Terminator.
+N $DC48 Graphic #N$1BE.
+  $DC62,$01 Terminator.
+N $DC63 Graphic #N$1BF.
+  $DC75,$01 Terminator.
+N $DC76 Graphic #N$1C0.
+  $DC77,$01 Terminator.
+N $DC78 Graphic #N$1C1.
+  $DC88,$01 Terminator.
+N $DC89 Graphic #N$1C2.
+  $DC8A,$01 Terminator.
+N $DC8B Graphic #N$1C3.
+  $DC94,$01 Terminator.
+N $DC95 Graphic #N$1C4.
+  $DC96,$01 Terminator.
+N $DC97 Graphic #N$1C5.
+  $DCA7,$01 Terminator.
+N $DCA8 Graphic #N$1C6.
+  $DCA9,$01 Terminator.
+N $DCAA Graphic #N$1C7.
+  $DCBA,$01 Terminator.
+N $DCBB Graphic #N$1C8.
+  $DCBC,$01 Terminator.
+N $DCBD Graphic #N$1C9.
+  $DCCD,$01 Terminator.
+N $DCCE Graphic #N$1CA.
+  $DCCF,$01 Terminator.
+N $DCD0 Graphic #N$1CB.
+  $DCE0,$01 Terminator.
+N $DCE1 Graphic #N$1CC.
+  $DCE2,$01 Terminator.
+N $DCE3 Graphic #N$1CD.
+  $DCF4,$01 Terminator.
+N $DCF5 Graphic #N$1CE.
+  $DCF6,$01 Terminator.
+N $DCF7 Graphic #N$1CF.
+  $DD0F,$01 Terminator.
+N $DD10 Graphic #N$1D0.
+  $DD11,$01 Terminator.
+N $DD12 Graphic #N$1D1.
+  $DD22,$01 Terminator.
+N $DD23 Graphic #N$1D2.
+  $DD24,$01 Terminator.
+N $DD25 Graphic #N$1D3.
+  $DD36,$01 Terminator.
+N $DD37 Graphic #N$1D4.
+  $DD38,$01 Terminator.
+N $DD39 Graphic #N$1D5.
+  $DD51,$01 Terminator.
+N $DD52 Graphic #N$1D6.
+  $DD6C,$01 Terminator.
+N $DD6D Graphic #N$1D7.
+  $DD7F,$01 Terminator.
+N $DD80 Graphic #N$1D8.
+  $DD82,$01 Terminator.
+N $DD83 Graphic #N$1D9.
+  $DD8B,$01 Terminator.
+N $DD8C Graphic #N$1DA.
+  $DD9E,$01 Terminator.
+N $DD9F Graphic #N$1DB.
+  $DDA0,$01 Terminator.
+N $DDA1 Graphic #N$1DC.
+  $DDB1,$01 Terminator.
+N $DDB2 Graphic #N$1DD.
+  $DDB3,$01 Terminator.
+N $DDB4 Graphic #N$1DE.
+  $DDC4,$01 Terminator.
+N $DDC5 Graphic #N$1DF.
+  $DDCF,$01 Terminator.
+N $DDD0 Graphic #N$1E0.
+  $DDDA,$01 Terminator.
+N $DDDB Graphic #N$1E1.
+  $DDED,$01 Terminator.
+N $DDEE Graphic #N$1E2.
+  $DDF9,$01 Terminator.
+N $DDFA Graphic #N$1E3.
+  $DE04,$01 Terminator.
+N $DE05 Graphic #N$1E4.
+  $DE06,$01 Terminator.
+N $DE07 Graphic #N$1E5.
+  $DE17,$01 Terminator.
+N $DE18 Graphic #N$1E6.
+  $DE22,$01 Terminator.
+N $DE23 Graphic #N$1E7.
+  $DE2D,$01 Terminator.
+N $DE2E Graphic #N$1E8.
+  $DE40,$01 Terminator.
+N $DE41 Graphic #N$1E9.
+  $DE42,$01 Terminator.
+N $DE43 Graphic #N$1EA.
+  $DE53,$01 Terminator.
+N $DE54 Graphic #N$1EB.
+  $DE56,$01 Terminator.
+N $DE57 Graphic #N$1EC.
+  $DE5F,$01 Terminator.
+N $DE60 Graphic #N$1ED.
+  $DE72,$01 Terminator.
+N $DE73 Graphic #N$1EE.
+  $DE74,$01 Terminator.
+N $DE75 Graphic #N$1EF.
+  $DE85,$01 Terminator.
+N $DE86 Graphic #N$1F0.
+  $DE87,$01 Terminator.
+N $DE88 Graphic #N$1F1.
+  $DE98,$01 Terminator.
+N $DE99 Graphic #N$1F2.
+  $DEA3,$01 Terminator.
+N $DEA4 Graphic #N$1F3.
+  $DEBE,$01 Terminator.
+N $DEBF Graphic #N$1F4.
+  $DED9,$01 Terminator.
+N $DEDA Graphic #N$1F5.
+  $DEE5,$01 Terminator.
+N $DEE6 Graphic #N$1F6.
+  $DEF0,$01 Terminator.
+N $DEF1 Graphic #N$1F7.
+  $DEF2,$01 Terminator.
+N $DEF3 Graphic #N$1F8.
+  $DF03,$01 Terminator.
+N $DF04 Graphic #N$1F9.
+  $DF0E,$01 Terminator.
+N $DF0F Graphic #N$1FA.
+  $DF19,$01 Terminator.
+N $DF1A Graphic #N$1FB.
+  $DF34,$01 Terminator.
+N $DF35 Graphic #N$1FC.
+  $DF40,$01 Terminator.
+N $DF41 Graphic #N$1FD.
+  $DF4B,$01 Terminator.
+N $DF4C Graphic #N$1FE.
+  $DF4D,$01 Terminator.
+N $DF4E Graphic #N$1FF.
+  $DF5E,$01 Terminator.
+N $DF5F Graphic #N$200.
+  $DF69,$01 Terminator.
+N $DF6A Graphic #N$201.
+  $DF6B,$01 Terminator.
+N $DF6C Graphic #N$202.
+  $DF7C,$01 Terminator.
+N $DF7D Graphic #N$203.
+  $DF97,$01 Terminator.
+N $DF98 Graphic #N$204.
+  $DFA3,$01 Terminator.
+N $DFA4 Graphic #N$205.
+  $DFAE,$01 Terminator.
+N $DFAF Graphic #N$206.
+  $DFB0,$01 Terminator.
+N $DFB1 Graphic #N$207.
+  $DFC1,$01 Terminator.
+N $DFC2 Graphic #N$208.
+  $DFCC,$01 Terminator.
+N $DFCD Graphic #N$209.
+  $DFD7,$01 Terminator.
+N $DFD8 Graphic #N$20A.
+  $DFE2,$01 Terminator.
+N $DFE3 Graphic #N$20B.
+  $DFED,$01 Terminator.
+N $DFEE Graphic #N$20C.
+  $E001,$01 Terminator.
+N $E002 Graphic #N$20D.
+  $E003,$01 Terminator.
+N $E004 Graphic #N$20E.
+  $E01C,$01 Terminator.
+N $E01D Graphic #N$20F.
+  $E037,$01 Terminator.
+N $E038 Graphic #N$210.
+  $E043,$01 Terminator.
+N $E044 Graphic #N$211.
+  $E05E,$01 Terminator.
+N $E05F Graphic #N$212.
+  $E079,$01 Terminator.
+N $E07A Graphic #N$213.
+  $E07B,$01 Terminator.
+N $E07C Graphic #N$214.
+  $E08C,$01 Terminator.
+N $E08D Graphic #N$215.
+  $E08F,$01 Terminator.
+N $E090 Graphic #N$216.
+  $E0A0,$01 Terminator.
+N $E0A1 Graphic #N$217.
+  $E0BB,$01 Terminator.
+N $E0BC Graphic #N$218.
+  $E0D6,$01 Terminator.
+N $E0D7 Graphic #N$219.
+  $E0E2,$01 Terminator.
+N $E0E3 Graphic #N$21A.
+  $E0ED,$01 Terminator.
+N $E0EE Graphic #N$21B.
+  $E0EF,$01 Terminator.
+N $E0F0 Graphic #N$21C.
+  $E100,$01 Terminator.
+N $E101 Graphic #N$21D.
+  $E11B,$01 Terminator.
+N $E11C Graphic #N$21E.
+  $E136,$01 Terminator.
+N $E137 Graphic #N$21F.
+  $E142,$01 Terminator.
+N $E143 Graphic #N$220.
+  $E14D,$01 Terminator.
+N $E14E Graphic #N$221.
+  $E168,$01 Terminator.
+N $E169 Graphic #N$222.
+  $E183,$01 Terminator.
+N $E184 Graphic #N$223.
+  $E185,$01 Terminator.
+N $E186 Graphic #N$224.
+  $E196,$01 Terminator.
+N $E197 Graphic #N$225.
+  $E1A2,$01 Terminator.
+N $E1A3 Graphic #N$226.
+  $E1AD,$01 Terminator.
+N $E1AE Graphic #N$227.
+  $E1C8,$01 Terminator.
+N $E1C9 Graphic #N$228.
+  $E1CA,$01 Terminator.
+N $E1CB Graphic #N$229.
+  $E1DB,$01 Terminator.
+N $E1DC Graphic #N$22A.
+  $E1DE,$01 Terminator.
+N $E1DF Graphic #N$22B.
+  $E1EF,$01 Terminator.
+N $E1F0 Graphic #N$22C.
+  $E20A,$01 Terminator.
+N $E20B Graphic #N$22D.
+  $E20C,$01 Terminator.
+N $E20D Graphic #N$22E.
+  $E21D,$01 Terminator.
+N $E21E Graphic #N$22F.
+  $E228,$01 Terminator.
+N $E229 Graphic #N$230.
+  $E22A,$01 Terminator.
+N $E22B Graphic #N$231.
+  $E23C,$01 Terminator.
+N $E23D Graphic #N$232.
+  $E23E,$01 Terminator.
+N $E23F Graphic #N$233.
+  $E24F,$01 Terminator.
+N $E250 Graphic #N$234.
+  $E252,$01 Terminator.
+N $E253 Graphic #N$235.
+  $E263,$01 Terminator.
+N $E264 Graphic #N$236.
+  $E265,$01 Terminator.
+N $E266 Graphic #N$237.
+  $E277,$01 Terminator.
+N $E278 Graphic #N$238.
+  $E279,$01 Terminator.
+N $E27A Graphic #N$239.
+  $E28A,$01 Terminator.
+N $E28B Graphic #N$23A.
+  $E28C,$01 Terminator.
+N $E28D Graphic #N$23B.
+  $E29E,$01 Terminator.
+N $E29F Graphic #N$23C.
+  $E2A0,$01 Terminator.
+N $E2A1 Graphic #N$23D.
+  $E2B1,$01 Terminator.
+N $E2B2 Graphic #N$23E.
+  $E2B4,$01 Terminator.
+N $E2B5 Graphic #N$23F.
+  $E2BD,$01 Terminator.
+N $E2BE Graphic #N$240.
+  $E2D0,$01 Terminator.
+N $E2D1 Graphic #N$241.
+  $E2D2,$01 Terminator.
+N $E2D3 Graphic #N$242.
+  $E2E3,$01 Terminator.
+N $E2E4 Graphic #N$243.
+  $E2EF,$01 Terminator.
+N $E2F0 Graphic #N$244.
+  $E2F1,$01 Terminator.
+N $E2F2 Graphic #N$245.
+  $E302,$01 Terminator.
+N $E303 Graphic #N$246.
+  $E304,$01 Terminator.
+N $E305 Graphic #N$247.
+  $E315,$01 Terminator.
+N $E316 Graphic #N$248.
+  $E321,$01 Terminator.
+N $E322 Graphic #N$249.
+  $E32C,$01 Terminator.
+N $E32D Graphic #N$24A.
+  $E32E,$01 Terminator.
+N $E32F Graphic #N$24B.
+  $E33F,$01 Terminator.
+N $E340 Graphic #N$24C.
+  $E341,$01 Terminator.
+N $E342 Graphic #N$24D.
+  $E352,$01 Terminator.
+N $E353 Graphic #N$24E.
+  $E35E,$01 Terminator.
+N $E35F Graphic #N$24F.
+  $E360,$01 Terminator.
+N $E361 Graphic #N$250.
+  $E371,$01 Terminator.
+N $E372 Graphic #N$251.
+  $E374,$01 Terminator.
+N $E375 Graphic #N$252.
+  $E385,$01 Terminator.
+N $E386 Graphic #N$253.
+  $E387,$01 Terminator.
+N $E388 Graphic #N$254.
+  $E398,$01 Terminator.
+N $E399 Graphic #N$255.
+  $E3A4,$01 Terminator.
+N $E3A5 Graphic #N$256.
+  $E3A6,$01 Terminator.
+N $E3A7 Graphic #N$257.
+  $E3B7,$01 Terminator.
+N $E3B8 Graphic #N$258.
+  $E3BA,$01 Terminator.
+N $E3BB Graphic #N$259.
+  $E3CB,$01 Terminator.
+N $E3CC Graphic #N$25A.
+  $E3CD,$01 Terminator.
+N $E3CE Graphic #N$25B.
+  $E3DE,$01 Terminator.
+N $E3DF Graphic #N$25C.
+  $E3EA,$01 Terminator.
+N $E3EB Graphic #N$25D.
+  $E3F5,$01 Terminator.
+N $E3F6 Graphic #N$25E.
+  $E401,$01 Terminator.
+N $E402 Graphic #N$25F.
+  $E40C,$01 Terminator.
+N $E40D Graphic #N$260.
+  $E420,$01 Terminator.
+N $E421 Graphic #N$261.
+  $E422,$01 Terminator.
+N $E423 Graphic #N$262.
+  $E433,$01 Terminator.
+N $E434 Graphic #N$263.
+  $E447,$01 Terminator.
+N $E448 Graphic #N$264.
+  $E449,$01 Terminator.
+N $E44A Graphic #N$265.
+  $E45A,$01 Terminator.
+N $E45B Graphic #N$266.
+  $E466,$01 Terminator.
+N $E467 Graphic #N$267.
+  $E468,$01 Terminator.
+N $E469 Graphic #N$268.
+  $E478,$01 Terminator.
+N $E479 Graphic #N$269.
+  $E47A,$01 Terminator.
+N $E47B Graphic #N$26A.
+  $E48C,$01 Terminator.
+N $E48D Graphic #N$26B.
+  $E48F,$01 Terminator.
+N $E490 Graphic #N$26C.
+  $E4A0,$01 Terminator.
+N $E4A1 Graphic #N$26D.
+  $E4A2,$01 Terminator.
+N $E4A3 Graphic #N$26E.
+  $E4B2,$01 Terminator.
+N $E4B3 Graphic #N$26F.
+  $E4B4,$01 Terminator.
+N $E4B5 Graphic #N$270.
+  $E4C6,$01 Terminator.
+N $E4C7 Graphic #N$271.
+  $E4C9,$01 Terminator.
+N $E4CA Graphic #N$272.
+  $E4DA,$01 Terminator.
+N $E4DB Graphic #N$273.
+  $E4DC,$01 Terminator.
+N $E4DD Graphic #N$274.
+  $E4E8,$01 Terminator.
+N $E4E9 Graphic #N$275.
+  $E4ED,$01 Terminator.
+N $E4EE Graphic #N$276.
+  $E4EF,$01 Terminator.
+N $E4F0 Graphic #N$277.
+  $E500,$01 Terminator.
+N $E501 Graphic #N$278.
+  $E503,$01 Terminator.
+N $E504 Graphic #N$279.
+  $E514,$01 Terminator.
+N $E515 Graphic #N$27A.
+  $E516,$01 Terminator.
+N $E517 Graphic #N$27B.
+  $E522,$01 Terminator.
+N $E523 Graphic #N$27C.
+  $E527,$01 Terminator.
+N $E528 Graphic #N$27D.
+  $E529,$01 Terminator.
+N $E52A Graphic #N$27E.
+  $E53A,$01 Terminator.
+
+
+  $C740,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C740-$C748-$08(player-01) } UDGTABLE#
+  $C753,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C753-$C75B-$08(player-02) } UDGTABLE#
+  $C766,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C766-$C76E-$08(player-03) } UDGTABLE#
+  $C777,$0A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C777-$C77F-$08{$00,$00,$20,$28}(player-04) } UDGTABLE#
+  $C785,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C785-$C78D-$08(graphic-32) } UDGTABLE#
+  $C796,$1A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C796-$C7AE-$08{$00,$00,$20,$68}(graphic-33) } UDGTABLE#
+
+B $D59B #UDGARRAY$01,attr=$07,scale=$04,step=$01;$D59B-$D5B3-$08(kangaroo)
 
 b $E600
 
@@ -2446,6 +4104,7 @@ N $E8E4 This routine moves the data at #R$A900 to the screen buffer (to draw the
 
 c $E8F6 Get Kempston Joystick Input
 @ $E8F6 label=KempstonJoystickInput
+D $E8F6 Input method; used by the routine at #R$6B48.
   $E8F6,$02 Read Kempston Joystick input.
   $E8F8,$01 Return.
 
@@ -2604,13 +4263,13 @@ u $EBFF
 
 c $EC00
   $EC00,$01 Switch to the shadow registers.
-  $EC01,$01 #REGc=#REGa.
+  $EC01,$01 #REGc'=#REGa.
   $EC02,$03 #REGa=*#R$785A.
-  $EC05,$03 #HTML(#REGhl=<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
-  $EC08,$01 Compare #REGa with *#REGhl.
-  $EC09,$01 #REGa=#REGc.
+  $EC05,$03 #HTML(#REGhl'=<a href="https://skoolkid.github.io/rom/asm/5C78.html">FRAMES</a>.)
+  $EC08,$01 Compare #REGa with *#REGhl'.
+  $EC09,$01 #REGa=#REGc'.
   $EC0A,$01 Switch back to the normal registers.
-  $EC0B,$01 Return if #REGa was not equal to *#REGhl on line #R$EC08.
+  $EC0B,$01 Return if #REGa was not equal to *#REGhl' on line #R$EC08.
   $EC0C,$03 Jump to #R$6C00.
 
 c $EC0F
@@ -2676,7 +4335,7 @@ N $EC3D Restore the real value of the note after the terminator check.
   $EC56,$02 Jump to #R$EC53 if #REGde is not zero.
   $EC58,$01 #REGa=#REGb.
   $EC59,$01 Increment #REGa by one.
-  $EC5A,$02,b$01 Keep only bits 0-2, 4.
+  $EC5A,$02,b$01 Keep only bits 0-2 and 4.
   $EC5C,$02 Jump to #R$EC37.
 
 c $EC5E Sounds: Level Complete
