@@ -41,7 +41,7 @@ Next: <a href="25853.html">25853</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="25856.html">25856</a>.
+Used by the routine at <a href="25856.html">InitialiseLevel</a>.
 </div>
 </div>
 </td>
@@ -49,7 +49,7 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-2"><span id="25770"></span>25770</td>
 <td class="instruction">LD HL,40448</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="40448.html">40448</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="40448.html">LevelBuffer</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="25773"></span>25773</td>
@@ -64,7 +64,7 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-1"><span id="25778"></span>25778</td>
 <td class="instruction">CPIR</td>
-<td class="comment-1" rowspan="1">CPIR.</td>
+<td class="comment-1" rowspan="1">Starting from <a href="40448.html">LevelBuffer</a>, find the first instance of 50 in a maximum of 2560 bytes.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="25780"></span>25780</td>
@@ -120,12 +120,11 @@ Used by the routine at <a href="25856.html">25856</a>.
 <tr>
 <td class="address-1"><span id="25792"></span>25792</td>
 <td class="instruction">CALL <a href="25600.html">GetRandomNumber</a></td>
-<td class="comment-1" rowspan="1">Call <a href="25600.html">GetRandomNumber</a>.</td>
+<td class="comment-1" rowspan="2"><span class="register">A</span>=random number between 0 and 7.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="25795"></span>25795</td>
 <td class="instruction">AND %00000111</td>
-<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="25797"></span>25797</td>
@@ -340,7 +339,7 @@ Next: <a href="25853.html">25853</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/64AA.html">Switch to hexadecimal</a>.</div>
 </footer>

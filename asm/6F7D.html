@@ -47,7 +47,66 @@ Next: <a href="6F98.html">6F98</a>
 <td class="asm-label">Handler_HitHump</td>
 <td class="address-2"><span id="6f7d"></span>6F7D</td>
 <td class="instruction">LD A,($7834)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7834.html">7834</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7834.html">Wheelie</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6f80"></span>
+<div class="comments">
+<div class="paragraph">
+<table class="default">
+<tr>
+<th colspan="1" rowspan="1">Direction</th>
+<th colspan="1" rowspan="1">Wheelie Range</th>
+<th colspan="1" rowspan="1">Byte</th>
+<th colspan="1" rowspan="1">Bits</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="4">Left</td>
+<th colspan="1" rowspan="1">Normal (no wheelie)</th>
+<td class="centre" colspan="1" rowspan="1">48</td>
+<td class="centre" colspan="1" rowspan="1">01001000</td>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Mid-Low</th>
+<td class="centre" colspan="1" rowspan="1">49</td>
+<td class="centre" colspan="1" rowspan="1">01001001</td>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Mid-High</th>
+<td class="centre" colspan="1" rowspan="1">4A</td>
+<td class="centre" colspan="1" rowspan="1">01001010</td>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Max (full wheelie)</th>
+<td class="centre" colspan="1" rowspan="1">4B</td>
+<td class="centre" colspan="1" rowspan="1">01001011</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="4">Right</td>
+<th colspan="1" rowspan="1">Normal (no wheelie)</th>
+<td class="centre" colspan="1" rowspan="1">08</td>
+<td class="centre" colspan="1" rowspan="1">00001000</td>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Mid-Low</th>
+<td class="centre" colspan="1" rowspan="1">09</td>
+<td class="centre" colspan="1" rowspan="1">00001001</td>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Mid-High</th>
+<td class="centre" colspan="1" rowspan="1">0A</td>
+<td class="centre" colspan="1" rowspan="1">00001010</td>
+</tr>
+<tr>
+<th colspan="1" rowspan="1">Max (full wheelie)</th>
+<td class="centre" colspan="1" rowspan="1">0B</td>
+<td class="centre" colspan="1" rowspan="1">00001011</td>
+</tr>
+</table>
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -76,13 +135,13 @@ Next: <a href="6F98.html">6F98</a>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6f88"></span>6F88</td>
 <td class="instruction">LD A,($7834)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7834.html">7834</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7834.html">Wheelie</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6f8b"></span>6F8B</td>
 <td class="instruction">AND %01000000</td>
-<td class="comment-1" rowspan="1">Keep only bit 6.</td>
+<td class="comment-1" rowspan="1">Keep only the direction bit (bit 6).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -93,8 +152,8 @@ Next: <a href="6F98.html">6F98</a>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6f90"></span>6F90</td>
-<td class="instruction">JR Z,<a href="6F7D.html#6f94">Handler_HitHump_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6F7D.html#6f94">Handler_HitHump_0</a> if {} is zero.</td>
+<td class="instruction">JR Z,<a href="6F7D.html#6f94">HitHumpMovingRight</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6F7D.html#6f94">HitHumpMovingRight</a> if the player is moving right.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -103,7 +162,7 @@ Next: <a href="6F98.html">6F98</a>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=21.</td>
 </tr>
 <tr>
-<td class="asm-label">Handler_HitHump_0</td>
+<td class="asm-label">HitHumpMovingRight</td>
 <td class="address-2"><span id="6f94"></span>6F94</td>
 <td class="instruction">LD ($783A),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="783A.html">783A</a>.</td>
@@ -129,7 +188,7 @@ Next: <a href="6F98.html">6F98</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/28541.html">Switch to decimal</a>.</div>
 </footer>

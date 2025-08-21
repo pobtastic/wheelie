@@ -49,12 +49,11 @@ Used by the routine at <a href="25770.html">25770</a>.
 <tr>
 <td class="address-2"><span id="28808"></span>28808</td>
 <td class="instruction">CALL <a href="25600.html">GetRandomNumber</a></td>
-<td class="comment-1" rowspan="1">Call <a href="25600.html">GetRandomNumber</a>.</td>
+<td class="comment-1" rowspan="2"><span class="register">E</span>=random number between 0-255.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="28811"></span>28811</td>
 <td class="instruction">LD E,A</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="28812"></span>28812</td>
@@ -88,12 +87,11 @@ Used by the routine at <a href="25770.html">25770</a>.
 <tr>
 <td class="address-2"><span id="28823"></span>28823</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E</span>.</td>
+<td class="comment-1" rowspan="2"><span class="register">A</span>=bit 0 of the random number stored in <span class="register">E</span> (so ensure it is either 0 or 1).</td>
 </tr>
 <tr>
 <td class="address-1"><span id="28824"></span>28824</td>
 <td class="instruction">AND %00000001</td>
-<td class="comment-1" rowspan="1">Keep only bit 0.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="28826"></span>28826</td>
@@ -103,7 +101,7 @@ Used by the routine at <a href="25770.html">25770</a>.
 <tr>
 <td class="address-2"><span id="28827"></span>28827</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E</span>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=the random number stored in <span class="register">E</span>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="28828"></span>28828</td>
@@ -125,7 +123,7 @@ Next: <a href="28829.html">28829</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/7088.html">Switch to hexadecimal</a>.</div>
 </footer>

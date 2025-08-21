@@ -63,7 +63,7 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_0</td>
+<td class="asm-label">SetNewGameStates</td>
 <td class="address-2"><span id="27821"></span>27821</td>
 <td class="instruction">LD HL,13312</td>
 <td class="comment-1" rowspan="2">Write 13312 to *<a href="30780.html">Fuel</a>.</td>
@@ -77,79 +77,82 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="27827"></span>27827</td>
 <td class="instruction">LD HL,30741</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30741.html">30741</a>.</td>
+<td class="comment-1" rowspan="2">Write 0 to <a href="30741.html">30741</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27830"></span>27830</td>
 <td class="instruction">LD (HL),0</td>
-<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27832"></span>27832</td>
 <td class="instruction">DEC L</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="2">Write 0 to <a href="30740.html">30740</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27833"></span>27833</td>
 <td class="instruction">LD (HL),0</td>
-<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27835"></span>27835</td>
 <td class="instruction">LD L,26</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=26.</td>
+<td class="comment-1" rowspan="2">Write 1 to <a href="30746.html">30746</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27837"></span>27837</td>
 <td class="instruction">LD (HL),1</td>
-<td class="comment-1" rowspan="1">Write 1 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27839"></span>27839</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="2">Write 0 to <a href="30747.html">30747</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27840"></span>27840</td>
 <td class="instruction">LD (HL),0</td>
-<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27842"></span>27842</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="4">Write <a href="45568.html">ShadowBuffer</a> to <a href="30748.html">30748</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27843"></span>27843</td>
 <td class="instruction">LD (HL),0</td>
-<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27845"></span>27845</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27846"></span>27846</td>
 <td class="instruction">LD (HL),178</td>
-<td class="comment-1" rowspan="1">Write 178 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27848"></span>27848</td>
 <td class="instruction">LD L,33</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=33.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30753.html">30753</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="27850"></span>
+<div class="comments">
+<div class="paragraph">
+Write 128 to <a href="30753.html">30753</a>, <a href="30754.html">Speed</a> and <a href="30754.html#30755">30755</a>.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -158,7 +161,7 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 <td class="comment-1" rowspan="1"><span class="register">B</span>=3.</td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_1</td>
+<td class="asm-label">GameInitialisation_0</td>
 <td class="address-2"><span id="27852"></span>27852</td>
 <td class="instruction">LD (HL),128</td>
 <td class="comment-1" rowspan="1">Write 128 to *<span class="register">HL</span>.</td>
@@ -172,8 +175,18 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27855"></span>27855</td>
-<td class="instruction">DJNZ <a href="27818.html#27852">GameInitialisation_1</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="27818.html#27852">GameInitialisation_1</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="27818.html#27852">GameInitialisation_0</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="27818.html#27852">GameInitialisation_0</a> until counter is zero.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="27857"></span>
+<div class="comments">
+<div class="paragraph">
+Write 0 to 30756, 30757, 30758, 30759, 30760, 30761, 30762 and 30763.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -182,7 +195,7 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 <td class="comment-1" rowspan="1"><span class="register">B</span>=8.</td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_2</td>
+<td class="asm-label">GameInitialisation_1</td>
 <td class="address-2"><span id="27859"></span>27859</td>
 <td class="instruction">LD (HL),0</td>
 <td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
@@ -196,14 +209,14 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27862"></span>27862</td>
-<td class="instruction">DJNZ <a href="27818.html#27859">GameInitialisation_2</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="27818.html#27859">GameInitialisation_2</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="27818.html#27859">GameInitialisation_1</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="27818.html#27859">GameInitialisation_1</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27864"></span>27864</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="2">Increment <span class="register">L</span> by two.</td>
+<td class="comment-1" rowspan="5">Write <a href="41217.html">41235</a> to *<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -214,85 +227,76 @@ This entry point is used by the routine at <a href="30423.html">30423</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="27866"></span>27866</td>
 <td class="instruction">LD (HL),19</td>
-<td class="comment-1" rowspan="1">Write 19 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27868"></span>27868</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27869"></span>27869</td>
 <td class="instruction">LD (HL),161</td>
-<td class="comment-1" rowspan="1">Write 161 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27871"></span>27871</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="2">Write 3 to *<a href="30768.html">30768</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27872"></span>27872</td>
 <td class="instruction">LD (HL),3</td>
-<td class="comment-1" rowspan="1">Write 3 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27874"></span>27874</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="4">Write 47872 to *<a href="30769.html">30769</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27875"></span>27875</td>
 <td class="instruction">LD (HL),0</td>
-<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27877"></span>27877</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27878"></span>27878</td>
 <td class="instruction">LD (HL),187</td>
-<td class="comment-1" rowspan="1">Write 187 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27880"></span>27880</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="2">Write 11 to *<a href="30771.html">30771</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27881"></span>27881</td>
 <td class="instruction">LD (HL),11</td>
-<td class="comment-1" rowspan="1">Write 11 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27883"></span>27883</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="2">Write 0 to *<a href="30772.html">Wheelie</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27884"></span>27884</td>
 <td class="instruction">LD (HL),0</td>
-<td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27886"></span>27886</td>
-<td class="instruction">CALL <a href="25856.html">25856</a></td>
-<td class="comment-1" rowspan="1">Call <a href="25856.html">25856</a>.</td>
+<td class="instruction">CALL <a href="25856.html">InitialiseLevel</a></td>
+<td class="comment-1" rowspan="1">Call <a href="25856.html">InitialiseLevel</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -314,7 +318,7 @@ See <a href="59392.html">InitialiseDemoMode</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="27891"></span>27891</td>
 <td class="instruction">LD A,(30765)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="27818.html#27921">GameInitialisation_5</a> if the game is not in "demo mode" (the high-order byte of <a href="30764.html">ControlMethod_Pointer</a> does not contain <a href="29623.html">115</a>).</td>
+<td class="comment-1" rowspan="3">Jump to <a href="27818.html#27921">GameInitialisation_4</a> if the game is not in "demo mode" (the high-order byte of <a href="30764.html">ControlMethod_Pointer</a> does not contain <a href="29623.html">115</a>).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -324,7 +328,7 @@ See <a href="59392.html">InitialiseDemoMode</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27896"></span>27896</td>
-<td class="instruction">JR NZ,<a href="27818.html#27921">GameInitialisation_5</a></td>
+<td class="instruction">JR NZ,<a href="27818.html#27921">GameInitialisation_4</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -333,7 +337,7 @@ See <a href="59392.html">InitialiseDemoMode</a>.
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="41440.html">41440</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_3</td>
+<td class="asm-label">GameInitialisation_2</td>
 <td class="address-2"><span id="27901"></span>27901</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
@@ -353,33 +357,33 @@ See <a href="59392.html">InitialiseDemoMode</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27904"></span>27904</td>
-<td class="instruction">JR Z,<a href="27818.html#27914">GameInitialisation_4</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="27818.html#27914">GameInitialisation_4</a> if <span class="register">A</span> is zero.</td>
+<td class="instruction">JR Z,<a href="27818.html#27914">GameInitialisation_3</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="27818.html#27914">GameInitialisation_3</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27906"></span>27906</td>
 <td class="instruction">CP 49</td>
-<td class="comment-1" rowspan="2">Jump to <a href="27818.html#27901">GameInitialisation_3</a> if <span class="register">A</span> is higher than 49.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="27818.html#27901">GameInitialisation_2</a> if <span class="register">A</span> is higher than 49.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27908"></span>27908</td>
-<td class="instruction">JR NC,<a href="27818.html#27901">GameInitialisation_3</a></td>
+<td class="instruction">JR NC,<a href="27818.html#27901">GameInitialisation_2</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27910"></span>27910</td>
 <td class="instruction">CP 45</td>
-<td class="comment-1" rowspan="2">Jump to <a href="27818.html#27901">GameInitialisation_3</a> if <span class="register">A</span> is lower than 45.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="27818.html#27901">GameInitialisation_2</a> if <span class="register">A</span> is lower than 45.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27912"></span>27912</td>
-<td class="instruction">JR C,<a href="27818.html#27901">GameInitialisation_3</a></td>
+<td class="instruction">JR C,<a href="27818.html#27901">GameInitialisation_2</a></td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_4</td>
+<td class="asm-label">GameInitialisation_3</td>
 <td class="address-2"><span id="27914"></span>27914</td>
 <td class="instruction">LD A,L</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
@@ -394,7 +398,7 @@ See <a href="59392.html">InitialiseDemoMode</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="27916"></span>27916</td>
 <td class="instruction">LD (30766),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30766.html">30766</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -408,7 +412,7 @@ See <a href="59392.html">InitialiseDemoMode</a>.
 <td class="instruction">DEC L</td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_5</td>
+<td class="asm-label">GameInitialisation_4</td>
 <td class="address-2"><span id="27921"></span>27921</td>
 <td class="instruction">LD H,158</td>
 <td class="comment-1" rowspan="1"><span class="register">H</span>=158.</td>
@@ -436,7 +440,7 @@ This entry point is used by the routine at <a href="28184.html">28184</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label">GameInitialisation_6</td>
+<td class="asm-label">GameInitialisation_5</td>
 <td class="address-2"><span id="27927"></span>27927</td>
 <td class="instruction">LD A,(23672)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.</td>
@@ -468,7 +472,7 @@ Next: <a href="27934.html">27934</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/6CAA.html">Switch to hexadecimal</a>.</div>
 </footer>

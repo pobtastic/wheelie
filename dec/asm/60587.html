@@ -212,7 +212,7 @@ The player is entering a password to access a later level.
 <td class="asm-label">CheckPassword_Input</td>
 <td class="address-2"><span id="60635"></span>60635</td>
 <td class="instruction">LD DE,30766</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="30766.html">30766</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -382,7 +382,7 @@ Test if any of the passwords match the input.
 <td class="asm-label">CheckPassword_Loop</td>
 <td class="address-2"><span id="60681"></span>60681</td>
 <td class="instruction">LD E,46</td>
-<td class="comment-1" rowspan="1">Reset the user input held by <span class="register">DE</span> back to the start of the string (<a href="30766.html">30766</a>).</td>
+<td class="comment-1" rowspan="1">Reset the user input held by <span class="register">DE</span> back to the start of the string (<a href="30766.html">LevelProgressPointer</a>).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -555,7 +555,7 @@ All passwords have been checked, let the player know their password was entered 
 <td class="asm-label"></td>
 <td class="address-1"><span id="60711"></span>60711</td>
 <td class="instruction">LD HL,61012</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="60948.html#61012">Messaging_Mistake</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="61012.html">Messaging_Mistake</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -596,7 +596,7 @@ Next: <a href="60725.html">60725</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/ECAB.html">Switch to hexadecimal</a>.</div>
 </footer>

@@ -47,7 +47,7 @@ Next: <a href="30005.html">30005</a>
 <td class="asm-label">Handler_HumpJump</td>
 <td class="address-2"><span id="29978"></span>29978</td>
 <td class="instruction">LD HL,(30766)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">30766</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -65,12 +65,12 @@ Next: <a href="30005.html">30005</a>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29985"></span>29985</td>
 <td class="instruction">CP 40</td>
-<td class="comment-1" rowspan="2">Jump to <a href="29978.html#29997">Handler_HumpJump_0</a> if <span class="register">A</span> is lower than 40.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="29978.html#29997">HumpJumpAwardScore</a> if <span class="register">A</span> is lower than 40.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29987"></span>29987</td>
-<td class="instruction">JR C,<a href="29978.html#29997">Handler_HumpJump_0</a></td>
+<td class="instruction">JR C,<a href="29978.html#29997">HumpJumpAwardScore</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -87,8 +87,8 @@ Next: <a href="30005.html">30005</a>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="29993"></span>29993</td>
-<td class="instruction">JR NC,<a href="29978.html#29997">Handler_HumpJump_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="29978.html#29997">Handler_HumpJump_0</a> if <span class="register">A</span> was higher than 70 (on line <a href="29978.html#29989">29989</a>).</td>
+<td class="instruction">JR NC,<a href="29978.html#29997">HumpJumpAwardScore</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="29978.html#29997">HumpJumpAwardScore</a> if <span class="register">A</span> was higher than 70 (on line <a href="29978.html#29989">29989</a>).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -107,7 +107,7 @@ Award the score.
 </td>
 </tr>
 <tr>
-<td class="asm-label">Handler_HumpJump_0</td>
+<td class="asm-label">HumpJumpAwardScore</td>
 <td class="address-2"><span id="29997"></span>29997</td>
 <td class="instruction">LD HL,(30788)</td>
 <td class="comment-1" rowspan="2"><span class="register">HL</span>=*<a href="30788.html">Score</a>+<span class="register">DE</span>.</td>
@@ -144,7 +144,7 @@ Next: <a href="30005.html">30005</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/751A.html">Switch to hexadecimal</a>.</div>
 </footer>

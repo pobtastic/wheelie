@@ -79,7 +79,7 @@ Used by the routine at <a href="6C00.html">6C00</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="6e23"></span>6E23</td>
 <td class="instruction">LD ($7834),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7834.html">7834</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7834.html">Wheelie</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -127,7 +127,7 @@ Used by the routine at <a href="6C00.html">6C00</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="6e32"></span>6E32</td>
 <td class="instruction">LD HL,$7833</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7831.html#7833">7833</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7833.html">7833</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -180,14 +180,14 @@ Used by the routine at <a href="6C00.html">6C00</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6e40"></span>6E40</td>
-<td class="instruction">CALL <a href="659C.html">$659C</a></td>
-<td class="comment-1" rowspan="1">Call <a href="659C.html">659C</a>.</td>
+<td class="instruction">CALL <a href="659C.html">ScrollPlayarea</a></td>
+<td class="comment-1" rowspan="1">Call <a href="659C.html">ScrollPlayarea</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6e43"></span>6E43</td>
-<td class="instruction">CALL <a href="67E9.html">Controller_ScrollPlayarea</a></td>
-<td class="comment-1" rowspan="1">Call <a href="67E9.html">Controller_ScrollPlayarea</a>.</td>
+<td class="instruction">CALL <a href="67E9.html">DrawPlayarea</a></td>
+<td class="comment-1" rowspan="1">Call <a href="67E9.html">DrawPlayarea</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -216,8 +216,8 @@ Used by the routine at <a href="6C00.html">6C00</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6e4e"></span>6E4E</td>
-<td class="instruction">CALL <a href="67E9.html">Controller_ScrollPlayarea</a></td>
-<td class="comment-1" rowspan="1">Call <a href="67E9.html">Controller_ScrollPlayarea</a>.</td>
+<td class="instruction">CALL <a href="67E9.html">DrawPlayarea</a></td>
+<td class="comment-1" rowspan="1">Call <a href="67E9.html">DrawPlayarea</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -344,7 +344,7 @@ Used by the routine at <a href="6C00.html">6C00</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="6e74"></span>6E74</td>
 <td class="instruction">LD A,($7833)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7831.html#7833">7833</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7833.html">7833</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -903,7 +903,7 @@ This entry point is used by the routines at <a href="7161.html">7161</a> and <a 
 <td class="asm-label"></td>
 <td class="address-1"><span id="6f0d"></span>6F0D</td>
 <td class="instruction">LD ($782E),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="782E.html">782E</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="782E.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -981,7 +981,7 @@ This entry point is used by the routines at <a href="7161.html">7161</a> and <a 
 <td class="asm-label"></td>
 <td class="address-1"><span id="6f23"></span>6F23</td>
 <td class="instruction">LD ($7833),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7831.html#7833">7833</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7833.html">7833</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -1077,8 +1077,8 @@ This entry point is used by the routines at <a href="7161.html">7161</a> and <a 
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6f40"></span>6F40</td>
-<td class="instruction">CALL <a href="6CAA.html#6d17">GameInitialisation_6</a></td>
-<td class="comment-1" rowspan="1">Call <a href="6CAA.html#6d17">GameInitialisation_6</a>.</td>
+<td class="instruction">CALL <a href="6CAA.html#6d17">GameInitialisation_5</a></td>
+<td class="comment-1" rowspan="1">Call <a href="6CAA.html#6d17">GameInitialisation_5</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -1095,7 +1095,7 @@ Next: <a href="6F43.html">6F43</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/28184.html">Switch to decimal</a>.</div>
 </footer>

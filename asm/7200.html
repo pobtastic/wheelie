@@ -41,7 +41,7 @@ Next: <a href="72BA.html">72BA</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="6500.html">6500</a>.
+Used by the routine at <a href="6500.html">InitialiseLevel</a>.
 </div>
 </div>
 </td>
@@ -56,7 +56,7 @@ Used by the routine at <a href="6500.html">6500</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="7203"></span>7203</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="7200.html#720a">InitialiseLevel</a> if the current level is equal to 07. After level 07 the game just repeats this level.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="7200.html#720a">InitialiseLevelTodo</a> if the current level is equal to 07. After level 07 the game just repeats this level.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -66,7 +66,7 @@ Used by the routine at <a href="6500.html">6500</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7206"></span>7206</td>
-<td class="instruction">JR Z,<a href="7200.html#720a">InitialiseLevel</a></td>
+<td class="instruction">JR Z,<a href="7200.html#720a">InitialiseLevelTodo</a></td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -96,6 +96,10 @@ Increments both <a href="7820.html">CurrentLevel</a> and <span class="register">
 <div class="comments">
 <div class="paragraph">
 <table class="default">
+<tr>
+<th colspan="1" rowspan="1">Level</th>
+<th colspan="1" rowspan="1">Data</th>
+</tr>
 <tr>
 <td class="centre" colspan="1" rowspan="1">00</td>
 <td class="centre" colspan="1" rowspan="1"><a href="E600.html">E600</a></td>
@@ -134,7 +138,7 @@ Increments both <a href="7820.html">CurrentLevel</a> and <span class="register">
 </td>
 </tr>
 <tr>
-<td class="asm-label">InitialiseLevel</td>
+<td class="asm-label">InitialiseLevelTodo</td>
 <td class="address-2"><span id="720a"></span>720A</td>
 <td class="instruction">RRCA</td>
 <td class="comment-1" rowspan="2">Rotate <span class="register">A</span> right two positions (bits 2 to 5 are now in positions 0 to 3) using the carry flag.</td>
@@ -388,13 +392,12 @@ Increments both <a href="7820.html">CurrentLevel</a> and <span class="register">
 <td class="asm-label">InitialiseNewLevel_5</td>
 <td class="address-2"><span id="724a"></span>724A</td>
 <td class="instruction">CALL <a href="6400.html">GetRandomNumber</a></td>
-<td class="comment-1" rowspan="1">Call <a href="6400.html">GetRandomNumber</a>.</td>
+<td class="comment-1" rowspan="2"><span class="register">A</span>=random number between 00-1F.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="724d"></span>724D</td>
 <td class="instruction">AND %00011111</td>
-<td class="comment-1" rowspan="1">Keep only bits 0-4.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -428,19 +431,17 @@ Increments both <a href="7820.html">CurrentLevel</a> and <span class="register">
 <td class="asm-label"></td>
 <td class="address-1"><span id="7258"></span>7258</td>
 <td class="instruction">CALL <a href="6400.html">GetRandomNumber</a></td>
-<td class="comment-1" rowspan="1">Call <a href="6400.html">GetRandomNumber</a>.</td>
+<td class="comment-1" rowspan="3"><span class="register">H</span>=random number between 00-03.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="725b"></span>725B</td>
 <td class="instruction">AND %00000011</td>
-<td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="725d"></span>725D</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -813,7 +814,7 @@ Next: <a href="72BA.html">72BA</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../dec/asm/29184.html">Switch to decimal</a>.</div>
 </footer>

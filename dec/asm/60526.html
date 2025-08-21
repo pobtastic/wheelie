@@ -49,12 +49,12 @@ Used by the routine at <a href="60587.html">CheckPassword</a>.
 <tr>
 <td class="address-2"><span id="60526"></span>60526</td>
 <td class="instruction">LD (IY+7),0</td>
-<td class="comment-1" rowspan="1">Write 7 to *<span class="register">IY</span>+7.</td>
+<td class="comment-1" rowspan="1">Write 0 (cursor type "C", "K" or "L") to *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="60530"></span>60530</td>
 <td class="instruction">SET 3,(IY+48)</td>
-<td class="comment-1" rowspan="1">Set bit 3 of *<span class="register">IX</span>+48.</td>
+<td class="comment-1" rowspan="1">Set CAPS LOCK on, using bit 3 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="60534"></span>60534</td>
@@ -64,17 +64,16 @@ Used by the routine at <a href="60587.html">CheckPassword</a>.
 <tr>
 <td class="address-1"><span id="60537"></span>60537</td>
 <td class="instruction">RES 5,(HL)</td>
-<td class="comment-1" rowspan="1">Reset bit 5 of *<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="1">Reset bit 5 of *<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a> which resets "when a new key has been pressed".</td>
 </tr>
 <tr>
 <td class="address-2"><span id="60539"></span>60539</td>
 <td class="instruction">BIT 5,(HL)</td>
-<td class="comment-1" rowspan="1">Test bit 5 of *<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="60526.html#60539">60539</a> if no key was pressed.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="60541"></span>60541</td>
 <td class="instruction">JR Z,<a href="60526.html#60539">60539</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="60526.html#60539">60539</a> if {} is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="60543"></span>60543</td>
@@ -124,7 +123,7 @@ Next: <a href="60556.html">60556</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/EC6E.html">Switch to hexadecimal</a>.</div>
 </footer>

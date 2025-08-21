@@ -41,7 +41,7 @@ Next: <a href="25620.html">25620</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="25770.html">25770</a>, <a href="25856.html">25856</a>, <a href="28808.html">28808</a>, <a href="28829.html">28829</a>, <a href="29184.html">InitialiseNewLevel</a> and <a href="29623.html">DemoModeInput</a>.
+Used by the routines at <a href="25770.html">25770</a>, <a href="25856.html">InitialiseLevel</a>, <a href="28808.html">28808</a>, <a href="28829.html">28829</a>, <a href="29184.html">InitialiseNewLevel</a> and <a href="29623.html">DemoModeInput</a>.
 </div>
 </div>
 <table class="output">
@@ -53,6 +53,16 @@ Used by the routines at <a href="25770.html">25770</a>, <a href="25856.html">258
 <td class="register-desc">Random number</td>
 </tr>
 </table>
+</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="25600"></span>
+<div class="comments">
+<div class="paragraph">
+Random numbers are just data pulled from addresses between 30976-31487 (sequentially).
+</div>
+</div>
 </td>
 </tr>
 <tr>
@@ -82,8 +92,8 @@ Used by the routines at <a href="25770.html">25770</a>, <a href="25856.html">258
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="25606"></span>25606</td>
-<td class="instruction">JR NZ,<a href="25600.html#25615">GetRandomNumber_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="25600.html#25615">GetRandomNumber_0</a> if <span class="register">L</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="25600.html#25615">UpdateRandomNumberSeed</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="25600.html#25615">UpdateRandomNumberSeed</a> if <span class="register">L</span> is not zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -95,12 +105,22 @@ Used by the routines at <a href="25770.html">25770</a>, <a href="25856.html">258
 <td class="asm-label"></td>
 <td class="address-1"><span id="25609"></span>25609</td>
 <td class="instruction">BIT 2,H</td>
-<td class="comment-1" rowspan="2">Jump to <a href="25600.html#25615">GetRandomNumber_0</a> if bit 2 of <span class="register">H</span> is not set.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="25600.html#25615">UpdateRandomNumberSeed</a> if bit 2 of <span class="register">H</span> is not set.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="25611"></span>25611</td>
-<td class="instruction">JR Z,<a href="25600.html#25615">GetRandomNumber_0</a></td>
+<td class="instruction">JR Z,<a href="25600.html#25615">UpdateRandomNumberSeed</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="25613"></span>
+<div class="comments">
+<div class="paragraph">
+Bit 2 is set, this means that <span class="register">H</span> has reached 124 so pull the range back down to 121.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -109,7 +129,7 @@ Used by the routines at <a href="25770.html">25770</a>, <a href="25856.html">258
 <td class="comment-1" rowspan="1"><span class="register">H</span>=121.</td>
 </tr>
 <tr>
-<td class="asm-label">GetRandomNumber_0</td>
+<td class="asm-label">UpdateRandomNumberSeed</td>
 <td class="address-2"><span id="25615"></span>25615</td>
 <td class="instruction">LD (30750),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30750.html">RandomNumberSeed</a>.</td>
@@ -141,7 +161,7 @@ Next: <a href="25620.html">25620</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/6400.html">Switch to hexadecimal</a>.</div>
 </footer>

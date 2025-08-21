@@ -99,37 +99,37 @@ Used by the routines at <a href="27818.html">GameInitialisation</a> and <a href=
 <tr>
 <td class="address-1"><span id="26646"></span>26646</td>
 <td class="instruction">LD B,32</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=32.</td>
+<td class="comment-1" rowspan="1"><span class="register">B</span>=32 (counter; screen columns).</td>
 </tr>
 <tr>
 <td class="address-2"><span id="26648"></span>26648</td>
 <td class="instruction">PUSH BC</td>
-<td class="comment-1" rowspan="1">Stash <span class="register">BC</span> on the stack.</td>
+<td class="comment-1" rowspan="1">Stash the screen column counter on the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26649"></span>26649</td>
-<td class="instruction">CALL <a href="26012.html">26012</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26012.html">26012</a>.</td>
+<td class="instruction">CALL <a href="26012.html">ScrollPlayarea</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26012.html">ScrollPlayarea</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26652"></span>26652</td>
-<td class="instruction">CALL <a href="26012.html">26012</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26012.html">26012</a>.</td>
+<td class="instruction">CALL <a href="26012.html">ScrollPlayarea</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26012.html">ScrollPlayarea</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26655"></span>26655</td>
-<td class="instruction">CALL <a href="26601.html">Controller_ScrollPlayarea</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26601.html">Controller_ScrollPlayarea</a>.</td>
+<td class="instruction">CALL <a href="26601.html">DrawPlayarea</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26601.html">DrawPlayarea</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26658"></span>26658</td>
 <td class="instruction">POP BC</td>
-<td class="comment-1" rowspan="1">Restore <span class="register">BC</span> from the stack.</td>
+<td class="comment-1" rowspan="1">Restore the screen column counter from the stack.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26659"></span>26659</td>
 <td class="instruction">DJNZ <a href="26624.html#26648">26648</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="26624.html#26648">26648</a> until counter is zero.</td>
+<td class="comment-1" rowspan="1">Decrease the screen column counter by one and loop back to <a href="26624.html#26648">26648</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26661"></span>26661</td>
@@ -151,7 +151,7 @@ Next: <a href="26662.html">26662</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/6800.html">Switch to hexadecimal</a>.</div>
 </footer>

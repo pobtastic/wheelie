@@ -212,19 +212,19 @@ The parameters are again, quite wide; <table class="default">
 <td class="asm-label">Initialise_CrashJumpTooFast</td>
 <td class="address-2"><span id="28638"></span>28638</td>
 <td class="instruction">RLCA</td>
-<td class="comment-1" rowspan="1">RLCA.</td>
+<td class="comment-1" rowspan="1">Rotate the direction bit into the carry flag.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28639"></span>28639</td>
 <td class="instruction">LD HL,(30766)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">30766</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28642"></span>28642</td>
-<td class="instruction">JR C,<a href="28608.html#28646">Handler_Jumps_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28608.html#28646">Handler_Jumps_0</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="28608.html#28646">CrashJumpTooFastMovingRight</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28608.html#28646">CrashJumpTooFastMovingRight</a> if the player is moving right.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -238,7 +238,7 @@ The parameters are again, quite wide; <table class="default">
 <td class="instruction">DEC L</td>
 </tr>
 <tr>
-<td class="asm-label">Handler_Jumps_0</td>
+<td class="asm-label">CrashJumpTooFastMovingRight</td>
 <td class="address-2"><span id="28646"></span>28646</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
@@ -259,12 +259,12 @@ The parameters are again, quite wide; <table class="default">
 <td class="asm-label"></td>
 <td class="address-1"><span id="28651"></span>28651</td>
 <td class="instruction">CP 67</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28608.html#28658">Handler_Jumps_1</a> if <span class="register">A</span> is lower than 67.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28608.html#28658">Handler_Jumps_0</a> if <span class="register">A</span> is lower than 67.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28653"></span>28653</td>
-<td class="instruction">JR C,<a href="28608.html#28658">Handler_Jumps_1</a></td>
+<td class="instruction">JR C,<a href="28608.html#28658">Handler_Jumps_0</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -273,7 +273,7 @@ The parameters are again, quite wide; <table class="default">
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="50176.html">50176</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">Handler_Jumps_1</td>
+<td class="asm-label">Handler_Jumps_0</td>
 <td class="address-2"><span id="28658"></span>28658</td>
 <td class="instruction">ADD HL,DE</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
@@ -316,7 +316,7 @@ Next: <a href="28668.html">28668</a>
 <footer>
 <div class="release"></div>
 <div class="copyright">&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.</div>
-<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.1.</div>
+<div class="created">Created using <a href="https://skoolkit.ca">SkoolKit</a> 9.6.</div>
 <div class="repository">Link to <a rel="noopener nofollow" href="https://github.com/pobtastic/wheelie/">Source code</a>.</div>
 <div><a href="../../asm/6FC0.html">Switch to hexadecimal</a>.</div>
 </footer>
