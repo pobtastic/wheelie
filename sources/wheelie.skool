@@ -535,6 +535,9 @@ b$5D27 DEFB $78,$78,$78,$78,$78,$78,$78,$78
 ; #R$73B7.
 ;
 ; O:A Random number
+;
+; Random numbers are just data pulled from addresses between #N$7900-#N$7AFF
+; (sequentially).
 @label=GetRandomNumber
 c$6400 PUSH HL       ; Stash #REGhl on the stack.
  $6401 LD HL,($781E) ; #REGhl=*#R$781E.
@@ -544,7 +547,10 @@ c$6400 PUSH HL       ; Stash #REGhl on the stack.
  $6408 INC H         ; Increment #REGh by one.
  $6409 BIT 2,H       ; {Jump to #R$640F if bit 2 of #REGh is not set.
  $640B JR Z,$640F    ; }
+; Bit 2 is set, this means that #REGh has reached #N$7C so pull the range back
+; down to #N$79.
  $640D LD H,$79      ; #REGh=#N$79.
+@label=UpdateRandomNumberSeed
 *$640F LD ($781E),HL ; Write #REGhl to *#R$781E.
  $6412 POP HL        ; Restore #REGhl from the stack.
  $6413 RET           ; Return.
@@ -565,27 +571,39 @@ c$6414 LD HL,($5C78) ; #HTML(#REGhl=*<a rel="noopener nofollow"
  $6420 LD ($781E),HL ; Write #REGhl to *#R$781E.
  $6423 RET           ; Return.
 
-; Routine at 6424
+; Copy Level Data to Level Buffer
 ;
 ; Used by the routine at #R$6500.
-c$6424 LD C,$05      ; #REGc=#N$05.
-*$6426 LD B,$20      ; #REGb=#N$20.
-*$6428 LD A,(HL)     ; #REGa=*#REGhl.
- $6429 INC HL        ; Increment #REGhl by one.
- $642A LD (DE),A     ; Write #REGa to *#REGde.
- $642B INC E         ; Increment #REGe by one.
- $642C DJNZ $6428    ; Decrease counter by one and loop back to #R$6428 until
-                     ; counter is zero.
- $642E DEC E         ; Decrease #REGe by one.
- $642F LD A,E        ; #REGa=#REGe.
- $6430 AND %11100000 ; Keep only bits 5-7.
- $6432 LD E,A        ; #REGe=#REGa.
- $6433 INC D         ; Increment #REGd by one.
- $6434 DEC C         ; Decrease #REGc by one.
- $6435 JR NZ,$6426   ; Jump to #R$6426 until #REGc is zero.
- $6437 ADD A,$20     ; #REGa+=#N$20.
- $6439 LD E,A        ; #REGe=#REGa.
- $643A RET Z         ; Return if #REGa is zero.
+;
+; HL Source data pointer
+; DE Destination buffer pointer
+@label=CopyLevelDataToBuffer
+c$6424 LD C,$05      ; Set a counter in #REGc for #N$05 rows to copy.
+@label=CopyLevelDataToBuffer_CopyRow
+*$6426 LD B,$20      ; Set a counter in #REGb for #N$20 bytes per row.
+@label=CopyLevelDataToBuffer_CopyByte
+*$6428 LD A,(HL)     ; Fetch a byte from the source data.
+ $6429 INC HL        ; Move to the next source data byte.
+ $642A LD (DE),A     ; Write the byte to the destination buffer.
+ $642B INC E         ; Move to the next destination buffer position.
+ $642C DJNZ $6428    ; Decrease the bytes-per-row counter by one and loop back to #R$6428
+                     ; until the whole row has been copied.
+; Handle updating the destination pointer positioning after each row.
+ $642E DEC E         ; Step back one position.
+ $642F LD A,E        ; {Keep only the upper 3 bits of the #REGe co-ordinate.
+ $6430 AND %11100000 ;
+ $6432 LD E,A        ; }
+ $6433 INC D         ; Move down one row.
+ $6434 DEC C         ; Decrease the row counter by one.
+ $6435 JR NZ,$6426   ; Jump back to #R$6426 until all the rows have been
+                     ; copied.
+; Adjust the destination pointer after copying a complete block.
+ $6437 ADD A,$20     ; Move to the next block horizontally.
+ $6439 LD E,A        ; Load the new horizontal position into #REGe.
+ $643A RET Z         ; Return if #REGe wrapped around to #N$00 (reached the end of the
+                     ; buffer).
+; Move the destination pointer back up #N$05 rows to the original
+; vertical position.
  $643B LD A,D        ; {#REGd-=#N$05.
  $643C SUB $05       ;
  $643E LD D,A        ; }
@@ -594,81 +612,84 @@ c$6424 LD C,$05      ; #REGc=#N$05.
 ; Routine at 6440
 ;
 ; Used by the routine at #R$6500.
-c$6440 LD A,$0A      ;
- $6442 NOP           ;
- $6443 LD C,A        ;
- $6444 INC B         ;
- $6445 INC C         ;
- $6446 LD HL,$A01E   ;
-*$6449 PUSH HL       ;
- $644A LD DE,$B400   ;
- $644D DEC (HL)      ;
- $644E JR Z,$6458    ;
- $6450 LD E,$24      ;
- $6452 INC H         ;
- $6453 DEC (HL)      ;
- $6454 JR Z,$6458    ;
- $6456 LD E,$48      ;
-*$6458 POP HL        ;
- $6459 PUSH HL       ;
- $645A INC L         ;
- $645B INC L         ;
- $645C JR NZ,$6462   ;
- $645E LD A,H        ;
- $645F ADD A,$05     ;
- $6461 LD H,A        ;
-*$6462 INC L         ;
- $6463 LD A,(HL)     ;
- $6464 DEC A         ;
- $6465 JR Z,$6470    ;
- $6467 INC H         ;
- $6468 LD A,(HL)     ;
- $6469 DEC A         ;
- $646A LD A,$0C      ;
- $646C JR Z,$6470    ;
- $646E LD A,$18      ;
-*$6470 ADD A,E       ;
- $6471 LD E,A        ;
- $6472 POP HL        ;
- $6473 DEC H         ;
- $6474 LD B,$04      ;
-*$6476 LD A,(DE)     ;
- $6477 LD (HL),A     ;
- $6478 INC H         ;
- $6479 INC E         ;
- $647A DJNZ $6476    ;
- $647C DEC H         ;
+c$6440 LD A,$0A      ; #REGa=#N$0A.
+ $6442 NOP           ; No operation.
+ $6443 LD C,A        ; #REGc=#REGa.
+ $6444 INC B         ; Increment #REGb by one.
+ $6445 INC C         ; Increment #REGc by one.
+ $6446 LD HL,$A01E   ; #REGhl=#R$9E00(#N$A01E).
+*$6449 PUSH HL       ; Stash #REGhl on the stack.
+ $644A LD DE,$B400   ; #REGde=#R$B400.
+ $644D DEC (HL)      ; Decrease *#REGhl by one.
+ $644E JR Z,$6458    ; Jump to #R$6458 if *#REGhl is zero.
+ $6450 LD E,$24      ; #REGe=#N$24.
+ $6452 INC H         ; Increment #REGh by one.
+ $6453 DEC (HL)      ; Decrease *#REGhl by one.
+ $6454 JR Z,$6458    ; Jump to #R$6458 if *#REGhl is zero.
+ $6456 LD E,$48      ; #REGe=#N$48.
+*$6458 POP HL        ; Restore #REGhl from the stack.
+ $6459 PUSH HL       ; Stash #REGhl on the stack.
+ $645A INC L         ; {Increment #REGl by two.
+ $645B INC L         ; }
+ $645C JR NZ,$6462   ; Jump to #R$6462 if #REGl is not zero.
+ $645E LD A,H        ; #REGa=#REGh.
+ $645F ADD A,$05     ; #REGa+=#N$05.
+ $6461 LD H,A        ; #REGh=#REGa.
+*$6462 INC L         ; Increment #REGl by one.
+ $6463 LD A,(HL)     ; #REGa=*#REGhl.
+ $6464 DEC A         ; Decrease #REGa by one.
+ $6465 JR Z,$6470    ; Jump to #R$6470 if #REGa is zero.
+ $6467 INC H         ; Increment #REGh by one.
+ $6468 LD A,(HL)     ; #REGa=*#REGhl.
+ $6469 DEC A         ; Decrease #REGa by one.
+ $646A LD A,$0C      ; #REGa=#N$0C.
+ $646C JR Z,$6470    ; Jump to #R$6470 if #REGa was zero on line #R$6469.
+ $646E LD A,$18      ; #REGa=#N$18.
+*$6470 ADD A,E       ; #REGa+=#REGe.
+ $6471 LD E,A        ; #REGe=#REGa.
+ $6472 POP HL        ; Restore #REGhl from the stack.
+ $6473 DEC H         ; Decrease #REGh by one.
+ $6474 LD B,$04      ; #REGb=#N$04.
+*$6476 LD A,(DE)     ; #REGa=*#REGde.
+ $6477 LD (HL),A     ; Write #REGa to *#REGhl.
+ $6478 INC H         ; Increment #REGh by one.
+ $6479 INC E         ; Increment #REGe by one.
+ $647A DJNZ $6476    ; Decrease counter by one and loop back to #R$6476 until
+                     ; counter is zero.
+ $647C DEC H         ; {Decrease #REGh by four.
  $647D DEC H         ;
  $647E DEC H         ;
- $647F DEC H         ;
- $6480 INC L         ;
- $6481 LD B,$04      ;
-*$6483 LD A,(DE)     ;
- $6484 LD (HL),A     ;
- $6485 INC H         ;
- $6486 INC E         ;
- $6487 DJNZ $6483    ;
- $6489 INC H         ;
- $648A INC L         ;
- $648B JR Z,$6491    ;
- $648D LD A,H        ;
- $648E SUB $05       ;
- $6490 LD H,A        ;
-*$6491 LD B,$04      ;
-*$6493 LD A,(DE)     ;
- $6494 LD (HL),A     ;
- $6495 INC H         ;
- $6496 INC E         ;
- $6497 DJNZ $6493    ;
- $6499 DEC H         ;
+ $647F DEC H         ; }
+ $6480 INC L         ; Increment #REGl by one.
+ $6481 LD B,$04      ; #REGb=#N$04.
+*$6483 LD A,(DE)     ; #REGa=*#REGde.
+ $6484 LD (HL),A     ; Write #REGa to *#REGhl.
+ $6485 INC H         ; Increment #REGh by one.
+ $6486 INC E         ; Increment #REGe by one.
+ $6487 DJNZ $6483    ; Decrease counter by one and loop back to #R$6483 until
+                     ; counter is zero.
+ $6489 INC H         ; Increment #REGh by one.
+ $648A INC L         ; Increment #REGl by one.
+ $648B JR Z,$6491    ; Jump to #R$6491 if #REGl is zero.
+ $648D LD A,H        ; #REGa=#REGh.
+ $648E SUB $05       ; #REGa-=#N$05.
+ $6490 LD H,A        ; #REGh=#REGa.
+*$6491 LD B,$04      ; #REGb=#N$04.
+*$6493 LD A,(DE)     ; #REGa=*#REGde.
+ $6494 LD (HL),A     ; Write #REGa to *#REGhl.
+ $6495 INC H         ; Increment #REGh by one.
+ $6496 INC E         ; Increment #REGe by one.
+ $6497 DJNZ $6493    ; Decrease counter by one and loop back to #R$6493 until
+                     ; counter is zero.
+ $6499 DEC H         ; {Decrease #REGh by three.
  $649A DEC H         ;
- $649B DEC H         ;
- $649C LD A,L        ;
+ $649B DEC H         ; }
+ $649C LD A,L        ; {#REGl+=#N$1E.
  $649D ADD A,$1E     ;
- $649F LD L,A        ;
- $64A0 DEC C         ;
- $64A1 JR NZ,$6449   ;
- $64A3 RET           ;
+ $649F LD L,A        ; }
+ $64A0 DEC C         ; Decrease #REGc by one.
+ $64A1 JR NZ,$6449   ; Jump to #R$6449 until #REGc is zero.
+ $64A3 RET           ; Return.
 
 ; Unused
 u$64A4 DEFB $00,$00,$00,$00,$00,$00
@@ -679,7 +700,8 @@ u$64A4 DEFB $00,$00,$00,$00,$00,$00
 c$64AA LD HL,$9E00   ; #REGhl=#R$9E00.
  $64AD LD BC,$0A00   ; #REGbc=#N$0A00.
 *$64B0 LD A,$32      ; #REGa=#N$32.
- $64B2 CPIR          ; CPIR.
+ $64B2 CPIR          ; Starting from #R$9E00, find the first instance of #N$32
+                     ; in a maximum of #N$0A00 bytes.
  $64B4 LD A,B        ; {Return if #REGbc is zero.
  $64B5 OR C          ;
  $64B6 RET Z         ; }
@@ -691,8 +713,8 @@ c$64AA LD HL,$9E00   ; #REGhl=#R$9E00.
  $64BC LD B,$04      ; #REGb=#N$04.
  $64BE LD E,A        ; #REGe=#REGa.
  $64BF DEC L         ; Decrease #REGl by one.
- $64C0 CALL $6400    ; Call #R$6400.
- $64C3 AND %00000111 ; Keep only bits 0-2.
+ $64C0 CALL $6400    ; {#REGa=random number between #N$00 and #N$07.
+ $64C3 AND %00000111 ; }
  $64C5 CP E          ; {Jump to #R$64F4 if #REGa is lower than #REGe.
  $64C6 JR C,$64F4    ; }
  $64C8 CALL $7088    ; Call #R$7088.
@@ -741,9 +763,16 @@ c$64AA LD HL,$9E00   ; #REGhl=#R$9E00.
 ; Unused
 u$64FD DEFB $00,$00,$00
 
-; Routine at 6500
+; Initialise Level
 ;
 ; Used by the routine at #R$6CAA.
+;
+; .
+;
+; #PUSHS #UDGTABLE {
+; #SIM(start=$6CAA,stop=$6562)#SCR$02(level-1)
+; } UDGTABLE# #POPS
+@label=InitialiseLevel
 c$6500 LD DE,$9E00   ; #REGde=#R$9E00.
  $6503 LD HL,$8960   ; #REGhl=#R$8960.
  $6506 CALL $6424    ; Call #R$6424.
@@ -811,52 +840,56 @@ u$6563 DEFB $00
 ; Routine at 6564
 ;
 ; Used by the routines at #R$659C and #R$6650.
-c$6564 ADD A,A       ;
- $6565 ADD A,A       ;
- $6566 LD C,A        ;
- $6567 EXX           ;
- $6568 LD BC,$05FF   ;
- $656B LD DE,$7800   ;
-*$656E EXX           ;
- $656F LD A,(DE)     ;
- $6570 INC D         ;
- $6571 RRCA          ;
+c$6564 ADD A,A       ; #REGa+=#REGa.
+ $6565 ADD A,A       ; #REGa+=#REGa.
+ $6566 LD C,A        ; #REGc=#REGa.
+ $6567 EXX           ; Switch to the shadow registers.
+ $6568 LD BC,$05FF   ; #REGbc=#N$05FF.
+ $656B LD DE,$7800   ; #REGde=#R$7800.
+*$656E EXX           ; Switch back to the normal registers.
+ $656F LD A,(DE)     ; #REGa=*#REGde.
+ $6570 INC D         ; Increment #REGd by one.
+ $6571 RRCA          ; {RRCA.
  $6572 RRCA          ;
- $6573 RRCA          ;
- $6574 LD L,A        ;
- $6575 AND $1F       ;
- $6577 ADD A,$80     ;
- $6579 LD H,A        ;
- $657A LD A,L        ;
- $657B AND $E0       ;
- $657D ADD A,C       ;
- $657E LD L,A        ;
- $657F PUSH HL       ;
- $6580 EXX           ;
- $6581 POP HL        ;
- $6582 LDI           ;
+ $6573 RRCA          ; }
+ $6574 LD L,A        ; #REGl=#REGa.
+ $6575 AND %00011111 ; Keep only bits 0-4.
+ $6577 ADD A,$80     ; #REGa+=#N$80.
+ $6579 LD H,A        ; #REGh=#REGa.
+ $657A LD A,L        ; #REGa=#REGl.
+ $657B AND %11100000 ; Keep only bits 5-7.
+ $657D ADD A,C       ; #REGa+=#REGc.
+ $657E LD L,A        ; #REGl=#REGa.
+ $657F PUSH HL       ; Stash #REGhl on the stack.
+ $6580 EXX           ; Switch to the shadow registers.
+ $6581 POP HL        ; Restore #REGhl from the stack.
+ $6582 LDI           ; {LDI.
  $6584 LDI           ;
  $6586 LDI           ;
- $6588 LDI           ;
- $658A DJNZ $656E    ;
- $658C LD A,(DE)     ;
- $658D INC A         ;
- $658E LD (DE),A     ;
- $658F INC E         ;
- $6590 LD A,(DE)     ;
- $6591 EXX           ;
- $6592 ADD A,B       ;
- $6593 EXX           ;
- $6594 LD (DE),A     ;
- $6595 LD E,$02      ;
- $6597 LD B,$10      ;
- $6599 EXX           ;
- $659A RET           ;
- $659B NOP           ;
+ $6588 LDI           ; }
+ $658A DJNZ $656E    ; Decrease counter by one and loop back to #R$656E until
+                     ; counter is zero.
+ $658C LD A,(DE)     ; #REGa=*#REGde.
+ $658D INC A         ; Increment #REGa by one.
+ $658E LD (DE),A     ; Write #REGa to *#REGde.
+ $658F INC E         ; Increment #REGe by one.
+ $6590 LD A,(DE)     ; #REGa=*#REGde.
+ $6591 EXX           ; Switch to the shadow registers.
+ $6592 ADD A,B       ; #REGa+=#REGb.
+ $6593 EXX           ; Switch to the shadow registers.
+ $6594 LD (DE),A     ; Write #REGa to *#REGde.
+ $6595 LD E,$02      ; #REGe=#N$02.
+ $6597 LD B,$10      ; #REGb=#N$10.
+ $6599 EXX           ; Switch to the shadow registers.
+ $659A RET           ; Return.
 
-; Routine at 659C
+; Unused
+u$659B DEFB $00
+
+; Scroll Playarea
 ;
 ; Used by the routines at #R$6800, #R$6AAC, #R$6C00 and #R$6E18.
+@label=ScrollPlayarea
 c$659C LD HL,($7817) ; #REGhl=*#R$7817.
  $659F LD D,H        ; #REGd=#REGh.
  $65A0 LD E,L        ; #REGe=#REGl.
@@ -1238,10 +1271,10 @@ c$678C LD HL,$59FE   ; #REGhl=#N$59FE (attribute buffer location).
 u$67DE DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $67E6 DEFB $00,$00,$00
 
-; Controller: Scroll Playarea
+; Draw Playarea
 ;
 ; Used by the routines at #R$6800, #R$6AAC, #R$6C00 and #R$6E18.
-@label=Controller_ScrollPlayarea
+@label=DrawPlayarea
 c$67E9 LD HL,$7814   ; {Return if *#R$7814 is not equal to #N$02.
  $67EC LD A,(HL)     ;
  $67ED CP $02        ;
@@ -1270,14 +1303,14 @@ c$6800 LD ($7819),A  ; Write #REGa to *#R$7819.
 *$680D LD ($7817),HL ; Write #REGhl to *#R$7817.
  $6810 LD HL,$0000   ; {Write #N($0000,$04,$04) to *#R$7814.
  $6813 LD ($7814),HL ; }
- $6816 LD B,$20      ; #REGb=#N$20.
-*$6818 PUSH BC       ; Stash #REGbc on the stack.
+ $6816 LD B,$20      ; #REGb=#N$20 (counter; screen columns).
+*$6818 PUSH BC       ; Stash the screen column counter on the stack.
  $6819 CALL $659C    ; Call #R$659C.
  $681C CALL $659C    ; Call #R$659C.
  $681F CALL $67E9    ; Call #R$67E9.
- $6822 POP BC        ; Restore #REGbc from the stack.
- $6823 DJNZ $6818    ; Decrease counter by one and loop back to #R$6818 until
-                     ; counter is zero.
+ $6822 POP BC        ; Restore the screen column counter from the stack.
+ $6823 DJNZ $6818    ; Decrease the screen column counter by one and loop back
+                     ; to #R$6818 until counter is zero.
  $6825 RET           ; Return.
 
 ; Unused
@@ -2130,46 +2163,49 @@ c$6C00 LD A,($782B)  ;
 @label=GameInitialisation
 c$6CAA CALL $75AA    ; Call #R$75AA.
 ; This entry point is used by the routine at #R$76D7.
+@label=SetNewGameStates
 *$6CAD LD HL,$3400   ; {Write #N$3400 to *#R$783C.
  $6CB0 LD ($783C),HL ; }
- $6CB3 LD HL,$7815   ; #REGhl=#R$7815.
- $6CB6 LD (HL),$00   ; Write #N$00 to *#REGhl.
- $6CB8 DEC L         ; Decrease #REGl by one.
- $6CB9 LD (HL),$00   ; Write #N$00 to *#REGhl.
- $6CBB LD L,$1A      ; #REGl=#N$1A.
- $6CBD LD (HL),$01   ; Write #N$01 to *#REGhl.
- $6CBF INC L         ; Increment #REGl by one.
- $6CC0 LD (HL),$00   ; Write #N$00 to *#REGhl.
- $6CC2 INC L         ; Increment #REGl by one.
- $6CC3 LD (HL),$00   ; Write #N$00 to *#REGhl.
- $6CC5 INC L         ; Increment #REGl by one.
- $6CC6 LD (HL),$B2   ; Write #N$B2 to *#REGhl.
- $6CC8 LD L,$21      ; #REGl=#N$21.
+ $6CB3 LD HL,$7815   ; {Write #N$00 to #R$7815.
+ $6CB6 LD (HL),$00   ; }
+ $6CB8 DEC L         ; {Write #N$00 to #R$7814.
+ $6CB9 LD (HL),$00   ; }
+ $6CBB LD L,$1A      ; {Write #N$01 to #R$781A.
+ $6CBD LD (HL),$01   ; }
+ $6CBF INC L         ; {Write #N$00 to #R$781B.
+ $6CC0 LD (HL),$00   ; }
+ $6CC2 INC L         ; {Write #R$B200 to #R$781C.
+ $6CC3 LD (HL),$00   ;
+ $6CC5 INC L         ;
+ $6CC6 LD (HL),$B2   ; }
+ $6CC8 LD L,$21      ; #REGhl=#R$7821.
+; Write #N$80 to #FOR$00,$02,,$01(n,#R($7821+n), , and ).
  $6CCA LD B,$03      ; #REGb=#N$03.
 *$6CCC LD (HL),$80   ; Write #N$80 to *#REGhl.
  $6CCE INC L         ; Increment #REGl by one.
  $6CCF DJNZ $6CCC    ; Decrease counter by one and loop back to #R$6CCC until
                      ; counter is zero.
+; Write #N$00 to #FOR$00,$07,,$01(n,#N($7824+n), , and ).
  $6CD1 LD B,$08      ; #REGb=#N$08.
 *$6CD3 LD (HL),$00   ; Write #N$00 to *#REGhl.
  $6CD5 INC L         ; Increment #REGl by one.
  $6CD6 DJNZ $6CD3    ; Decrease counter by one and loop back to #R$6CD3 until
                      ; counter is zero.
- $6CD8 INC L         ; {Increment #REGl by two.
- $6CD9 INC L         ; }
- $6CDA LD (HL),$13   ; Write #N$13 to *#REGhl.
- $6CDC INC L         ; Increment #REGl by one.
- $6CDD LD (HL),$A1   ; Write #N$A1 to *#REGhl.
- $6CDF INC L         ; Increment #REGl by one.
- $6CE0 LD (HL),$03   ; Write #N$03 to *#REGhl.
- $6CE2 INC L         ; Increment #REGl by one.
- $6CE3 LD (HL),$00   ; Write #N$00 to *#REGhl.
- $6CE5 INC L         ; Increment #REGl by one.
- $6CE6 LD (HL),$BB   ; Write #N$BB to *#REGhl.
- $6CE8 INC L         ; Increment #REGl by one.
- $6CE9 LD (HL),$0B   ; Write #N$0B to *#REGhl.
- $6CEB INC L         ; Increment #REGl by one.
- $6CEC LD (HL),$00   ; Write #N$00 to *#REGhl.
+ $6CD8 INC L         ; {Write #R$A101(#N$A113) to *#R$782E.
+ $6CD9 INC L         ;
+ $6CDA LD (HL),$13   ;
+ $6CDC INC L         ;
+ $6CDD LD (HL),$A1   ; }
+ $6CDF INC L         ; {Write #N$03 to *#R$7830.
+ $6CE0 LD (HL),$03   ; }
+ $6CE2 INC L         ; {Write #N$BB00 to *#R$7831.
+ $6CE3 LD (HL),$00   ;
+ $6CE5 INC L         ;
+ $6CE6 LD (HL),$BB   ; }
+ $6CE8 INC L         ; {Write #N$0B to *#R$7833.
+ $6CE9 LD (HL),$0B   ; }
+ $6CEB INC L         ; {Write #N$00 to *#R$7834.
+ $6CEC LD (HL),$00   ; }
  $6CEE CALL $6500    ; Call #R$6500.
  $6CF1 LD L,$10      ; #REGl=#N$10.
 ; See #R$E800.
@@ -2615,15 +2651,27 @@ c$6F62 LD ($782E),HL ; Write #REGhl to *#R$782E.
 ; Handler: Hit Hump
 @label=Handler_HitHump
 c$6F7D LD A,($7834)  ; #REGa=*#R$7834.
+; #TABLE(default,centre,centre,centre,centre)
+; { =h Direction | =h Wheelie Range | =h Byte | =h Bits }
+; { =r4 Left | =h Normal (no wheelie) | #N$48 | #EVAL($48,$02,$08) }
+; { =h Mid-Low | #N$49 | #EVAL($49,$02,$08) }
+; { =h Mid-High | #N$4A | #EVAL($4A,$02,$08) }
+; { =h Max (full wheelie) | #N$4B | #EVAL($4B,$02,$08) }
+; { =r4 Right | =h Normal (no wheelie) | #N$08 | #EVAL($08,$02,$08) }
+; { =h Mid-Low | #N$09 | #EVAL($09,$02,$08) }
+; { =h Mid-High | #N$0A | #EVAL($0A,$02,$08) }
+; { =h Max (full wheelie) | #N$0B | #EVAL($0B,$02,$08) }
+; TABLE#
  $6F80 AND %00000111 ; Keep only bits 0-2.
  $6F82 RET NZ        ; Return if the result is not zero.
  $6F83 LD A,$05      ; {Write #N$05 to *#R$782A.
  $6F85 LD ($782A),A  ; }
  $6F88 LD A,($7834)  ; #REGa=*#R$7834.
- $6F8B AND %01000000 ; Keep only bit 6.
+ $6F8B AND %01000000 ; Keep only the direction bit (bit 6).
  $6F8D LD HL,$BD0E   ; #REGhl=#R$BD0E.
- $6F90 JR Z,$6F94    ; Jump to #R$6F94 if {} is zero.
+ $6F90 JR Z,$6F94    ; Jump to #R$6F94 if the player is moving right.
  $6F92 LD L,$21      ; #REGl=#N$21.
+@label=HitHumpMovingRight
 *$6F94 LD ($783A),HL ; Write #REGhl to *#R$783A.
  $6F97 RET           ; Return.
 
@@ -2708,11 +2756,12 @@ c$6FC0 LD DE,$0000   ; #REGde=#N($0000,$04,$04).
  $6FDA JR NZ,$6FDE   ; moving right).}
  $6FDC LD E,$65      ; #REGe=#N$65.
 @label=Initialise_CrashJumpTooFast
-*$6FDE RLCA          ; RLCA.
+*$6FDE RLCA          ; Rotate the direction bit into the carry flag.
  $6FDF LD HL,($782E) ; #REGhl=*#R$782E.
- $6FE2 JR C,$6FE6    ; Jump to #R$6FE6 if {} is lower.
+ $6FE2 JR C,$6FE6    ; Jump to #R$6FE6 if the player is moving right.
  $6FE4 DEC L         ; {Decrease #REGl by two.
  $6FE5 DEC L         ; }
+@label=CrashJumpTooFastMovingRight
 *$6FE6 INC L         ; Increment #REGl by one.
  $6FE7 LD A,(HL)     ; #REGa=*#REGhl.
  $6FE8 LD HL,$BD34   ; #REGhl=#R$BD34.
@@ -2840,18 +2889,18 @@ u$7087 DEFB $00
 ; Routine at 7088
 ;
 ; Used by the routine at #R$64AA.
-c$7088 CALL $6400    ; Call #R$6400.
- $708B LD E,A        ; #REGe=#REGa.
+c$7088 CALL $6400    ; {#REGe=random number between #N$00-#N$FF.
+ $708B LD E,A        ; }
  $708C LD A,H        ; #REGa=#REGh.
 *$708D CP $9F        ; {Jump to #R$709B if #REGa is lower than #N$9F.
  $708F JR C,$709B    ; }
  $7091 JR Z,$7097    ; Jump to #R$7097 if #REGa is equal to #N$9F.
  $7093 SUB $05       ; #REGa-=#N$05.
  $7095 JR $708D      ; Jump to #R$708D.
-*$7097 LD A,E        ; #REGa=#REGe.
- $7098 AND %00000001 ; Keep only bit 0.
+*$7097 LD A,E        ; {#REGa=bit 0 of the random number stored in #REGe (so
+ $7098 AND %00000001 ; ensure it is either #N$00 or #N$01).}
  $709A RET           ; Return.
-*$709B LD A,E        ; #REGa=#REGe.
+*$709B LD A,E        ; #REGa=the random number stored in #REGe.
  $709C RET           ; Return.
 
 ; Routine at 709D
@@ -3135,6 +3184,7 @@ c$7200 LD HL,$7820   ; #REGhl=#R$7820.
  $7208 INC (HL)      ; Increment *#REGhl by one.
  $7209 INC A         ; Increment #REGa by one.
 ; #TABLE(default,centre,centre)
+; { =h Level | =h Data }
 ; { #N$00 | #R$E600 }
 ; { #N$01 | #R$E640 }
 ; { #N$02 | #R$E680 }
@@ -3144,7 +3194,7 @@ c$7200 LD HL,$7820   ; #REGhl=#R$7820.
 ; { #N$06 | #R$E780 }
 ; { #N$07 | #R$E7C0 }
 ; TABLE#
-@label=InitialiseLevel
+@label=InitialiseLevelTodo
 *$720A RRCA          ; {Rotate #REGa right two positions (bits 2 to 5 are now
  $720B RRCA          ; in positions 0 to 3) using the carry flag.}
  $720C LD L,A        ; #REGl=#REGa.
@@ -3191,16 +3241,16 @@ c$7200 LD HL,$7820   ; #REGhl=#R$7820.
  $7245 LD B,$0A      ; #REGb=#N$0A.
 *$7247 PUSH BC       ; Stash #REGbc on the stack.
  $7248 LD B,$08      ; #REGb=#N$08.
-*$724A CALL $6400    ; Call #R$6400.
- $724D AND %00011111 ; Keep only bits 0-4.
+*$724A CALL $6400    ; {#REGa=random number between #N$00-#N$1F.
+ $724D AND %00011111 ; }
  $724F CP $1F        ; {Jump to #R$724A if #REGa is equal to #N$1F.
  $7251 JR Z,$724A    ; }
  $7253 CP $08        ; {Jump to #R$724A if #REGa is lower than #N$08.
  $7255 JR C,$724A    ; }
  $7257 LD L,A        ; #REGl=#REGa.
- $7258 CALL $6400    ; Call #R$6400.
- $725B AND %00000011 ; Keep only bits 0-1.
- $725D LD H,A        ; #REGh=#REGa.
+ $7258 CALL $6400    ; {#REGh=random number between #N$00-#N$03.
+ $725B AND %00000011 ;
+ $725D LD H,A        ; }
  $725E ADD HL,DE     ; #REGhl+=#REGde.
  $725F LD A,(HL)     ; #REGa=*#REGhl.
  $7260 DEC A         ; Decrease #REGa by one.
@@ -3804,6 +3854,7 @@ c$751A LD HL,($782E) ; #REGhl=*#R$782E.
                      ; #R$7525).
  $752B LD E,$01      ; Alter awarded score to #N($0001,$04,$04).
 ; Award the score.
+@label=HumpJumpAwardScore
 *$752D LD HL,($7844) ; {#REGhl=*#R$7844+#REGde.
  $7530 ADD HL,DE     ; }
  $7531 LD ($7844),HL ; Write #REGhl to *#R$7844.
@@ -3855,8 +3906,10 @@ c$754F CALL $7535    ; Call #R$7535.
  $755D EXX           ; Switch back to the normal registers.
  $755E SUB C         ; #REGa-=#REGc.
  $755F JR Z,$756B    ; Jump to #R$756B if #REGa is zero.
+; Blank out where the lives would print.
  $7561 ADD A,A       ; {#REGb=#REGa*#N$02.
  $7562 LD B,A        ; }
+@label=PrintBlank_Loop
 *$7563 EXX           ; Switch to the shadow registers.
  $7564 LD L,$64      ; #REGl=#R$7864(#N$64).
  $7566 CALL $74AA    ; Call #R$74AA.
@@ -4285,8 +4338,10 @@ c$77E0 NOP           ; {No operation.
  $77F6 JP $7552      ; Jump to #R$7552.
 
 ; Data block at 77F9
-b$77F9 DEFB $00,$05,$00,$03,$02,$02,$02,$00
- $7801 DEFB $03
+b$77F9 DEFB $00,$05,$00,$03,$02,$02,$02
+
+; Data block at 7800
+b$7800 DEFB $00,$03
 
 ; Data block at 7802
 b$7802 DEFB $00,$03,$03,$00,$00,$01,$00,$04
@@ -4359,17 +4414,21 @@ u$782B DEFB $00
 @label=ControlMethod_Pointer
 g$782C DEFW $6828
 
-; Game status buffer entry at 782E
-g$782E DEFB $00,$00
+; Level Progress Pointer
+@label=LevelProgressPointer
+g$782E DEFW $0000
 
 ; Game status buffer entry at 7830
 g$7830 DEFB $00
 
 ; Game status buffer entry at 7831
 g$7831 DEFW $0303
- $7833 DEFB $00
 
-; Game status buffer entry at 7834
+; Game status buffer entry at 7833
+g$7833 DEFB $00
+
+; Wheelie
+@label=Wheelie
 g$7834 DEFB $00
 
 ; Game status buffer entry at 7835
@@ -5028,7 +5087,8 @@ b$78E0 DEFB $00,$55,$00,$00,$00,$00,$00,$00
  $8950 DEFB $00,$00,$FA,$00,$00,$00,$FC,$00
  $8958 DEFB $00,$00,$F4,$00,$00,$00,$FD,$00
 
-; Data block at 8960
+; Level Data?
+@label=Data_Level1
 b$8960 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $8968 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $8970 DEFB $00,$00,$00,$00,$00,$00,$00,$00
@@ -5690,7 +5750,8 @@ b$8960 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $9DF0 DEFB $01,$01,$01,$01,$49,$22,$00,$00
  $9DF8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
-; Data block at 9E00
+; Level Buffer?
+@label=LevelBuffer
 b$9E00 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $9E08 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $9E10 DEFB $78,$78,$78,$78,$78,$78,$78,$78
@@ -9548,9 +9609,9 @@ c$E80E LD HL,$FFFF   ; {#REGsp=#N$FFFF.
  $E81E LD ($782C),HL ; }
  $E821 CALL $749C    ; Call #R$749C.
  $E824 CALL $E8E4    ; Call #R$E8E4.
- $E827 XOR A         ; #REGa=#N$00.
- $E828 DEC A         ; Decrease #REGa by one.
- $E829 LD ($7820),A  ; Write #REGa to *#R$7820.
+ $E827 XOR A         ; {Write #N$FF to *#R$7820.
+ $E828 DEC A         ;
+ $E829 LD ($7820),A  ; }
  $E82C CALL $E891    ; Call #R$E891.
 ; Wait for keyboard input.
 @label=StartScreen_Input
@@ -10053,13 +10114,18 @@ u$EC6D DEFB $00
 ; Routine at EC6E
 ;
 ; Used by the routine at #R$ECAB.
-c$EC6E LD (IY+$07),$00 ; Write #N$07 to *#REGiy+#N$07.
- $EC72 SET 3,(IY+$30)  ; Set bit 3 of *#REGix+#N$30.
+c$EC6E LD (IY+$07),$00 ; #HTML(Write #N$00 (cursor type "C", "K" or "L") to
+                       ; *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
+ $EC72 SET 3,(IY+$30)  ; #HTML(Set CAPS LOCK on, using bit 3 of *<a
+                       ; rel="noopener nofollow"
+                       ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>).
  $EC76 LD HL,$5C3B     ; #HTML(#REGhl=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
- $EC79 RES 5,(HL)      ; Reset bit 5 of *#REGhl.
-*$EC7B BIT 5,(HL)      ; Test bit 5 of *#REGhl.
- $EC7D JR Z,$EC7B      ; Jump to #R$EC7B if {} is zero.
+ $EC79 RES 5,(HL)      ; #HTML(Reset bit 5 of
+                       ; *<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
+                       ; which resets "when a new key has been pressed".)
+*$EC7B BIT 5,(HL)      ; {Jump to #R$EC7B if no key was pressed.
+ $EC7D JR Z,$EC7B      ; }
  $EC7F LD A,($5C08)    ; #HTML(#REGa=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
  $EC82 CP $80          ; {Jump to #N$EC6F if #REGa is higher than #N$80.
@@ -10387,10 +10453,14 @@ u$EE09 DEFB $78,$78,$78,$78,$78,$78,$78,$78
 
 ; Messaging: Code Entry
 @label=Messaging_CodeEntry
-t$EE14 DEFM "  KEY IN 1ST CHARACTER OF CODE  "
- $EE34 DEFM "(JUST PRESS 'ENTER' FOR LEVEL 1)"
+t$EE14 DEFM "  KEY IN 1ST CHARACTER OF CODE  " ; {#TABLE(default,centre)
+ $EE34 DEFM "(JUST PRESS 'ENTER' FOR LEVEL 1)" ; #FOR$00,$20,$20(n,{
+                                               ; "#STR(#PC+n,$04,$20)" }, )
+                                               ; TABLE#}
+
+; Messaging: Code Mistake
 @label=Messaging_Mistake
- $EE54 DEFM "      MISTAKE - TRY AGAIN       "
+t$EE54 DEFM "      MISTAKE - TRY AGAIN       " ; "#STR(#PC,$04,$20)".
 
 ; Messaging: How To Play Wheelie
 @label=Messaging_HowToPlay

@@ -28,6 +28,7 @@ b $5D27
 c $6400 Get Random Number
 @ $6400 label=GetRandomNumber
 R $6400 O:A Random number
+N $6400 Random numbers are just data pulled from addresses between #N$7900-#N$7AFF (sequentially).
   $6400,$01 Stash #REGhl on the stack.
   $6401,$03 #REGhl=*#R$781E.
   $6404,$01 #REGa=*#REGhl.
@@ -35,7 +36,9 @@ R $6400 O:A Random number
   $6406,$02 Jump to #R$640F if #REGl is not zero.
   $6408,$01 Increment #REGh by one.
   $6409,$04 Jump to #R$640F if bit 2 of #REGh is not set.
+N $640D Bit 2 is set, this means that #REGh has reached #N$7C so pull the range back down to #N$79.
   $640D,$02 #REGh=#N$79.
+@ $640F label=UpdateRandomNumberSeed
   $640F,$03 Write #REGhl to *#R$781E.
   $6412,$01 Restore #REGhl from the stack.
   $6413,$01 Return.
@@ -54,28 +57,107 @@ M $6417,$09 #REGh=random number between #N$79-#N$7B.
   $6420,$03 Write #REGhl to *#R$781E.
   $6423,$01 Return.
 
-c $6424
-  $6424,$02 #REGc=#N$05.
-  $6426,$02 #REGb=#N$20.
-  $6428,$01 #REGa=*#REGhl.
-  $6429,$01 Increment #REGhl by one.
-  $642A,$01 Write #REGa to *#REGde.
-  $642B,$01 Increment #REGe by one.
-  $642C,$02 Decrease counter by one and loop back to #R$6428 until counter is zero.
-  $642E,$01 Decrease #REGe by one.
+c $6424 Copy Level Data to Level Buffer
+@ $6424 label=CopyLevelDataToBuffer
+R $6424 HL Source data pointer
+R $6424 DE Destination buffer pointer
+  $6424,$02 Set a counter in #REGc for #N$05 rows to copy.
+@ $6426 label=CopyLevelDataToBuffer_CopyRow
+  $6426,$02 Set a counter in #REGb for #N$20 bytes per row.
+@ $6428 label=CopyLevelDataToBuffer_CopyByte
+  $6428,$01 Fetch a byte from the source data.
+  $6429,$01 Move to the next source data byte.
+  $642A,$01 Write the byte to the destination buffer.
+  $642B,$01 Move to the next destination buffer position.
+  $642C,$02 Decrease the bytes-per-row counter by one and loop back to #R$6428
+. until the whole row has been copied.
+N $642E Handle updating the destination pointer positioning after each row.
+  $642E,$01 Step back one position.
+M $642F,$04 Keep only the upper 3 bits of the #REGe co-ordinate.
   $642F,$01 #REGa=#REGe.
   $6430,$02,b$01 Keep only bits 5-7.
   $6432,$01 #REGe=#REGa.
-  $6433,$01 Increment #REGd by one.
-  $6434,$01 Decrease #REGc by one.
-  $6435,$02 Jump to #R$6426 until #REGc is zero.
-  $6437,$02 #REGa+=#N$20.
-  $6439,$01 #REGe=#REGa.
-  $643A,$01 Return if #REGa is zero.
+  $6433,$01 Move down one row.
+  $6434,$01 Decrease the row counter by one.
+  $6435,$02 Jump back to #R$6426 until all the rows have been copied.
+N $6437 Adjust the destination pointer after copying a complete block.
+  $6437,$02 Move to the next block horizontally.
+  $6439,$01 Load the new horizontal position into #REGe.
+  $643A,$01 Return if #REGe wrapped around to #N$00 (reached the end of the
+. buffer).
+N $643B Move the destination pointer back up #N$05 rows to the original
+. vertical position.
   $643B,$04 #REGd-=#N$05.
   $643F,$01 Return.
 
 c $6440
+  $6440,$02 #REGa=#N$0A.
+  $6442,$01 No operation.
+  $6443,$01 #REGc=#REGa.
+  $6444,$01 Increment #REGb by one.
+  $6445,$01 Increment #REGc by one.
+  $6446,$03 #REGhl=#R$9E00(#N$A01E).
+  $6449,$01 Stash #REGhl on the stack.
+  $644A,$03 #REGde=#R$B400.
+  $644D,$01 Decrease *#REGhl by one.
+  $644E,$02 Jump to #R$6458 if *#REGhl is zero.
+  $6450,$02 #REGe=#N$24.
+  $6452,$01 Increment #REGh by one.
+  $6453,$01 Decrease *#REGhl by one.
+  $6454,$02 Jump to #R$6458 if *#REGhl is zero.
+  $6456,$02 #REGe=#N$48.
+  $6458,$01 Restore #REGhl from the stack.
+  $6459,$01 Stash #REGhl on the stack.
+  $645A,$02 Increment #REGl by two.
+  $645C,$02 Jump to #R$6462 if #REGl is not zero.
+  $645E,$01 #REGa=#REGh.
+  $645F,$02 #REGa+=#N$05.
+  $6461,$01 #REGh=#REGa.
+  $6462,$01 Increment #REGl by one.
+  $6463,$01 #REGa=*#REGhl.
+  $6464,$01 Decrease #REGa by one.
+  $6465,$02 Jump to #R$6470 if #REGa is zero.
+  $6467,$01 Increment #REGh by one.
+  $6468,$01 #REGa=*#REGhl.
+  $6469,$01 Decrease #REGa by one.
+  $646A,$02 #REGa=#N$0C.
+  $646C,$02 Jump to #R$6470 if #REGa was zero on line #R$6469.
+  $646E,$02 #REGa=#N$18.
+  $6470,$01 #REGa+=#REGe.
+  $6471,$01 #REGe=#REGa.
+  $6472,$01 Restore #REGhl from the stack.
+  $6473,$01 Decrease #REGh by one.
+  $6474,$02 #REGb=#N$04.
+  $6476,$01 #REGa=*#REGde.
+  $6477,$01 Write #REGa to *#REGhl.
+  $6478,$01 Increment #REGh by one.
+  $6479,$01 Increment #REGe by one.
+  $647A,$02 Decrease counter by one and loop back to #R$6476 until counter is zero.
+  $647C,$04 Decrease #REGh by four.
+  $6480,$01 Increment #REGl by one.
+  $6481,$02 #REGb=#N$04.
+  $6483,$01 #REGa=*#REGde.
+  $6484,$01 Write #REGa to *#REGhl.
+  $6485,$01 Increment #REGh by one.
+  $6486,$01 Increment #REGe by one.
+  $6487,$02 Decrease counter by one and loop back to #R$6483 until counter is zero.
+  $6489,$01 Increment #REGh by one.
+  $648A,$01 Increment #REGl by one.
+  $648B,$02 Jump to #R$6491 if #REGl is zero.
+  $648D,$01 #REGa=#REGh.
+  $648E,$02 #REGa-=#N$05.
+  $6490,$01 #REGh=#REGa.
+  $6491,$02 #REGb=#N$04.
+  $6493,$01 #REGa=*#REGde.
+  $6494,$01 Write #REGa to *#REGhl.
+  $6495,$01 Increment #REGh by one.
+  $6496,$01 Increment #REGe by one.
+  $6497,$02 Decrease counter by one and loop back to #R$6493 until counter is zero.
+  $6499,$03 Decrease #REGh by three.
+  $649C,$04 #REGl+=#N$1E.
+  $64A0,$01 Decrease #REGc by one.
+  $64A1,$02 Jump to #R$6449 until #REGc is zero.
+  $64A3,$01 Return.
 
 u $64A4
 
@@ -83,7 +165,7 @@ c $64AA
   $64AA,$03 #REGhl=#R$9E00.
   $64AD,$03 #REGbc=#N$0A00.
   $64B0,$02 #REGa=#N$32.
-  $64B2,$02 CPIR.
+  $64B2,$02 Starting from #R$9E00, find the first instance of #N$32 in a maximum of #N$0A00 bytes.
   $64B4,$03 Return if #REGbc is zero.
   $64B7,$02 Stash #REGhl and #REGbc on the stack.
   $64B9,$01 #REGa=#N$00.
@@ -93,6 +175,7 @@ c $64AA
   $64BF,$01 Decrease #REGl by one.
   $64C0,$03 Call #R$6400.
   $64C3,$02,b$01 Keep only bits 0-2.
+M $64C0,$05 #REGa=random number between #N$00 and #N$07.
   $64C5,$03 Jump to #R$64F4 if #REGa is lower than #REGe.
   $64C8,$03 Call #R$7088.
   $64CB,$02,b$01 Keep only bits 0-2.
@@ -130,7 +213,11 @@ c $64AA
 
 u $64FD
 
-c $6500
+c $6500 Initialise Level
+@ $6500 label=InitialiseLevel
+N $6500 #PUSHS #UDGTABLE {
+. #SIM(start=$6CAA,stop=$6562)#SCR$02(level-1)
+. } UDGTABLE# #POPS
   $6500,$03 #REGde=#R$9E00.
   $6503,$03 #REGhl=#R$8960.
   $6506,$03 Call #R$6424.
@@ -189,8 +276,47 @@ c $6500
 u $6563
 
 c $6564
+  $6564,$01 #REGa+=#REGa.
+  $6565,$01 #REGa+=#REGa.
+  $6566,$01 #REGc=#REGa.
+  $6567,$01 Switch to the shadow registers.
+  $6568,$03 #REGbc=#N$05FF.
+  $656B,$03 #REGde=#R$7800.
+  $656E,$01 Switch back to the normal registers.
+  $656F,$01 #REGa=*#REGde.
+  $6570,$01 Increment #REGd by one.
+  $6571,$03 RRCA.
+  $6574,$01 #REGl=#REGa.
+  $6575,$02,b$01 Keep only bits 0-4.
+  $6577,$02 #REGa+=#N$80.
+  $6579,$01 #REGh=#REGa.
+  $657A,$01 #REGa=#REGl.
+  $657B,$02,b$01 Keep only bits 5-7.
+  $657D,$01 #REGa+=#REGc.
+  $657E,$01 #REGl=#REGa.
+  $657F,$01 Stash #REGhl on the stack.
+  $6580,$01 Switch to the shadow registers.
+  $6581,$01 Restore #REGhl from the stack.
+  $6582,$08 LDI.
+  $658A,$02 Decrease counter by one and loop back to #R$656E until counter is zero.
+  $658C,$01 #REGa=*#REGde.
+  $658D,$01 Increment #REGa by one.
+  $658E,$01 Write #REGa to *#REGde.
+  $658F,$01 Increment #REGe by one.
+  $6590,$01 #REGa=*#REGde.
+  $6591,$01 Switch to the shadow registers.
+  $6592,$01 #REGa+=#REGb.
+  $6593,$01 Switch to the shadow registers.
+  $6594,$01 Write #REGa to *#REGde.
+  $6595,$02 #REGe=#N$02.
+  $6597,$02 #REGb=#N$10.
+  $6599,$01 Switch to the shadow registers.
+  $659A,$01 Return.
 
-c $659C
+u $659B
+
+c $659C Scroll Playarea
+@ $659C label=ScrollPlayarea
   $659C,$03 #REGhl=*#R$7817.
   $659F,$01 #REGd=#REGh.
   $65A0,$01 #REGe=#REGl.
@@ -467,8 +593,8 @@ c $678C
 
 u $67DE
 
-c $67E9 Controller: Scroll Playarea
-@ $67E9 label=Controller_ScrollPlayarea
+c $67E9 Draw Playarea
+@ $67E9 label=DrawPlayarea
   $67E9,$07 Return if *#R$7814 is not equal to #N$02.
   $67F0,$02 Write #N$00 to *#REGhl.
   $67F2,$01 Increment #REGhl by one.
@@ -485,13 +611,13 @@ c $6800
   $6809,$04 #REGh-=#N$05.
   $680D,$03 Write #REGhl to *#R$7817.
   $6810,$06 Write #N($0000,$04,$04) to *#R$7814.
-  $6816,$02 #REGb=#N$20.
-  $6818,$01 Stash #REGbc on the stack.
+  $6816,$02 #REGb=#N$20 (counter; screen columns).
+  $6818,$01 Stash the screen column counter on the stack.
   $6819,$03 Call #R$659C.
   $681C,$03 Call #R$659C.
   $681F,$03 Call #R$67E9.
-  $6822,$01 Restore #REGbc from the stack.
-  $6823,$02 Decrease counter by one and loop back to #R$6818 until counter is zero.
+  $6822,$01 Restore the screen column counter from the stack.
+  $6823,$02 Decrease the screen column counter by one and loop back to #R$6818 until counter is zero.
   $6825,$01 Return.
 
 u $6826
@@ -951,42 +1077,29 @@ c $6C00
 c $6CAA Game Initialisation
 @ $6CAA label=GameInitialisation
   $6CAA,$03 Call #R$75AA.
+@ $6CAD label=SetNewGameStates
   $6CAD,$06 Write #N$3400 to *#R$783C.
-  $6CB3,$03 #REGhl=#R$7815.
-  $6CB6,$02 Write #N$00 to *#REGhl.
-  $6CB8,$01 Decrease #REGl by one.
-  $6CB9,$02 Write #N$00 to *#REGhl.
-  $6CBB,$02 #REGl=#N$1A.
-  $6CBD,$02 Write #N$01 to *#REGhl.
-  $6CBF,$01 Increment #REGl by one.
-  $6CC0,$02 Write #N$00 to *#REGhl.
-  $6CC2,$01 Increment #REGl by one.
-  $6CC3,$02 Write #N$00 to *#REGhl.
-  $6CC5,$01 Increment #REGl by one.
-  $6CC6,$02 Write #N$B2 to *#REGhl.
-  $6CC8,$02 #REGl=#N$21.
+  $6CB3,$05 Write #N$00 to #R$7815.
+  $6CB8,$03 Write #N$00 to #R$7814.
+  $6CBB,$04 Write #N$01 to #R$781A.
+  $6CBF,$03 Write #N$00 to #R$781B.
+  $6CC2,$06 Write #R$B200 to #R$781C.
+  $6CC8,$02 #REGhl=#R$7821.
+N $6CCA Write #N$80 to #FOR$00,$02,,$01(n,#R($7821+n), , and ).
   $6CCA,$02 #REGb=#N$03.
   $6CCC,$02 Write #N$80 to *#REGhl.
   $6CCE,$01 Increment #REGl by one.
   $6CCF,$02 Decrease counter by one and loop back to #R$6CCC until counter is zero.
+N $6CD1 Write #N$00 to #FOR$00,$07,,$01(n,#N($7824+n), , and ).
   $6CD1,$02 #REGb=#N$08.
   $6CD3,$02 Write #N$00 to *#REGhl.
   $6CD5,$01 Increment #REGl by one.
   $6CD6,$02 Decrease counter by one and loop back to #R$6CD3 until counter is zero.
-  $6CD8,$02 Increment #REGl by two.
-  $6CDA,$02 Write #N$13 to *#REGhl.
-  $6CDC,$01 Increment #REGl by one.
-  $6CDD,$02 Write #N$A1 to *#REGhl.
-  $6CDF,$01 Increment #REGl by one.
-  $6CE0,$02 Write #N$03 to *#REGhl.
-  $6CE2,$01 Increment #REGl by one.
-  $6CE3,$02 Write #N$00 to *#REGhl.
-  $6CE5,$01 Increment #REGl by one.
-  $6CE6,$02 Write #N$BB to *#REGhl.
-  $6CE8,$01 Increment #REGl by one.
-  $6CE9,$02 Write #N$0B to *#REGhl.
-  $6CEB,$01 Increment #REGl by one.
-  $6CEC,$02 Write #N$00 to *#REGhl.
+  $6CD8,$07 Write #R$A101(#N$A113) to *#R$782E.
+  $6CDF,$03 Write #N$03 to *#R$7830.
+  $6CE2,$06 Write #N$BB00 to *#R$7831.
+  $6CE8,$03 Write #N$0B to *#R$7833.
+  $6CEB,$03 Write #N$00 to *#R$7834.
   $6CEE,$03 Call #R$6500.
   $6CF1,$02 #REGl=#N$10.
 N $6CF3 See #R$E800.
@@ -1275,14 +1388,26 @@ c $6F62
 c $6F7D Handler: Hit Hump
 @ $6F7D label=Handler_HitHump
   $6F7D,$03 #REGa=*#R$7834.
+N $6F80 #TABLE(default,centre,centre,centre,centre)
+. { =h Direction | =h Wheelie Range | =h Byte | =h Bits }
+. { =r4 Left | =h Normal (no wheelie) | #N$48 | #EVAL($48,$02,$08) }
+. { =h Mid-Low | #N$49 | #EVAL($49,$02,$08) }
+. { =h Mid-High | #N$4A | #EVAL($4A,$02,$08) }
+. { =h Max (full wheelie) | #N$4B | #EVAL($4B,$02,$08) }
+. { =r4 Right | =h Normal (no wheelie) | #N$08 | #EVAL($08,$02,$08) }
+. { =h Mid-Low | #N$09 | #EVAL($09,$02,$08) }
+. { =h Mid-High | #N$0A | #EVAL($0A,$02,$08) }
+. { =h Max (full wheelie) | #N$0B | #EVAL($0B,$02,$08) }
+. TABLE#
   $6F80,$02,b$01 Keep only bits 0-2.
   $6F82,$01 Return if the result is not zero.
   $6F83,$05 Write #N$05 to *#R$782A.
   $6F88,$03 #REGa=*#R$7834.
-  $6F8B,$02,b$01 Keep only bit 6.
+  $6F8B,$02,b$01 Keep only the direction bit (bit 6).
   $6F8D,$03 #REGhl=#R$BD0E.
-  $6F90,$02 Jump to #R$6F94 if {} is zero.
+  $6F90,$02 Jump to #R$6F94 if the player is moving right.
   $6F92,$02 #REGl=#N$21.
+@ $6F94 label=HitHumpMovingRight
   $6F94,$03 Write #REGhl to *#R$783A.
   $6F97,$01 Return.
 
@@ -1342,10 +1467,11 @@ N $6FD2 The parameters are again, quite wide; #TABLE(default,centre,centre,centr
   $6FD8,$04 Jump to #R$6FDE if *#R$7822 is higher than #N$80 (i.e. moving right).
   $6FDC,$02 #REGe=#N$65.
 @ $6FDE label=Initialise_CrashJumpTooFast
-  $6FDE,$01 RLCA.
+  $6FDE,$01 Rotate the direction bit into the carry flag.
   $6FDF,$03 #REGhl=*#R$782E.
-  $6FE2,$02 Jump to #R$6FE6 if {} is lower.
+  $6FE2,$02 Jump to #R$6FE6 if the player is moving right.
   $6FE4,$02 Decrease #REGl by two.
+@ $6FE6 label=CrashJumpTooFastMovingRight
   $6FE6,$01 Increment #REGl by one.
   $6FE7,$01 #REGa=*#REGhl.
   $6FE8,$03 #REGhl=#R$BD34.
@@ -1441,6 +1567,7 @@ u $7087
 c $7088
   $7088,$03 Call #R$6400.
   $708B,$01 #REGe=#REGa.
+M $7088,$04 #REGe=random number between #N$00-#N$FF.
   $708C,$01 #REGa=#REGh.
   $708D,$04 Jump to #R$709B if #REGa is lower than #N$9F.
   $7091,$02 Jump to #R$7097 if #REGa is equal to #N$9F.
@@ -1448,8 +1575,9 @@ c $7088
   $7095,$02 Jump to #R$708D.
   $7097,$01 #REGa=#REGe.
   $7098,$02,b$01 Keep only bit 0.
+M $7097,$03 #REGa=bit 0 of the random number stored in #REGe (so ensure it is either #N$00 or #N$01).
   $709A,$01 Return.
-  $709B,$01 #REGa=#REGe.
+  $709B,$01 #REGa=the random number stored in #REGe.
   $709C,$01 Return.
 
 c $709D
@@ -1472,6 +1600,7 @@ N $7208 Increments both #R$7820 and #REGa as we use this as an offset for pointi
   $7208,$01 Increment *#REGhl by one.
   $7209,$01 Increment #REGa by one.
 N $720A #TABLE(default,centre,centre)
+. { =h Level | =h Data }
 . { #N$00 | #R$E600 }
 . { #N$01 | #R$E640 }
 . { #N$02 | #R$E680 }
@@ -1481,7 +1610,7 @@ N $720A #TABLE(default,centre,centre)
 . { #N$06 | #R$E780 }
 . { #N$07 | #R$E7C0 }
 . TABLE#
-@ $720A label=InitialiseLevel
+@ $720A label=InitialiseLevelTodo
   $720A,$02 Rotate #REGa right two positions (bits 2 to 5 are now in positions 0 to 3) using the carry flag.
   $720C,$01 #REGl=#REGa.
   $720D,$02,b$01 Keep only bits 0-1.
@@ -1525,12 +1654,14 @@ N $720A #TABLE(default,centre,centre)
   $7248,$02 #REGb=#N$08.
   $724A,$03 Call #R$6400.
   $724D,$02,b$01 Keep only bits 0-4.
+M $724A,$05 #REGa=random number between #N$00-#N$1F.
   $724F,$04 Jump to #R$724A if #REGa is equal to #N$1F.
   $7253,$04 Jump to #R$724A if #REGa is lower than #N$08.
   $7257,$01 #REGl=#REGa.
   $7258,$03 Call #R$6400.
   $725B,$02,b$01 Keep only bits 0-1.
   $725D,$01 #REGh=#REGa.
+M $7258,$06 #REGh=random number between #N$00-#N$03.
   $725E,$01 #REGhl+=#REGde.
   $725F,$01 #REGa=*#REGhl.
   $7260,$01 Decrease #REGa by one.
@@ -1978,6 +2109,7 @@ c $751A Handler: Hump Jump
   $7529,$02 Jump to #R$752D if #REGa was higher than #N$46 (on line #R$7525).
   $752B,$02 Alter awarded score to #N($0001,$04,$04).
 N $752D Award the score.
+@ $752D label=HumpJumpAwardScore
   $752D,$04 #REGhl=*#R$7844+#REGde.
   $7531,$03 Write #REGhl to *#R$7844.
   $7534,$01 Return.
@@ -2016,7 +2148,9 @@ N $7556 Compare the players current lives with the maximum number of lives (#N$0
   $755D,$01 Switch back to the normal registers.
   $755E,$01 #REGa-=#REGc.
   $755F,$02 Jump to #R$756B if #REGa is zero.
+N $7561 Blank out where the lives would print.
   $7561,$02 #REGb=#REGa*#N$02.
+@ $7563 label=PrintBlank_Loop
   $7563,$01 Switch to the shadow registers.
   $7564,$02 #REGl=#R$7864(#N$64).
   $7566,$03 Call #R$74AA.
@@ -2349,6 +2483,8 @@ N $77F1 Set the player lives to #N$01 this is decreased to #N$00 by #R$7552 so i
 
 b $77F9
 
+b $7800
+
 b $7802
 
 g $7814
@@ -2408,7 +2544,9 @@ g $782C Control Method Pointer
 @ $782C label=ControlMethod_Pointer
 W $782C,$02
 
-g $782E
+g $782E Level Progress Pointer
+@ $782E label=LevelProgressPointer
+W $782E,$02
 
 g $7830
 B $7830,$01
@@ -2416,8 +2554,12 @@ B $7830,$01
 g $7831
 W $7831,$02
 
-g $7834
-B $7834
+g $7833
+B $7833,$01
+
+g $7834 Wheelie
+@ $7834 label=Wheelie
+B $7834,$01
 
 g $7835
 
@@ -2516,9 +2658,11 @@ b $78CC
 
 b $78E0
 
-b $8960
+b $8960 Level Data?
+@ $8960 label=Data_Level1
 
-b $9E00
+b $9E00 Level Buffer?
+@ $9E00 label=LevelBuffer
 
 b $A101
 
@@ -4003,6 +4147,7 @@ c $E80E Initialise Game
   $E827,$01 #REGa=#N$00.
   $E828,$01 Decrease #REGa by one.
   $E829,$03 Write #REGa to *#R$7820.
+M $E827,$05 Write #N$FF to *#R$7820.
   $E82C,$03 Call #R$E891.
 N $E82F Wait for keyboard input.
 @ $E82F label=StartScreen_Input
@@ -4366,12 +4511,14 @@ N $EC68 #HTML(#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
 u $EC6D
 
 c $EC6E
-  $EC6E,$04 Write #N$07 to *#REGiy+#N$07.
-  $EC72,$04 Set bit 3 of *#REGix+#N$30.
+  $EC6E,$04 #HTML(Write #N$00 (cursor type "C", "K" or "L") to
+. *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
+  $EC72,$04 #HTML(Set CAPS LOCK on, using bit 3 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>).
   $EC76,$03 #HTML(#REGhl=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
-  $EC79,$02 Reset bit 5 of *#REGhl.
-  $EC7B,$02 Test bit 5 of *#REGhl.
-  $EC7D,$02 Jump to #R$EC7B if {} is zero.
+  $EC79,$02 #HTML(Reset bit 5 of 
+. *<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
+. which resets "when a new key has been pressed".)
+  $EC7B,$04 Jump to #R$EC7B if no key was pressed.
   $EC7F,$03 #HTML(#REGa=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
   $EC82,$04 Jump to #N$EC6F if #REGa is higher than #N$80.
   $EC86,$03 Return if #REGa is lower than #N$60.
@@ -4635,9 +4782,11 @@ u $EE09
 
 t $EE14 Messaging: Code Entry
 @ $EE14 label=Messaging_CodeEntry
-  $EE14,$40,$20
+  $EE14,$40,$20 #TABLE(default,centre) #FOR$00,$20,$20(n,{ "#STR(#PC+n,$04,$20)" }, ) TABLE#
+
+t $EE54 Messaging: Code Mistake
 @ $EE54 label=Messaging_Mistake
-  $EE54,$20
+  $EE54,$20 "#STR(#PC,$04,$20)".
 
 t $EE74 Messaging: How To Play Wheelie
 @ $EE74 label=Messaging_HowToPlay
