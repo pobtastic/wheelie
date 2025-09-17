@@ -18,3 +18,7 @@ SectionPrefix=Audio
 [Audio:Dead]
 
 #AUDIO(dead.wav)(#INCLUDE(Dead))
+
+[Audio:OutOfFuel]
+
+#AUDIO(out-of-fuel.wav)(#INCLUDE(OutOfFuel))

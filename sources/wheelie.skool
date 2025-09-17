@@ -582,7 +582,7 @@ c$6424 LD C,$05      ; Set a counter in #REGc for #N$05 rows to copy.
 @label=CopyLevelDataToBuffer_CopyRow
 *$6426 LD B,$20      ; Set a counter in #REGb for #N$20 bytes per row.
 @label=CopyLevelDataToBuffer_CopyByte
-*$6428 LD A,(HL)     ; Fetch a byte from the source data.
+*$6428 LD A,(HL)     ; Fetch a terrain byte from the source data.
  $6429 INC HL        ; Move to the next source data byte.
  $642A LD (DE),A     ; Write the byte to the destination buffer.
  $642B INC E         ; Move to the next destination buffer position.
@@ -590,17 +590,18 @@ c$6424 LD C,$05      ; Set a counter in #REGc for #N$05 rows to copy.
                      ; until the whole row has been copied.
 ; Handle updating the destination pointer positioning after each row.
  $642E DEC E         ; Step back one position.
- $642F LD A,E        ; {Keep only the upper 3 bits of the #REGe co-ordinate.
- $6430 AND %11100000 ;
- $6432 LD E,A        ; }
+ $642F LD A,E        ; Align to a #N$20 byte boundary.
+ $6430 AND %11100000 ; Keep only the upper 3 bits of the #REGe co-ordinate.
+ $6432 LD E,A        ; Reset to the start of the current #N$20 byte block.
  $6433 INC D         ; Move down one row.
  $6434 DEC C         ; Decrease the row counter by one.
  $6435 JR NZ,$6426   ; Jump back to #R$6426 until all the rows have been
                      ; copied.
-; Adjust the destination pointer after copying a complete block.
+; Adjust the destination pointer after copying a complete #N$05x#N$20
+; block.
  $6437 ADD A,$20     ; Move to the next block horizontally.
  $6439 LD E,A        ; Load the new horizontal position into #REGe.
- $643A RET Z         ; Return if #REGe wrapped around to #N$00 (reached the end of the
+ $643A RET Z         ; Return if #REGe wrapped around to #N$00 (we reached the end of the
                      ; buffer).
 ; Move the destination pointer back up #N$05 rows to the original
 ; vertical position.
@@ -609,12 +610,13 @@ c$6424 LD C,$05      ; Set a counter in #REGc for #N$05 rows to copy.
  $643E LD D,A        ; }
  $643F RET           ; Return.
 
-; Routine at 6440
+; Initialise Game Objects
 ;
 ; Used by the routine at #R$6500.
-c$6440 LD A,$0A      ; #REGa=#N$0A.
+@label=InitialiseGameObjects
+c$6440 LD A,$0A      ; Set the number of game objects to process (#N$0A).
  $6442 NOP           ; No operation.
- $6443 LD C,A        ; #REGc=#REGa.
+ $6443 LD C,A        ; Set a counter in #REGc of the number of game objects.
  $6444 INC B         ; Increment #REGb by one.
  $6445 INC C         ; Increment #REGc by one.
  $6446 LD HL,$A01E   ; #REGhl=#R$9E00(#N$A01E).
@@ -632,9 +634,9 @@ c$6440 LD A,$0A      ; #REGa=#N$0A.
  $645A INC L         ; {Increment #REGl by two.
  $645B INC L         ; }
  $645C JR NZ,$6462   ; Jump to #R$6462 if #REGl is not zero.
- $645E LD A,H        ; #REGa=#REGh.
- $645F ADD A,$05     ; #REGa+=#N$05.
- $6461 LD H,A        ; #REGh=#REGa.
+ $645E LD A,H        ; {#REGh+=#N$05.
+ $645F ADD A,$05     ;
+ $6461 LD H,A        ; }
 *$6462 INC L         ; Increment #REGl by one.
  $6463 LD A,(HL)     ; #REGa=*#REGhl.
  $6464 DEC A         ; Decrease #REGa by one.
@@ -644,9 +646,9 @@ c$6440 LD A,$0A      ; #REGa=#N$0A.
  $6469 DEC A         ; Decrease #REGa by one.
  $646A LD A,$0C      ; #REGa=#N$0C.
  $646C JR Z,$6470    ; Jump to #R$6470 if #REGa was zero on line #R$6469.
- $646E LD A,$18      ; #REGa=#N$18.
-*$6470 ADD A,E       ; #REGa+=#REGe.
- $6471 LD E,A        ; #REGe=#REGa.
+ $646E LD A,$18      ; {#REGe+=#N$18.
+*$6470 ADD A,E       ;
+ $6471 LD E,A        ; }
  $6472 POP HL        ; Restore #REGhl from the stack.
  $6473 DEC H         ; Decrease #REGh by one.
  $6474 LD B,$04      ; #REGb=#N$04.
@@ -671,9 +673,9 @@ c$6440 LD A,$0A      ; #REGa=#N$0A.
  $6489 INC H         ; Increment #REGh by one.
  $648A INC L         ; Increment #REGl by one.
  $648B JR Z,$6491    ; Jump to #R$6491 if #REGl is zero.
- $648D LD A,H        ; #REGa=#REGh.
- $648E SUB $05       ; #REGa-=#N$05.
- $6490 LD H,A        ; #REGh=#REGa.
+ $648D LD A,H        ; {#REGh-=#N$05.
+ $648E SUB $05       ;
+ $6490 LD H,A        ; }
 *$6491 LD B,$04      ; #REGb=#N$04.
 *$6493 LD A,(DE)     ; #REGa=*#REGde.
  $6494 LD (HL),A     ; Write #REGa to *#REGhl.
@@ -694,70 +696,99 @@ c$6440 LD A,$0A      ; #REGa=#N$0A.
 ; Unused
 u$64A4 DEFB $00,$00,$00,$00,$00,$00
 
-; Routine at 64AA
+; Level Object Placement And Special Terrain Generation
 ;
 ; Used by the routine at #R$6500.
-c$64AA LD HL,$9E00   ; #REGhl=#R$9E00.
- $64AD LD BC,$0A00   ; #REGbc=#N$0A00.
-*$64B0 LD A,$32      ; #REGa=#N$32.
- $64B2 CPIR          ; Starting from #R$9E00, find the first instance of #N$32
-                     ; in a maximum of #N$0A00 bytes.
- $64B4 LD A,B        ; {Return if #REGbc is zero.
+;
+; .
+;
+; Search the level buffer for special terrain markers (#N$32) and replace
+; with objects/ terrain.
+@label=ObjectPlacement_SpecialTerrain
+c$64AA LD HL,$9E00   ; Load #REGhl with #R$9E00.
+ $64AD LD BC,$0A00   ; Set the length of the level buffer in #REGbc (#N$0A00
+                     ; bytes).
+@label=ObjectPlacement_SpecialTerrain_Loop
+*$64B0 LD A,$32      ; {Search for the next #N$32 markr in the level buffer.
+ $64B2 CPIR          ; }
+ $64B4 LD A,B        ; {Return if no more markers were found.
  $64B5 OR C          ;
  $64B6 RET Z         ; }
- $64B7 PUSH HL       ; {Stash #REGhl and #REGbc on the stack.
- $64B8 PUSH BC       ; }
- $64B9 XOR A         ; #REGa=#N$00.
+; A marker was found.
+ $64B7 PUSH HL       ; {Stash the level buffer position and buffer counter on
+ $64B8 PUSH BC       ; the stack.}
+ $64B9 XOR A         ; Clear #REGa.
  $64BA NOP           ; {No operation.
  $64BB NOP           ; }
- $64BC LD B,$04      ; #REGb=#N$04.
+ $64BC LD B,$04      ; Set a counter in #REGb for #N$04 bytes to process.
  $64BE LD E,A        ; #REGe=#REGa.
  $64BF DEC L         ; Decrease #REGl by one.
- $64C0 CALL $6400    ; {#REGa=random number between #N$00 and #N$07.
- $64C3 AND %00000111 ; }
+; Determine what to place based on a random number.
+ $64C0 CALL $6400    ; Call #R$6400.
+ $64C3 AND %00000111 ; #REGa=random number between #N$00 and #N$07.
  $64C5 CP E          ; {Jump to #R$64F4 if #REGa is lower than #REGe.
  $64C6 JR C,$64F4    ; }
+; Generate terrain/ object from the data table.
+; .
+; This part of the routine takes a random number between #N$00-#N$07 and
+; uses it to fetch terrain data:
+; .
+; #TABLE(default,centre,centre,centre)
+; { =h Random Number | =h Calculation | =h Address }
+; #FOR$00,$07,$01,$04(x,{ #Nx | #N((x*$06)+$6C) | #R(((x*$06)+$6C)+$B4*$100) })
+; TABLE#
  $64C8 CALL $7088    ; Call #R$7088.
- $64CB AND %00000111 ; Keep only bits 0-2.
- $64CD ADD A,A       ; #REGa+=#REGa.
- $64CE LD E,A        ; #REGe=#REGa.
- $64CF ADD A,A       ; #REGa+=#REGa.
- $64D0 ADD A,E       ; #REGa+=#REGe.
- $64D1 ADD A,$6C     ; #REGa+=#N$6C.
- $64D3 LD E,A        ; #REGe=#REGa.
- $64D4 LD D,$B4      ; #REGd=#N$B4.
-*$64D6 LD A,(DE)     ; #REGa=*#REGde.
- $64D7 LD (HL),A     ; Write #REGa to *#REGhl.
- $64D8 INC E         ; Increment #REGe by one.
- $64D9 INC L         ; Increment #REGl by one.
- $64DA DJNZ $64D6    ; Decrease counter by one and loop back to #R$64D6 until
-                     ; counter is zero.
- $64DC LD A,(DE)     ; {Jump to #R$64F9 if *#REGde is zero.
- $64DD AND A         ;
+ $64CB AND %00000111 ; Ensure the random number is between #N$00-#N$07.
+; Calculate the low-byte of the object data table address.
+ $64CD ADD A,A       ; {#REGe=(#REGa*#N$06)+#N$6C.
+ $64CE LD E,A        ;
+ $64CF ADD A,A       ;
+ $64D0 ADD A,E       ;
+ $64D1 ADD A,$6C     ;
+ $64D3 LD E,A        ; }
+ $64D4 LD D,$B4      ; Set the high-byte in #REGd to #N$B4.
+; Copy a byte of the #N$04 bytes of object data into the level buffer.
+@label=PlaceObjectData
+*$64D6 LD A,(DE)     ; Fetch an object data byte.
+ $64D7 LD (HL),A     ; Write the object data byte into the level buffer.
+ $64D8 INC E         ; Move to the next object data byte.
+ $64D9 INC L         ; Move to the next position in the level buffer.
+ $64DA DJNZ $64D6    ; Decrease the byte counter by one and loop back to #R$64D6 until all
+                     ; the object data bytes have been written into the level buffer.
+; Check if the object has a vertical component.
+ $64DC LD A,(DE)     ; {Jump to #R$64F9 if the current data byte is zero (no vertical
+ $64DD AND A         ; component).
  $64DE JR Z,$64F9    ; }
+; Place the vertical component of the object.
  $64E0 DEC L         ; {Decrease #REGl by three.
  $64E1 DEC L         ;
  $64E2 DEC L         ; }
  $64E3 INC H         ; Increment #REGh by one.
  $64E4 LD B,$02      ; #REGb=#N$02.
+@label=PlaceVerticalComponent
 *$64E6 LD A,(HL)     ; #REGa=*#REGhl.
  $64E7 AND A         ; Set flags.
  $64E8 LD A,(DE)     ; #REGa=*#REGde.
  $64E9 JR Z,$64ED    ; Jump to #R$64ED if *#REGhl is zero.
  $64EB INC A         ; {Increment #REGa by two.
  $64EC INC A         ; }
+@label=PlaceVerticalByte
 *$64ED LD (HL),A     ; Write #REGa to *#REGhl.
  $64EE INC L         ; Increment #REGl by one.
  $64EF INC E         ; Increment #REGe by one.
  $64F0 DJNZ $64E6    ; Decrease counter by one and loop back to #R$64E6 until
                      ; counter is zero.
  $64F2 JR $64F9      ; Jump to #R$64F9.
-*$64F4 LD (HL),$01   ; Write #N$01 to *#REGhl.
- $64F6 INC L         ; Increment #REGl by one.
- $64F7 DJNZ $64F4    ; Decrease counter by one and loop back to #R$64F4 until
-                     ; counter is zero.
-*$64F9 POP BC        ; {Restore #REGbc and #REGhl from the stack.
- $64FA POP HL        ; }
+; Place a simple terrain block (block type: #N$01).
+@label=PlaceSimpleTerrain_Loop
+*$64F4 LD (HL),$01   ; Write block type #N$01 to the level buffer pointer.
+ $64F6 INC L         ; Move to the next buffer position.
+ $64F7 DJNZ $64F4    ; Decrease the byte counter by one and loop back to #R$64F4 until all
+                     ; bytes have been written into the buffer.
+; Continue searching for the next terrain markers.
+@label=ObjectPlacement_SpecialTerrain_Next
+*$64F9 POP BC        ; {Restore the buffer counter and level buffer position
+ $64FA POP HL        ; from the stack.}
  $64FB JR $64B0      ; Jump to #R$64B0.
 
 ; Unused
@@ -776,7 +807,7 @@ u$64FD DEFB $00,$00,$00
 c$6500 LD DE,$9E00   ; #REGde=#R$9E00.
  $6503 LD HL,$8960   ; #REGhl=#R$8960.
  $6506 CALL $6424    ; Call #R$6424.
- $6509 LD HL,$A101   ; #REGhl=#R$A101.
+ $6509 LD HL,$A101   ; #REGhl=#N$A101.
  $650C LD B,$0A      ; #REGb=#N$0A.
 *$650E LD (HL),$00   ; Write #N$00 to *#REGhl.
  $6510 DEC H         ; Decrease #REGh by one.
@@ -837,38 +868,43 @@ c$6500 LD DE,$9E00   ; #REGde=#R$9E00.
 ; Unused
 u$6563 DEFB $00
 
-; Routine at 6564
+; Prepare Scroll Data
 ;
 ; Used by the routines at #R$659C and #R$6650.
-c$6564 ADD A,A       ; #REGa+=#REGa.
- $6565 ADD A,A       ; #REGa+=#REGa.
- $6566 LD C,A        ; #REGc=#REGa.
+;
+; A Scroll phase
+@label=PrepareScrollData
+c$6564 ADD A,A       ; {#REGc=#REGa*#N$04.
+ $6565 ADD A,A       ;
+ $6566 LD C,A        ; }
  $6567 EXX           ; Switch to the shadow registers.
- $6568 LD BC,$05FF   ; #REGbc=#N$05FF.
+ $6568 LD BC,$05FF   ; Set a counter in #REGb of #N$05 (the #N$FF in #REGc
+                     ; isn't used).
  $656B LD DE,$7800   ; #REGde=#R$7800.
+@label=PrepareScrollData_Loop
 *$656E EXX           ; Switch back to the normal registers.
- $656F LD A,(DE)     ; #REGa=*#REGde.
- $6570 INC D         ; Increment #REGd by one.
- $6571 RRCA          ; {RRCA.
- $6572 RRCA          ;
+ $656F LD A,(DE)     ; Read the index byte.
+ $6570 INC D         ; Move to the next byte.
+ $6571 RRCA          ; {Rotate the index byte right three times to extract the address
+ $6572 RRCA          ; components.
  $6573 RRCA          ; }
- $6574 LD L,A        ; #REGl=#REGa.
+ $6574 LD L,A        ; Copy the result to #REGl.
  $6575 AND %00011111 ; Keep only bits 0-4.
- $6577 ADD A,$80     ; #REGa+=#N$80.
- $6579 LD H,A        ; #REGh=#REGa.
- $657A LD A,L        ; #REGa=#REGl.
+ $6577 ADD A,$80     ; {Add #N$80 to form the high byte of the graphics address
+ $6579 LD H,A        ; in #REGhl.}
+ $657A LD A,L        ; Restore the rotated value.
  $657B AND %11100000 ; Keep only bits 5-7.
- $657D ADD A,C       ; #REGa+=#REGc.
- $657E LD L,A        ; #REGl=#REGa.
- $657F PUSH HL       ; Stash #REGhl on the stack.
+ $657D ADD A,C       ; Add the scroll offset from #REGc.
+ $657E LD L,A        ; Complete the graphics address in #REGhl.
+ $657F PUSH HL       ; Stash the graphics address on the stack.
  $6580 EXX           ; Switch to the shadow registers.
- $6581 POP HL        ; Restore #REGhl from the stack.
- $6582 LDI           ; {LDI.
- $6584 LDI           ;
+ $6581 POP HL        ; Restore the graphics address from the stack.
+ $6582 LDI           ; {Copy #N$04 bytes from the graphics line to the
+ $6584 LDI           ; destination.
  $6586 LDI           ;
  $6588 LDI           ; }
- $658A DJNZ $656E    ; Decrease counter by one and loop back to #R$656E until
-                     ; counter is zero.
+ $658A DJNZ $656E    ; Decrease the row counter by one and loop back to #R$656E until all
+                     ; the rows have been copied.
  $658C LD A,(DE)     ; #REGa=*#REGde.
  $658D INC A         ; Increment #REGa by one.
  $658E LD (DE),A     ; Write #REGa to *#REGde.
@@ -888,23 +924,28 @@ u$659B DEFB $00
 
 ; Scroll Playarea
 ;
-; Used by the routines at #R$6800, #R$6AAC, #R$6C00 and #R$6E18.
+; #HTML(Scrolls the play area horizontally by shifting pixel data left
+; using <code>RLD</code> instructions.)
 @label=ScrollPlayarea
 c$659C LD HL,($7817) ; #REGhl=*#R$7817.
- $659F LD D,H        ; #REGd=#REGh.
- $65A0 LD E,L        ; #REGe=#REGl.
+ $659F LD D,H        ; {Copy the screen position pointer into #REGde.
+ $65A0 LD E,L        ; }
  $65A1 LD A,($7819)  ; #REGa=*#R$7819.
- $65A4 LD C,A        ; #REGc=#REGa.
- $65A5 INC A         ; Increment #REGa by one.
- $65A6 AND %00000111 ; Keep only bits 0-2.
- $65A8 LD ($7819),A  ; Write #REGa to *#R$7819.
+ $65A4 LD C,A        ; Copy the scroll phase counter into #REGc.
+ $65A5 INC A         ; Increment the scroll phase counter by one.
+ $65A6 AND %00000111 ; Ensure the counter is limited to being a number between
+                     ; #N$00-#N$07.
+ $65A8 LD ($7819),A  ; Write the scroll phase counter back to *#R$7819.
  $65AB JR NZ,$65B7   ; Jump to #R$65B7 if #REGa is not zero.
  $65AD INC L         ; Increment #REGl by one.
  $65AE JR NZ,$65B4   ; Jump to #R$65B4 if #REGl is not zero.
  $65B0 LD A,H        ; {#REGh+=#N$05.
  $65B1 ADD A,$05     ;
  $65B3 LD H,A        ; }
+@label=ScrollPlayarea_StorePointer
 *$65B4 LD ($7817),HL ; Write #REGhl to *#R$7817.
+; Set up the column data pointer for new graphics data.
+@label=ScrollPlayarea_UpdateColumnPointer
 *$65B7 LD A,E        ; {#REGe+=#N$08.
  $65B8 ADD A,$08     ;
  $65BA LD E,A        ; }
@@ -912,13 +953,16 @@ c$659C LD HL,($7817) ; #REGhl=*#R$7817.
  $65BD LD A,D        ; {#REGd+=#N$05.
  $65BE ADD A,$05     ;
  $65C0 LD D,A        ; }
-*$65C1 LD A,C        ; #REGa=#REGc.
- $65C2 LD B,$01      ; #REGb=#N$01.
+@label=ScrollPlayarea_SetupScroll
+*$65C1 LD A,C        ; Load the original scroll phase counter value into #REGa.
+ $65C2 LD B,$01      ; Set a counter in #REGb for #N$01 column to process.
  $65C4 CALL $6564    ; Call #R$6564.
+; Start of screen buffer.
  $65C7 LD HL,$401F   ; #REGhl=#N$401F (screen buffer location).
- $65CA LD D,H        ; #REGd=#REGh.
- $65CB LD E,L        ; #REGe=#REGl.
+ $65CA LD D,H        ; {Copy the screen position pointer into #REGde.
+ $65CB LD E,L        ; }
  $65CC EXX           ; Switch to the shadow registers.
+@label=ScrollPlayarea_ProcessRows
 *$65CD LD A,(DE)     ; #REGa=*#REGde.
  $65CE INC E         ; Increment #REGe by one.
  $65CF LD L,A        ; #REGl=#REGa.
@@ -999,17 +1043,18 @@ c$659C LD HL,($7817) ; #REGhl=*#R$7817.
  $663C INC H         ; }
  $663D DJNZ $65D7    ; Decrease counter by one and loop back to #R$65D7 until
                      ; counter is zero.
- $663F LD A,$20      ; {#REGe+=#N$20.
+ $663F LD A,$20      ; {Move down one character row.
  $6641 ADD A,E       ;
  $6642 LD E,A        ; }
- $6643 LD L,A        ; #REGl=#REGa.
+ $6643 LD L,A        ; Update the screen pointer.
  $6644 JR NC,$6648   ; Jump to #R$6648 if {} is higher.
  $6646 LD D,$48      ; #REGd=#N$48.
-*$6648 LD H,D        ; #REGh=#REGd.
+@label=ScrollPlayarea_NextRow
+*$6648 LD H,D        ; Update the screen pointer.
  $6649 EXX           ; Switch to the shadow registers.
  $664A DJNZ $65CD    ; Decrease counter by one and loop back to #R$65CD until
                      ; counter is zero.
- $664C EXX           ; Switch to the shadow registers.
+ $664C EXX           ; Switch back to the normal registers.
  $664D RET           ; Return.
 
 ; Unused
@@ -1398,11 +1443,15 @@ c$6880 BIT 7,A       ;
  $6890 LD L,A        ;
  $6891 LD H,$B4      ;
 
-; Routine at 6893
+; Copy #N$0C Bytes
 ;
 ; Used by the routines at #R$6D28 and #R$763C.
-c$6893 LDI           ;
- $6895 LDI           ;
+;
+; HL Source address
+; DE Destination address
+@label=CopyTwelveBytes
+c$6893 LDI           ; {Copy #N$0C bytes from the source address to the destination
+ $6895 LDI           ; address.
  $6897 LDI           ;
  $6899 LDI           ;
  $689B LDI           ;
@@ -1412,34 +1461,43 @@ c$6893 LDI           ;
  $68A3 LDI           ;
  $68A5 LDI           ;
  $68A7 LDI           ;
- $68A9 LDI           ;
+ $68A9 LDI           ; }
  $68AB RET           ; Return.
 
 ; Unused
 u$68AC DEFB $00
 
-; Routine at 68AD
+; Remove Sprites
 ;
 ; Used by the routines at #R$6AAC, #R$6C00, #R$6E18, #R$763C and #R$76D7.
-@label=RemoveSprite
-c$68AD LD A,($781B)  ; {Return if *#R$781B is zero.
- $68B0 AND A         ;
+@label=RemoveSprites
+c$68AD LD A,($781B)  ; {Return if *#R$781B is zero (no sprite blocks on the
+ $68B0 AND A         ; screen).
  $68B1 RET Z         ; }
- $68B2 LD HL,($781C) ; #REGhl=*#R$781C.
- $68B5 LD B,A        ; #REGb=#REGa.
- $68B6 LD C,$00      ; #REGc=#N$00.
-*$68B8 DEC HL        ; Decrease #REGhl by one.
- $68B9 LD D,(HL)     ; #REGd=*#REGhl.
- $68BA DEC HL        ; Decrease #REGhl by one.
- $68BB LD E,(HL)     ; #REGe=*#REGhl.
- $68BC DEC HL        ; Decrease #REGhl by one.
- $68BD LD A,(HL)     ; #REGa=*#REGhl.
- $68BE LD (DE),A     ; Write #REGa to *#REGde.
- $68BF DEC HL        ; Decrease #REGhl by one.
- $68C0 LD A,D        ; #REGa=#REGd.
- $68C1 SUB $11       ; #REGa-=#N$11.
- $68C3 OR %00000111  ; Set bits 0-2.
- $68C5 LD D,A        ; #REGd=#REGa.
+; Whilst this routine is clearing sprites, the data is stored per
+; character block, e.g. a kangaroo may span 3 character blocks - and data is
+; stored individually for each of those three blocks, so the count is +3 for
+; a kangaroo (when it is covering those three blocks).
+ $68B2 LD HL,($781C) ; Load *#R$781C into #REGhl.
+ $68B5 LD B,A        ; Set a counter in #REGb of the number of character blocks needed to
+                     ; clear all the sprites.
+ $68B6 LD C,$00      ; Set a "clear" value (#N$00) in #REGc.
+@label=RemoveSingleSpriteBlock_Loop
+*$68B8 DEC HL        ; {Load #REGde with the attribute buffer address of the
+ $68B9 LD D,(HL)     ; sprite block.
+ $68BA DEC HL        ;
+ $68BB LD E,(HL)     ; }
+ $68BC DEC HL        ; {Fetch the background attribute value.
+ $68BD LD A,(HL)     ; }
+ $68BE LD (DE),A     ; Write the background attribute value to the attribute buffer
+                     ; address held in #REGde.
+ $68BF DEC HL        ; Move to next buffer entry.
+; Convert the attribute address to the corresponding screen buffer
+; address.
+ $68C0 LD A,D        ; {Taking the attribute buffer high byte, subtract #N$11.
+ $68C1 SUB $11       ; }
+ $68C3 OR %00000111  ; Adjust for the screen buffer memory layout.
+ $68C5 LD D,A        ; Write this back into #REGd.
  $68C6 EX DE,HL      ; Exchange the #REGde and #REGhl registers.
  $68C7 LD (HL),C     ; Write #REGc to *#REGhl.
  $68C8 DEC H         ; Decrease #REGh by one.
@@ -1464,10 +1522,11 @@ c$68AD LD A,($781B)  ; {Return if *#R$781B is zero.
  $68DB LD A,(DE)     ; #REGa=*#REGde.
  $68DC LD (HL),A     ; Write #REGa to *#REGhl.
  $68DD EX DE,HL      ; Exchange the #REGde and #REGhl registers.
- $68DE DJNZ $68B8    ; Decrease counter by one and loop back to #R$68B8 until
-                     ; counter is zero.
- $68E0 LD ($781C),HL ; Write #REGhl to *#R$781C.
- $68E3 XOR A         ; {Write #N$00 to *#R$781B.
+ $68DE DJNZ $68B8    ; Decrease the sprite block counter by one and loop back to #R$68B8
+                     ; until all the sprite blocks have been reverted to backgrounds.
+; All sprite blocks are now reverted!
+ $68E0 LD ($781C),HL ; Update the buffer position at *#R$781C.
+ $68E3 XOR A         ; {Mark that no sprite blocks are now active at *#R$781B.
  $68E4 LD ($781B),A  ; }
  $68E7 RET           ; Return.
 
@@ -1551,24 +1610,31 @@ c$691B INC B         ; Increment #REGb' by one.
 ; Unused
 u$692B DEFB $C9      ; Return.
 
-; Routine at 692C
+; Draw Sprite Object
 ;
 ; Used by the routines at #R$6B2D and #R$76D7.
-c$692C LD B,A        ; #REGb=#REGa.
- $692D LD A,C        ; #REGa=#REGc.
+;
+; DE Sprite screen position
+; A Sprite frame ID
+; C Sprite colour
+@label=DrawSpriteObject
+c$692C LD B,A        ; Store the sprite frame ID in #REGb.
+ $692D LD A,C        ; Load the sprite attribute value into #REGa.
  $692E EXX           ; Switch to the shadow registers.
  $692F LD HL,($781C) ; #REGhl'=*#R$781C.
- $6932 LD C,A        ; #REGc'=#REGa.
- $6933 LD A,($781B)  ; #REGa=*#R$781B.
- $6936 LD B,A        ; #REGb'=#REGa.
+ $6932 LD C,A        ; Load the sprite attribute value into #REGc'.
+ $6933 LD A,($781B)  ; {Load *#R$781B into #REGb'.
+ $6936 LD B,A        ; }
  $6937 EXX           ; Switch back to the normal registers.
- $6938 LD A,B        ; #REGa=#REGb.
- $6939 ADD A,A       ; #REGa+=#REGa.
- $693A LD L,A        ; #REGl=#REGa.
- $693B ADC A,$BE     ; #REGa+=#N$BE (including carry).
- $693D SUB L         ; #REGa-=#REGl.
- $693E LD H,A        ; #REGh=#REGa.
- $693F LD A,B        ; #REGa=#REGb.
+; Calculate the sprite data address from the frame ID.
+ $6938 LD A,B        ; {Load #REGl with the frame ID multiplied by #N$02.
+ $6939 ADD A,A       ;
+ $693A LD L,A        ; }
+ $693B ADC A,$BE     ; {Load #REGh with the high byte for the graphics data:
+ $693D SUB L         ; #N$BE.
+ $693E LD H,A        ; }
+ $693F LD A,B        ; Load the original frame ID into #REGa.
+; Fetch the sprite data.
  $6940 LD C,(HL)     ; #REGc=*#REGhl.
  $6941 INC L         ; Increment #REGl by one.
  $6942 LD B,(HL)     ; #REGb=*#REGhl.
@@ -1924,19 +1990,22 @@ c$6AAC LD A,($7830)  ;
 ; Unused
 u$6B2A DEFB $00,$00,$00
 
-; Routine at 6B2D
+; Handler: Player Sprite
 ;
 ; Used by the routines at #R$6E18, #R$7311, #R$763C and #R$76D7.
-c$6B2D LD A,($7822)  ; #REGa=*#R$7822.
- $6B30 LD E,$0D      ; #REGe=#N$0D.
- $6B32 BIT 7,A       ; {Jump to #R$6B38 if *#R$7822 is higher than #N$80 (i.e.
- $6B34 JR NZ,$6B38   ; moving right).}
- $6B36 LD E,$12      ; #REGe=#N$12.
-*$6B38 LD C,$07      ; #REGc=#N$07.
- $6B3A LD HL,$7833   ; #REGhl=#R$7833.
- $6B3D LD D,(HL)     ; #REGd=*#REGhl.
- $6B3E INC L         ; Increment #REGl by one.
- $6B3F LD A,(HL)     ; #REGa=*#REGhl.
+@label=Handler: PlayerSprite
+c$6B2D LD A,($7822)  ; Load #REGa with *#R$7822.
+ $6B30 LD E,$0D      ; Set the sprite offset in #REGe (#N$0D bytes).
+ $6B32 BIT 7,A       ; Check the direction bit.
+ $6B34 JR NZ,$6B38   ; Jump to #R$6B38 if the player is moving fowards.
+ $6B36 LD E,$12      ; Set an alternate sprite offset for the left-facing sprite (#N$12
+                     ; bytes).
+@label=SetPlayerSpriteDirection
+*$6B38 LD C,$07      ; Set #INK$07 to #REGc.
+ $6B3A LD HL,$7833   ; {Fetch #R$7833 in #REGd.
+ $6B3D LD D,(HL)     ; }
+ $6B3E INC L         ; {Fetch #R$7834 in #REGa.
+ $6B3F LD A,(HL)     ; }
  $6B40 CALL $692C    ; Call #R$692C.
  $6B43 RET           ; Return.
 
@@ -2069,26 +2138,28 @@ c$6B4C LD ($7828),A  ;
 ; Unused
 u$6BFC DEFB $00,$00,$00,$00
 
-; Routine at 6C00
+; Game Loop
 ;
 ; Used by the routines at #R$EBF3 and #R$EC00.
-c$6C00 LD A,($782B)  ;
- $6C03 XOR $01       ;
- $6C05 LD ($782B),A  ;
- $6C08 LD HL,$FFFF   ;
- $6C0B LD SP,HL      ;
- $6C0C LD A,($5C78)  ;
- $6C0F INC A         ;
- $6C10 LD HL,$781A   ;
- $6C13 DEC (HL)      ;
- $6C14 LD L,$5A      ;
- $6C16 LD (HL),A     ;
- $6C17 JR NZ,$6C73   ;
- $6C19 INC (HL)      ;
- $6C1A LD L,$2B      ;
- $6C1C LD A,(HL)     ;
- $6C1D XOR $01       ;
- $6C1F LD (HL),A     ;
+@label=Game_Loop
+c$6C00 LD A,($782B)  ; #REGa=*#R$782B.
+ $6C03 XOR %00000001 ; Flip bit 0.
+ $6C05 LD ($782B),A  ; Write #REGa back to *#R$782B.
+ $6C08 LD HL,$FFFF   ; {#REGsp=#N$FFFF.
+ $6C0B LD SP,HL      ; }
+ $6C0C LD A,($5C78)  ; #HTML(#REGa=*<a rel="noopener nofollow"
+                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
+ $6C0F INC A         ; Increment #REGa by one.
+ $6C10 LD HL,$781A   ; #REGhl=#R$781A.
+ $6C13 DEC (HL)      ; Decrease *#REGhl by one.
+ $6C14 LD L,$5A      ; #REGl=#N$5A.
+ $6C16 LD (HL),A     ; Write #REGa to *#REGhl.
+ $6C17 JR NZ,$6C73   ; Jump to #R$6C73 if *#REGhl is not zero.
+ $6C19 INC (HL)      ; Increment *#REGhl by one.
+ $6C1A LD L,$2B      ; #REGl=#N$2B.
+ $6C1C LD A,(HL)     ; #REGa=*#REGhl.
+ $6C1D XOR %00000001 ; Flip bit 0.
+ $6C1F LD (HL),A     ; Write #REGa to *#REGhl.
  $6C20 NOP           ;
  $6C21 NOP           ;
  $6C22 LD A,$02      ;
@@ -2191,7 +2262,7 @@ c$6CAA CALL $75AA    ; Call #R$75AA.
  $6CD5 INC L         ; Increment #REGl by one.
  $6CD6 DJNZ $6CD3    ; Decrease counter by one and loop back to #R$6CD3 until
                      ; counter is zero.
- $6CD8 INC L         ; {Write #R$A101(#N$A113) to *#R$782E.
+ $6CD8 INC L         ; {Write #R$A100(#N$A113) to *#R$782E.
  $6CD9 INC L         ;
  $6CDA LD (HL),$13   ;
  $6CDC INC L         ;
@@ -2421,7 +2492,7 @@ c$6DA8 LD A,(BC)     ;
  $6E12 LD BC,$0607   ;
  $6E15 LD BC,$0000   ;
 
-; Remove Sprite?
+; Routine at 6E18
 ;
 ; Used by the routine at #R$6C00.
 c$6E18 CALL $68AD    ; Call #R$68AD.
@@ -2576,10 +2647,10 @@ c$6E18 CALL $68AD    ; Call #R$68AD.
                      ; counter is zero.
  $6F00 LD L,$1A      ; #REGl=#N$1A.
  $6F02 LD (HL),$01   ; Write #N$01 to *#REGhl.
- $6F04 LD HL,$0000   ; #REGhl=#N($0000,$04,$04).
- $6F07 LD ($7814),HL ; Write #REGhl to *#R$7814.
- $6F0A LD HL,($7836) ; #REGhl=*#R$7836.
- $6F0D LD ($782E),HL ; Write #REGhl to *#R$782E.
+ $6F04 LD HL,$0000   ; {Write #N($0000,$04,$04) to *#R$7814.
+ $6F07 LD ($7814),HL ; }
+ $6F0A LD HL,($7836) ; {Write *#R$7836 to *#R$782E.
+ $6F0D LD ($782E),HL ; }
  $6F10 BIT 7,A       ; Test bit 7 of #REGa.
  $6F12 LD B,$03      ; #REGb=#N$03.
  $6F14 JR NZ,$6F17   ; Jump to #R$6F17 if {} is not zero.
@@ -2886,20 +2957,31 @@ c$7048 LD HL,($782E) ; #REGhl=*#R$782E.
 ; Unused
 u$7087 DEFB $00
 
-; Routine at 7088
+; Contextual Random Number
 ;
 ; Used by the routine at #R$64AA.
+;
+;   H Seed value
+; O:A Random number betwen #N$00-#N$FF
+@label=ContextualRandomNumber
 c$7088 CALL $6400    ; {#REGe=random number between #N$00-#N$FF.
  $708B LD E,A        ; }
- $708C LD A,H        ; #REGa=#REGh.
-*$708D CP $9F        ; {Jump to #R$709B if #REGa is lower than #N$9F.
- $708F JR C,$709B    ; }
- $7091 JR Z,$7097    ; Jump to #R$7097 if #REGa is equal to #N$9F.
- $7093 SUB $05       ; #REGa-=#N$05.
- $7095 JR $708D      ; Jump to #R$708D.
-*$7097 LD A,E        ; {#REGa=bit 0 of the random number stored in #REGe (so
- $7098 AND %00000001 ; ensure it is either #N$00 or #N$01).}
+ $708C LD A,H        ; Get the seed number.
+@label=CheckSeedNumber
+*$708D CP $9F        ; {Jump to #R$709B if the seed number in #REGh is lower
+ $708F JR C,$709B    ; than #N$9F.}
+ $7091 JR Z,$7097    ; Jump to #R$7097 if the seed number in #REGh is equal to
+                     ; #N$9F.
+; Else, subtract #N$05 and loop back to try again.
+ $7093 SUB $05       ; Subtract #N$05 from the seed number.
+ $7095 JR $708D      ; Jump back to #R$708D.
+; Return either #N$00 or #N$01 using bit 0 of the random number.
+@label=ReturnBoolean
+*$7097 LD A,E        ; {#REGa=bit 0 of the random number stored in #REGe (ensure it is
+ $7098 AND %00000001 ; either #N$00 or #N$01).}
  $709A RET           ; Return.
+; Just return the full random number between #N$00-#N$FF.
+@label=ReturnFullValue
 *$709B LD A,E        ; #REGa=the random number stored in #REGe.
  $709C RET           ; Return.
 
@@ -3626,10 +3708,10 @@ c$7420 LD HL,($7844) ; #REGhl=*#R$7844.
  $746C EXX           ; Switch to the shadow registers.
  $746D LD BC,$784B   ; #REGbc'=#R$784B.
 ; #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
-;       <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
+; <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
 ; .
 ; This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
-;       only copies six bytes/ lines.
+; only copies six bytes/ lines.
 @label=PrintTarget
 *$7470 LD A,(BC)     ; #REGa=*#REGbc'.
  $7471 ADD A,A       ; {#REGl'=#N$81+(#REGa*#N$08).
@@ -4074,9 +4156,10 @@ c$75AA CALL $749C    ; Call #R$749C.
 ; Unused
 u$763B DEFB $00
 
-; Routine at 763C
+; Handler: Fuel
 ;
 ; Used by the routine at #R$6C00.
+@label=Handler_Fuel
 c$763C CALL $7420    ; Call #R$7420.
  $763F LD HL,($783C) ; #REGhl=*#R$783C.
  $7642 LD A,H        ; {Jump to #R$769A if #REGh is lower than #N$80.
@@ -4094,13 +4177,17 @@ c$763C CALL $7420    ; Call #R$7420.
  $7659 NOP           ;
  $765A NOP           ;
  $765B NOP           ; }
+; Start the "Out Of Fuel" sequence.
+@label=TriggerOutOfFuel
 *$765C CALL $68AD    ; Call #R$68AD.
  $765F LD A,($7822)  ; #REGa=*#R$7822.
- $7662 BIT 7,A       ; Test bit 7 of #REGa.
- $7664 LD A,$87      ; #REGa=#N$87.
- $7666 JR NZ,$766A   ; Jump to #R$766A if {} is not zero.
- $7668 ADD A,$40     ; #REGa+=#N$40.
-*$766A LD ($7834),A  ; Write #REGa to *#R$7834.
+ $7662 BIT 7,A       ; Check the direction bit.
+ $7664 LD A,$87      ; Load the base player sprite into #REGa (#N$87).
+ $7666 JR NZ,$766A   ; Jump to #R$766A if the player is moving left.
+ $7668 ADD A,$40     ; Modify the player sprite ID for the player moving right
+                     ; (#N$C7).
+@label=SetWheelieSprite
+*$766A LD ($7834),A  ; Write the player sprite ID to *#R$7834.
  $766D CALL $6B2D    ; Call #R$6B2D.
 ; Print the "#STR($BA86,$03,$20)" messaging in the footer.
 ; .
@@ -4108,52 +4195,70 @@ c$763C CALL $7420    ; Call #R$7420.
  $7670 LD A,$A9      ; #REGa=#N$A9 (#COLOUR$A9).
  $7672 LD HL,$BA86   ; #REGhl=#R$BA86.
  $7675 CALL $74C3    ; Call #R$74C3.
- $7678 LD D,$10      ; #REGd=#N$10.
- $767A LD C,$01      ; #REGc=#N$01.
-*$767C LD HL,$1E00   ; #REGhl=#N$1E00.
- $767F LD A,C        ; #REGa=#REGc.
-*$7680 LD B,C        ; #REGb=#REGc.
- $7681 OUT ($FE),A   ; OUT #N$FE
- $7683 XOR %00010000 ; Flip bits 4.
-*$7685 DJNZ $7685    ; Decrease counter by one and loop back to #R$7685 until
-                     ; counter is zero.
- $7687 DEC L         ; Decrease #REGl by one.
- $7688 JR NZ,$7680   ; Jump to #R$7680 if #REGl is not zero.
- $768A DEC H         ; Decrease #REGh by one.
- $768B JR NZ,$7680   ; Jump to #R$7680 if #REGh is not zero.
- $768D INC C         ; Increment #REGc by one.
- $768E DEC D         ; Decrease #REGd by one.
- $768F JR NZ,$767C   ; Jump to #R$767C if #REGd is not zero.
+; Play the "out of fuel" audio.
+; .
+; #HTML(#AUDIO(out-of-fuel.wav)(#INCLUDE(OutOfFuel)))
+ $7678 LD D,$10      ; Set an outer loop count in #REGd for #N$10 iterations.
+ $767A LD C,$01      ; Set the initial tone value in #REGc to #N$01.
+@label=PlayFuelSound_OuterLoop
+*$767C LD HL,$1E00   ; Set the tone duration counter in #REGhl to #N$1E00.
+ $767F LD A,C        ; Get current tone value.
+@label=PlayFuelSound_ToneLoop
+*$7680 LD B,C        ; Set inner delay counter.
+ $7681 OUT ($FE),A   ; Send to the speaker.
+ $7683 XOR %00010000 ; Flip the speaker bit.
+@label=PlayFuelSound_InnerDelayLoop
+*$7685 DJNZ $7685    ; Decrease the inner delay counter by one and loop back to #R$7685
+                     ; until the counter is zero.
+ $7687 DEC L         ; Decrease the tone duration low byte by one.
+ $7688 JR NZ,$7680   ; Jump back to #R$7680 until the tone duration low byte is
+                     ; zero.
+ $768A DEC H         ; Decrease the tone duration high byte by one.
+ $768B JR NZ,$7680   ; Jump back to #R$7680 until the tone duration high byte
+                     ; is zero.
+ $768D INC C         ; Increase the tone frequency by one (higher pitch).
+ $768E DEC D         ; Decrease the outer loop counter by one.
+ $768F JR NZ,$767C   ; Jump back to #R$767C until the outer loop counter is
+                     ; zero.
+; Reset the players fuel and restart the game.
  $7691 LD HL,$3400   ; {Write #N$3400 to *#R$783C.
  $7694 LD ($783C),HL ; }
  $7697 JP $7161      ; Jump to #R$7161.
+; Normal fuel consumption processing.
+@label=ProcessFuelConsumption
 *$769A LD A,($7822)  ; #REGa=*#R$7822.
- $769D BIT 7,A       ; Test bit 7 of #REGa.
- $769F JR NZ,$76A2   ; Jump to #R$76A2 if {} is not zero.
- $76A1 CPL           ; Invert the bits in #REGa.
-*$76A2 SUB $7E       ; #REGa-=#N$7E.
- $76A4 SRL A         ; Shift #REGa right.
- $76A6 LD E,A        ; #REGe=#REGa.
- $76A7 LD D,$00      ; #REGd=#N$00.
- $76A9 AND A         ; Set flags.
- $76AA SBC HL,DE     ; #REGhl-=#REGde (with carry).
- $76AC LD ($783C),HL ; Write #REGhl to *#R$783C.
- $76AF JR C,$76D0    ; Jump to #R$76D0 if {} is lower.
- $76B1 LD A,H        ; #REGa=#REGh.
- $76B2 SRL A         ; Shift #REGa right.
- $76B4 SRL A         ; Shift #REGa right.
- $76B6 CPL           ; Invert the bits in #REGa.
- $76B7 SUB $0C       ; #REGa-=#N$0C.
- $76B9 LD L,A        ; #REGl=#REGa.
- $76BA LD H,$BA      ; #REGh=#N$BA.
- $76BC LD DE,$5A65   ; #REGde=#N$5A65 (attribute buffer location).
+ $769D BIT 7,A       ; Check the direction bit.
+ $769F JR NZ,$76A2   ; Jump to #R$76A2 if the player is moving backwards.
+; The player is moving forwards.
+ $76A1 CPL           ; Invert the speed for forward movement calculation.
+@label=CalculateFuelConsumption
+*$76A2 SUB $7E       ; {Calculate the fuel consumption rate in #REGde;
+ $76A4 SRL A         ; (speed-#N$7E)/#N$02.
+ $76A6 LD E,A        ;
+ $76A7 LD D,$00      ; }
+ $76A9 AND A         ; {Subtract the consumption from the players fuel level.
+ $76AA SBC HL,DE     ; }
+ $76AC LD ($783C),HL ; Write the updated fuel value back to *#R$783C.
+ $76AF JR C,$76D0    ; Jump to #R$76D0 if the fuel value is negative.
+; Update the fuel gauge display.
+ $76B1 LD A,H        ; Get the fuel high byte.
+ $76B2 SRL A         ; {Divide it by #N$04.
+ $76B4 SRL A         ; }
+ $76B6 CPL           ; Invert the byte for the gauge display.
+ $76B7 SUB $0C       ; Abjust by an offset of #N$0C bytes for where the gauge
+                     ; displays.
+ $76B9 LD L,A        ; Set this value in #REGl.
+ $76BA LD H,$BA      ; Load the high byte in #REGh with #N$BA.
+ $76BC LD DE,$5A65   ; Point #REGde to the gauge position #N$5A65 (attribute buffer
+                     ; location).
  $76BF CALL $6893    ; Call #R$6893.
+; Handle fuel-related audio effects during gameplay.
  $76C2 LD HL,($783C) ; #REGhl=*#R$783C.
- $76C5 LD A,H        ; #REGa=#REGh.
- $76C6 CP $04        ; Compare #REGa with #N$04.
- $76C8 CALL NC,$6D50 ; Call #R$6D50 is higher.
- $76CB BIT 6,L       ; Test bit 6 of #REGl.
- $76CD CALL NZ,$6D50 ; Call #R$6D50 not zero.
+ $76C5 LD A,H        ; {Call #R$6D50 if the fuel level is #N$0400 or higher, or for every
+ $76C6 CP $04        ; #N$40 fuel units (which creates pulses as the fuel decreases).
+ $76C8 CALL NC,$6D50 ;
+ $76CB BIT 6,L       ;
+ $76CD CALL NZ,$6D50 ; }
 *$76D0 JP $EBF3      ; Jump to #R$EBF3.
 
 ; Unused
@@ -4342,31 +4447,46 @@ b$77F9 DEFB $00,$05,$00,$03,$02,$02,$02
 
 ; Data block at 7800
 b$7800 DEFB $00,$03
-
-; Data block at 7802
-b$7802 DEFB $00,$03,$03,$00,$00,$01,$00,$04
- $780A DEFB $00,$00,$04,$02,$02,$00,$00,$01
+ $7802 DEFB $00,$03
+ $7804 DEFB $03,$00
+ $7806 DEFB $00,$01
+ $7808 DEFB $00,$04
+ $780A DEFB $00,$00
+ $780C DEFB $04,$02
+ $780E DEFB $02,$00
+ $7810 DEFB $00,$01
  $7812 DEFB $00,$00
 
 ; Game status buffer entry at 7814
 g$7814 DEFB $00
 
 ; Game status buffer entry at 7815
-g$7815 DEFB $06,$1E
+g$7815 DEFW $1E06
 
-; Game status buffer entry at 7817
-g$7817 DEFB $06,$06
+; Current Screen Position
+@label=Current_ScreenPosition
+g$7817 DEFW $0606
 
-; Game status buffer entry at 7819
+; Scroll Phase Counter
+@label=ScrollPhase_Counter
 g$7819 DEFB $00
 
 ; Game status buffer entry at 781A
 g$781A DEFB $00
 
-; Game status buffer entry at 781B
+; Active Sprite Blocks
+;
+; The number of sprite character blocks (8x8 pixels) currently active.
+; .
+; A single sprite may span multiple character blocks, this is where it's
+; tracked.
+@label=ActiveSpriteBlocks
 g$781B DEFB $00
 
-; Game status buffer entry at 781C
+; Pointer: Sprite Background Buffer
+;
+; Pointer to buffer containing saved background data for sprite removal.
+@label=SpriteBackgroundBuffer_Pointer
 g$781C DEFW $0404
 
 ; Random Number Seed?
@@ -4424,11 +4544,12 @@ g$7830 DEFB $00
 ; Game status buffer entry at 7831
 g$7831 DEFW $0303
 
-; Game status buffer entry at 7833
+; Player Y Position
+@label=PlayerPosition_Y
 g$7833 DEFB $00
 
-; Wheelie
-@label=Wheelie
+; Player Sprite ID
+@label=PlayerSpriteID
 g$7834 DEFB $00
 
 ; Game status buffer entry at 7835
@@ -4786,30 +4907,32 @@ b$78E0 DEFB $00,$55,$00,$00,$00,$00,$00,$00
  $7FE8 DEFB $05,$05,$04,$04,$05,$05,$04,$05
  $7FF0 DEFB $05,$05,$05,$00,$05,$05,$05,$01
  $7FF8 DEFB $05,$05,$05,$04,$05,$05,$05,$05
- $8000 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
- $8008 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
- $8010 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
- $8018 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
- $8020 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $8028 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $8030 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $8038 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $8040 DEFB $00,$00,$D0,$00,$00,$00,$FD,$00
- $8048 DEFB $00,$00,$FC,$00,$00,$00,$F8,$00
- $8050 DEFB $00,$07,$FD,$00,$00,$B0,$FD,$00
- $8058 DEFB $07,$FF,$FE,$00,$B0,$FF,$F0,$00
- $8060 DEFB $BF,$FF,$FD,$00,$0B,$FF,$D0,$00
- $8068 DEFB $00,$BF,$FE,$00,$00,$0B,$FE,$00
- $8070 DEFB $00,$00,$D0,$00,$00,$00,$F0,$00
- $8078 DEFB $00,$00,$E0,$00,$00,$00,$F8,$00
- $8080 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $8088 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $8090 DEFB $00,$07,$FF,$FF,$00,$B0,$FF,$FF
- $8098 DEFB $07,$FF,$FF,$FF,$B0,$FF,$FF,$FF
- $80A0 DEFB $BF,$FF,$FF,$FF,$0B,$FF,$FF,$FF
- $80A8 DEFB $00,$BF,$FF,$FF,$00,$0B,$FF,$FF
- $80B0 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
- $80B8 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF
+
+; Graphics Data
+b$8000 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF ; {#UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_solid)
+ $8008 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF ;
+ $8010 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF ;
+ $8018 DEFB $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF ; }
+ $8020 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ; {#UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_stripes)
+ $8028 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ;
+ $8030 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ;
+ $8038 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ; }
+ $8040 DEFB $00,$00,$D0,$00,$00,$00,$FD,$00 ; {#UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge1)
+ $8048 DEFB $00,$00,$FC,$00,$00,$00,$F8,$00 ;
+ $8050 DEFB $00,$07,$FD,$00,$00,$B0,$FD,$00 ;
+ $8058 DEFB $07,$FF,$FE,$00,$B0,$FF,$F0,$00 ; }
+ $8060 DEFB $BF,$FF,$FD,$00,$0B,$FF,$D0,$00 ; {#UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge2)
+ $8068 DEFB $00,$BF,$FE,$00,$00,$0B,$FE,$00 ;
+ $8070 DEFB $00,$00,$D0,$00,$00,$00,$F0,$00 ;
+ $8078 DEFB $00,$00,$E0,$00,$00,$00,$F8,$00 ; }
+ $8080 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ; {#UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge3)
+ $8088 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ;
+ $8090 DEFB $00,$07,$FF,$FF,$00,$B0,$FF,$FF ;
+ $8098 DEFB $07,$FF,$FF,$FF,$B0,$FF,$FF,$FF ; }
+ $80A0 DEFB $BF,$FF,$FF,$FF,$0B,$FF,$FF,$FF ; {#UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge4)
+ $80A8 DEFB $00,$BF,$FF,$FF,$00,$0B,$FF,$FF ;
+ $80B0 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ;
+ $80B8 DEFB $00,$00,$FF,$FF,$00,$00,$FF,$FF ; }
  $80C0 DEFB $00,$00,$E8,$00,$00,$00,$C0,$00
  $80C8 DEFB $00,$00,$F5,$00,$00,$00,$FF,$00
  $80D0 DEFB $00,$06,$FE,$00,$00,$AE,$E0,$00
@@ -5087,648 +5210,213 @@ b$78E0 DEFB $00,$55,$00,$00,$00,$00,$00,$00
  $8950 DEFB $00,$00,$FA,$00,$00,$00,$FC,$00
  $8958 DEFB $00,$00,$F4,$00,$00,$00,$FD,$00
 
-; Level Data?
-@label=Data_Level1
-b$8960 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8968 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8970 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8978 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8980 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8988 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8990 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8998 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $89A0 DEFB $00,$2B,$2D,$2D,$2D,$2D,$2B,$2B
- $89A8 DEFB $2D,$2D,$2C,$2A,$2A,$2B,$2C,$2A
- $89B0 DEFB $2B,$2B,$2B,$2A,$2B,$2A,$2B,$2C
- $89B8 DEFB $2B,$2D,$2D,$2B,$2B,$2A,$2B,$00
- $89C0 DEFB $00,$01,$01,$01,$01,$01,$01,$01
- $89C8 DEFB $01,$01,$01,$01,$49,$01,$01,$01
- $89D0 DEFB $01,$01,$01,$49,$01,$01,$01,$01
- $89D8 DEFB $01,$01,$01,$01,$01,$01,$01,$00
- $89E0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $89E8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $89F0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $89F8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8A00 DEFB $00,$00,$00,$00,$00,$00,$29,$2C
- $8A08 DEFB $2D,$2A,$2B,$28,$00,$00,$00,$29
- $8A10 DEFB $2A,$2A,$2C,$2B,$2C,$2B,$2D,$2D
- $8A18 DEFB $2A,$2A,$28,$00,$00,$00,$00,$00
- $8A20 DEFB $00,$2D,$2C,$2C,$2D,$15,$0D,$2E
- $8A28 DEFB $2F,$30,$31,$0C,$14,$2C,$15,$0F
- $8A30 DEFB $01,$01,$1C,$11,$01,$32,$32,$32
- $8A38 DEFB $32,$01,$0E,$1B,$00,$00,$00,$00
- $8A40 DEFB $00,$01,$01,$10,$16,$06,$20,$01
- $8A48 DEFB $10,$16,$31,$31,$07,$2E,$02,$2B
- $8A50 DEFB $2B,$15,$1F,$2A,$2B,$2C,$2B,$2C
- $8A58 DEFB $2D,$00,$00,$0B,$14,$2A,$2A,$00
- $8A60 DEFB $00,$00,$00,$00,$05,$01,$0E,$14
- $8A68 DEFB $2D,$03,$30,$2F,$2F,$30,$12,$16
- $8A70 DEFB $30,$06,$31,$30,$2F,$30,$33,$4A
- $8A78 DEFB $24,$2D,$2C,$2B,$03,$30,$01,$00
- $8A80 DEFB $00,$00,$00,$00,$00,$00,$00,$05
- $8A88 DEFB $01,$01,$01,$01,$01,$01,$01,$09
- $8A90 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $8A98 DEFB $01,$01,$01,$01,$49,$22,$00,$00
- $8AA0 DEFB $00,$00,$2D,$2D,$2C,$2D,$2B,$2F
- $8AA8 DEFB $2B,$2A,$2C,$2C,$2D,$2A,$2A,$2B
- $8AB0 DEFB $2D,$2B,$2C,$2C,$2A,$2C,$2D,$2D
- $8AB8 DEFB $2B,$28,$00,$00,$00,$00,$00,$00
- $8AC0 DEFB $00,$2B,$25,$4A,$30,$20,$10,$16
- $8AC8 DEFB $30,$2F,$2E,$31,$2E,$2F,$30,$2F
- $8AD0 DEFB $2E,$31,$31,$2F,$2F,$20,$01,$01
- $8AD8 DEFB $01,$0E,$14,$2B,$2B,$2C,$2C,$00
- $8AE0 DEFB $00,$01,$10,$1D,$01,$0E,$14,$03
- $8AE8 DEFB $2E,$2E,$30,$31,$31,$2E,$30,$30
- $8AF0 DEFB $32,$32,$32,$32,$01,$0E,$1B,$00
- $8AF8 DEFB $2D,$2A,$03,$17,$11,$01,$01,$00
- $8B00 DEFB $00,$00,$00,$0B,$14,$2B,$03,$30
- $8B08 DEFB $30,$2F,$31,$30,$2E,$33,$4A,$24
- $8B10 DEFB $2D,$2D,$2B,$2C,$2B,$2B,$1E,$14
- $8B18 DEFB $25,$4A,$31,$02,$2A,$2C,$00,$00
- $8B20 DEFB $00,$00,$00,$00,$05,$01,$01,$01
- $8B28 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $8B30 DEFB $01,$01,$01,$01,$01,$01,$01,$09
- $8B38 DEFB $01,$01,$01,$01,$49,$22,$00,$00
- $8B40 DEFB $00,$00,$00,$00,$00,$00,$00,$29
- $8B48 DEFB $2D,$2D,$2B,$2B,$2C,$2C,$28,$00
- $8B50 DEFB $2A,$2B,$2C,$2B,$2D,$2D,$2A,$2A
- $8B58 DEFB $2D,$2B,$2B,$2A,$2C,$2B,$00,$00
- $8B60 DEFB $00,$00,$00,$00,$29,$2D,$15,$0F
- $8B68 DEFB $01,$32,$32,$32,$32,$01,$0E,$14
- $8B70 DEFB $25,$4A,$30,$33,$31,$2F,$31,$20
- $8B78 DEFB $10,$16,$30,$20,$49,$22,$00,$00
- $8B80 DEFB $00,$00,$00,$1A,$0F,$01,$18,$2B
- $8B88 DEFB $2A,$2B,$2D,$2D,$2A,$2C,$2B,$03
- $8B90 DEFB $30,$2F,$31,$2E,$2E,$31,$31,$0E
- $8B98 DEFB $14,$03,$2F,$0C,$14,$2D,$2D,$00
- $8BA0 DEFB $00,$2C,$15,$1F,$2A,$15,$0D,$2E
- $8BA8 DEFB $2E,$2F,$2E,$30,$12,$16,$31,$30
- $8BB0 DEFB $30,$17,$11,$01,$01,$49,$22,$00
- $8BB8 DEFB $05,$01,$01,$01,$09,$01,$01,$00
- $8BC0 DEFB $00,$01,$08,$01,$01,$08,$01,$01
- $8BC8 DEFB $01,$01,$01,$01,$01,$09,$01,$01
- $8BD0 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $8BD8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8BE0 DEFB $00,$00,$00,$00,$00,$2C,$2A,$2B
- $8BE8 DEFB $2C,$2D,$2D,$2C,$2B,$2A,$2C,$2C
- $8BF0 DEFB $2B,$2D,$2C,$2C,$2A,$2C,$2B,$2B
- $8BF8 DEFB $2A,$2D,$28,$00,$00,$00,$00,$00
- $8C00 DEFB $00,$00,$00,$29,$2D,$25,$4A,$20
- $8C08 DEFB $01,$01,$01,$01,$01,$01,$01,$32
- $8C10 DEFB $32,$32,$32,$01,$01,$21,$2E,$17
- $8C18 DEFB $11,$01,$0E,$14,$2B,$2A,$2C,$00
- $8C20 DEFB $00,$2A,$15,$0D,$30,$30,$30,$0C
- $8C28 DEFB $14,$2A,$2A,$2B,$2C,$00,$29,$2C
- $8C30 DEFB $2C,$2D,$2D,$2B,$15,$0D,$20,$04
- $8C38 DEFB $00,$00,$00,$05,$01,$01,$01,$00
- $8C40 DEFB $00,$01,$08,$01,$10,$16,$31,$31
- $8C48 DEFB $07,$30,$33,$4A,$24,$15,$0F,$01
- $8C50 DEFB $32,$32,$32,$32,$08,$01,$0E,$14
- $8C58 DEFB $2C,$2D,$2D,$2C,$2B,$00,$00,$00
- $8C60 DEFB $00,$00,$00,$00,$00,$05,$01,$01
- $8C68 DEFB $01,$01,$01,$01,$01,$04,$00,$00
- $8C70 DEFB $00,$00,$00,$00,$00,$00,$00,$05
- $8C78 DEFB $01,$01,$01,$49,$22,$00,$00,$00
- $8C80 DEFB $00,$00,$00,$00,$00,$00,$29,$2A
- $8C88 DEFB $2B,$2C,$2D,$2B,$2C,$2B,$2A,$28
- $8C90 DEFB $00,$2A,$2B,$2B,$28,$00,$00,$00
- $8C98 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8CA0 DEFB $00,$00,$00,$00,$00,$1A,$0F,$21
- $8CA8 DEFB $2E,$2F,$2F,$30,$2F,$30,$20,$0E
- $8CB0 DEFB $1B,$23,$49,$01,$0E,$14,$2A,$2A
- $8CB8 DEFB $2B,$2C,$2B,$2D,$2A,$2C,$2B,$00
- $8CC0 DEFB $00,$2C,$2D,$2C,$15,$1F,$15,$0F
- $8CC8 DEFB $01,$32,$32,$32,$32,$01,$0E,$1B
- $8CD0 DEFB $0B,$14,$2C,$2D,$2B,$03,$2E,$33
- $8CD8 DEFB $2F,$31,$17,$11,$01,$01,$01,$00
- $8CE0 DEFB $00,$01,$10,$16,$06,$2F,$02,$2A
- $8CE8 DEFB $2C,$2D,$2B,$2C,$2A,$2D,$2D,$1E
- $8CF0 DEFB $14,$03,$31,$30,$32,$32,$32,$32
- $8CF8 DEFB $01,$01,$04,$00,$00,$00,$00,$00
- $8D00 DEFB $00,$00,$00,$05,$01,$01,$01,$01
- $8D08 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $8D10 DEFB $09,$01,$49,$22,$00,$00,$00,$00
- $8D18 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8D20 DEFB $00,$00,$00,$00,$29,$2C,$2D,$2A
- $8D28 DEFB $2B,$2A,$2C,$2A,$2B,$2D,$00,$00
- $8D30 DEFB $00,$00,$00,$29,$2B,$2D,$2C,$2D
- $8D38 DEFB $2B,$2A,$2A,$2D,$2C,$2A,$00,$00
- $8D40 DEFB $00,$2A,$2D,$15,$0D,$2F,$30,$01
- $8D48 DEFB $1C,$11,$21,$33,$4A,$24,$2A,$2C
- $8D50 DEFB $2D,$2B,$15,$0F,$1C,$11,$01,$32
- $8D58 DEFB $32,$32,$32,$01,$49,$22,$00,$00
- $8D60 DEFB $00,$01,$30,$06,$2F,$4A,$24,$15
- $8D68 DEFB $1F,$15,$0F,$01,$32,$32,$32,$32
- $8D70 DEFB $01,$21,$02,$15,$0A,$00,$29,$2C
- $8D78 DEFB $2D,$2B,$2A,$2C,$2B,$2C,$2D,$00
- $8D80 DEFB $00,$00,$23,$49,$01,$01,$01,$08
- $8D88 DEFB $01,$02,$2D,$2A,$2C,$2B,$2A,$2A
- $8D90 DEFB $15,$0D,$2F,$02,$2B,$15,$0D,$2E
- $8D98 DEFB $30,$2F,$30,$2F,$2E,$01,$01,$00
- $8DA0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8DA8 DEFB $00,$23,$49,$01,$01,$01,$01,$01
- $8DB0 DEFB $08,$01,$01,$01,$01,$08,$01,$01
- $8DB8 DEFB $01,$01,$01,$49,$22,$00,$00,$00
- $8DC0 DEFB $00,$2B,$2D,$2A,$2B,$2B,$2A,$2D
- $8DC8 DEFB $2C,$2D,$2D,$2B,$2A,$2C,$2C,$2D
- $8DD0 DEFB $2A,$2B,$2A,$2C,$2D,$2A,$2B,$2C
- $8DD8 DEFB $2D,$2B,$2C,$28,$00,$00,$00,$00
- $8DE0 DEFB $00,$23,$49,$21,$12,$16,$2E,$2F
- $8DE8 DEFB $30,$31,$2E,$32,$32,$32,$32,$2F
- $8DF0 DEFB $2E,$31,$2F,$2E,$30,$2F,$30,$31
- $8DF8 DEFB $2E,$2E,$2F,$0C,$14,$2B,$2C,$00
- $8E00 DEFB $00,$2C,$15,$0D,$30,$07,$30,$2F
- $8E08 DEFB $2E,$4A,$24,$2C,$2B,$2B,$2D,$23
- $8E10 DEFB $49,$21,$2F,$31,$2E,$30,$2E,$2F
- $8E18 DEFB $30,$17,$11,$01,$09,$01,$01,$00
- $8E20 DEFB $00,$01,$08,$01,$01,$01,$10,$16
- $8E28 DEFB $30,$2E,$2F,$31,$33,$4A,$24,$2C
- $8E30 DEFB $15,$0F,$01,$32,$32,$32,$32,$01
- $8E38 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $8E40 DEFB $00,$00,$00,$00,$00,$00,$00,$05
- $8E48 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $8E50 DEFB $04,$00,$00,$00,$00,$00,$00,$00
- $8E58 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8E60 DEFB $00,$00,$00,$29,$2C,$2A,$2D,$2B
- $8E68 DEFB $2D,$2C,$2A,$28,$00,$00,$00,$00
- $8E70 DEFB $00,$00,$29,$2B,$2A,$2C,$2D,$2A
- $8E78 DEFB $2B,$2D,$00,$00,$00,$00,$00,$00
- $8E80 DEFB $00,$2A,$15,$0D,$20,$01,$32,$32
- $8E88 DEFB $32,$32,$01,$0E,$14,$2C,$2B,$2D
- $8E90 DEFB $2A,$15,$0F,$21,$2F,$31,$2E,$33
- $8E98 DEFB $4A,$24,$2C,$28,$00,$00,$00,$00
- $8EA0 DEFB $00,$01,$08,$01,$0E,$14,$2D,$2B
- $8EA8 DEFB $2A,$2A,$2D,$28,$05,$32,$32,$32
- $8EB0 DEFB $32,$04,$1A,$0F,$2F,$2E,$31,$30
- $8EB8 DEFB $2E,$2F,$31,$0C,$14,$2D,$2A,$00
- $8EC0 DEFB $00,$00,$00,$00,$00,$05,$32,$32
- $8EC8 DEFB $32,$32,$01,$0E,$14,$2C,$2B,$2D
- $8ED0 DEFB $2C,$15,$0A,$00,$23,$49,$01,$01
- $8ED8 DEFB $32,$32,$32,$32,$09,$01,$01,$00
- $8EE0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8EE8 DEFB $00,$00,$00,$00,$05,$01,$01,$01
- $8EF0 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $8EF8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8F00 DEFB $00,$00,$00,$00,$00,$29,$2C,$2D
- $8F08 DEFB $2B,$2D,$2B,$2A,$2C,$2D,$2B,$2C
- $8F10 DEFB $2A,$00,$29,$2B,$2D,$2C,$2B,$2A
- $8F18 DEFB $2D,$28,$00,$00,$00,$00,$00,$00
- $8F20 DEFB $00,$2B,$2C,$2A,$15,$0F,$01,$01
- $8F28 DEFB $32,$32,$32,$32,$01,$21,$33,$4A
- $8F30 DEFB $24,$15,$0F,$21,$31,$2F,$30,$2E
- $8F38 DEFB $2F,$0C,$14,$2C,$2C,$2A,$2D,$00
- $8F40 DEFB $00,$01,$10,$16,$02,$28,$00,$2B
- $8F48 DEFB $2A,$2C,$2D,$2A,$15,$0F,$01,$21
- $8F50 DEFB $2F,$02,$15,$0F,$01,$32,$32,$32
- $8F58 DEFB $32,$01,$07,$2E,$2F,$30,$01,$00
- $8F60 DEFB $00,$00,$00,$05,$01,$0E,$14,$25
- $8F68 DEFB $4A,$31,$30,$2F,$02,$2B,$15,$0D
- $8F70 DEFB $30,$31,$02,$2D,$2A,$2B,$2D,$2C
- $8F78 DEFB $2A,$15,$0F,$01,$49,$22,$00,$00
- $8F80 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $8F88 DEFB $01,$01,$01,$01,$01,$01,$08,$01
- $8F90 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $8F98 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $8FA0 DEFB $00,$00,$00,$00,$00,$29,$2C,$2B
- $8FA8 DEFB $2D,$2B,$2C,$2D,$2A,$2C,$2B,$2D
- $8FB0 DEFB $2C,$2A,$2D,$2C,$2B,$2D,$2A,$2C
- $8FB8 DEFB $2D,$28,$00,$00,$00,$00,$00,$00
- $8FC0 DEFB $00,$00,$00,$00,$1A,$0F,$01,$01
- $8FC8 DEFB $01,$01,$21,$2F,$2E,$30,$31,$2F
- $8FD0 DEFB $2E,$30,$31,$30,$20,$10,$1D,$01
- $8FD8 DEFB $01,$0E,$14,$2C,$2D,$2C,$00,$00
- $8FE0 DEFB $00,$2A,$2B,$15,$1F,$2D,$2B,$2A
- $8FE8 DEFB $2C,$15,$0F,$01,$32,$32,$32,$32
- $8FF0 DEFB $01,$1C,$11,$01,$0E,$14,$1E,$14
- $8FF8 DEFB $2B,$2A,$03,$01,$4A,$24,$2B,$00
- $9000 DEFB $00,$01,$01,$08,$01,$01,$01,$01
- $9008 DEFB $01,$02,$2C,$2B,$2C,$2A,$2D,$2A
- $9010 DEFB $15,$1F,$2D,$2B,$2D,$03,$31,$07
- $9018 DEFB $33,$4A,$24,$15,$0F,$01,$01,$00
- $9020 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9028 DEFB $00,$23,$49,$01,$01,$01,$01,$01
- $9030 DEFB $08,$01,$01,$01,$01,$01,$01,$01
- $9038 DEFB $01,$01,$01,$04,$00,$00,$00,$00
- $9040 DEFB $00,$00,$00,$29,$2B,$2A,$2C,$2D
- $9048 DEFB $2C,$2A,$2D,$2B,$2A,$2D,$2A,$2A
- $9050 DEFB $2C,$2D,$2B,$2C,$2A,$2D,$00,$00
- $9058 DEFB $00,$00,$00,$29,$2B,$2C,$00,$00
- $9060 DEFB $00,$2B,$15,$0F,$01,$1C,$11,$01
- $9068 DEFB $10,$16,$2F,$31,$2E,$30,$2E,$17
- $9070 DEFB $11,$21,$30,$33,$4A,$24,$2D,$2C
- $9078 DEFB $2D,$2B,$15,$0F,$49,$22,$00,$00
- $9080 DEFB $00,$01,$02,$2B,$15,$1F,$28,$00
- $9088 DEFB $00,$05,$21,$30,$2F,$31,$31,$02
- $9090 DEFB $15,$0F,$01,$32,$32,$32,$32,$01
- $9098 DEFB $12,$16,$02,$28,$00,$00,$00,$00
- $90A0 DEFB $00,$00,$23,$49,$08,$01,$0E,$14
- $90A8 DEFB $2A,$15,$0F,$01,$32,$32,$32,$32
- $90B0 DEFB $02,$2C,$2D,$2A,$2B,$2D,$2A,$15
- $90B8 DEFB $0F,$09,$01,$0E,$14,$2B,$2A,$00
- $90C0 DEFB $00,$00,$00,$00,$00,$00,$00,$05
- $90C8 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $90D0 DEFB $23,$49,$01,$01,$01,$01,$01,$04
- $90D8 DEFB $00,$00,$00,$00,$05,$01,$01,$00
- $90E0 DEFB $00,$00,$00,$29,$2B,$2D,$2C,$2A
- $90E8 DEFB $2B,$2D,$2B,$2A,$2C,$2E,$2D,$00
- $90F0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $90F8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9100 DEFB $00,$2B,$15,$0D,$2F,$30,$31,$12
- $9108 DEFB $16,$2E,$33,$20,$01,$49,$22,$2C
- $9110 DEFB $2B,$2C,$2D,$2A,$2D,$2B,$2A,$2B
- $9118 DEFB $2A,$2C,$2A,$2D,$2B,$2D,$2C,$00
- $9120 DEFB $00,$01,$08,$01,$10,$16,$2F,$2E
- $9128 DEFB $07,$31,$2E,$0C,$14,$2B,$28,$23
- $9130 DEFB $49,$01,$1C,$11,$01,$32,$32,$32
- $9138 DEFB $32,$01,$01,$1C,$11,$01,$01,$00
- $9140 DEFB $00,$00,$00,$00,$00,$05,$01,$32
- $9148 DEFB $32,$32,$32,$01,$09,$01,$0E,$14
- $9150 DEFB $2A,$15,$1F,$2B,$2C,$2A,$2B,$2D
- $9158 DEFB $2A,$2C,$15,$0A,$00,$00,$00,$00
- $9160 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9168 DEFB $00,$00,$00,$00,$00,$00,$00,$05
- $9170 DEFB $01,$08,$01,$01,$01,$49,$22,$23
- $9178 DEFB $49,$01,$04,$00,$00,$00,$00,$00
- $9180 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9188 DEFB $00,$00,$00,$29,$2A,$2A,$2B,$2B
- $9190 DEFB $2C,$2C,$2D,$2D,$2B,$28,$00,$2D
- $9198 DEFB $2B,$2A,$28,$00,$00,$00,$00,$00
- $91A0 DEFB $00,$00,$00,$00,$29,$2C,$2B,$2A
- $91A8 DEFB $2D,$2A,$15,$0D,$30,$2E,$31,$2F
- $91B0 DEFB $2E,$30,$2F,$2E,$01,$0E,$14,$25
- $91B8 DEFB $4A,$01,$0E,$1B,$00,$00,$00,$00
- $91C0 DEFB $00,$00,$00,$1A,$0F,$01,$32,$32
- $91C8 DEFB $32,$32,$08,$01,$10,$16,$30,$2E
- $91D0 DEFB $30,$33,$4A,$24,$2A,$28,$05,$4A
- $91D8 DEFB $24,$2B,$2A,$1E,$14,$2C,$2D,$00
- $91E0 DEFB $00,$2B,$15,$1F,$2B,$2D,$2C,$2A
- $91E8 DEFB $2D,$2B,$2A,$00,$00,$05,$32,$32
- $91F0 DEFB $32,$32,$01,$01,$01,$0E,$14,$25
- $91F8 DEFB $4A,$17,$11,$01,$09,$01,$01,$00
- $9200 DEFB $00,$01,$08,$01,$01,$01,$01,$01
- $9208 DEFB $01,$49,$22,$00,$00,$00,$00,$00
- $9210 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $9218 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $9220 DEFB $00,$00,$00,$00,$29,$2B,$2B,$2A
- $9228 DEFB $2C,$2C,$2D,$2A,$2A,$2B,$2D,$2D
- $9230 DEFB $2C,$2B,$2A,$2D,$2B,$2C,$2A,$2B
- $9238 DEFB $2D,$2A,$2A,$00,$00,$00,$00,$00
- $9240 DEFB $00,$2D,$2B,$15,$0D,$20,$01,$32
- $9248 DEFB $32,$32,$32,$01,$30,$2F,$2F,$2E
- $9250 DEFB $2E,$31,$30,$2F,$30,$33,$31,$2E
- $9258 DEFB $2E,$4A,$24,$28,$00,$00,$00,$00
- $9260 DEFB $00,$01,$01,$08,$01,$0E,$14,$2B
- $9268 DEFB $2C,$2B,$2A,$2C,$25,$4A,$2E,$2F
- $9270 DEFB $31,$30,$01,$2F,$2E,$31,$30,$2E
- $9278 DEFB $30,$31,$2F,$0C,$14,$2A,$2C,$00
- $9280 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $9288 DEFB $01,$10,$16,$30,$31,$2F,$31,$2F
- $9290 DEFB $4A,$24,$2A,$25,$4A,$17,$11,$01
- $9298 DEFB $32,$32,$32,$32,$09,$01,$01,$00
- $92A0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $92A8 DEFB $00,$00,$05,$01,$01,$01,$01,$01
- $92B0 DEFB $01,$01,$01,$01,$01,$04,$00,$00
- $92B8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $92C0 DEFB $00,$00,$00,$00,$00,$2B,$2D,$2A
- $92C8 DEFB $2C,$2B,$2A,$2D,$2A,$2A,$2C,$2B
- $92D0 DEFB $2B,$2C,$2D,$2D,$2C,$2A,$2A,$2D
- $92D8 DEFB $2A,$2A,$2D,$2B,$2B,$2C,$00,$00
- $92E0 DEFB $00,$00,$00,$2B,$2D,$25,$4A,$31
- $92E8 DEFB $2E,$2F,$12,$16,$31,$31,$2F,$2F
- $92F0 DEFB $30,$30,$2E,$2E,$31,$30,$2E,$2F
- $92F8 DEFB $30,$2F,$31,$2E,$4A,$24,$00,$00
- $9300 DEFB $00,$2B,$28,$23,$49,$2F,$2E,$2F
- $9308 DEFB $17,$13,$2F,$07,$30,$2E,$2F,$01
- $9310 DEFB $21,$30,$31,$2F,$2E,$30,$31,$01
- $9318 DEFB $21,$30,$17,$11,$49,$22,$00,$00
- $9320 DEFB $00,$01,$0E,$14,$2C,$25,$4A,$31
- $9328 DEFB $06,$30,$12,$16,$2E,$4A,$24,$15
- $9330 DEFB $0F,$31,$2E,$30,$33,$4A,$24,$15
- $9338 DEFB $0D,$30,$02,$2B,$2D,$2A,$2C,$00
- $9340 DEFB $00,$00,$00,$05,$01,$01,$01,$01
- $9348 DEFB $01,$01,$01,$09,$01,$01,$01,$04
- $9350 DEFB $00,$23,$49,$01,$01,$01,$01,$08
- $9358 DEFB $01,$01,$01,$01,$01,$01,$01,$00
- $9360 DEFB $00,$00,$2A,$2C,$2D,$2A,$2B,$2D
- $9368 DEFB $2C,$2A,$2D,$2B,$2A,$2D,$2B,$2A
- $9370 DEFB $2A,$2C,$2C,$2C,$2D,$2D,$2A,$2B
- $9378 DEFB $2B,$28,$00,$00,$00,$00,$00,$00
- $9380 DEFB $00,$00,$23,$4A,$2F,$2E,$30,$31
- $9388 DEFB $2E,$2F,$33,$31,$31,$2E,$2E,$30
- $9390 DEFB $30,$2F,$31,$30,$2F,$2E,$31,$2F
- $9398 DEFB $30,$0C,$14,$2C,$2D,$2C,$00,$00
- $93A0 DEFB $00,$2A,$15,$0F,$01,$32,$32,$32
- $93A8 DEFB $32,$01,$01,$32,$32,$32,$32,$01
- $93B0 DEFB $01,$32,$32,$32,$32,$01,$1C,$11
- $93B8 DEFB $01,$01,$09,$01,$49,$22,$00,$00
- $93C0 DEFB $00,$01,$04,$00,$00,$00,$00,$00
- $93C8 DEFB $00,$00,$2A,$2D,$2C,$2B,$2D,$2A
- $93D0 DEFB $2D,$2C,$2A,$2B,$2D,$15,$1F,$2D
- $93D8 DEFB $2B,$2C,$2A,$2A,$2D,$2D,$2B,$00
- $93E0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $93E8 DEFB $00,$00,$23,$49,$01,$01,$01,$01
- $93F0 DEFB $01,$01,$01,$01,$01,$08,$01,$01
- $93F8 DEFB $01,$01,$01,$01,$01,$01,$01,$00
- $9400 DEFB $00,$00,$00,$00,$00,$29,$2A,$2A
- $9408 DEFB $2D,$2D,$2B,$2C,$2B,$2C,$2A,$2A
- $9410 DEFB $28,$00,$00,$00,$29,$2B,$2A,$2D
- $9418 DEFB $2C,$28,$00,$00,$00,$00,$00,$00
- $9420 DEFB $00,$00,$00,$00,$1A,$0F,$01,$32
- $9428 DEFB $32,$32,$32,$01,$10,$1D,$01,$01
- $9430 DEFB $0E,$14,$2C,$15,$0D,$31,$30,$2F
- $9438 DEFB $2E,$0C,$14,$2D,$2C,$2C,$2D,$00
- $9440 DEFB $00,$2A,$2A,$15,$0A,$00,$00,$2D
- $9448 DEFB $2C,$2B,$2C,$2B,$2A,$1E,$14,$2B
- $9450 DEFB $2B,$03,$2E,$06,$31,$31,$17,$11
- $9458 DEFB $01,$21,$07,$17,$11,$01,$01,$00
- $9460 DEFB $00,$01,$30,$02,$2C,$2D,$2A,$25
- $9468 DEFB $4A,$33,$30,$2F,$30,$31,$07,$30
- $9470 DEFB $17,$13,$30,$2F,$2F,$30,$02,$2D
- $9478 DEFB $15,$0F,$01,$04,$00,$00,$00,$00
- $9480 DEFB $00,$00,$23,$49,$01,$01,$01,$01
- $9488 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $9490 DEFB $08,$01,$01,$01,$01,$01,$01,$01
- $9498 DEFB $04,$00,$00,$00,$00,$00,$00,$00
- $94A0 DEFB $00,$00,$00,$00,$00,$00,$29,$2B
- $94A8 DEFB $2D,$2D,$2C,$2A,$2C,$2C,$2B,$2D
- $94B0 DEFB $2B,$2A,$2A,$2D,$2C,$2C,$2A,$2B
- $94B8 DEFB $2F,$2B,$2D,$2C,$2D,$2D,$00,$00
- $94C0 DEFB $00,$2C,$2C,$2B,$2B,$15,$0F,$01
- $94C8 DEFB $01,$01,$21,$2F,$2F,$31,$31,$2E
- $94D0 DEFB $2F,$30,$2F,$2E,$31,$2E,$2F,$30
- $94D8 DEFB $17,$11,$21,$30,$4A,$24,$2B,$00
- $94E0 DEFB $00,$01,$01,$10,$16,$02,$2A,$2D
- $94E8 DEFB $00,$1A,$0F,$01,$32,$32,$32,$32
- $94F0 DEFB $30,$30,$2E,$31,$31,$30,$2E,$2E
- $94F8 DEFB $02,$15,$0F,$01,$1C,$11,$01,$00
- $9500 DEFB $00,$00,$2C,$2A,$03,$31,$4A,$24
- $9508 DEFB $15,$1F,$2B,$2B,$2C,$2B,$2D,$2D
- $9510 DEFB $25,$4A,$33,$2E,$30,$31,$2F,$30
- $9518 DEFB $30,$02,$2B,$15,$0A,$00,$00,$00
- $9520 DEFB $00,$00,$23,$49,$01,$01,$01,$01
- $9528 DEFB $08,$01,$01,$01,$01,$01,$01,$01
- $9530 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $9538 DEFB $01,$01,$01,$04,$00,$00,$00,$00
- $9540 DEFB $00,$00,$2B,$2C,$2A,$2B,$2B,$2D
- $9548 DEFB $2A,$2A,$2D,$2D,$2B,$2C,$2B,$2A
- $9550 DEFB $00,$29,$2C,$2C,$2B,$2B,$2D,$2D
- $9558 DEFB $28,$00,$00,$00,$00,$00,$00,$00
- $9560 DEFB $00,$00,$23,$49,$21,$30,$17,$11
- $9568 DEFB $21,$31,$2F,$31,$33,$30,$4A,$24
- $9570 DEFB $15,$0F,$01,$32,$32,$32,$32,$01
- $9578 DEFB $0E,$14,$2D,$28,$00,$00,$00,$00
- $9580 DEFB $00,$2D,$2D,$15,$0D,$2F,$02,$15
- $9588 DEFB $0F,$31,$31,$2E,$2E,$31,$2F,$30
- $9590 DEFB $02,$2B,$2C,$2A,$2D,$2D,$2B,$2A
- $9598 DEFB $2B,$19,$01,$0E,$1B,$00,$00,$00
- $95A0 DEFB $00,$01,$01,$08,$01,$01,$01,$04
- $95A8 DEFB $00,$23,$49,$01,$01,$10,$16,$30
- $95B0 DEFB $30,$31,$17,$13,$30,$2E,$2F,$2E
- $95B8 DEFB $2E,$0C,$14,$2A,$1E,$14,$2C,$00
- $95C0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $95C8 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $95D0 DEFB $01,$01,$08,$01,$01,$01,$01,$01
- $95D8 DEFB $01,$01,$09,$01,$01,$09,$01,$00
- $95E0 DEFB $00,$00,$00,$00,$00,$29,$2D,$2A
- $95E8 DEFB $2B,$2B,$2C,$2A,$2C,$2C,$2D,$2B
- $95F0 DEFB $2C,$2C,$2A,$2B,$2C,$2D,$2D,$2C
- $95F8 DEFB $2B,$2A,$2C,$00,$00,$00,$00,$00
- $9600 DEFB $00,$2C,$2A,$2B,$15,$0F,$01,$10
- $9608 DEFB $16,$2E,$20,$01,$01,$32,$32,$32
- $9610 DEFB $32,$01,$01,$01,$01,$01,$01,$01
- $9618 DEFB $21,$4A,$24,$2D,$28,$00,$00,$00
- $9620 DEFB $00,$01,$01,$01,$04,$00,$00,$00
- $9628 DEFB $05,$21,$0C,$14,$2B,$2D,$2D,$2C
- $9630 DEFB $2C,$28,$00,$2C,$2B,$2A,$2A,$15
- $9638 DEFB $0D,$30,$30,$30,$0C,$14,$2A,$00
- $9640 DEFB $00,$00,$00,$2B,$2C,$2D,$2D,$2C
- $9648 DEFB $15,$0F,$01,$09,$32,$32,$32,$32
- $9650 DEFB $01,$0E,$14,$25,$4A,$33,$30,$06
- $9658 DEFB $31,$31,$17,$11,$01,$09,$01,$00
- $9660 DEFB $00,$00,$00,$23,$49,$01,$01,$01
- $9668 DEFB $04,$00,$00,$00,$00,$00,$00,$00
- $9670 DEFB $00,$00,$05,$01,$01,$01,$01,$01
- $9678 DEFB $01,$01,$04,$00,$00,$00,$00,$00
- $9680 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9688 DEFB $00,$00,$00,$29,$2B,$2B,$2A,$00
- $9690 DEFB $29,$2A,$2B,$2C,$2B,$2D,$2C,$2B
- $9698 DEFB $2A,$28,$00,$00,$00,$00,$00,$00
- $96A0 DEFB $00,$2B,$2C,$2A,$2D,$2B,$2C,$2B
- $96A8 DEFB $2A,$2A,$15,$0F,$01,$49,$22,$1A
- $96B0 DEFB $0F,$21,$30,$2F,$30,$2F,$2F,$2E
- $96B8 DEFB $20,$0E,$1B,$00,$00,$00,$00,$00
- $96C0 DEFB $00,$01,$01,$01,$10,$16,$31,$2F
- $96C8 DEFB $33,$2E,$02,$2B,$2D,$2C,$15,$0A
- $96D0 DEFB $1A,$0F,$01,$32,$32,$32,$32,$01
- $96D8 DEFB $0E,$14,$1E,$14,$2C,$2D,$2C,$00
- $96E0 DEFB $00,$00,$00,$00,$00,$05,$01,$01
- $96E8 DEFB $32,$32,$32,$32,$30,$31,$02,$15
- $96F0 DEFB $1F,$2D,$2D,$2A,$2C,$2B,$2D,$2C
- $96F8 DEFB $2A,$03,$2F,$07,$17,$11,$01,$00
- $9700 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9708 DEFB $00,$00,$00,$00,$23,$49,$01,$08
- $9710 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $9718 DEFB $01,$01,$01,$01,$04,$00,$00,$00
- $9720 DEFB $00,$00,$2A,$2C,$2D,$2A,$2A,$2B
- $9728 DEFB $2D,$2C,$2D,$2B,$28,$00,$00,$00
- $9730 DEFB $00,$00,$2D,$2B,$2A,$2C,$2A,$2B
- $9738 DEFB $2A,$2D,$2C,$28,$00,$00,$00,$00
- $9740 DEFB $00,$00,$23,$49,$01,$32,$32,$32
- $9748 DEFB $32,$01,$10,$1D,$0E,$14,$2B,$2D
- $9750 DEFB $2C,$2A,$25,$4A,$33,$20,$10,$1D
- $9758 DEFB $01,$30,$2F,$0C,$14,$2D,$2A,$00
- $9760 DEFB $00,$2D,$2C,$2B,$2C,$2A,$2B,$2D
- $9768 DEFB $2C,$28,$00,$0B,$14,$03,$20,$01
- $9770 DEFB $32,$32,$32,$32,$01,$0E,$14,$1E
- $9778 DEFB $14,$25,$4A,$2F,$07,$30,$01,$00
- $9780 DEFB $00,$01,$01,$2E,$2F,$30,$2F,$30
- $9788 DEFB $2E,$0C,$14,$2B,$03,$2F,$0C,$14
- $9790 DEFB $2A,$2A,$2B,$2C,$2A,$2D,$03,$01
- $9798 DEFB $09,$01,$01,$01,$49,$22,$00,$00
- $97A0 DEFB $00,$00,$00,$23,$49,$01,$01,$01
- $97A8 DEFB $01,$01,$09,$01,$01,$01,$01,$09
- $97B0 DEFB $01,$01,$01,$01,$01,$49,$22,$00
- $97B8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $97C0 DEFB $00,$00,$00,$00,$29,$2C,$2B,$2D
- $97C8 DEFB $2C,$2B,$2A,$2D,$2C,$2A,$2B,$2A
- $97D0 DEFB $2D,$2C,$2C,$2A,$2B,$2D,$2D,$2C
- $97D8 DEFB $2D,$2A,$2B,$2B,$2A,$2D,$00,$00
- $97E0 DEFB $00,$2C,$2B,$15,$0D,$2F,$2E,$2E
- $97E8 DEFB $31,$30,$2F,$30,$2E,$2F,$31,$2E
- $97F0 DEFB $2F,$32,$32,$32,$32,$2E,$31,$30
- $97F8 DEFB $2F,$2E,$17,$13,$4A,$22,$00,$00
- $9800 DEFB $00,$01,$01,$08,$01,$10,$16,$30
- $9808 DEFB $2F,$2E,$30,$2E,$31,$2F,$20,$49
- $9810 DEFB $22,$2D,$2B,$2B,$2C,$25,$4A,$2E
- $9818 DEFB $2F,$30,$06,$30,$0C,$14,$2C,$00
- $9820 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $9828 DEFB $01,$32,$32,$32,$32,$01,$0E,$14
- $9830 DEFB $2C,$25,$4A,$33,$31,$2F,$2E,$30
- $9838 DEFB $17,$11,$01,$01,$01,$09,$01,$00
- $9840 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9848 DEFB $00,$00,$00,$00,$00,$00,$00,$05
- $9850 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $9858 DEFB $04,$00,$00,$00,$00,$00,$00,$00
- $9860 DEFB $00,$00,$00,$00,$00,$00,$2D,$2B
- $9868 DEFB $2A,$2D,$2C,$2A,$2B,$28,$00,$00
- $9870 DEFB $00,$00,$00,$00,$29,$2A,$2C,$2D
- $9878 DEFB $2B,$2D,$2A,$2C,$28,$00,$00,$00
- $9880 DEFB $00,$00,$00,$00,$29,$2C,$25,$4A
- $9888 DEFB $33,$2E,$31,$2F,$20,$0E,$14,$2A
- $9890 DEFB $2D,$2B,$2C,$15,$0F,$01,$32,$32
- $9898 DEFB $32,$32,$01,$21,$0C,$14,$2A,$00
- $98A0 DEFB $00,$2A,$2D,$15,$0D,$31,$2F,$2E
- $98A8 DEFB $30,$31,$2E,$2F,$0E,$1B,$05,$32
- $98B0 DEFB $32,$32,$32,$04,$29,$2D,$2A,$2A
- $98B8 DEFB $2B,$2D,$15,$0F,$01,$09,$01,$00
- $98C0 DEFB $00,$01,$01,$08,$32,$32,$32,$32
- $98C8 DEFB $01,$01,$49,$22,$00,$0B,$14,$2C
- $98D0 DEFB $2D,$2B,$2C,$15,$0F,$01,$32,$32
- $98D8 DEFB $32,$32,$04,$00,$00,$00,$00,$00
- $98E0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $98E8 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $98F0 DEFB $01,$01,$01,$04,$00,$00,$00,$00
- $98F8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9900 DEFB $00,$00,$00,$00,$00,$00,$29,$2D
- $9908 DEFB $2A,$2B,$2C,$2D,$2B,$28,$00,$2A
- $9910 DEFB $2C,$2B,$2D,$2C,$2A,$2B,$2D,$2B
- $9918 DEFB $2D,$2C,$28,$00,$00,$00,$00,$00
- $9920 DEFB $00,$2D,$2A,$2C,$2C,$15,$0D,$2F
- $9928 DEFB $2E,$30,$2F,$31,$20,$0E,$14,$25
- $9930 DEFB $4A,$33,$20,$01,$32,$32,$32,$32
- $9938 DEFB $01,$01,$0E,$14,$2A,$2C,$2B,$00
- $9940 DEFB $00,$01,$30,$2F,$2E,$06,$01,$32
- $9948 DEFB $32,$32,$32,$01,$0E,$14,$03,$2F
- $9950 DEFB $20,$01,$0E,$14,$2A,$2D,$2C,$2A
- $9958 DEFB $2B,$00,$29,$03,$17,$11,$01,$00
- $9960 DEFB $00,$00,$23,$49,$01,$0E,$14,$2A
- $9968 DEFB $2C,$2D,$2B,$2A,$2D,$03,$31,$30
- $9970 DEFB $0C,$14,$2B,$03,$2F,$30,$31,$4A
- $9978 DEFB $24,$15,$0F,$01,$04,$00,$00,$00
- $9980 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $9988 DEFB $01,$01,$01,$01,$01,$01,$01,$01
- $9990 DEFB $01,$09,$01,$01,$01,$01,$01,$01
- $9998 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $99A0 DEFB $00,$00,$00,$00,$00,$00,$29,$2D
- $99A8 DEFB $2C,$2A,$2D,$2B,$2C,$2D,$2A,$2C
- $99B0 DEFB $2D,$2B,$2C,$2A,$2D,$2C,$2B,$2D
- $99B8 DEFB $2B,$2C,$28,$00,$00,$00,$00,$00
- $99C0 DEFB $00,$2C,$2C,$2D,$2C,$15,$0F,$01
- $99C8 DEFB $01,$1C,$11,$21,$30,$31,$30,$2E
- $99D0 DEFB $2F,$31,$30,$2E,$2F,$20,$01,$01
- $99D8 DEFB $01,$01,$0E,$1B,$00,$00,$00,$00
- $99E0 DEFB $00,$25,$4A,$20,$01,$02,$2A,$2B
- $99E8 DEFB $15,$1F,$15,$0F,$01,$10,$1D,$01
- $99F0 DEFB $32,$32,$32,$32,$01,$0E,$14,$2C
- $99F8 DEFB $2A,$2B,$2D,$1E,$14,$2B,$2A,$00
- $9A00 DEFB $00,$01,$01,$0E,$14,$25,$4A,$33
- $9A08 DEFB $06,$31,$02,$2D,$2B,$2D,$1E,$14
- $9A10 DEFB $2A,$2D,$2A,$2C,$2B,$2C,$03,$01
- $9A18 DEFB $01,$01,$01,$01,$09,$01,$01,$00
- $9A20 DEFB $00,$00,$00,$00,$05,$01,$01,$01
- $9A28 DEFB $01,$01,$01,$01,$01,$01,$01,$09
- $9A30 DEFB $01,$01,$01,$01,$01,$49,$22,$00
- $9A38 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9A40 DEFB $00,$00,$2C,$2B,$28,$00,$00,$00
- $9A48 DEFB $00,$00,$2D,$2A,$2C,$2B,$2D,$2C
- $9A50 DEFB $2A,$2A,$2D,$2A,$2B,$2D,$2A,$2C
- $9A58 DEFB $2D,$2C,$2A,$2B,$28,$00,$00,$00
- $9A60 DEFB $00,$00,$23,$49,$0E,$14,$2B,$2D
- $9A68 DEFB $2C,$2D,$25,$4A,$33,$30,$20,$10
- $9A70 DEFB $16,$2E,$30,$2E,$31,$2F,$17,$11
- $9A78 DEFB $01,$10,$1D,$01,$0E,$14,$2B,$00
- $9A80 DEFB $00,$00,$00,$00,$29,$03,$17,$13
- $9A88 DEFB $01,$32,$32,$32,$32,$01,$0E,$14
- $9A90 DEFB $03,$31,$31,$2F,$30,$20,$04,$00
- $9A98 DEFB $00,$29,$1E,$14,$2B,$03,$01,$00
- $9AA0 DEFB $00,$2A,$2B,$15,$0F,$01,$08,$0E
- $9AA8 DEFB $14,$2A,$2D,$2B,$2A,$2D,$2C,$03
- $9AB0 DEFB $32,$32,$32,$32,$01,$0E,$14,$2A
- $9AB8 DEFB $15,$0F,$01,$09,$49,$22,$00,$00
- $9AC0 DEFB $00,$01,$01,$04,$00,$00,$00,$00
- $9AC8 DEFB $05,$01,$01,$01,$01,$01,$49,$22
- $9AD0 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $9AD8 DEFB $04,$00,$00,$00,$00,$00,$00,$00
- $9AE0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9AE8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9AF0 DEFB $00,$2D,$2E,$2C,$2A,$2B,$2D,$2B
- $9AF8 DEFB $2A,$2C,$2D,$2B,$28,$00,$00,$00
- $9B00 DEFB $00,$2C,$2D,$2B,$2D,$2A,$2C,$2A
- $9B08 DEFB $2B,$2A,$2B,$2D,$2A,$2D,$2C,$2B
- $9B10 DEFB $2C,$23,$49,$01,$21,$33,$2E,$17
- $9B18 DEFB $13,$31,$30,$2F,$0C,$14,$2B,$00
- $9B20 DEFB $00,$01,$01,$10,$1D,$01,$01,$32
- $9B28 DEFB $32,$32,$32,$01,$10,$1D,$01,$49
- $9B30 DEFB $22,$29,$2B,$15,$0D,$2E,$31,$06
- $9B38 DEFB $2E,$2F,$17,$11,$01,$09,$01,$00
- $9B40 DEFB $00,$00,$00,$00,$0B,$14,$2C,$2A
- $9B48 DEFB $2D,$2B,$2A,$2C,$2B,$1E,$14,$2A
- $9B50 DEFB $15,$0F,$01,$08,$01,$32,$32,$32
- $9B58 DEFB $32,$01,$04,$00,$00,$00,$00,$00
- $9B60 DEFB $00,$00,$00,$00,$00,$05,$01,$49
- $9B68 DEFB $22,$23,$49,$01,$01,$01,$09,$01
- $9B70 DEFB $04,$00,$00,$00,$00,$00,$00,$00
- $9B78 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9B80 DEFB $00,$00,$00,$00,$00,$29,$2A,$2B
- $9B88 DEFB $2D,$00,$29,$2B,$2D,$2D,$2C,$2C
- $9B90 DEFB $2B,$2B,$2A,$2A,$28,$00,$00,$00
- $9B98 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9BA0 DEFB $00,$00,$00,$00,$1A,$0F,$01,$4A
- $9BA8 DEFB $24,$15,$0F,$01,$2E,$2F,$30,$2E
- $9BB0 DEFB $2F,$31,$2E,$30,$0C,$14,$2A,$2D
- $9BB8 DEFB $2A,$2B,$2C,$28,$00,$00,$00,$00
- $9BC0 DEFB $00,$2D,$2C,$15,$1F,$2A,$2B,$25
- $9BC8 DEFB $4A,$04,$29,$2A,$25,$4A,$33,$30
- $9BD0 DEFB $2E,$30,$17,$11,$01,$09,$32,$32
- $9BD8 DEFB $32,$32,$01,$0E,$1B,$00,$00,$00
- $9BE0 DEFB $00,$01,$01,$08,$01,$10,$16,$4A
- $9BE8 DEFB $24,$15,$0F,$01,$01,$01,$32,$32
- $9BF0 DEFB $32,$32,$04,$00,$00,$2A,$2B,$2D
- $9BF8 DEFB $2A,$2C,$2D,$2B,$1E,$14,$2B,$00
- $9C00 DEFB $00,$00,$00,$00,$00,$00,$05,$01
- $9C08 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $9C10 DEFB $00,$00,$00,$00,$00,$23,$49,$01
- $9C18 DEFB $01,$01,$01,$01,$01,$09,$01,$00
- $9C20 DEFB $00,$00,$00,$00,$00,$2A,$2A,$2D
- $9C28 DEFB $2B,$2A,$2C,$2B,$2D,$2A,$2B,$2C
- $9C30 DEFB $2D,$2D,$2B,$2A,$2A,$2D,$2C,$2C
- $9C38 DEFB $2A,$2B,$2B,$28,$00,$00,$00,$00
- $9C40 DEFB $00,$00,$00,$00,$29,$25,$4A,$2E
- $9C48 DEFB $2E,$31,$33,$30,$2F,$30,$31,$2E
- $9C50 DEFB $2E,$2F,$2F,$30,$01,$32,$32,$32
- $9C58 DEFB $32,$01,$21,$0C,$14,$2B,$2D,$00
- $9C60 DEFB $00,$2C,$2A,$15,$0D,$2F,$31,$30
- $9C68 DEFB $2E,$30,$31,$2E,$2F,$01,$30,$31
- $9C70 DEFB $2F,$2E,$4A,$24,$2C,$2A,$2B,$2C
- $9C78 DEFB $2B,$15,$0F,$01,$09,$01,$01,$00
- $9C80 DEFB $00,$01,$01,$08,$32,$32,$32,$32
- $9C88 DEFB $01,$10,$16,$4A,$24,$2A,$25,$4A
- $9C90 DEFB $2F,$31,$2F,$31,$30,$17,$11,$01
- $9C98 DEFB $01,$04,$00,$00,$00,$00,$00,$00
- $9CA0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9CA8 DEFB $00,$00,$05,$01,$01,$01,$01,$01
- $9CB0 DEFB $01,$01,$01,$01,$01,$04,$00,$00
- $9CB8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $9CC0 DEFB $00,$00,$2C,$2B,$2B,$2D,$2A,$2A
- $9CC8 DEFB $2D,$2A,$2A,$2C,$2D,$2D,$2C,$2B
- $9CD0 DEFB $2B,$2C,$2A,$2A,$2D,$2A,$2B,$2C
- $9CD8 DEFB $2A,$2D,$2B,$00,$00,$00,$00,$00
- $9CE0 DEFB $00,$00,$25,$4A,$2E,$31,$2F,$30
- $9CE8 DEFB $2F,$2E,$30,$31,$2E,$2E,$30,$30
- $9CF0 DEFB $2F,$2F,$31,$31,$17,$13,$2F,$2E
- $9CF8 DEFB $31,$4A,$24,$2D,$2B,$00,$00,$00
- $9D00 DEFB $00,$00,$23,$49,$10,$16,$30,$20
- $9D08 DEFB $01,$31,$30,$2E,$2F,$31,$30,$20
- $9D10 DEFB $01,$2F,$2E,$30,$06,$2F,$12,$16
- $9D18 DEFB $2F,$2E,$2F,$49,$22,$29,$2B,$00
- $9D20 DEFB $00,$2C,$2A,$2D,$2B,$03,$30,$0C
- $9D28 DEFB $14,$25,$4A,$33,$30,$2E,$31,$0E
- $9D30 DEFB $14,$25,$4A,$2E,$17,$13,$30,$07
- $9D38 DEFB $31,$4A,$24,$2C,$15,$0F,$01,$00
- $9D40 DEFB $00,$01,$01,$01,$01,$01,$01,$01
- $9D48 DEFB $09,$01,$01,$01,$01,$49,$22,$00
- $9D50 DEFB $05,$01,$01,$01,$08,$01,$01,$01
- $9D58 DEFB $01,$01,$01,$01,$04,$00,$00,$00
+; Data: Level 1
+;
+; .
+;
+; .
+;
+; Page #N($01+(#PC-$8960)/$A0).
+@label=Data_Level_1
+g$8960 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+ $8980 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+ $89A0 DEFB $00,$2B,$2D,$2D,$2D,$2D,$2B,$2B,$2D,$2D,$2C,$2A,$2A,$2B,$2C,$2A,$2B,$2B,$2B,$2A,$2B,$2A,$2B,$2C,$2B,$2D,$2D,$2B,$2B,$2A,$2B,$00
+ $89C0 DEFB $00,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$49,$01,$01,$01,$01,$01,$01,$49,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$00
+ $89E0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8A00 DEFB $00,$00,$00,$00,$00,$00,$29,$2C,$2D,$2A,$2B,$28,$00,$00,$00,$29,$2A,$2A,$2C,$2B,$2C,$2B,$2D,$2D,$2A,$2A,$28,$00,$00,$00,$00,$00
+ $8A20 DEFB $00,$2D,$2C,$2C,$2D,$15,$0D,$2E,$2F,$30,$31,$0C,$14,$2C,$15,$0F,$01,$01,$1C,$11,$01,$32,$32,$32,$32,$01,$0E,$1B,$00,$00,$00,$00
+ $8A40 DEFB $00,$01,$01,$10,$16,$06,$20,$01,$10,$16,$31,$31,$07,$2E,$02,$2B,$2B,$15,$1F,$2A,$2B,$2C,$2B,$2C,$2D,$00,$00,$0B,$14,$2A,$2A,$00
+ $8A60 DEFB $00,$00,$00,$00,$05,$01,$0E,$14,$2D,$03,$30,$2F,$2F,$30,$12,$16,$30,$06,$31,$30,$2F,$30,$33,$4A,$24,$2D,$2C,$2B,$03,$30,$01,$00
+ $8A80 DEFB $00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$49,$22,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8AA0 DEFB $00,$00,$2D,$2D,$2C,$2D,$2B,$2F,$2B,$2A,$2C,$2C,$2D,$2A,$2A,$2B,$2D,$2B,$2C,$2C,$2A,$2C,$2D,$2D,$2B,$28,$00,$00,$00,$00,$00,$00
+ $8AC0 DEFB $00,$2B,$25,$4A,$30,$20,$10,$16,$30,$2F,$2E,$31,$2E,$2F,$30,$2F,$2E,$31,$31,$2F,$2F,$20,$01,$01,$01,$0E,$14,$2B,$2B,$2C,$2C,$00
+ $8AE0 DEFB $00,$01,$10,$1D,$01,$0E,$14,$03,$2E,$2E,$30,$31,$31,$2E,$30,$30,$32,$32,$32,$32,$01,$0E,$1B,$00,$2D,$2A,$03,$17,$11,$01,$01,$00
+ $8B00 DEFB $00,$00,$00,$0B,$14,$2B,$03,$30,$30,$2F,$31,$30,$2E,$33,$4A,$24,$2D,$2D,$2B,$2C,$2B,$2B,$1E,$14,$25,$4A,$31,$02,$2A,$2C,$00,$00
+ $8B20 DEFB $00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$01,$49,$22,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8B40 DEFB $00,$00,$00,$00,$00,$00,$00,$29,$2D,$2D,$2B,$2B,$2C,$2C,$28,$00,$2A,$2B,$2C,$2B,$2D,$2D,$2A,$2A,$2D,$2B,$2B,$2A,$2C,$2B,$00,$00
+ $8B60 DEFB $00,$00,$00,$00,$29,$2D,$15,$0F,$01,$32,$32,$32,$32,$01,$0E,$14,$25,$4A,$30,$33,$31,$2F,$31,$20,$10,$16,$30,$20,$49,$22,$00,$00
+ $8B80 DEFB $00,$00,$00,$1A,$0F,$01,$18,$2B,$2A,$2B,$2D,$2D,$2A,$2C,$2B,$03,$30,$2F,$31,$2E,$2E,$31,$31,$0E,$14,$03,$2F,$0C,$14,$2D,$2D,$00
+ $8BA0 DEFB $00,$2C,$15,$1F,$2A,$15,$0D,$2E,$2E,$2F,$2E,$30,$12,$16,$31,$30,$30,$17,$11,$01,$01,$49,$22,$00,$05,$01,$01,$01,$09,$01,$01,$00
+ $8BC0 DEFB $00,$01,$08,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8BE0 DEFB $00,$00,$00,$00,$00,$2C,$2A,$2B,$2C,$2D,$2D,$2C,$2B,$2A,$2C,$2C,$2B,$2D,$2C,$2C,$2A,$2C,$2B,$2B,$2A,$2D,$28,$00,$00,$00,$00,$00
+ $8C00 DEFB $00,$00,$00,$29,$2D,$25,$4A,$20,$01,$01,$01,$01,$01,$01,$01,$32,$32,$32,$32,$01,$01,$21,$2E,$17,$11,$01,$0E,$14,$2B,$2A,$2C,$00
+ $8C20 DEFB $00,$2A,$15,$0D,$30,$30,$30,$0C,$14,$2A,$2A,$2B,$2C,$00,$29,$2C,$2C,$2D,$2D,$2B,$15,$0D,$20,$04,$00,$00,$00,$05,$01,$01,$01,$00
+ $8C40 DEFB $00,$01,$08,$01,$10,$16,$31,$31,$07,$30,$33,$4A,$24,$15,$0F,$01,$32,$32,$32,$32,$08,$01,$0E,$14,$2C,$2D,$2D,$2C,$2B,$00,$00,$00
+ $8C60 DEFB $00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$49,$22,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8C80 DEFB $00,$00,$00,$00,$00,$00,$29,$2A,$2B,$2C,$2D,$2B,$2C,$2B,$2A,$28,$00,$2A,$2B,$2B,$28,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+ $8CA0 DEFB $00,$00,$00,$00,$00,$1A,$0F,$21,$2E,$2F,$2F,$30,$2F,$30,$20,$0E,$1B,$23,$49,$01,$0E,$14,$2A,$2A,$2B,$2C,$2B,$2D,$2A,$2C,$2B,$00
+ $8CC0 DEFB $00,$2C,$2D,$2C,$15,$1F,$15,$0F,$01,$32,$32,$32,$32,$01,$0E,$1B,$0B,$14,$2C,$2D,$2B,$03,$2E,$33,$2F,$31,$17,$11,$01,$01,$01,$00
+ $8CE0 DEFB $00,$01,$10,$16,$06,$2F,$02,$2A,$2C,$2D,$2B,$2C,$2A,$2D,$2D,$1E,$14,$03,$31,$30,$32,$32,$32,$32,$01,$01,$04,$00,$00,$00,$00,$00
+ $8D00 DEFB $00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$09,$01,$49,$22,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8D20 DEFB $00,$00,$00,$00,$29,$2C,$2D,$2A,$2B,$2A,$2C,$2A,$2B,$2D,$00,$00,$00,$00,$00,$29,$2B,$2D,$2C,$2D,$2B,$2A,$2A,$2D,$2C,$2A,$00,$00
+ $8D40 DEFB $00,$2A,$2D,$15,$0D,$2F,$30,$01,$1C,$11,$21,$33,$4A,$24,$2A,$2C,$2D,$2B,$15,$0F,$1C,$11,$01,$32,$32,$32,$32,$01,$49,$22,$00,$00
+ $8D60 DEFB $00,$01,$30,$06,$2F,$4A,$24,$15,$1F,$15,$0F,$01,$32,$32,$32,$32,$01,$21,$02,$15,$0A,$00,$29,$2C,$2D,$2B,$2A,$2C,$2B,$2C,$2D,$00
+ $8D80 DEFB $00,$00,$23,$49,$01,$01,$01,$08,$01,$02,$2D,$2A,$2C,$2B,$2A,$2A,$15,$0D,$2F,$02,$2B,$15,$0D,$2E,$30,$2F,$30,$2F,$2E,$01,$01,$00
+ $8DA0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$23,$49,$01,$01,$01,$01,$01,$08,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$49,$22,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8DC0 DEFB $00,$2B,$2D,$2A,$2B,$2B,$2A,$2D,$2C,$2D,$2D,$2B,$2A,$2C,$2C,$2D,$2A,$2B,$2A,$2C,$2D,$2A,$2B,$2C,$2D,$2B,$2C,$28,$00,$00,$00,$00
+ $8DE0 DEFB $00,$23,$49,$21,$12,$16,$2E,$2F,$30,$31,$2E,$32,$32,$32,$32,$2F,$2E,$31,$2F,$2E,$30,$2F,$30,$31,$2E,$2E,$2F,$0C,$14,$2B,$2C,$00
+ $8E00 DEFB $00,$2C,$15,$0D,$30,$07,$30,$2F,$2E,$4A,$24,$2C,$2B,$2B,$2D,$23,$49,$21,$2F,$31,$2E,$30,$2E,$2F,$30,$17,$11,$01,$09,$01,$01,$00
+ $8E20 DEFB $00,$01,$08,$01,$01,$01,$10,$16,$30,$2E,$2F,$31,$33,$4A,$24,$2C,$15,$0F,$01,$32,$32,$32,$32,$01,$01,$04,$00,$00,$00,$00,$00,$00
+ $8E40 DEFB $00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8E60 DEFB $00,$00,$00,$29,$2C,$2A,$2D,$2B,$2D,$2C,$2A,$28,$00,$00,$00,$00,$00,$00,$29,$2B,$2A,$2C,$2D,$2A,$2B,$2D,$00,$00,$00,$00,$00,$00
+ $8E80 DEFB $00,$2A,$15,$0D,$20,$01,$32,$32,$32,$32,$01,$0E,$14,$2C,$2B,$2D,$2A,$15,$0F,$21,$2F,$31,$2E,$33,$4A,$24,$2C,$28,$00,$00,$00,$00
+ $8EA0 DEFB $00,$01,$08,$01,$0E,$14,$2D,$2B,$2A,$2A,$2D,$28,$05,$32,$32,$32,$32,$04,$1A,$0F,$2F,$2E,$31,$30,$2E,$2F,$31,$0C,$14,$2D,$2A,$00
+ $8EC0 DEFB $00,$00,$00,$00,$00,$05,$32,$32,$32,$32,$01,$0E,$14,$2C,$2B,$2D,$2C,$15,$0A,$00,$23,$49,$01,$01,$32,$32,$32,$32,$09,$01,$01,$00
+ $8EE0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8F00 DEFB $00,$00,$00,$00,$00,$29,$2C,$2D,$2B,$2D,$2B,$2A,$2C,$2D,$2B,$2C,$2A,$00,$29,$2B,$2D,$2C,$2B,$2A,$2D,$28,$00,$00,$00,$00,$00,$00
+ $8F20 DEFB $00,$2B,$2C,$2A,$15,$0F,$01,$01,$32,$32,$32,$32,$01,$21,$33,$4A,$24,$15,$0F,$21,$31,$2F,$30,$2E,$2F,$0C,$14,$2C,$2C,$2A,$2D,$00
+ $8F40 DEFB $00,$01,$10,$16,$02,$28,$00,$2B,$2A,$2C,$2D,$2A,$15,$0F,$01,$21,$2F,$02,$15,$0F,$01,$32,$32,$32,$32,$01,$07,$2E,$2F,$30,$01,$00
+ $8F60 DEFB $00,$00,$00,$05,$01,$0E,$14,$25,$4A,$31,$30,$2F,$02,$2B,$15,$0D,$30,$31,$02,$2D,$2A,$2B,$2D,$2C,$2A,$15,$0F,$01,$49,$22,$00,$00
+ $8F80 DEFB $00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $8FA0 DEFB $00,$00,$00,$00,$00,$29,$2C,$2B,$2D,$2B,$2C,$2D,$2A,$2C,$2B,$2D,$2C,$2A,$2D,$2C,$2B,$2D,$2A,$2C,$2D,$28,$00,$00,$00,$00,$00,$00
+ $8FC0 DEFB $00,$00,$00,$00,$1A,$0F,$01,$01,$01,$01,$21,$2F,$2E,$30,$31,$2F,$2E,$30,$31,$30,$20,$10,$1D,$01,$01,$0E,$14,$2C,$2D,$2C,$00,$00
+ $8FE0 DEFB $00,$2A,$2B,$15,$1F,$2D,$2B,$2A,$2C,$15,$0F,$01,$32,$32,$32,$32,$01,$1C,$11,$01,$0E,$14,$1E,$14,$2B,$2A,$03,$01,$4A,$24,$2B,$00
+ $9000 DEFB $00,$01,$01,$08,$01,$01,$01,$01,$01,$02,$2C,$2B,$2C,$2A,$2D,$2A,$15,$1F,$2D,$2B,$2D,$03,$31,$07,$33,$4A,$24,$15,$0F,$01,$01,$00
+ $9020 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$23,$49,$01,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $9040 DEFB $00,$00,$00,$29,$2B,$2A,$2C,$2D,$2C,$2A,$2D,$2B,$2A,$2D,$2A,$2A,$2C,$2D,$2B,$2C,$2A,$2D,$00,$00,$00,$00,$00,$29,$2B,$2C,$00,$00
+ $9060 DEFB $00,$2B,$15,$0F,$01,$1C,$11,$01,$10,$16,$2F,$31,$2E,$30,$2E,$17,$11,$21,$30,$33,$4A,$24,$2D,$2C,$2D,$2B,$15,$0F,$49,$22,$00,$00
+ $9080 DEFB $00,$01,$02,$2B,$15,$1F,$28,$00,$00,$05,$21,$30,$2F,$31,$31,$02,$15,$0F,$01,$32,$32,$32,$32,$01,$12,$16,$02,$28,$00,$00,$00,$00
+ $90A0 DEFB $00,$00,$23,$49,$08,$01,$0E,$14,$2A,$15,$0F,$01,$32,$32,$32,$32,$02,$2C,$2D,$2A,$2B,$2D,$2A,$15,$0F,$09,$01,$0E,$14,$2B,$2A,$00
+ $90C0 DEFB $00,$00,$00,$00,$00,$00,$00,$05,$01,$04,$00,$00,$00,$00,$00,$00,$23,$49,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$05,$01,$01,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $90E0 DEFB $00,$00,$00,$29,$2B,$2D,$2C,$2A,$2B,$2D,$2B,$2A,$2C,$2E,$2D,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+ $9100 DEFB $00,$2B,$15,$0D,$2F,$30,$31,$12,$16,$2E,$33,$20,$01,$49,$22,$2C,$2B,$2C,$2D,$2A,$2D,$2B,$2A,$2B,$2A,$2C,$2A,$2D,$2B,$2D,$2C,$00
+ $9120 DEFB $00,$01,$08,$01,$10,$16,$2F,$2E,$07,$31,$2E,$0C,$14,$2B,$28,$23,$49,$01,$1C,$11,$01,$32,$32,$32,$32,$01,$01,$1C,$11,$01,$01,$00
+ $9140 DEFB $00,$00,$00,$00,$00,$05,$01,$32,$32,$32,$32,$01,$09,$01,$0E,$14,$2A,$15,$1F,$2B,$2C,$2A,$2B,$2D,$2A,$2C,$15,$0A,$00,$00,$00,$00
+ $9160 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$08,$01,$01,$01,$49,$22,$23,$49,$01,$04,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $9180 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$29,$2A,$2A,$2B,$2B,$2C,$2C,$2D,$2D,$2B,$28,$00,$2D,$2B,$2A,$28,$00,$00,$00,$00,$00
+ $91A0 DEFB $00,$00,$00,$00,$29,$2C,$2B,$2A,$2D,$2A,$15,$0D,$30,$2E,$31,$2F,$2E,$30,$2F,$2E,$01,$0E,$14,$25,$4A,$01,$0E,$1B,$00,$00,$00,$00
+ $91C0 DEFB $00,$00,$00,$1A,$0F,$01,$32,$32,$32,$32,$08,$01,$10,$16,$30,$2E,$30,$33,$4A,$24,$2A,$28,$05,$4A,$24,$2B,$2A,$1E,$14,$2C,$2D,$00
+ $91E0 DEFB $00,$2B,$15,$1F,$2B,$2D,$2C,$2A,$2D,$2B,$2A,$00,$00,$05,$32,$32,$32,$32,$01,$01,$01,$0E,$14,$25,$4A,$17,$11,$01,$09,$01,$01,$00
+ $9200 DEFB $00,$01,$08,$01,$01,$01,$01,$01,$01,$49,$22,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$04,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $9220 DEFB $00,$00,$00,$00,$29,$2B,$2B,$2A,$2C,$2C,$2D,$2A,$2A,$2B,$2D,$2D,$2C,$2B,$2A,$2D,$2B,$2C,$2A,$2B,$2D,$2A,$2A,$00,$00,$00,$00,$00
+ $9240 DEFB $00,$2D,$2B,$15,$0D,$20,$01,$32,$32,$32,$32,$01,$30,$2F,$2F,$2E,$2E,$31,$30,$2F,$30,$33,$31,$2E,$2E,$4A,$24,$28,$00,$00,$00,$00
+ $9260 DEFB $00,$01,$01,$08,$01,$0E,$14,$2B,$2C,$2B,$2A,$2C,$25,$4A,$2E,$2F,$31,$30,$01,$2F,$2E,$31,$30,$2E,$30,$31,$2F,$0C,$14,$2A,$2C,$00
+ $9280 DEFB $00,$00,$00,$00,$00,$00,$05,$01,$01,$10,$16,$30,$31,$2F,$31,$2F,$4A,$24,$2A,$25,$4A,$17,$11,$01,$32,$32,$32,$32,$09,$01,$01,$00
+ $92A0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$8960)/$A0).
+ $92C0 DEFB $00,$00,$00,$00,$00,$2B,$2D,$2A,$2C,$2B,$2A,$2D,$2A,$2A,$2C,$2B,$2B,$2C,$2D,$2D,$2C,$2A,$2A,$2D,$2A,$2A,$2D,$2B,$2B,$2C,$00,$00
+ $92E0 DEFB $00,$00,$00,$2B,$2D,$25,$4A,$31,$2E,$2F,$12,$16,$31,$31,$2F,$2F,$30,$30,$2E,$2E,$31,$30,$2E,$2F,$30,$2F,$31,$2E,$4A,$24,$00,$00
+ $9300 DEFB $00,$2B,$28,$23,$49,$2F,$2E,$2F,$17,$13,$2F,$07,$30,$2E,$2F,$01,$21,$30,$31,$2F,$2E,$30,$31,$01,$21,$30,$17,$11,$49,$22,$00,$00
+ $9320 DEFB $00,$01,$0E,$14,$2C,$25,$4A,$31,$06,$30,$12,$16,$2E,$4A,$24,$15,$0F,$31,$2E,$30,$33,$4A,$24,$15,$0D,$30,$02,$2B,$2D,$2A,$2C,$00
+ $9340 DEFB $00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$04,$00,$23,$49,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$00
+
+; Data: Level 2
+;
+; .
+;
+; .
+;
+; Page #N($01+(#PC-$9360)/$A0).
+@label=Data_Level_2
+g$9360 DEFB $00,$00,$2A,$2C,$2D,$2A,$2B,$2D,$2C,$2A,$2D,$2B,$2A,$2D,$2B,$2A,$2A,$2C,$2C,$2C,$2D,$2D,$2A,$2B,$2B,$28,$00,$00,$00,$00,$00,$00
+ $9380 DEFB $00,$00,$23,$4A,$2F,$2E,$30,$31,$2E,$2F,$33,$31,$31,$2E,$2E,$30,$30,$2F,$31,$30,$2F,$2E,$31,$2F,$30,$0C,$14,$2C,$2D,$2C,$00,$00
+ $93A0 DEFB $00,$2A,$15,$0F,$01,$32,$32,$32,$32,$01,$01,$32,$32,$32,$32,$01,$01,$32,$32,$32,$32,$01,$1C,$11,$01,$01,$09,$01,$49,$22,$00,$00
+ $93C0 DEFB $00,$01,$04,$00,$00,$00,$00,$00,$00,$00,$2A,$2D,$2C,$2B,$2D,$2A,$2D,$2C,$2A,$2B,$2D,$15,$1F,$2D,$2B,$2C,$2A,$2A,$2D,$2D,$2B,$00
+ $93E0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$23,$49,$01,$01,$01,$01,$01,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$01,$01,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9400 DEFB $00,$00,$00,$00,$00,$29,$2A,$2A,$2D,$2D,$2B,$2C,$2B,$2C,$2A,$2A,$28,$00,$00,$00,$29,$2B,$2A,$2D,$2C,$28,$00,$00,$00,$00,$00,$00
+ $9420 DEFB $00,$00,$00,$00,$1A,$0F,$01,$32,$32,$32,$32,$01,$10,$1D,$01,$01,$0E,$14,$2C,$15,$0D,$31,$30,$2F,$2E,$0C,$14,$2D,$2C,$2C,$2D,$00
+ $9440 DEFB $00,$2A,$2A,$15,$0A,$00,$00,$2D,$2C,$2B,$2C,$2B,$2A,$1E,$14,$2B,$2B,$03,$2E,$06,$31,$31,$17,$11,$01,$21,$07,$17,$11,$01,$01,$00
+ $9460 DEFB $00,$01,$30,$02,$2C,$2D,$2A,$25,$4A,$33,$30,$2F,$30,$31,$07,$30,$17,$13,$30,$2F,$2F,$30,$02,$2D,$15,$0F,$01,$04,$00,$00,$00,$00
+ $9480 DEFB $00,$00,$23,$49,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $94A0 DEFB $00,$00,$00,$00,$00,$00,$29,$2B,$2D,$2D,$2C,$2A,$2C,$2C,$2B,$2D,$2B,$2A,$2A,$2D,$2C,$2C,$2A,$2B,$2F,$2B,$2D,$2C,$2D,$2D,$00,$00
+ $94C0 DEFB $00,$2C,$2C,$2B,$2B,$15,$0F,$01,$01,$01,$21,$2F,$2F,$31,$31,$2E,$2F,$30,$2F,$2E,$31,$2E,$2F,$30,$17,$11,$21,$30,$4A,$24,$2B,$00
+ $94E0 DEFB $00,$01,$01,$10,$16,$02,$2A,$2D,$00,$1A,$0F,$01,$32,$32,$32,$32,$30,$30,$2E,$31,$31,$30,$2E,$2E,$02,$15,$0F,$01,$1C,$11,$01,$00
+ $9500 DEFB $00,$00,$2C,$2A,$03,$31,$4A,$24,$15,$1F,$2B,$2B,$2C,$2B,$2D,$2D,$25,$4A,$33,$2E,$30,$31,$2F,$30,$30,$02,$2B,$15,$0A,$00,$00,$00
+ $9520 DEFB $00,$00,$23,$49,$01,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9540 DEFB $00,$00,$2B,$2C,$2A,$2B,$2B,$2D,$2A,$2A,$2D,$2D,$2B,$2C,$2B,$2A,$00,$29,$2C,$2C,$2B,$2B,$2D,$2D,$28,$00,$00,$00,$00,$00,$00,$00
+ $9560 DEFB $00,$00,$23,$49,$21,$30,$17,$11,$21,$31,$2F,$31,$33,$30,$4A,$24,$15,$0F,$01,$32,$32,$32,$32,$01,$0E,$14,$2D,$28,$00,$00,$00,$00
+ $9580 DEFB $00,$2D,$2D,$15,$0D,$2F,$02,$15,$0F,$31,$31,$2E,$2E,$31,$2F,$30,$02,$2B,$2C,$2A,$2D,$2D,$2B,$2A,$2B,$19,$01,$0E,$1B,$00,$00,$00
+ $95A0 DEFB $00,$01,$01,$08,$01,$01,$01,$04,$00,$23,$49,$01,$01,$10,$16,$30,$30,$31,$17,$13,$30,$2E,$2F,$2E,$2E,$0C,$14,$2A,$1E,$14,$2C,$00
+ $95C0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$09,$01,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $95E0 DEFB $00,$00,$00,$00,$00,$29,$2D,$2A,$2B,$2B,$2C,$2A,$2C,$2C,$2D,$2B,$2C,$2C,$2A,$2B,$2C,$2D,$2D,$2C,$2B,$2A,$2C,$00,$00,$00,$00,$00
+ $9600 DEFB $00,$2C,$2A,$2B,$15,$0F,$01,$10,$16,$2E,$20,$01,$01,$32,$32,$32,$32,$01,$01,$01,$01,$01,$01,$01,$21,$4A,$24,$2D,$28,$00,$00,$00
+ $9620 DEFB $00,$01,$01,$01,$04,$00,$00,$00,$05,$21,$0C,$14,$2B,$2D,$2D,$2C,$2C,$28,$00,$2C,$2B,$2A,$2A,$15,$0D,$30,$30,$30,$0C,$14,$2A,$00
+ $9640 DEFB $00,$00,$00,$2B,$2C,$2D,$2D,$2C,$15,$0F,$01,$09,$32,$32,$32,$32,$01,$0E,$14,$25,$4A,$33,$30,$06,$31,$31,$17,$11,$01,$09,$01,$00
+ $9660 DEFB $00,$00,$00,$23,$49,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9680 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$29,$2B,$2B,$2A,$00,$29,$2A,$2B,$2C,$2B,$2D,$2C,$2B,$2A,$28,$00,$00,$00,$00,$00,$00
+ $96A0 DEFB $00,$2B,$2C,$2A,$2D,$2B,$2C,$2B,$2A,$2A,$15,$0F,$01,$49,$22,$1A,$0F,$21,$30,$2F,$30,$2F,$2F,$2E,$20,$0E,$1B,$00,$00,$00,$00,$00
+ $96C0 DEFB $00,$01,$01,$01,$10,$16,$31,$2F,$33,$2E,$02,$2B,$2D,$2C,$15,$0A,$1A,$0F,$01,$32,$32,$32,$32,$01,$0E,$14,$1E,$14,$2C,$2D,$2C,$00
+ $96E0 DEFB $00,$00,$00,$00,$00,$05,$01,$01,$32,$32,$32,$32,$30,$31,$02,$15,$1F,$2D,$2D,$2A,$2C,$2B,$2D,$2C,$2A,$03,$2F,$07,$17,$11,$01,$00
+ $9700 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$23,$49,$01,$08,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9720 DEFB $00,$00,$2A,$2C,$2D,$2A,$2A,$2B,$2D,$2C,$2D,$2B,$28,$00,$00,$00,$00,$00,$2D,$2B,$2A,$2C,$2A,$2B,$2A,$2D,$2C,$28,$00,$00,$00,$00
+ $9740 DEFB $00,$00,$23,$49,$01,$32,$32,$32,$32,$01,$10,$1D,$0E,$14,$2B,$2D,$2C,$2A,$25,$4A,$33,$20,$10,$1D,$01,$30,$2F,$0C,$14,$2D,$2A,$00
+ $9760 DEFB $00,$2D,$2C,$2B,$2C,$2A,$2B,$2D,$2C,$28,$00,$0B,$14,$03,$20,$01,$32,$32,$32,$32,$01,$0E,$14,$1E,$14,$25,$4A,$2F,$07,$30,$01,$00
+ $9780 DEFB $00,$01,$01,$2E,$2F,$30,$2F,$30,$2E,$0C,$14,$2B,$03,$2F,$0C,$14,$2A,$2A,$2B,$2C,$2A,$2D,$03,$01,$09,$01,$01,$01,$49,$22,$00,$00
+ $97A0 DEFB $00,$00,$00,$23,$49,$01,$01,$01,$01,$01,$09,$01,$01,$01,$01,$09,$01,$01,$01,$01,$01,$49,$22,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $97C0 DEFB $00,$00,$00,$00,$29,$2C,$2B,$2D,$2C,$2B,$2A,$2D,$2C,$2A,$2B,$2A,$2D,$2C,$2C,$2A,$2B,$2D,$2D,$2C,$2D,$2A,$2B,$2B,$2A,$2D,$00,$00
+ $97E0 DEFB $00,$2C,$2B,$15,$0D,$2F,$2E,$2E,$31,$30,$2F,$30,$2E,$2F,$31,$2E,$2F,$32,$32,$32,$32,$2E,$31,$30,$2F,$2E,$17,$13,$4A,$22,$00,$00
+ $9800 DEFB $00,$01,$01,$08,$01,$10,$16,$30,$2F,$2E,$30,$2E,$31,$2F,$20,$49,$22,$2D,$2B,$2B,$2C,$25,$4A,$2E,$2F,$30,$06,$30,$0C,$14,$2C,$00
+ $9820 DEFB $00,$00,$00,$00,$00,$00,$05,$01,$01,$32,$32,$32,$32,$01,$0E,$14,$2C,$25,$4A,$33,$31,$2F,$2E,$30,$17,$11,$01,$01,$01,$09,$01,$00
+ $9840 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9860 DEFB $00,$00,$00,$00,$00,$00,$2D,$2B,$2A,$2D,$2C,$2A,$2B,$28,$00,$00,$00,$00,$00,$00,$29,$2A,$2C,$2D,$2B,$2D,$2A,$2C,$28,$00,$00,$00
+ $9880 DEFB $00,$00,$00,$00,$29,$2C,$25,$4A,$33,$2E,$31,$2F,$20,$0E,$14,$2A,$2D,$2B,$2C,$15,$0F,$01,$32,$32,$32,$32,$01,$21,$0C,$14,$2A,$00
+ $98A0 DEFB $00,$2A,$2D,$15,$0D,$31,$2F,$2E,$30,$31,$2E,$2F,$0E,$1B,$05,$32,$32,$32,$32,$04,$29,$2D,$2A,$2A,$2B,$2D,$15,$0F,$01,$09,$01,$00
+ $98C0 DEFB $00,$01,$01,$08,$32,$32,$32,$32,$01,$01,$49,$22,$00,$0B,$14,$2C,$2D,$2B,$2C,$15,$0F,$01,$32,$32,$32,$32,$04,$00,$00,$00,$00,$00
+ $98E0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9900 DEFB $00,$00,$00,$00,$00,$00,$29,$2D,$2A,$2B,$2C,$2D,$2B,$28,$00,$2A,$2C,$2B,$2D,$2C,$2A,$2B,$2D,$2B,$2D,$2C,$28,$00,$00,$00,$00,$00
+ $9920 DEFB $00,$2D,$2A,$2C,$2C,$15,$0D,$2F,$2E,$30,$2F,$31,$20,$0E,$14,$25,$4A,$33,$20,$01,$32,$32,$32,$32,$01,$01,$0E,$14,$2A,$2C,$2B,$00
+ $9940 DEFB $00,$01,$30,$2F,$2E,$06,$01,$32,$32,$32,$32,$01,$0E,$14,$03,$2F,$20,$01,$0E,$14,$2A,$2D,$2C,$2A,$2B,$00,$29,$03,$17,$11,$01,$00
+ $9960 DEFB $00,$00,$23,$49,$01,$0E,$14,$2A,$2C,$2D,$2B,$2A,$2D,$03,$31,$30,$0C,$14,$2B,$03,$2F,$30,$31,$4A,$24,$15,$0F,$01,$04,$00,$00,$00
+ $9980 DEFB $00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $99A0 DEFB $00,$00,$00,$00,$00,$00,$29,$2D,$2C,$2A,$2D,$2B,$2C,$2D,$2A,$2C,$2D,$2B,$2C,$2A,$2D,$2C,$2B,$2D,$2B,$2C,$28,$00,$00,$00,$00,$00
+ $99C0 DEFB $00,$2C,$2C,$2D,$2C,$15,$0F,$01,$01,$1C,$11,$21,$30,$31,$30,$2E,$2F,$31,$30,$2E,$2F,$20,$01,$01,$01,$01,$0E,$1B,$00,$00,$00,$00
+ $99E0 DEFB $00,$25,$4A,$20,$01,$02,$2A,$2B,$15,$1F,$15,$0F,$01,$10,$1D,$01,$32,$32,$32,$32,$01,$0E,$14,$2C,$2A,$2B,$2D,$1E,$14,$2B,$2A,$00
+ $9A00 DEFB $00,$01,$01,$0E,$14,$25,$4A,$33,$06,$31,$02,$2D,$2B,$2D,$1E,$14,$2A,$2D,$2A,$2C,$2B,$2C,$03,$01,$01,$01,$01,$01,$09,$01,$01,$00
+ $9A20 DEFB $00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$01,$01,$49,$22,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9A40 DEFB $00,$00,$2C,$2B,$28,$00,$00,$00,$00,$00,$2D,$2A,$2C,$2B,$2D,$2C,$2A,$2A,$2D,$2A,$2B,$2D,$2A,$2C,$2D,$2C,$2A,$2B,$28,$00,$00,$00
+ $9A60 DEFB $00,$00,$23,$49,$0E,$14,$2B,$2D,$2C,$2D,$25,$4A,$33,$30,$20,$10,$16,$2E,$30,$2E,$31,$2F,$17,$11,$01,$10,$1D,$01,$0E,$14,$2B,$00
+ $9A80 DEFB $00,$00,$00,$00,$29,$03,$17,$13,$01,$32,$32,$32,$32,$01,$0E,$14,$03,$31,$31,$2F,$30,$20,$04,$00,$00,$29,$1E,$14,$2B,$03,$01,$00
+ $9AA0 DEFB $00,$2A,$2B,$15,$0F,$01,$08,$0E,$14,$2A,$2D,$2B,$2A,$2D,$2C,$03,$32,$32,$32,$32,$01,$0E,$14,$2A,$15,$0F,$01,$09,$49,$22,$00,$00
+ $9AC0 DEFB $00,$01,$01,$04,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$49,$22,$00,$00,$00,$00,$00,$00,$05,$01,$04,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9AE0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$2D,$2E,$2C,$2A,$2B,$2D,$2B,$2A,$2C,$2D,$2B,$28,$00,$00,$00
+ $9B00 DEFB $00,$2C,$2D,$2B,$2D,$2A,$2C,$2A,$2B,$2A,$2B,$2D,$2A,$2D,$2C,$2B,$2C,$23,$49,$01,$21,$33,$2E,$17,$13,$31,$30,$2F,$0C,$14,$2B,$00
+ $9B20 DEFB $00,$01,$01,$10,$1D,$01,$01,$32,$32,$32,$32,$01,$10,$1D,$01,$49,$22,$29,$2B,$15,$0D,$2E,$31,$06,$2E,$2F,$17,$11,$01,$09,$01,$00
+ $9B40 DEFB $00,$00,$00,$00,$0B,$14,$2C,$2A,$2D,$2B,$2A,$2C,$2B,$1E,$14,$2A,$15,$0F,$01,$08,$01,$32,$32,$32,$32,$01,$04,$00,$00,$00,$00,$00
+ $9B60 DEFB $00,$00,$00,$00,$00,$05,$01,$49,$22,$23,$49,$01,$01,$01,$09,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9B80 DEFB $00,$00,$00,$00,$00,$29,$2A,$2B,$2D,$00,$29,$2B,$2D,$2D,$2C,$2C,$2B,$2B,$2A,$2A,$28,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+ $9BA0 DEFB $00,$00,$00,$00,$1A,$0F,$01,$4A,$24,$15,$0F,$01,$2E,$2F,$30,$2E,$2F,$31,$2E,$30,$0C,$14,$2A,$2D,$2A,$2B,$2C,$28,$00,$00,$00,$00
+ $9BC0 DEFB $00,$2D,$2C,$15,$1F,$2A,$2B,$25,$4A,$04,$29,$2A,$25,$4A,$33,$30,$2E,$30,$17,$11,$01,$09,$32,$32,$32,$32,$01,$0E,$1B,$00,$00,$00
+ $9BE0 DEFB $00,$01,$01,$08,$01,$10,$16,$4A,$24,$15,$0F,$01,$01,$01,$32,$32,$32,$32,$04,$00,$00,$2A,$2B,$2D,$2A,$2C,$2D,$2B,$1E,$14,$2B,$00
+ $9C00 DEFB $00,$00,$00,$00,$00,$00,$05,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$23,$49,$01,$01,$01,$01,$01,$01,$09,$01,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9C20 DEFB $00,$00,$00,$00,$00,$2A,$2A,$2D,$2B,$2A,$2C,$2B,$2D,$2A,$2B,$2C,$2D,$2D,$2B,$2A,$2A,$2D,$2C,$2C,$2A,$2B,$2B,$28,$00,$00,$00,$00
+ $9C40 DEFB $00,$00,$00,$00,$29,$25,$4A,$2E,$2E,$31,$33,$30,$2F,$30,$31,$2E,$2E,$2F,$2F,$30,$01,$32,$32,$32,$32,$01,$21,$0C,$14,$2B,$2D,$00
+ $9C60 DEFB $00,$2C,$2A,$15,$0D,$2F,$31,$30,$2E,$30,$31,$2E,$2F,$01,$30,$31,$2F,$2E,$4A,$24,$2C,$2A,$2B,$2C,$2B,$15,$0F,$01,$09,$01,$01,$00
+ $9C80 DEFB $00,$01,$01,$08,$32,$32,$32,$32,$01,$10,$16,$4A,$24,$2A,$25,$4A,$2F,$31,$2F,$31,$30,$17,$11,$01,$01,$04,$00,$00,$00,$00,$00,$00
+ $9CA0 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$05,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+; Page #N($01+(#PC-$9360)/$A0).
+ $9CC0 DEFB $00,$00,$2C,$2B,$2B,$2D,$2A,$2A,$2D,$2A,$2A,$2C,$2D,$2D,$2C,$2B,$2B,$2C,$2A,$2A,$2D,$2A,$2B,$2C,$2A,$2D,$2B,$00,$00,$00,$00,$00
+ $9CE0 DEFB $00,$00,$25,$4A,$2E,$31,$2F,$30,$2F,$2E,$30,$31,$2E,$2E,$30,$30,$2F,$2F,$31,$31,$17,$13,$2F,$2E,$31,$4A,$24,$2D,$2B,$00,$00,$00
+ $9D00 DEFB $00,$00,$23,$49,$10,$16,$30,$20,$01,$31,$30,$2E,$2F,$31,$30,$20,$01,$2F,$2E,$30,$06,$2F,$12,$16,$2F,$2E,$2F,$49,$22,$29,$2B,$00
+ $9D20 DEFB $00,$2C,$2A,$2D,$2B,$03,$30,$0C,$14,$25,$4A,$33,$30,$2E,$31,$0E,$14,$25,$4A,$2E,$17,$13,$30,$07,$31,$4A,$24,$2C,$15,$0F,$01,$00
+ $9D40 DEFB $00,$01,$01,$01,$01,$01,$01,$01,$09,$01,$01,$01,$01,$49,$22,$00,$05,$01,$01,$01,$08,$01,$01,$01,$01,$01,$01,$01,$04,$00,$00,$00
  $9D60 DEFB $00,$00,$00,$00,$00,$00,$29,$2B
  $9D68 DEFB $2B,$2A,$2D,$2D,$2C,$2C,$2C,$2A
  $9D70 DEFB $2A,$2B,$2D,$2A,$2B,$2D,$2A,$2C
@@ -5750,333 +5438,110 @@ b$8960 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $9DF0 DEFB $01,$01,$01,$01,$49,$22,$00,$00
  $9DF8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
-; Level Buffer?
+; Level Buffer
+;
+; #N$20 columns x #N$50 rows, organised as #N$10 pages of #N$A0 bytes
+; each (each page is #N$05 rows x #N$20 columns).
+;
+; .
+;
+; Page #N($01+(#PC-$9E00)/$A0).
 @label=LevelBuffer
-b$9E00 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E08 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E10 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E18 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E20 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E28 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E30 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E38 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E40 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E48 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E50 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E58 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E60 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E68 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E70 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E78 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E80 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E88 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E90 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9E98 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EA0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EA8 DEFB $78,$78,$0D,$00,$3D,$FC,$00,$EA
- $9EB0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EB8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EC0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EC8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9ED0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9ED8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EE0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EE8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EF0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9EF8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F00 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F08 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F10 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F18 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F20 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F28 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F30 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F38 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F40 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F48 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F50 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F58 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F60 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F68 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F70 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F78 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F80 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F88 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F90 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9F98 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FA0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FA8 DEFB $78,$78,$0D,$00,$3E,$FC,$00,$EA
- $9FB0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FB8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FC0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FC8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FD0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FD8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FE0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FE8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FF0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $9FF8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A000 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A008 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A010 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A018 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A020 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A028 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A030 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A038 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A040 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A048 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A050 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A058 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A060 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A068 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A070 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A078 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A080 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A088 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A090 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A098 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0A8 DEFB $78,$78,$0D,$00,$3F,$FC,$00,$EA
- $A0B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A0F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A100 DEFB $78
-
-; Data block at A101
-b$A101 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A109 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A111 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A119 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A121 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A129 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A131 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A139 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A141 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A149 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A151 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A159 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A161 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A169 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A171 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A179 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A181 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A189 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A191 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A199 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1A1 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1A9 DEFB $78,$0D,$00,$40,$FC,$00,$EA,$78
- $A1B1 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1B9 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1C1 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1C9 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1D1 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1D9 DEFB $78,$78,$78,$78,$78,$78,$78
-
-; Data block at A1E0
-b$A1E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A1F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A200 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A208 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A210 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A218 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A220 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A228 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A230 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A238 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A240 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A248 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A250 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A258 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A260 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A268 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A270 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A278 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A280 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A288 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A290 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A298 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2A8 DEFB $78,$78,$0D,$00,$41,$FC,$00,$EA
- $A2B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A2F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A300 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A308 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A310 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A318 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A320 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A328 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A330 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A338 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A340 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A348 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A350 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A358 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A360 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A368 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A370 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A378 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A380 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A388 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A390 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A398 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3A8 DEFB $78,$78,$0D,$00,$42,$FC,$00,$EA
- $A3B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A3F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A400 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A408 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A410 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A418 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A420 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A428 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A430 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A438 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A440 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A448 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A450 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A458 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A460 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A468 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A470 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A478 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A480 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A488 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A490 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A498 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4A8 DEFB $78,$78,$0D,$00,$43,$FC,$00,$EA
- $A4B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A4F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A500 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A508 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A510 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A518 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A520 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A528 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A530 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A538 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A540 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A548 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A550 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A558 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A560 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A568 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A570 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A578 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A580 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A588 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A590 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A598 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5A8 DEFB $78,$78,$0D,$00,$44,$FC,$00,$EA
- $A5B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A5F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A600 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A608 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A610 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A618 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A620 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A628 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A630 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A638 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A640 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A648 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A650 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A658 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A660 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A668 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A670 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A678 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A680 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A688 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A690 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A698 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6A8 DEFB $78,$78,$0D,$00,$45,$FC,$00,$EA
- $A6B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A6F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A700 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A708 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A710 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A718 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A720 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A728 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A730 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A738 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A740 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A748 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A750 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A758 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A760 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A768 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A770 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A778 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A780 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A788 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A790 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A798 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7A8 DEFB $78,$78,$0D,$00,$46,$FC,$00,$EA
- $A7B0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7B8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7C8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7D0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7D8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $A7F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
+g$9E00 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9E20 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9E40 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9E60 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9E80 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $9EA0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$3D,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9EC0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9EE0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9F00 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9F20 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $9F40 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9F60 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9F80 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9FA0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$3E,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $9FC0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $9FE0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A000 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A020 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A040 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A060 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A080 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A0A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$3F,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A0C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A0E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A100 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A120 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A140 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A160 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A180 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A1A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$40,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A1C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A1E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A200 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A220 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A240 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A260 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A280 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A2A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$41,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A2C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A2E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A300 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A320 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A340 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A360 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A380 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A3A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$42,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A3C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A3E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A400 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A420 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A440 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A460 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A480 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A4A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$43,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A4C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A4E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A500 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A520 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A540 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A560 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A580 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A5A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$44,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A5C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A5E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A600 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A620 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A640 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A660 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A680 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A6A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$45,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A6C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A6E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A700 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A720 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A740 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+; Page #N($01+(#PC-$9E00)/$A0).
+ $A760 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A780 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A7A0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$0D,$00,$46,$FC,$00,$EA,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A7C0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
+ $A7E0 DEFB $78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78,$78
 
 ; Messaging: Start Screen
 @label=Messaging_StartScreen
@@ -6232,34 +5697,92 @@ b$B200 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $B3E8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $B3F0 DEFB $78,$78,$78,$78,$78,$78,$78,$78
  $B3F8 DEFB $78,$78,$78,$78,$78,$78,$78,$78
- $B400 DEFB $2C,$01,$00,$00,$2D,$01,$00,$00
- $B408 DEFB $2A,$01,$00,$00,$28,$0E,$00,$00
- $B410 DEFB $00,$14,$05,$00,$00,$2C,$01,$00
- $B418 DEFB $28,$0E,$00,$00,$00,$1B,$0B,$00
- $B420 DEFB $00,$00,$14,$05,$00,$15,$04,$00
- $B428 DEFB $29,$0F,$00,$00,$2C,$01,$00,$00
- $B430 DEFB $00,$2B,$01,$00,$00,$2D,$01,$00
- $B438 DEFB $00,$2C,$01,$00,$00,$28,$0E,$00
- $B440 DEFB $00,$00,$14,$05,$00,$00,$2A,$01
- $B448 DEFB $00,$00,$15,$04,$00,$1A,$0A,$00
- $B450 DEFB $29,$0F,$00,$00,$00,$00,$15,$04
- $B458 DEFB $00,$29,$0F,$00,$00,$2B,$01,$00
- $B460 DEFB $00,$00,$2A,$01,$00,$00,$2D,$01
- $B468 DEFB $00,$00,$2A,$01,$49,$47,$48,$49
- $B470 DEFB $00,$00,$34,$36,$36,$35,$00,$00
- $B478 DEFB $26,$37,$38,$27,$39,$3A,$26,$3D
- $B480 DEFB $3E,$27,$3F,$40,$26,$37,$38,$27
- $B488 DEFB $39,$3A,$26,$3D,$3E,$27,$3F,$40
- $B490 DEFB $26,$43,$44,$27,$00,$00,$26,$45
- $B498 DEFB $46,$27,$00,$00,$12,$12,$12,$12
- $B4A0 DEFB $12,$12,$12,$12,$12,$12,$12,$12
- $B4A8 DEFB $12,$00,$00,$00,$00,$00,$00,$00
- $B4B0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $B4B8 DEFB $00,$00,$00,$00,$A7,$A6,$A5,$A4
- $B4C0 DEFB $A3,$A2,$A1,$A0,$9F,$A5,$A4,$A3
- $B4C8 DEFB $A2,$A1,$A0,$9F,$9E,$A3,$A2,$A1
- $B4D0 DEFB $A0,$9F,$9E,$9D,$00,$00,$00,$00
- $B4D8 DEFB $00,$00,$00,$00
+
+; Data block at B400
+b$B400 DEFB $2C,$01,$00,$00 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B404 DEFB $2D,$01,$00,$00 ;
+ $B408 DEFB $2A,$01,$00,$00 ; }
+ $B40C DEFB $28,$0E,$00,$00 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B410 DEFB $00,$14,$05,$00 ;
+ $B414 DEFB $00,$2C,$01,$00 ; }
+ $B418 DEFB $28,$0E,$00,$00 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B41C DEFB $00,$1B,$0B,$00 ;
+ $B420 DEFB $00,$00,$14,$05 ; }
+ $B424 DEFB $00,$15,$04,$00 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B428 DEFB $29,$0F,$00,$00 ;
+ $B42C DEFB $2C,$01,$00,$00 ; }
+ $B430 DEFB $00,$2B,$01,$00 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B434 DEFB $00,$2D,$01,$00 ;
+ $B438 DEFB $00,$2C,$01,$00 ; }
+ $B43C DEFB $00,$28,$0E,$00 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B440 DEFB $00,$00,$14,$05 ;
+ $B444 DEFB $00,$00,$2A,$01 ; }
+ $B448 DEFB $00,$00,$15,$04 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B44C DEFB $00,$1A,$0A,$00 ;
+ $B450 DEFB $29,$0F,$00,$00 ; }
+ $B454 DEFB $00,$00,$15,$04 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B458 DEFB $00,$29,$0F,$00 ;
+ $B45C DEFB $00,$2B,$01,$00 ; }
+ $B460 DEFB $00,$00,$2A,$01 ; {#UDGTABLE #TILES(#PC,$04,$03) TABLE#
+ $B464 DEFB $00,$00,$2D,$01 ;
+ $B468 DEFB $00,$00,$2A,$01 ; }
+
+; Terrain Data
+;
+; .
+;
+; .
+;
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_01
+g$B46C DEFB $49,$47,$48,$49
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B470 DEFB $00,$00
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_02
+ $B472 DEFB $34,$36,$36,$35
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B476 DEFB $00,$00
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_03
+ $B478 DEFB $26,$37,$38,$27
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B47C DEFB $39,$3A
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_04
+ $B47E DEFB $26,$3D,$3E,$27
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B482 DEFB $3F,$40
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_05
+ $B484 DEFB $26,$37,$38,$27
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B488 DEFB $39,$3A
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_06
+ $B48A DEFB $26,$3D,$3E,$27
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B48E DEFB $3F,$40
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_07
+ $B490 DEFB $26,$43,$44,$27
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B494 DEFB $00,$00
+; Terrain object #N($01+(#PC-$B46C)/$06).
+@label=Data_Terrain_08
+ $B496 DEFB $26,$45,$46,$27
+; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+ $B49A DEFB $00,$00
+
+; Game status buffer entry at B49C
+g$B49C DEFB $12,$12,$12,$12,$12,$12,$12,$12
+ $B4A4 DEFB $12,$12,$12,$12,$12,$00,$00,$00
+ $B4AC DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $B4B4 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $B4BC DEFB $A7,$A6,$A5,$A4,$A3,$A2,$A1,$A0
+ $B4C4 DEFB $9F,$A5,$A4,$A3,$A2,$A1,$A0,$9F
+ $B4CC DEFB $9E,$A3,$A2,$A1,$A0,$9F,$9E,$9D
+ $B4D4 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; Actions Jump Table
 ;
@@ -6590,9 +6113,10 @@ b$BC9E DEFB $08,$22,$07,$22,$07,$22,$06,$23
 ; Data block at BD0E
 b$BD0E DEFB $06,$87,$19,$47,$1A,$08,$1B,$08
  $BD16 DEFB $1C,$09,$1D,$09,$1E,$0A,$1F,$0B
- $BD1E DEFB $80,$0F,$FF,$46,$87,$59,$47,$5A
- $BD26 DEFB $08,$5B,$08,$5C,$09,$5D,$09,$5E
- $BD2E DEFB $0A,$5F,$0B,$C0,$0F,$F1
+ $BD1E DEFB $80,$0F,$FF
+ $BD21 DEFB $46,$87,$59,$47,$5A,$08,$5B,$08
+ $BD29 DEFB $5C,$09,$5D,$09,$5E,$0A,$5F,$0B
+ $BD31 DEFB $C0,$0F,$F1
 
 ; Data block at BD34
 b$BD34 DEFB $0C,$21,$2C,$21,$0C,$A1,$2D,$21
@@ -6900,608 +6424,608 @@ b$C400 DEFB $0C,$21,$2C,$21,$0C,$A1,$2D,$21
 ;
 ; .
 ;
-; Graphic #N$01.
+; Graphic #N$00.
 @label=Graphics_Data
 b$C500 DEFB $00,$FE,$66,$99,$8C,$42,$C1,$B0
  $C508 DEFB $AE,$7F
  $C50A DEFB $FF                             ; Terminator.
-; Graphic #N$02.
+; Graphic #N$01.
  $C50B DEFB $01,$00,$00,$00,$80,$80,$E0,$70
  $C513 DEFB $F0,$20
  $C515 DEFB $FF                             ; Terminator.
-; Graphic #N$03.
+; Graphic #N$02.
  $C516 DEFB $80,$00,$FE,$06,$09,$08,$04,$0C
  $C51E DEFB $0B,$0A,$07
  $C521 DEFB $FF                             ; Terminator.
-; Graphic #N$04.
+; Graphic #N$03.
  $C522 DEFB $01,$00,$60,$90,$C8,$28,$1E,$07
  $C52A DEFB $EF,$F2
  $C52C DEFB $FF                             ; Terminator.
-; Graphic #N$05.
+; Graphic #N$04.
  $C52D DEFB $80,$00,$FE,$0E,$09,$78,$B7,$B5
  $C535 DEFB $96,$7D,$09,$11,$22,$22,$1C,$00
  $C53D DEFB $00,$00,$00
  $C540 DEFB $FF                             ; Terminator.
-; Graphic #N$06.
+; Graphic #N$05.
  $C541 DEFB $01
  $C542 DEFB $FF                             ; Terminator.
-; Graphic #N$07.
+; Graphic #N$06.
  $C543 DEFB $00,$00,$80,$E0,$70,$F0,$A0,$00
  $C54B DEFB $FF                             ; Terminator.
-; Graphic #N$08.
+; Graphic #N$07.
  $C54C DEFB $80,$00,$FE,$00,$00,$07,$0B,$0B
  $C554 DEFB $09,$07,$00,$01,$02,$02,$01,$00
  $C55C DEFB $00,$00,$00
  $C55F DEFB $FF                             ; Terminator.
-; Graphic #N$09.
+; Graphic #N$08.
  $C560 DEFB $01
  $C561 DEFB $FF                             ; Terminator.
-; Graphic #N$0A.
+; Graphic #N$09.
  $C562 DEFB $E0,$90,$88,$7E,$57,$6F,$DA,$90
  $C56A DEFB $10,$20,$20,$C0,$00,$00,$00,$00
  $C572 DEFB $FF                             ; Terminator.
-; Graphic #N$0B.
+; Graphic #N$0A.
  $C573 DEFB $80,$A4,$9F,$8F,$40,$40,$A0,$20
  $C57B DEFB $39,$02,$88,$70
  $C57F DEFB $FF                             ; Terminator.
-; Graphic #N$0C.
+; Graphic #N$0B.
  $C580 DEFB $01
  $C581 DEFB $FF                             ; Terminator.
-; Graphic #N$0D.
+; Graphic #N$0C.
  $C582 DEFB $00,$80,$40,$30,$88,$28,$A0,$C0
  $C58A DEFB $40,$80,$80,$80,$00,$00,$00,$00
  $C592 DEFB $FF                             ; Terminator.
-; Graphic #N$0E.
+; Graphic #N$0D.
  $C593 DEFB $80,$00,$00,$00,$07,$08,$10,$12
  $C59B DEFB $13,$09,$07,$03,$01,$01,$01,$00
  $C5A3 DEFB $00,$00,$00
  $C5A6 DEFB $FF                             ; Terminator.
-; Graphic #N$0F.
+; Graphic #N$0E.
  $C5A7 DEFB $01
  $C5A8 DEFB $FF                             ; Terminator.
-; Graphic #N$10.
+; Graphic #N$0F.
  $C5A9 DEFB $20,$60,$F0,$70,$78,$56,$B1,$D4
  $C5B1 DEFB $37,$C6,$26,$17,$8F,$40,$20,$20
  $C5B9 DEFB $10,$1C,$27,$24,$20,$11,$0E,$00
  $C5C1 DEFB $FF                             ; Terminator.
-; Graphic #N$11.
+; Graphic #N$10.
  $C5C2 DEFB $01,$FE,$00,$00,$00,$00,$00,$00
  $C5CA DEFB $00,$80,$70,$0C,$C4,$34,$80,$60
  $C5D2 DEFB $20,$20,$20,$40,$40,$80,$80,$00
  $C5DA DEFB $00,$00
  $C5DC DEFB $FF                             ; Terminator.
-; Graphic #N$12.
+; Graphic #N$11.
  $C5DD DEFB $80,$00,$00,$00,$07,$08,$10,$12
  $C5E5 DEFB $13,$09,$07
  $C5E8 DEFB $FF                             ; Terminator.
-; Graphic #N$13.
+; Graphic #N$12.
  $C5E9 DEFB $01,$00,$40,$E0,$E0,$70,$7E,$59
  $C5F1 DEFB $88,$58,$64,$50,$48,$24,$23,$10
  $C5F9 DEFB $08,$04,$02,$09,$09,$08,$04,$03
  $C601 DEFB $00,$00
  $C603 DEFB $FF                             ; Terminator.
-; Graphic #N$14.
+; Graphic #N$13.
  $C604 DEFB $01,$FE,$00,$00,$00,$00,$00,$C0
  $C60C DEFB $30,$0C,$C2,$82,$88,$40,$F8,$08
  $C614 DEFB $08,$08,$10,$E0,$00,$20,$40,$80
  $C61C DEFB $00,$00
  $C61E DEFB $FF                             ; Terminator.
-; Graphic #N$15.
+; Graphic #N$14.
  $C61F DEFB $80,$00,$00,$00,$07,$08,$10,$12
  $C627 DEFB $13,$09,$07
  $C62A DEFB $FF                             ; Terminator.
-; Graphic #N$16.
+; Graphic #N$15.
  $C62B DEFB $01,$00,$40,$E0,$FE,$73,$60,$51
  $C633 DEFB $BA,$CB,$31,$2F,$21,$10,$08,$04
  $C63B DEFB $03,$01,$01,$01,$00,$00,$00,$00
  $C643 DEFB $00,$00
  $C645 DEFB $FF                             ; Terminator.
-; Graphic #N$17.
+; Graphic #N$16.
  $C646 DEFB $01,$FE,$00,$00,$00,$E0,$18,$06
  $C64E DEFB $02,$0A,$80,$DC,$E4,$04,$04,$04
  $C656 DEFB $08,$F4,$24,$04,$88,$70,$00,$00
  $C65E DEFB $00,$00
  $C660 DEFB $FF                             ; Terminator.
-; Graphic #N$18.
+; Graphic #N$17.
  $C661 DEFB $80,$00
  $C663 DEFB $FF                             ; Terminator.
-; Graphic #N$19.
+; Graphic #N$18.
  $C664 DEFB $00,$00,$00,$00,$00,$00,$00,$01
  $C66C DEFB $00,$07,$08,$10,$13,$10,$08,$07
  $C674 DEFB $FF                             ; Terminator.
-; Graphic #N$1A.
+; Graphic #N$19.
  $C675 DEFB $01,$00,$C0,$6F,$F0,$78,$78,$E4
  $C67D DEFB $BC,$32,$09,$04,$02,$01,$00,$00
  $C685 DEFB $00,$00
  $C687 DEFB $FF                             ; Terminator.
-; Graphic #N$1B.
+; Graphic #N$1A.
  $C688 DEFB $01
  $C689 DEFB $FF                             ; Terminator.
-; Graphic #N$1C.
+; Graphic #N$1B.
  $C68A DEFB $00,$C0,$3E,$01,$E1,$84,$44,$FA
  $C692 DEFB $F1,$01,$01,$81,$62,$1C,$49,$41
  $C69A DEFB $22,$1C,$00,$00,$00,$00,$00,$00
  $C6A2 DEFB $FF                             ; Terminator.
-; Graphic #N$1D.
+; Graphic #N$1C.
  $C6A3 DEFB $80,$00
  $C6A5 DEFB $FF                             ; Terminator.
-; Graphic #N$1E.
+; Graphic #N$1D.
  $C6A6 DEFB $00,$00,$00,$00,$00,$00,$00,$03
  $C6AE DEFB $01,$07,$08,$10,$13,$13,$08,$07
  $C6B6 DEFB $FF                             ; Terminator.
-; Graphic #N$1F.
+; Graphic #N$1E.
  $C6B7 DEFB $01,$00,$CF,$F0,$D1,$68,$70,$CC
  $C6BF DEFB $F3,$0C,$03,$00,$00,$00,$00,$00
  $C6C7 DEFB $00,$00
  $C6C9 DEFB $FF                             ; Terminator.
-; Graphic #N$20.
+; Graphic #N$1F.
  $C6CA DEFB $01,$FE,$00,$00,$00,$00,$00,$00
  $C6D2 DEFB $00,$0C,$F2,$00,$1C,$8C,$72,$E2
  $C6DA DEFB $C1,$01,$01,$E2,$1C,$24,$20,$11
  $C6E2 DEFB $0E,$00
  $C6E4 DEFB $FF                             ; Terminator.
-; Graphic #N$21.
+; Graphic #N$20.
  $C6E5 DEFB $01,$00,$00,$00,$80,$80,$80,$00
  $C6ED DEFB $00,$00
  $C6EF DEFB $FF                             ; Terminator.
-; Graphic #N$22.
+; Graphic #N$21.
  $C6F0 DEFB $80,$00
  $C6F2 DEFB $FF                             ; Terminator.
-; Graphic #N$23.
+; Graphic #N$22.
  $C6F3 DEFB $00,$00,$00,$00,$00,$00,$00,$07
  $C6FB DEFB $03,$07,$08,$10,$13,$10,$08,$07
  $C703 DEFB $FF                             ; Terminator.
-; Graphic #N$24.
+; Graphic #N$23.
  $C704 DEFB $01
  $C705 DEFB $FF                             ; Terminator.
-; Graphic #N$25.
+; Graphic #N$24.
  $C706 DEFB $00,$00,$00,$00,$00,$03,$1C,$60
  $C70E DEFB $C2,$E1,$FC,$67,$CD,$7C,$83,$00
  $C716 DEFB $FF                             ; Terminator.
-; Graphic #N$26.
+; Graphic #N$25.
  $C717 DEFB $01
  $C718 DEFB $FF                             ; Terminator.
-; Graphic #N$27.
+; Graphic #N$26.
  $C719 DEFB $00,$00,$00,$30,$C8,$00,$50,$0C
  $C721 DEFB $AA,$71,$B0,$20,$C0,$01,$FE,$04
  $C729 DEFB $20,$11,$0E,$00,$00,$00,$00,$00
  $C731 DEFB $FF                             ; Terminator.
-; Graphic #N$28.
+; Graphic #N$27.
  $C732 DEFB $01
  $C733 DEFB $FF                             ; Terminator.
-; Graphic #N$29.
+; Graphic #N$28.
  $C734 DEFB $00,$00,$80,$80,$80,$00,$80,$80
  $C73C DEFB $FF                             ; Terminator.
-; Graphic #N$2A.
+; Graphic #N$29.
  $C73D DEFB $80,$00
  $C73F DEFB $FF                             ; Terminator.
-; Graphic #N$2B.
+; Graphic #N$2A.
  $C740 DEFB $00,$00,$00,$00,$00,$00,$00,$0F ; {#UDGTABLE(default,centre) {
  $C748 DEFB $0F,$07,$08,$11,$13,$10,$08,$07 ; #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C740-$C748-$08(player-01)
                                             ; } UDGTABLE#}
  $C750 DEFB $FF                             ; Terminator.
-; Graphic #N$2C.
+; Graphic #N$2B.
  $C751 DEFB $01
  $C752 DEFB $FF                             ; Terminator.
-; Graphic #N$2D.
+; Graphic #N$2C.
  $C753 DEFB $00,$00,$00,$03,$0C,$32,$44,$C3 ; {#UDGTABLE(default,centre) {
  $C75B DEFB $F1,$4C,$89,$57,$FC,$43,$80,$00 ; #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C753-$C75B-$08(player-02)
                                             ; } UDGTABLE#}
  $C763 DEFB $FF                             ; Terminator.
-; Graphic #N$2E.
+; Graphic #N$2D.
  $C764 DEFB $01
  $C765 DEFB $FF                             ; Terminator.
-; Graphic #N$2F.
+; Graphic #N$2E.
  $C766 DEFB $00,$C0,$A0,$00,$60,$18,$F6,$F1 ; {#UDGTABLE(default,centre) {
  $C76E DEFB $F0,$E0,$40,$87,$3A,$D0,$08,$07 ; #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C766-$C76E-$08(player-03)
                                             ; } UDGTABLE#}
  $C776 DEFB $FF                             ; Terminator.
-; Graphic #N$30.
+; Graphic #N$2F.
  $C777 DEFB $01,$00,$80,$80,$80,$40,$40,$40 ; {#UDGTABLE(default,centre) {
  $C77F DEFB $80,$00                         ; #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C777-$C77F-$08{$00,$00,$20,$28}(player-04)
                                             ; } UDGTABLE#}
  $C781 DEFB $FF                             ; Terminator.
-; Graphic #N$31.
+; Graphic #N$30.
  $C782 DEFB $80,$00
  $C784 DEFB $FF                             ; Terminator.
-; Graphic #N$32.
+; Graphic #N$31.
  $C785 DEFB $00,$00,$00,$00,$00,$00,$03,$0F ; {#UDGTABLE(default,centre) {
  $C78D DEFB $1E,$17,$08,$11,$13,$10,$08,$07 ; #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C785-$C78D-$08(graphic-32)
                                             ; } UDGTABLE#}
  $C795 DEFB $FF                             ; Terminator.
-; Graphic #N$33.
+; Graphic #N$32.
  $C796 DEFB $01,$FE,$00,$00,$00,$00,$00,$00 ; {#UDGTABLE(default,centre) {
  $C79E DEFB $03,$04,$05,$08,$12,$20,$44,$87 ; #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C796-$C7AE-$08{$00,$00,$20,$68}(graphic-33)
  $C7A6 DEFB $80,$F8,$D3,$2C,$D7,$E0,$40,$40 ; } UDGTABLE#
  $C7AE DEFB $80,$00                         ; }
  $C7B0 DEFB $FF                             ; Terminator.
-; Graphic #N$34.
+; Graphic #N$33.
  $C7B1 DEFB $01
  $C7B2 DEFB $FF                             ; Terminator.
-; Graphic #N$35.
+; Graphic #N$34.
  $C7B3 DEFB $80,$60,$DC,$C2,$C1,$E0,$C2,$82
  $C7BB DEFB $0E,$30,$C8,$07,$00,$00,$00,$00
  $C7C3 DEFB $FF                             ; Terminator.
-; Graphic #N$36.
+; Graphic #N$35.
  $C7C4 DEFB $01
  $C7C5 DEFB $FF                             ; Terminator.
-; Graphic #N$37.
+; Graphic #N$36.
  $C7C6 DEFB $00,$00,$00,$00,$00,$00,$80,$40
  $C7CE DEFB $40,$40,$80,$00,$00,$00,$00,$00
  $C7D6 DEFB $FF                             ; Terminator.
-; Graphic #N$38.
+; Graphic #N$37.
  $C7D7 DEFB $80,$00
  $C7D9 DEFB $FF                             ; Terminator.
-; Graphic #N$39.
+; Graphic #N$38.
  $C7DA DEFB $00,$00,$00,$00,$01,$01,$02,$0F
  $C7E2 DEFB $3E,$1F,$08,$11,$13,$10,$08,$07
  $C7EA DEFB $FF                             ; Terminator.
-; Graphic #N$3A.
+; Graphic #N$39.
  $C7EB DEFB $01,$FE,$00,$00,$00,$00,$00,$1C
  $C7F3 DEFB $10,$24,$25,$29,$4A,$A6,$3E,$7E
  $C7FB DEFB $02,$E4,$A8,$51,$D2,$FC,$60,$40
  $C803 DEFB $80,$00
  $C805 DEFB $FF                             ; Terminator.
-; Graphic #N$3B.
+; Graphic #N$3A.
  $C806 DEFB $01
  $C807 DEFB $FF                             ; Terminator.
-; Graphic #N$3C.
+; Graphic #N$3B.
  $C808 DEFB $E0,$18,$06,$09,$08,$0C,$10,$31
  $C810 DEFB $CE,$00,$00,$00,$00,$00,$00,$00
  $C818 DEFB $FF                             ; Terminator.
-; Graphic #N$3D.
+; Graphic #N$3C.
  $C819 DEFB $01
  $C81A DEFB $FF                             ; Terminator.
-; Graphic #N$3E.
+; Graphic #N$3D.
  $C81B DEFB $00,$00,$00,$00,$80,$80,$80,$00
  $C823 DEFB $FF                             ; Terminator.
-; Graphic #N$3F.
+; Graphic #N$3E.
  $C824 DEFB $80,$00
  $C826 DEFB $FF                             ; Terminator.
-; Graphic #N$40.
+; Graphic #N$3F.
  $C827 DEFB $00,$01,$01,$01,$02,$02,$03,$07
  $C82F DEFB $1E,$3F,$08,$11,$13,$10,$08,$07
  $C837 DEFB $FF                             ; Terminator.
-; Graphic #N$41.
+; Graphic #N$40.
  $C838 DEFB $01,$FE,$00,$00,$00,$00,$30,$40
  $C840 DEFB $4B,$82,$82,$26,$3A,$02,$02,$24
  $C848 DEFB $C8,$51,$26,$78,$80,$C0,$40,$40
  $C850 DEFB $80,$00
  $C852 DEFB $FF                             ; Terminator.
-; Graphic #N$42.
+; Graphic #N$41.
  $C853 DEFB $01,$FE,$00,$00,$00,$00,$00,$00
  $C85B DEFB $C0,$20,$14,$12,$11,$19,$21,$42
  $C863 DEFB $9C,$00
  $C865 DEFB $FF                             ; Terminator.
-; Graphic #N$43.
+; Graphic #N$42.
  $C866 DEFB $80,$00,$FE,$00,$00,$00,$00,$01
  $C86E DEFB $01,$02,$02,$04,$04,$04,$05,$08
  $C876 DEFB $08,$08,$0D,$1E,$3F,$18,$11,$13
  $C87E DEFB $10,$08,$07
  $C881 DEFB $FF                             ; Terminator.
-; Graphic #N$44.
+; Graphic #N$43.
  $C882 DEFB $01,$FE,$00,$00,$00,$00,$C0,$1F
  $C88A DEFB $50,$10,$08,$18,$38,$78,$F0,$11
  $C892 DEFB $D2,$A4,$B8,$40,$C0,$C0,$40,$40
  $C89A DEFB $80,$00
  $C89C DEFB $FF                             ; Terminator.
-; Graphic #N$45.
+; Graphic #N$44.
  $C89D DEFB $01,$FE,$00,$00,$00,$00,$00,$70
  $C8A5 DEFB $88,$44,$64,$44,$48,$F0,$80,$00
  $C8AD DEFB $00,$00
  $C8AF DEFB $FF                             ; Terminator.
-; Graphic #N$46.
+; Graphic #N$45.
  $C8B0 DEFB $80,$00,$FE,$00,$00,$00,$06,$08
  $C8B8 DEFB $09,$08,$08,$0A,$12,$13,$10,$10
  $C8C0 DEFB $11,$16,$0E,$1F,$3F,$29,$52,$12
  $C8C8 DEFB $10,$08,$07
  $C8CB DEFB $FF                             ; Terminator.
-; Graphic #N$47.
+; Graphic #N$46.
  $C8CC DEFB $01,$FE,$00,$00,$00,$3C,$42,$81
  $C8D4 DEFB $41,$61,$62,$E2,$64,$24,$48,$90
  $C8DC DEFB $A0,$C0,$C0,$00,$80,$40,$40,$40
  $C8E4 DEFB $80,$00
  $C8E6 DEFB $FF                             ; Terminator.
-; Graphic #N$48.
+; Graphic #N$47.
  $C8E7 DEFB $01,$FE,$00,$00,$00,$C0,$20,$10
  $C8EF DEFB $90,$10,$40,$C0,$00,$00,$00,$00
  $C8F7 DEFB $00,$00
  $C8F9 DEFB $FF                             ; Terminator.
-; Graphic #N$49.
+; Graphic #N$48.
  $C8FA DEFB $80,$00,$FE,$00,$00,$00,$00,$23
  $C902 DEFB $4C,$4C,$2A,$23,$23,$25,$28,$20
  $C90A DEFB $21,$25,$1A,$16,$3F,$39,$73,$53
  $C912 DEFB $10,$08,$07
  $C915 DEFB $FF                             ; Terminator.
-; Graphic #N$4A.
+; Graphic #N$49.
  $C916 DEFB $01,$FE,$00,$00,$0E,$E1,$10,$0C
  $C91E DEFB $08,$09,$16,$90,$90,$A0,$A0,$40
  $C926 DEFB $40,$80,$80,$80,$80,$40,$40,$40
  $C92E DEFB $80,$00
  $C930 DEFB $FF                             ; Terminator.
-; Graphic #N$4B.
+; Graphic #N$4A.
  $C931 DEFB $01,$FE,$00,$00,$00,$00,$80,$80
  $C939 DEFB $80,$00
  $C93B DEFB $FF                             ; Terminator.
-; Graphic #N$4C.
+; Graphic #N$4B.
  $C93C DEFB $80
  $C93D DEFB $FF                             ; Terminator.
-; Graphic #N$4D.
+; Graphic #N$4C.
  $C93E DEFB $FE,$00,$00,$00,$00,$00,$00,$02
  $C946 DEFB $04,$04,$02,$02,$01,$01,$00,$00
  $C94E DEFB $00
  $C94F DEFB $FF                             ; Terminator.
-; Graphic #N$4E.
+; Graphic #N$4D.
  $C950 DEFB $01
  $C951 DEFB $FF                             ; Terminator.
-; Graphic #N$4F.
+; Graphic #N$4E.
  $C952 DEFB $00,$00,$0E,$11,$20,$40,$60,$98
  $C95A DEFB $3C,$92,$2A,$16,$24,$8F,$8B,$89
  $C962 DEFB $5D,$7F,$3A,$72,$72,$50,$08,$07
  $C96A DEFB $FF                             ; Terminator.
-; Graphic #N$50.
+; Graphic #N$4F.
  $C96B DEFB $01,$FE,$00,$00,$E0,$10,$88,$C8
  $C973 DEFB $88,$90,$A0,$80,$80,$80,$80,$00
  $C97B DEFB $00,$00,$00,$00,$80,$40,$40,$40
  $C983 DEFB $80,$00
  $C985 DEFB $FF                             ; Terminator.
-; Graphic #N$51.
+; Graphic #N$50.
  $C986 DEFB $80,$00,$FE,$66,$99,$31,$42,$83
  $C98E DEFB $0D,$75,$FE
  $C991 DEFB $FF                             ; Terminator.
-; Graphic #N$52.
+; Graphic #N$51.
  $C992 DEFB $FF,$00,$00,$00,$01,$01,$07,$0E
  $C99A DEFB $0F,$04
  $C99C DEFB $FF                             ; Terminator.
-; Graphic #N$53.
+; Graphic #N$52.
  $C99D DEFB $80,$00,$FE,$60,$90,$10,$20,$30
  $C9A5 DEFB $D0,$50,$E0
  $C9A8 DEFB $FF                             ; Terminator.
-; Graphic #N$54.
+; Graphic #N$53.
  $C9A9 DEFB $FF,$00,$06,$09,$13,$14,$78,$E0
  $C9B1 DEFB $F7,$4F
  $C9B3 DEFB $FF                             ; Terminator.
-; Graphic #N$55.
+; Graphic #N$54.
  $C9B4 DEFB $80,$00,$FE,$70,$90,$1E,$ED,$AD
  $C9BC DEFB $69,$BE,$90,$88,$44,$44,$38,$00
  $C9C4 DEFB $00,$00,$00
  $C9C7 DEFB $FF                             ; Terminator.
-; Graphic #N$56.
+; Graphic #N$55.
  $C9C8 DEFB $FF
  $C9C9 DEFB $FF                             ; Terminator.
-; Graphic #N$57.
+; Graphic #N$56.
  $C9CA DEFB $00,$00,$01,$07,$0E,$0F,$05,$00
  $C9D2 DEFB $FF                             ; Terminator.
-; Graphic #N$58.
+; Graphic #N$57.
  $C9D3 DEFB $80,$00,$FE,$00,$00,$E0,$D0,$D0
  $C9DB DEFB $90,$E0,$00,$80,$40,$40,$80,$00
  $C9E3 DEFB $00,$00,$00
  $C9E6 DEFB $FF                             ; Terminator.
-; Graphic #N$59.
+; Graphic #N$58.
  $C9E7 DEFB $FF
  $C9E8 DEFB $FF                             ; Terminator.
-; Graphic #N$5A.
+; Graphic #N$59.
  $C9E9 DEFB $07,$09,$11,$7E,$EA,$F6,$5B,$09
  $C9F1 DEFB $08,$04,$04,$03,$00,$00,$00,$00
  $C9F9 DEFB $FF                             ; Terminator.
-; Graphic #N$5B.
+; Graphic #N$5A.
  $C9FA DEFB $80,$25,$F9,$F1,$02,$02,$05,$04
  $CA02 DEFB $9C,$40,$11,$0E
  $CA06 DEFB $FF                             ; Terminator.
-; Graphic #N$5C.
+; Graphic #N$5B.
  $CA07 DEFB $FF
  $CA08 DEFB $FF                             ; Terminator.
-; Graphic #N$5D.
+; Graphic #N$5C.
  $CA09 DEFB $00,$01,$02,$0C,$11,$14,$05,$03
  $CA11 DEFB $02,$01,$01,$01,$00,$00,$00,$00
  $CA19 DEFB $FF                             ; Terminator.
-; Graphic #N$5E.
+; Graphic #N$5D.
  $CA1A DEFB $80,$00,$00,$00,$E0,$10,$08,$48
  $CA22 DEFB $C8,$90,$E0,$C0,$80,$80,$80,$00
  $CA2A DEFB $00,$00,$00
  $CA2D DEFB $FF                             ; Terminator.
-; Graphic #N$5F.
+; Graphic #N$5E.
  $CA2E DEFB $FF
  $CA2F DEFB $FF                             ; Terminator.
-; Graphic #N$60.
+; Graphic #N$5F.
  $CA30 DEFB $04,$06,$0F,$0E,$1E,$6A,$8D,$2B
  $CA38 DEFB $EC,$63,$64,$E8,$F1,$02,$04,$04
  $CA40 DEFB $08,$38,$E4,$24,$04,$88,$70,$00
  $CA48 DEFB $FF                             ; Terminator.
-; Graphic #N$61.
+; Graphic #N$60.
  $CA49 DEFB $FF,$FE,$00,$00,$00,$00,$00,$00
  $CA51 DEFB $00,$01,$0E,$30,$23,$2C,$01,$06
  $CA59 DEFB $04,$04,$04,$02,$02,$01,$01,$00
  $CA61 DEFB $00,$00
  $CA63 DEFB $FF                             ; Terminator.
-; Graphic #N$62.
+; Graphic #N$61.
  $CA64 DEFB $80,$00,$00,$00,$E0,$10,$08,$48
  $CA6C DEFB $C8,$90,$E0
  $CA6F DEFB $FF                             ; Terminator.
-; Graphic #N$63.
+; Graphic #N$62.
  $CA70 DEFB $FF,$00,$02,$07,$07,$0E,$7E,$9A
  $CA78 DEFB $11,$1A,$26,$0A,$12,$24,$C4,$08
  $CA80 DEFB $10,$20,$40,$90,$90,$10,$20,$C0
  $CA88 DEFB $00,$00
  $CA8A DEFB $FF                             ; Terminator.
-; Graphic #N$64.
+; Graphic #N$63.
  $CA8B DEFB $FF,$FE,$00,$00,$00,$00,$00,$03
  $CA93 DEFB $0C,$30,$43,$41,$11,$02,$1F,$10
  $CA9B DEFB $10,$10,$08,$07,$00,$04,$02,$01
  $CAA3 DEFB $00,$00
  $CAA5 DEFB $FF                             ; Terminator.
-; Graphic #N$65.
+; Graphic #N$64.
  $CAA6 DEFB $80,$00,$00,$00,$E0,$10,$08,$48
  $CAAE DEFB $C8,$90,$E0
  $CAB1 DEFB $FF                             ; Terminator.
-; Graphic #N$66.
+; Graphic #N$65.
  $CAB2 DEFB $FF,$00,$02,$07,$7F,$CE,$06,$8A
  $CABA DEFB $5D,$D3,$8C,$F4,$84,$08,$10,$20
  $CAC2 DEFB $C0,$80,$80,$80,$00,$00,$00,$00
  $CACA DEFB $00,$00
  $CACC DEFB $FF                             ; Terminator.
-; Graphic #N$67.
+; Graphic #N$66.
  $CACD DEFB $FF,$FE,$00,$00,$00,$07,$18,$60
  $CAD5 DEFB $40,$50,$01,$3B,$27,$20,$20,$20
  $CADD DEFB $10,$2F,$24,$20,$11,$0E,$00,$00
  $CAE5 DEFB $00,$00
  $CAE7 DEFB $FF                             ; Terminator.
-; Graphic #N$68.
+; Graphic #N$67.
  $CAE8 DEFB $80,$00
  $CAEA DEFB $FF                             ; Terminator.
-; Graphic #N$69.
+; Graphic #N$68.
  $CAEB DEFB $00,$00,$00,$00,$00,$00,$00,$80
  $CAF3 DEFB $00,$E0,$10,$08,$C8,$08,$10,$E0
  $CAFB DEFB $FF                             ; Terminator.
-; Graphic #N$6A.
+; Graphic #N$69.
  $CAFC DEFB $FF,$00,$03,$F6,$0F,$1E,$1E,$27
  $CB04 DEFB $3D,$4C,$90,$20,$40,$80,$00,$00
  $CB0C DEFB $00,$00
  $CB0E DEFB $FF                             ; Terminator.
-; Graphic #N$6B.
+; Graphic #N$6A.
  $CB0F DEFB $FF
  $CB10 DEFB $FF                             ; Terminator.
-; Graphic #N$6C.
+; Graphic #N$6B.
  $CB11 DEFB $00,$03,$7C,$80,$87,$21,$22,$5F
  $CB19 DEFB $8F,$80,$80,$81,$46,$38,$92,$82
  $CB21 DEFB $44,$38,$00,$00,$00,$00,$00,$00
  $CB29 DEFB $FF                             ; Terminator.
-; Graphic #N$6D.
+; Graphic #N$6C.
  $CB2A DEFB $80,$00
  $CB2C DEFB $FF                             ; Terminator.
-; Graphic #N$6E.
+; Graphic #N$6D.
  $CB2D DEFB $00,$00,$00,$00,$00,$00,$00,$C0
  $CB35 DEFB $80,$E0,$10,$08,$C8,$C8,$10,$E0
  $CB3D DEFB $FF                             ; Terminator.
-; Graphic #N$6F.
+; Graphic #N$6E.
  $CB3E DEFB $FF,$00,$F3,$0F,$8B,$16,$0E,$33
  $CB46 DEFB $CF,$30,$C0,$00,$00,$00,$00,$00
  $CB4E DEFB $00,$00
  $CB50 DEFB $FF                             ; Terminator.
-; Graphic #N$70.
+; Graphic #N$6F.
  $CB51 DEFB $FF,$FE,$00,$00,$00,$00,$00,$00
  $CB59 DEFB $00,$30,$4F,$00,$38,$31,$4E,$47
  $CB61 DEFB $83,$80,$80,$47,$38,$24,$04,$88
  $CB69 DEFB $70,$00
  $CB6B DEFB $FF                             ; Terminator.
-; Graphic #N$71.
+; Graphic #N$70.
  $CB6C DEFB $FF,$00,$00,$00,$01,$01,$01,$00
  $CB74 DEFB $00,$00
  $CB76 DEFB $FF                             ; Terminator.
-; Graphic #N$72.
+; Graphic #N$71.
  $CB77 DEFB $80,$00
  $CB79 DEFB $FF                             ; Terminator.
-; Graphic #N$73.
+; Graphic #N$72.
  $CB7A DEFB $00,$00,$00,$00,$00,$00,$00,$E0
  $CB82 DEFB $C0,$E0,$10,$08,$C8,$08,$10,$E0
  $CB8A DEFB $FF                             ; Terminator.
-; Graphic #N$74.
+; Graphic #N$73.
  $CB8B DEFB $FF
  $CB8C DEFB $FF                             ; Terminator.
-; Graphic #N$75.
+; Graphic #N$74.
  $CB8D DEFB $00,$00,$00,$00,$00,$C0,$38,$06
  $CB95 DEFB $43,$87,$3F,$E6,$B3,$3E,$C1,$00
  $CB9D DEFB $FF                             ; Terminator.
-; Graphic #N$76.
+; Graphic #N$75.
  $CB9E DEFB $FF
  $CB9F DEFB $FF                             ; Terminator.
-; Graphic #N$77.
+; Graphic #N$76.
  $CBA0 DEFB $00,$00,$00,$0C,$13,$00,$0A,$30
  $CBA8 DEFB $55,$8E,$0D,$04,$03,$80,$7F,$20
  $CBB0 DEFB $04,$88,$70,$00,$00,$00,$00,$00
  $CBB8 DEFB $FF                             ; Terminator.
-; Graphic #N$78.
+; Graphic #N$77.
  $CBB9 DEFB $FF
  $CBBA DEFB $FF                             ; Terminator.
-; Graphic #N$79.
+; Graphic #N$78.
  $CBBB DEFB $00,$00,$01,$01,$01,$00,$01,$01
  $CBC3 DEFB $FF                             ; Terminator.
-; Graphic #N$7A.
+; Graphic #N$79.
  $CBC4 DEFB $80,$00
  $CBC6 DEFB $FF                             ; Terminator.
-; Graphic #N$7B.
+; Graphic #N$7A.
  $CBC7 DEFB $00,$00,$00,$00,$00,$00,$00,$F0
  $CBCF DEFB $F0,$E0,$10,$88,$C8,$08,$10,$E0
  $CBD7 DEFB $FF                             ; Terminator.
-; Graphic #N$7C.
+; Graphic #N$7B.
  $CBD8 DEFB $FF
  $CBD9 DEFB $FF                             ; Terminator.
-; Graphic #N$7D.
+; Graphic #N$7C.
  $CBDA DEFB $00,$00,$00,$C0,$30,$4C,$22,$C3
  $CBE2 DEFB $8F,$32,$91,$EA,$3F,$C2,$01,$00
  $CBEA DEFB $FF                             ; Terminator.
-; Graphic #N$7E.
+; Graphic #N$7D.
  $CBEB DEFB $FF
  $CBEC DEFB $FF                             ; Terminator.
-; Graphic #N$7F.
+; Graphic #N$7E.
  $CBED DEFB $00,$03,$05,$00,$06,$18,$6F,$8F
  $CBF5 DEFB $0F,$07,$02,$E1,$5C,$0B,$10,$E0
  $CBFD DEFB $FF                             ; Terminator.
-; Graphic #N$80.
+; Graphic #N$7F.
  $CBFE DEFB $FF,$00,$01,$01,$01,$02,$02,$02
  $CC06 DEFB $01,$00
  $CC08 DEFB $FF                             ; Terminator.
-; Graphic #N$81.
+; Graphic #N$80.
  $CC09 DEFB $80,$00
  $CC0B DEFB $FF                             ; Terminator.
-; Graphic #N$82.
+; Graphic #N$81.
  $CC0C DEFB $00,$00,$00,$00,$00,$00,$C0,$F0
  $CC14 DEFB $78,$E8,$10,$88,$C8,$08,$10,$E0
  $CC1C DEFB $FF                             ; Terminator.
-; Graphic #N$83.
+; Graphic #N$82.
  $CC1D DEFB $FF,$FE,$00,$00,$00,$00,$00,$00
  $CC25 DEFB $C0,$20,$A0,$10,$48,$04,$22,$E1
  $CC2D DEFB $01,$1F,$CB,$34,$EB,$07,$02,$02
  $CC35 DEFB $01,$00
  $CC37 DEFB $FF                             ; Terminator.
-; Graphic #N$84.
+; Graphic #N$83.
  $CC38 DEFB $FF
  $CC39 DEFB $FF                             ; Terminator.
-; Graphic #N$85.
+; Graphic #N$84.
  $CC3A DEFB $01,$06,$3B,$43,$83,$07,$43,$41
  $CC42 DEFB $70,$0C,$13,$E0,$00,$00,$00,$00
  $CC4A DEFB $FF                             ; Terminator.
-; Graphic #N$86.
+; Graphic #N$85.
  $CC4B DEFB $FF
  $CC4C DEFB $FF                             ; Terminator.
-; Graphic #N$87.
+; Graphic #N$86.
  $CC4D DEFB $00,$00,$00,$00,$00,$00,$01,$02
  $CC55 DEFB $02,$02,$01,$00,$00,$00,$00,$00
  $CC5D DEFB $FF                             ; Terminator.
-; Graphic #N$88.
+; Graphic #N$87.
  $CC5E DEFB $80,$00
  $CC60 DEFB $FF                             ; Terminator.
-; Graphic #N$89.
+; Graphic #N$88.
  $CC61 DEFB $00,$00,$00,$00,$80,$80,$40,$F0
  $CC69 DEFB $7C,$F8,$10,$88,$C8,$08,$10,$E0
  $CC71 DEFB $FF                             ; Terminator.
-; Graphic #N$8A.
+; Graphic #N$89.
  $CC72 DEFB $FF,$FE,$00,$00,$00,$00,$00,$38
  $CC7A DEFB $08,$24,$A4,$94,$52,$65,$7C,$7E
  $CC82 DEFB $40,$27,$15,$8A,$4B,$3F,$06,$02
  $CC8A DEFB $01,$00
  $CC8C DEFB $FF                             ; Terminator.
-; Graphic #N$8B.
+; Graphic #N$8A.
  $CC8D DEFB $FF
  $CC8E DEFB $FF                             ; Terminator.
-; Graphic #N$8C.
+; Graphic #N$8B.
  $CC8F DEFB $07,$18,$60,$90,$10,$30,$08,$8C
  $CC97 DEFB $73,$00,$00,$00,$00,$00,$00,$00
  $CC9F DEFB $FF                             ; Terminator.
-; Graphic #N$8D.
+; Graphic #N$8C.
  $CCA0 DEFB $FF
  $CCA1 DEFB $FF                             ; Terminator.
-; Graphic #N$8E.
+; Graphic #N$8D.
  $CCA2 DEFB $00,$00,$00,$00,$01,$01,$01,$00
  $CCAA DEFB $FF                             ; Terminator.
-; Graphic #N$8F.
+; Graphic #N$8E.
  $CCAB DEFB $80,$00
  $CCAD DEFB $FF                             ; Terminator.
-; Graphic #N$90.
+; Graphic #N$8F.
  $CCAE DEFB $00,$80,$80,$80,$40,$40,$C0,$E0
  $CCB6 DEFB $78,$FC,$10,$88,$C8,$08,$10,$E0
  $CCBE DEFB $FF                             ; Terminator.
-; Graphic #N$91.
+; Graphic #N$90.
  $CCBF DEFB $FF,$FE,$00,$00,$00,$00,$0C,$02
  $CCC7 DEFB $D2,$41,$41,$64,$5C,$40,$40,$24
  $CCCF DEFB $13,$8A,$64,$1E,$01,$03,$02,$02
@@ -9807,7 +9331,10 @@ b$EB00 DEFB $FD,$36,$07,$00,$FD,$CB,$30,$DE
 ; Display Change Controls
 ;
 ; Used by the routine at #R$E80E.
-;       #UDGTABLE(default,centre) { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$EB43,stop=$E8DD) #SCR$02(change-controls) #POPS } UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$E821,stop=$E8C0)#SIM(start=$EB43,stop=$E8DD)
+;   #SCR$02(change-controls)
+; } UDGTABLE# #POPS
 @label=DisplayChangeControls
 c$EB43 LD HL,$E900     ; #REGhl=#R$E900.
  $EB46 LD C,$04        ; #REGc=#N$04 (four "blocks" of text).
@@ -9817,7 +9344,7 @@ c$EB43 LD HL,$E900     ; #REGhl=#R$E900.
 ; Re-use the same printing routine as the start screen.
  $EB4D CALL $E8CA      ; Call #R$E8CA.
  $EB50 LD HL,$0101     ; {#HTML(Write #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
- $EB53 LD ($5C09),HL   ;           and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+ $EB53 LD ($5C09),HL   ; and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
                        ; }
 ; Add a little pause to debounce the keypress from the previous page.
  $EB56 LD HL,$0000     ; #REGhl=#N($0000,$04,$04).
@@ -9853,10 +9380,10 @@ c$EB43 LD HL,$E900     ; #REGhl=#R$E900.
  $EB82 NOP             ; No operation.
 ; Ask the user to set user-defined keys.
 ; .
-; #UDGTABLE(default,centre)
-; { #PUSHS #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)
-; #SCR$02(user-defined-left) #POPS }
-; UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)
+;   #SCR$02(user-defined-left)
+; } UDGTABLE# #POPS
  $EB83 CALL $EBE3      ; Call #R$EBE3.
 ; Set the attributes.
  $EB86 LD HL,$5900     ; #REGhl=#N$5900 (attribute buffer location).
@@ -9912,11 +9439,10 @@ c$EB43 LD HL,$E900     ; #REGhl=#R$E900.
 ; Warn the user that we debounce using pauses rather than wait for the key to
 ; be released.
 ; .
-; #UDGTABLE(default,centre)
-; { #PUSHS
-; #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)#SIM(start=$EBCA,stop=$EBD6)
-; #SCR$02(user-defined-warning) #POPS }
-; UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)#SIM(start=$EBCA,stop=$EBD6)
+;   #SCR$02(user-defined-warning)
+; } UDGTABLE# #POPS
  $EBCA LD HL,$EA20     ; #REGhl=#R$EA20.
  $EBCD LD B,$40        ; #REGb=#N$40 (counter; number of characters in the
                        ; warning messaging).
@@ -10306,9 +9832,10 @@ c$ED52 EXX           ; Switch to the shadow registers.
  $ED64 CALL $74C3    ; Call #R$74C3.
 ; Display the instructions for page one.
 ; .
-; #UDGTABLE(default,centre)
-; { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8C) #SCR$02(instruction-01) #POPS }
-; UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8C)
+;   #SCR$02(instruction-01)
+; } UDGTABLE# #POPS
 ; .
 ; Set the attributes.
  $ED67 LD HL,$5840   ; #REGhl=#N$5840 (attribute buffer location).
@@ -10348,9 +9875,10 @@ c$ED52 EXX           ; Switch to the shadow registers.
  $ED94 JR Z,$ED90    ; }
 ; Display the instructions for page two.
 ; .
-; #UDGTABLE(default,centre)
-; { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA7) #SCR$02(instruction-02) #POPS }
-; UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA7)
+;   #SCR$02(instruction-02)
+; } UDGTABLE# #POPS
 ; .
 ; Set the attributes.
  $ED96 LD HL,$5840   ; #REGhl=#N$5840 (attribute buffer location).
@@ -10371,9 +9899,10 @@ c$ED52 EXX           ; Switch to the shadow registers.
  $EDAF JR Z,$EDAB    ; }
 ; Display the instructions for page three.
 ; .
-; #UDGTABLE(default,centre)
-; { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE4) #SCR$02(instruction-03) #POPS }
-; UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE4)
+;   #SCR$02(instruction-03)
+; } UDGTABLE# #POPS
 ; .
 ; Set the attributes.
  $EDB1 LD HL,$5960   ; #REGhl=#N$5960 (attribute buffer location).
@@ -10426,9 +9955,10 @@ c$ED52 EXX           ; Switch to the shadow registers.
  $EDEC JR Z,$EDE8    ; }
 ; Display the instructions for page four.
 ; .
-; #UDGTABLE(default,centre)
-; { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE5)#SIM(start=$EDEE,stop=$EDFF) #SCR$02(instruction-04) #POPS }
-; UDGTABLE#
+; #PUSHS #UDGTABLE(default,centre) {
+;   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE5)#SIM(start=$EDEE,stop=$EDFF)
+;   #SCR$02(instruction-04)
+; } UDGTABLE# #POPS
 ; .
 ; Set the attributes.
  $EDEE LD HL,$5840   ; #REGhl=#N$5840 (attribute buffer location).

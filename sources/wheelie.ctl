@@ -65,7 +65,7 @@ R $6424 DE Destination buffer pointer
 @ $6426 label=CopyLevelDataToBuffer_CopyRow
   $6426,$02 Set a counter in #REGb for #N$20 bytes per row.
 @ $6428 label=CopyLevelDataToBuffer_CopyByte
-  $6428,$01 Fetch a byte from the source data.
+  $6428,$01 Fetch a terrain byte from the source data.
   $6429,$01 Move to the next source data byte.
   $642A,$01 Write the byte to the destination buffer.
   $642B,$01 Move to the next destination buffer position.
@@ -73,27 +73,29 @@ R $6424 DE Destination buffer pointer
 . until the whole row has been copied.
 N $642E Handle updating the destination pointer positioning after each row.
   $642E,$01 Step back one position.
-M $642F,$04 Keep only the upper 3 bits of the #REGe co-ordinate.
-  $642F,$01 #REGa=#REGe.
+  $642F,$01 Align to a #N$20 byte boundary.
+M $6430,$02 Keep only the upper 3 bits of the #REGe co-ordinate.
   $6430,$02,b$01 Keep only bits 5-7.
-  $6432,$01 #REGe=#REGa.
+  $6432,$01 Reset to the start of the current #N$20 byte block.
   $6433,$01 Move down one row.
   $6434,$01 Decrease the row counter by one.
   $6435,$02 Jump back to #R$6426 until all the rows have been copied.
-N $6437 Adjust the destination pointer after copying a complete block.
+N $6437 Adjust the destination pointer after copying a complete #N$05x#N$20
+. block.
   $6437,$02 Move to the next block horizontally.
   $6439,$01 Load the new horizontal position into #REGe.
-  $643A,$01 Return if #REGe wrapped around to #N$00 (reached the end of the
+  $643A,$01 Return if #REGe wrapped around to #N$00 (we reached the end of the
 . buffer).
 N $643B Move the destination pointer back up #N$05 rows to the original
 . vertical position.
   $643B,$04 #REGd-=#N$05.
   $643F,$01 Return.
 
-c $6440
-  $6440,$02 #REGa=#N$0A.
+c $6440 Initialise Game Objects
+@ $6440 label=InitialiseGameObjects
+  $6440,$02 Set the number of game objects to process (#N$0A).
   $6442,$01 No operation.
-  $6443,$01 #REGc=#REGa.
+  $6443,$01 Set a counter in #REGc of the number of game objects.
   $6444,$01 Increment #REGb by one.
   $6445,$01 Increment #REGc by one.
   $6446,$03 #REGhl=#R$9E00(#N$A01E).
@@ -110,9 +112,7 @@ c $6440
   $6459,$01 Stash #REGhl on the stack.
   $645A,$02 Increment #REGl by two.
   $645C,$02 Jump to #R$6462 if #REGl is not zero.
-  $645E,$01 #REGa=#REGh.
-  $645F,$02 #REGa+=#N$05.
-  $6461,$01 #REGh=#REGa.
+  $645E,$04 #REGh+=#N$05.
   $6462,$01 Increment #REGl by one.
   $6463,$01 #REGa=*#REGhl.
   $6464,$01 Decrease #REGa by one.
@@ -122,9 +122,7 @@ c $6440
   $6469,$01 Decrease #REGa by one.
   $646A,$02 #REGa=#N$0C.
   $646C,$02 Jump to #R$6470 if #REGa was zero on line #R$6469.
-  $646E,$02 #REGa=#N$18.
-  $6470,$01 #REGa+=#REGe.
-  $6471,$01 #REGe=#REGa.
+  $646E,$04 #REGe+=#N$18.
   $6472,$01 Restore #REGhl from the stack.
   $6473,$01 Decrease #REGh by one.
   $6474,$02 #REGb=#N$04.
@@ -144,9 +142,7 @@ c $6440
   $6489,$01 Increment #REGh by one.
   $648A,$01 Increment #REGl by one.
   $648B,$02 Jump to #R$6491 if #REGl is zero.
-  $648D,$01 #REGa=#REGh.
-  $648E,$02 #REGa-=#N$05.
-  $6490,$01 #REGh=#REGa.
+  $648D,$04 #REGh-=#N$05.
   $6491,$02 #REGb=#N$04.
   $6493,$01 #REGa=*#REGde.
   $6494,$01 Write #REGa to *#REGhl.
@@ -161,54 +157,77 @@ c $6440
 
 u $64A4
 
-c $64AA
-  $64AA,$03 #REGhl=#R$9E00.
-  $64AD,$03 #REGbc=#N$0A00.
-  $64B0,$02 #REGa=#N$32.
-  $64B2,$02 Starting from #R$9E00, find the first instance of #N$32 in a maximum of #N$0A00 bytes.
-  $64B4,$03 Return if #REGbc is zero.
-  $64B7,$02 Stash #REGhl and #REGbc on the stack.
-  $64B9,$01 #REGa=#N$00.
+c $64AA Level Object Placement And Special Terrain Generation
+@ $64AA label=ObjectPlacement_SpecialTerrain
+N $64AA Search the level buffer for special terrain markers (#N$32) and replace
+. with objects/ terrain.
+  $64AA,$03 Load #REGhl with #R$9E00.
+  $64AD,$03 Set the length of the level buffer in #REGbc (#N$0A00 bytes).
+@ $64B0 label=ObjectPlacement_SpecialTerrain_Loop
+  $64B0,$04 Search for the next #N$32 markr in the level buffer.
+  $64B4,$03 Return if no more markers were found.
+N $64B7 A marker was found.
+  $64B7,$02 Stash the level buffer position and buffer counter on the stack.
+  $64B9,$01 Clear #REGa.
   $64BA,$02 No operation.
-  $64BC,$02 #REGb=#N$04.
+  $64BC,$02 Set a counter in #REGb for #N$04 bytes to process.
   $64BE,$01 #REGe=#REGa.
   $64BF,$01 Decrease #REGl by one.
+N $64C0 Determine what to place based on a random number.
   $64C0,$03 Call #R$6400.
+M $64C3,$02 #REGa=random number between #N$00 and #N$07.
   $64C3,$02,b$01 Keep only bits 0-2.
-M $64C0,$05 #REGa=random number between #N$00 and #N$07.
   $64C5,$03 Jump to #R$64F4 if #REGa is lower than #REGe.
+N $64C8 Generate terrain/ object from the data table.
+N $64C8 This part of the routine takes a random number between #N$00-#N$07 and
+. uses it to fetch terrain data:
+.
+. #TABLE(default,centre,centre,centre)
+. { =h Random Number | =h Calculation | =h Address }
+. #FOR$00,$07,$01,$04(x,{ #Nx | #N((x*$06)+$6C) | #R(((x*$06)+$6C)+$B4*$100) })
+. TABLE#
   $64C8,$03 Call #R$7088.
+M $64CB,$02 Ensure the random number is between #N$00-#N$07.
   $64CB,$02,b$01 Keep only bits 0-2.
-  $64CD,$01 #REGa+=#REGa.
-  $64CE,$01 #REGe=#REGa.
-  $64CF,$01 #REGa+=#REGa.
-  $64D0,$01 #REGa+=#REGe.
-  $64D1,$02 #REGa+=#N$6C.
-  $64D3,$01 #REGe=#REGa.
-  $64D4,$02 #REGd=#N$B4.
-  $64D6,$01 #REGa=*#REGde.
-  $64D7,$01 Write #REGa to *#REGhl.
-  $64D8,$01 Increment #REGe by one.
-  $64D9,$01 Increment #REGl by one.
-  $64DA,$02 Decrease counter by one and loop back to #R$64D6 until counter is zero.
-  $64DC,$04 Jump to #R$64F9 if *#REGde is zero.
+N $64CD Calculate the low-byte of the object data table address.
+  $64CD,$07 #REGe=(#REGa*#N$06)+#N$6C.
+  $64D4,$02 Set the high-byte in #REGd to #N$B4.
+N $64D6 Copy a byte of the #N$04 bytes of object data into the level buffer.
+@ $64D6 label=PlaceObjectData
+  $64D6,$01 Fetch an object data byte.
+  $64D7,$01 Write the object data byte into the level buffer.
+  $64D8,$01 Move to the next object data byte.
+  $64D9,$01 Move to the next position in the level buffer.
+  $64DA,$02 Decrease the byte counter by one and loop back to #R$64D6 until all
+. the object data bytes have been written into the level buffer.
+N $64DC Check if the object has a vertical component.
+  $64DC,$04 Jump to #R$64F9 if the current data byte is zero (no vertical
+. component).
+N $64E0 Place the vertical component of the object.
   $64E0,$03 Decrease #REGl by three.
   $64E3,$01 Increment #REGh by one.
   $64E4,$02 #REGb=#N$02.
+@ $64E6 label=PlaceVerticalComponent
   $64E6,$01 #REGa=*#REGhl.
   $64E7,$01 Set flags.
   $64E8,$01 #REGa=*#REGde.
   $64E9,$02 Jump to #R$64ED if *#REGhl is zero.
   $64EB,$02 Increment #REGa by two.
+@ $64ED label=PlaceVerticalByte
   $64ED,$01 Write #REGa to *#REGhl.
   $64EE,$01 Increment #REGl by one.
   $64EF,$01 Increment #REGe by one.
   $64F0,$02 Decrease counter by one and loop back to #R$64E6 until counter is zero.
   $64F2,$02 Jump to #R$64F9.
-  $64F4,$02 Write #N$01 to *#REGhl.
-  $64F6,$01 Increment #REGl by one.
-  $64F7,$02 Decrease counter by one and loop back to #R$64F4 until counter is zero.
-  $64F9,$02 Restore #REGbc and #REGhl from the stack.
+N $64F4 Place a simple terrain block (block type: #N$01).
+@ $64F4 label=PlaceSimpleTerrain_Loop
+  $64F4,$02 Write block type #N$01 to the level buffer pointer.
+  $64F6,$01 Move to the next buffer position.
+  $64F7,$02 Decrease the byte counter by one and loop back to #R$64F4 until all
+. bytes have been written into the buffer.
+N $64F9 Continue searching for the next terrain markers.
+@ $64F9 label=ObjectPlacement_SpecialTerrain_Next
+  $64F9,$02 Restore the buffer counter and level buffer position from the stack.
   $64FB,$02 Jump to #R$64B0.
 
 u $64FD
@@ -221,7 +240,7 @@ N $6500 #PUSHS #UDGTABLE {
   $6500,$03 #REGde=#R$9E00.
   $6503,$03 #REGhl=#R$8960.
   $6506,$03 Call #R$6424.
-  $6509,$03 #REGhl=#R$A101.
+  $6509,$03 #REGhl=#N$A101.
   $650C,$02 #REGb=#N$0A.
   $650E,$02 Write #N$00 to *#REGhl.
   $6510,$01 Decrease #REGh by one.
@@ -275,30 +294,32 @@ N $6500 #PUSHS #UDGTABLE {
 
 u $6563
 
-c $6564
-  $6564,$01 #REGa+=#REGa.
-  $6565,$01 #REGa+=#REGa.
-  $6566,$01 #REGc=#REGa.
+c $6564 Prepare Scroll Data
+@ $6564 label=PrepareScrollData
+R $6564 A Scroll phase
+  $6564,$03 #REGc=#REGa*#N$04.
   $6567,$01 Switch to the shadow registers.
-  $6568,$03 #REGbc=#N$05FF.
+  $6568,$03 Set a counter in #REGb of #N$05 (the #N$FF in #REGc isn't used).
   $656B,$03 #REGde=#R$7800.
+@ $656E label=PrepareScrollData_Loop
   $656E,$01 Switch back to the normal registers.
-  $656F,$01 #REGa=*#REGde.
-  $6570,$01 Increment #REGd by one.
-  $6571,$03 RRCA.
-  $6574,$01 #REGl=#REGa.
+  $656F,$01 Read the index byte.
+  $6570,$01 Move to the next byte.
+  $6571,$03 Rotate the index byte right three times to extract the address
+. components.
+  $6574,$01 Copy the result to #REGl.
   $6575,$02,b$01 Keep only bits 0-4.
-  $6577,$02 #REGa+=#N$80.
-  $6579,$01 #REGh=#REGa.
-  $657A,$01 #REGa=#REGl.
+  $6577,$03 Add #N$80 to form the high byte of the graphics address in #REGhl.
+  $657A,$01 Restore the rotated value.
   $657B,$02,b$01 Keep only bits 5-7.
-  $657D,$01 #REGa+=#REGc.
-  $657E,$01 #REGl=#REGa.
-  $657F,$01 Stash #REGhl on the stack.
+  $657D,$01 Add the scroll offset from #REGc.
+  $657E,$01 Complete the graphics address in #REGhl.
+  $657F,$01 Stash the graphics address on the stack.
   $6580,$01 Switch to the shadow registers.
-  $6581,$01 Restore #REGhl from the stack.
-  $6582,$08 LDI.
-  $658A,$02 Decrease counter by one and loop back to #R$656E until counter is zero.
+  $6581,$01 Restore the graphics address from the stack.
+  $6582,$08 Copy #N$04 bytes from the graphics line to the destination.
+  $658A,$02 Decrease the row counter by one and loop back to #R$656E until all
+. the rows have been copied.
   $658C,$01 #REGa=*#REGde.
   $658D,$01 Increment #REGa by one.
   $658E,$01 Write #REGa to *#REGde.
@@ -317,29 +338,37 @@ u $659B
 
 c $659C Scroll Playarea
 @ $659C label=ScrollPlayarea
+D $659C #HTML(Scrolls the play area horizontally by shifting pixel data left
+. using <code>RLD</code> instructions.)
   $659C,$03 #REGhl=*#R$7817.
-  $659F,$01 #REGd=#REGh.
-  $65A0,$01 #REGe=#REGl.
+  $659F,$02 Copy the screen position pointer into #REGde.
   $65A1,$03 #REGa=*#R$7819.
-  $65A4,$01 #REGc=#REGa.
-  $65A5,$01 Increment #REGa by one.
+  $65A4,$01 Copy the scroll phase counter into #REGc.
+  $65A5,$01 Increment the scroll phase counter by one.
+M $65A6,$02 Ensure the counter is limited to being a number between
+. #N$00-#N$07.
   $65A6,$02,b$01 Keep only bits 0-2.
-  $65A8,$03 Write #REGa to *#R$7819.
+  $65A8,$03 Write the scroll phase counter back to *#R$7819.
   $65AB,$02 Jump to #R$65B7 if #REGa is not zero.
   $65AD,$01 Increment #REGl by one.
   $65AE,$02 Jump to #R$65B4 if #REGl is not zero.
   $65B0,$04 #REGh+=#N$05.
+@ $65B4 label=ScrollPlayarea_StorePointer
   $65B4,$03 Write #REGhl to *#R$7817.
+N $65B7 Set up the column data pointer for new graphics data.
+@ $65B7 label=ScrollPlayarea_UpdateColumnPointer
   $65B7,$04 #REGe+=#N$08.
   $65BB,$02 Jump to #R$65C1 if {} is higher.
   $65BD,$04 #REGd+=#N$05.
-  $65C1,$01 #REGa=#REGc.
-  $65C2,$02 #REGb=#N$01.
+@ $65C1 label=ScrollPlayarea_SetupScroll
+  $65C1,$01 Load the original scroll phase counter value into #REGa.
+  $65C2,$02 Set a counter in #REGb for #N$01 column to process.
   $65C4,$03 Call #R$6564.
+N $65C7 Start of screen buffer.
   $65C7,$03 #REGhl=#N$401F (screen buffer location).
-  $65CA,$01 #REGd=#REGh.
-  $65CB,$01 #REGe=#REGl.
+  $65CA,$02 Copy the screen position pointer into #REGde.
   $65CC,$01 Switch to the shadow registers.
+@ $65CD label=ScrollPlayarea_ProcessRows
   $65CD,$01 #REGa=*#REGde.
   $65CE,$01 Increment #REGe by one.
   $65CF,$01 #REGl=#REGa.
@@ -418,14 +447,15 @@ c $659C Scroll Playarea
   $663A,$01 #REGl=#REGe.
   $663B,$02 Increment #REGh by two.
   $663D,$02 Decrease counter by one and loop back to #R$65D7 until counter is zero.
-  $663F,$04 #REGe+=#N$20.
-  $6643,$01 #REGl=#REGa.
+  $663F,$04 Move down one character row.
+  $6643,$01 Update the screen pointer.
   $6644,$02 Jump to #R$6648 if {} is higher.
   $6646,$02 #REGd=#N$48.
-  $6648,$01 #REGh=#REGd.
+@ $6648 label=ScrollPlayarea_NextRow
+  $6648,$01 Update the screen pointer.
   $6649,$01 Switch to the shadow registers.
   $664A,$02 Decrease counter by one and loop back to #R$65CD until counter is zero.
-  $664C,$01 Switch to the shadow registers.
+  $664C,$01 Switch back to the normal registers.
   $664D,$01 Return.
 
 u $664E
@@ -684,29 +714,45 @@ u $687D
 
 c $6880
 
-c $6893
-  $6893,$18
+c $6893 Copy #N$0C Bytes
+@ $6893 label=CopyTwelveBytes
+R $6893 HL Source address
+R $6893 DE Destination address
+  $6893,$18 Copy #N$0C bytes from the source address to the destination
+. address.
   $68AB,$01 Return.
 
 u $68AC
 
-c $68AD
-  $68AD,$05 Return if *#R$781B is zero.
-  $68B2,$03 #REGhl=*#R$781C.
-  $68B5,$01 #REGb=#REGa.
-  $68B6,$02 #REGc=#N$00.
+c $68AD Remove Sprites
+@ $68AD label=RemoveSprites
+  $68AD,$05 Return if *#R$781B is zero (no sprite blocks on the screen).
+N $68B2 Whilst this routine is clearing sprites, the data is stored per
+. character block, e.g. a kangaroo may span 3 character blocks - and data is
+. stored individually for each of those three blocks, so the count is +3 for
+. a kangaroo (when it is covering those three blocks).
+  $68B2,$03 Load *#R$781C into #REGhl.
+  $68B5,$01 Set a counter in #REGb of the number of character blocks needed to
+. clear all the sprites.
+  $68B6,$02 Set a "clear" value (#N$00) in #REGc.
+
+@ $68B8 label=RemoveSingleSpriteBlock_Loop
+M $68B8,$04 Load #REGde with the attribute buffer address of the sprite block.
   $68B8,$01 Decrease #REGhl by one.
   $68B9,$01 #REGd=*#REGhl.
   $68BA,$01 Decrease #REGhl by one.
   $68BB,$01 #REGe=*#REGhl.
+M $68BC,$02 Fetch the background attribute value.
   $68BC,$01 Decrease #REGhl by one.
   $68BD,$01 #REGa=*#REGhl.
-  $68BE,$01 Write #REGa to *#REGde.
-  $68BF,$01 Decrease #REGhl by one.
-  $68C0,$01 #REGa=#REGd.
-  $68C1,$02 #REGa-=#N$11.
-  $68C3,$02,b$01 Set bits 0-2.
-  $68C5,$01 #REGd=#REGa.
+  $68BE,$01 Write the background attribute value to the attribute buffer
+. address held in #REGde.
+  $68BF,$01 Move to next buffer entry.
+N $68C0 Convert the attribute address to the corresponding screen buffer
+. address.
+  $68C0,$03 Taking the attribute buffer high byte, subtract #N$11.
+  $68C3,$02,b$01 Adjust for the screen buffer memory layout.
+  $68C5,$01 Write this back into #REGd.
   $68C6,$01 Exchange the #REGde and #REGhl registers.
   $68C7,$01 Write #REGc to *#REGhl.
   $68C8,$01 Decrease #REGh by one.
@@ -731,9 +777,11 @@ c $68AD
   $68DB,$01 #REGa=*#REGde.
   $68DC,$01 Write #REGa to *#REGhl.
   $68DD,$01 Exchange the #REGde and #REGhl registers.
-  $68DE,$02 Decrease counter by one and loop back to #R$68B8 until counter is zero.
-  $68E0,$03 Write #REGhl to *#R$781C.
-  $68E3,$04 Write #N$00 to *#R$781B.
+  $68DE,$02 Decrease the sprite block counter by one and loop back to #R$68B8
+. until all the sprite blocks have been reverted to backgrounds.
+N $68E0 All sprite blocks are now reverted!
+  $68E0,$03 Update the buffer position at *#R$781C.
+  $68E3,$04 Mark that no sprite blocks are now active at *#R$781B.
   $68E7,$01 Return.
 
 u $68E8
@@ -808,22 +856,23 @@ c $691B Colourise Sprite
 u $692B
   $692B,$01 Return.
 
-c $692C
-  $692C,$01 #REGb=#REGa.
-  $692D,$01 #REGa=#REGc.
+c $692C Draw Sprite Object
+@ $692C label=DrawSpriteObject
+R $692C DE Sprite screen position
+R $692C A Sprite frame ID
+R $692C C Sprite colour
+  $692C,$01 Store the sprite frame ID in #REGb.
+  $692D,$01 Load the sprite attribute value into #REGa.
   $692E,$01 Switch to the shadow registers.
   $692F,$03 #REGhl'=*#R$781C.
-  $6932,$01 #REGc'=#REGa.
-  $6933,$03 #REGa=*#R$781B.
-  $6936,$01 #REGb'=#REGa.
+  $6932,$01 Load the sprite attribute value into #REGc'.
+  $6933,$04 Load *#R$781B into #REGb'.
   $6937,$01 Switch back to the normal registers.
-  $6938,$01 #REGa=#REGb.
-  $6939,$01 #REGa+=#REGa.
-  $693A,$01 #REGl=#REGa.
-  $693B,$02 #REGa+=#N$BE (including carry).
-  $693D,$01 #REGa-=#REGl.
-  $693E,$01 #REGh=#REGa.
-  $693F,$01 #REGa=#REGb.
+N $6938 Calculate the sprite data address from the frame ID.
+  $6938,$03 Load #REGl with the frame ID multiplied by #N$02.
+  $693B,$04 Load #REGh with the high byte for the graphics data: #N$BE.
+  $693F,$01 Load the original frame ID into #REGa.
+N $6940 Fetch the sprite data.
   $6940,$01 #REGc=*#REGhl.
   $6941,$01 Increment #REGl by one.
   $6942,$01 #REGb=*#REGhl.
@@ -1043,16 +1092,18 @@ c $6AAC
 
 u $6B2A
 
-c $6B2D
-  $6B2D,$03 #REGa=*#R$7822.
-  $6B30,$02 #REGe=#N$0D.
-  $6B32,$04 Jump to #R$6B38 if *#R$7822 is higher than #N$80 (i.e. moving right).
-  $6B36,$02 #REGe=#N$12.
-  $6B38,$02 #REGc=#N$07.
-  $6B3A,$03 #REGhl=#R$7833.
-  $6B3D,$01 #REGd=*#REGhl.
-  $6B3E,$01 Increment #REGl by one.
-  $6B3F,$01 #REGa=*#REGhl.
+c $6B2D Handler: Player Sprite
+@ $6B2D label=Handler: PlayerSprite
+  $6B2D,$03 Load #REGa with *#R$7822.
+  $6B30,$02 Set the sprite offset in #REGe (#N$0D bytes).
+  $6B32,$02 Check the direction bit.
+  $6B34,$02 Jump to #R$6B38 if the player is moving fowards.
+  $6B36,$02 Set an alternate sprite offset for the left-facing sprite (#N$12
+. bytes).
+@ $6B38 label=SetPlayerSpriteDirection
+  $6B38,$02 Set #INK$07 to #REGc.
+  $6B3A,$04 Fetch #R$7833 in #REGd.
+  $6B3E,$02 Fetch #R$7834 in #REGa.
   $6B40,$03 Call #R$692C.
   $6B43,$01 Return.
 
@@ -1072,7 +1123,24 @@ c $6B4C
 
 u $6BFC
 
-c $6C00
+c $6C00 Game Loop
+@ $6C00 label=Game_Loop
+  $6C00,$03 #REGa=*#R$782B.
+  $6C03,$02,b$01 Flip bit 0.
+  $6C05,$03 Write #REGa back to *#R$782B.
+  $6C08,$04 #REGsp=#N$FFFF.
+  $6C0C,$03 #HTML(#REGa=*<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
+  $6C0F,$01 Increment #REGa by one.
+  $6C10,$03 #REGhl=#R$781A.
+  $6C13,$01 Decrease *#REGhl by one.
+  $6C14,$02 #REGl=#N$5A.
+  $6C16,$01 Write #REGa to *#REGhl.
+  $6C17,$02 Jump to #R$6C73 if *#REGhl is not zero.
+  $6C19,$01 Increment *#REGhl by one.
+  $6C1A,$02 #REGl=#N$2B.
+  $6C1C,$01 #REGa=*#REGhl.
+  $6C1D,$02,b$01 Flip bit 0.
+  $6C1F,$01 Write #REGa to *#REGhl.
 
 c $6CAA Game Initialisation
 @ $6CAA label=GameInitialisation
@@ -1095,7 +1163,7 @@ N $6CD1 Write #N$00 to #FOR$00,$07,,$01(n,#N($7824+n), , and ).
   $6CD3,$02 Write #N$00 to *#REGhl.
   $6CD5,$01 Increment #REGl by one.
   $6CD6,$02 Decrease counter by one and loop back to #R$6CD3 until counter is zero.
-  $6CD8,$07 Write #R$A101(#N$A113) to *#R$782E.
+  $6CD8,$07 Write #R$A100(#N$A113) to *#R$782E.
   $6CDF,$03 Write #N$03 to *#R$7830.
   $6CE2,$06 Write #N$BB00 to *#R$7831.
   $6CE8,$03 Write #N$0B to *#R$7833.
@@ -1195,8 +1263,7 @@ c $6D96
 
 c $6DA8
 
-c $6E18 Remove Sprite?
-@ $68AD label=RemoveSprite
+c $6E18
   $6E18,$03 Call #R$68AD.
   $6E1B,$03 #REGhl=*#R$783A.
   $6E1E,$01 #REGa=*#REGhl.
@@ -1328,10 +1395,8 @@ N $6EAF #HTML(#AUDIO(dead.wav)(#INCLUDE(Dead)))
   $6EFE,$02 Decrease counter by one and loop back to #R$6EFB until counter is zero.
   $6F00,$02 #REGl=#N$1A.
   $6F02,$02 Write #N$01 to *#REGhl.
-  $6F04,$03 #REGhl=#N($0000,$04,$04).
-  $6F07,$03 Write #REGhl to *#R$7814.
-  $6F0A,$03 #REGhl=*#R$7836.
-  $6F0D,$03 Write #REGhl to *#R$782E.
+  $6F04,$06 Write #N($0000,$04,$04) to *#R$7814.
+  $6F0A,$06 Write *#R$7836 to *#R$782E.
   $6F10,$02 Test bit 7 of #REGa.
   $6F12,$02 #REGb=#N$03.
   $6F14,$02 Jump to #R$6F17 if {} is not zero.
@@ -1564,19 +1629,29 @@ c $7048 Handler: Refuel
 
 u $7087
 
-c $7088
+c $7088 Contextual Random Number
+@ $7088 label=ContextualRandomNumber
+R $7088 H Seed value
+R $7088 O:A Random number betwen #N$00-#N$FF
   $7088,$03 Call #R$6400.
   $708B,$01 #REGe=#REGa.
 M $7088,$04 #REGe=random number between #N$00-#N$FF.
-  $708C,$01 #REGa=#REGh.
-  $708D,$04 Jump to #R$709B if #REGa is lower than #N$9F.
-  $7091,$02 Jump to #R$7097 if #REGa is equal to #N$9F.
-  $7093,$02 #REGa-=#N$05.
-  $7095,$02 Jump to #R$708D.
+  $708C,$01 Get the seed number.
+@ $708D label=CheckSeedNumber
+  $708D,$04 Jump to #R$709B if the seed number in #REGh is lower than #N$9F.
+  $7091,$02 Jump to #R$7097 if the seed number in #REGh is equal to #N$9F.
+N $7093 Else, subtract #N$05 and loop back to try again.
+  $7093,$02 Subtract #N$05 from the seed number.
+  $7095,$02 Jump back to #R$708D.
+N $7097 Return either #N$00 or #N$01 using bit 0 of the random number.
+@ $7097 label=ReturnBoolean
   $7097,$01 #REGa=#REGe.
   $7098,$02,b$01 Keep only bit 0.
-M $7097,$03 #REGa=bit 0 of the random number stored in #REGe (so ensure it is either #N$00 or #N$01).
+M $7097,$03 #REGa=bit 0 of the random number stored in #REGe (ensure it is
+. either #N$00 or #N$01).
   $709A,$01 Return.
+N $709B Just return the full random number between #N$00-#N$FF.
+@ $709B label=ReturnFullValue
   $709B,$01 #REGa=the random number stored in #REGe.
   $709C,$01 Return.
 
@@ -1947,9 +2022,9 @@ c $7420
   $746C,$01 Switch to the shadow registers.
   $746D,$03 #REGbc'=#R$784B.
 N $7470 #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
-.       <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
+. <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
 N $7470 This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
-.       only copies six bytes/ lines.
+. only copies six bytes/ lines.
 @ $7470 label=PrintTarget
   $7470,$01 #REGa=*#REGbc'.
   $7471,$06 #REGl'=#N$81+(#REGa*#N$08).
@@ -2287,7 +2362,8 @@ N $761B Set the screen buffer position.
 
 u $763B
 
-c $763C
+c $763C Handler: Fuel
+@ $763C label=Handler_Fuel
   $763C,$03 Call #R$7420.
   $763F,$03 #REGhl=*#R$783C.
   $7642,$05 Jump to #R$769A if #REGh is lower than #N$80.
@@ -2298,63 +2374,72 @@ c $763C
   $764E,$05 Call #R$EBF3 if #REGa is higher than #N$31.
   $7653,$05 Call #R$EBF3 if #REGa is lower than #N$2D.
   $7658,$04 No operation.
+N $765C Start the "Out Of Fuel" sequence.
+@ $765C label=TriggerOutOfFuel
   $765C,$03 Call #R$68AD.
   $765F,$03 #REGa=*#R$7822.
-  $7662,$02 Test bit 7 of #REGa.
-  $7664,$02 #REGa=#N$87.
-  $7666,$02 Jump to #R$766A if {} is not zero.
-  $7668,$02 #REGa+=#N$40.
-  $766A,$03 Write #REGa to *#R$7834.
+  $7662,$02 Check the direction bit.
+  $7664,$02 Load the base player sprite into #REGa (#N$87).
+  $7666,$02 Jump to #R$766A if the player is moving left.
+  $7668,$02 Modify the player sprite ID for the player moving right (#N$C7).
+@ $766A label=SetWheelieSprite
+  $766A,$03 Write the player sprite ID to *#R$7834.
   $766D,$03 Call #R$6B2D.
 N $7670 Print the "#STR($BA86,$03,$20)" messaging in the footer.
 N $7670 #HTML(#FONT:(OUT OF FUEL)$3D00,attr=$A9(out-of-fuel))
   $7670,$02 #REGa=#N$A9 (#COLOUR$A9).
   $7672,$03 #REGhl=#R$BA86.
   $7675,$03 Call #R$74C3.
-  $7678,$02 #REGd=#N$10.
-  $767A,$02 #REGc=#N$01.
-  $767C,$03 #REGhl=#N$1E00.
-  $767F,$01 #REGa=#REGc.
-  $7680,$01 #REGb=#REGc.
-  $7681,$02 OUT #N$FE
-  $7683,$02,b$01 Flip bits 4.
-  $7685,$02 Decrease counter by one and loop back to #R$7685 until counter is zero.
-  $7687,$01 Decrease #REGl by one.
-  $7688,$02 Jump to #R$7680 if #REGl is not zero.
-  $768A,$01 Decrease #REGh by one.
-  $768B,$02 Jump to #R$7680 if #REGh is not zero.
-  $768D,$01 Increment #REGc by one.
-  $768E,$01 Decrease #REGd by one.
-  $768F,$02 Jump to #R$767C if #REGd is not zero.
+N $7678 Play the "out of fuel" audio.
+N $7678 #HTML(#AUDIO(out-of-fuel.wav)(#INCLUDE(OutOfFuel)))
+  $7678,$02 Set an outer loop count in #REGd for #N$10 iterations.
+  $767A,$02 Set the initial tone value in #REGc to #N$01.
+@ $767C label=PlayFuelSound_OuterLoop
+  $767C,$03 Set the tone duration counter in #REGhl to #N$1E00.
+  $767F,$01 Get current tone value.
+@ $7680 label=PlayFuelSound_ToneLoop
+  $7680,$01 Set inner delay counter.
+  $7681,$02 Send to the speaker.
+  $7683,$02,b$01 Flip the speaker bit.
+@ $7685 label=PlayFuelSound_InnerDelayLoop
+  $7685,$02 Decrease the inner delay counter by one and loop back to #R$7685
+. until the counter is zero.
+  $7687,$01 Decrease the tone duration low byte by one.
+  $7688,$02 Jump back to #R$7680 until the tone duration low byte is zero.
+  $768A,$01 Decrease the tone duration high byte by one.
+  $768B,$02 Jump back to #R$7680 until the tone duration high byte is zero.
+  $768D,$01 Increase the tone frequency by one (higher pitch).
+  $768E,$01 Decrease the outer loop counter by one.
+  $768F,$02 Jump back to #R$767C until the outer loop counter is zero.
+N $7691 Reset the players fuel and restart the game.
   $7691,$06 Write #N$3400 to *#R$783C.
   $7697,$03 Jump to #R$7161.
+N $769A Normal fuel consumption processing.
+@ $769A label=ProcessFuelConsumption
   $769A,$03 #REGa=*#R$7822.
-  $769D,$02 Test bit 7 of #REGa.
-  $769F,$02 Jump to #R$76A2 if {} is not zero.
-  $76A1,$01 Invert the bits in #REGa.
-  $76A2,$02 #REGa-=#N$7E.
-  $76A4,$02 Shift #REGa right.
-  $76A6,$01 #REGe=#REGa.
-  $76A7,$02 #REGd=#N$00.
-  $76A9,$01 Set flags.
-  $76AA,$02 #REGhl-=#REGde (with carry).
-  $76AC,$03 Write #REGhl to *#R$783C.
-  $76AF,$02 Jump to #R$76D0 if {} is lower.
-  $76B1,$01 #REGa=#REGh.
-  $76B2,$02 Shift #REGa right.
-  $76B4,$02 Shift #REGa right.
-  $76B6,$01 Invert the bits in #REGa.
-  $76B7,$02 #REGa-=#N$0C.
-  $76B9,$01 #REGl=#REGa.
-  $76BA,$02 #REGh=#N$BA.
-  $76BC,$03 #REGde=#N$5A65 (attribute buffer location).
+  $769D,$02 Check the direction bit.
+  $769F,$02 Jump to #R$76A2 if the player is moving backwards.
+N $76A1 The player is moving forwards.
+  $76A1,$01 Invert the speed for forward movement calculation.
+@ $76A2 label=CalculateFuelConsumption
+  $76A2,$07 Calculate the fuel consumption rate in #REGde; (speed-#N$7E)/#N$02.
+  $76A9,$03 Subtract the consumption from the players fuel level.
+  $76AC,$03 Write the updated fuel value back to *#R$783C.
+  $76AF,$02 Jump to #R$76D0 if the fuel value is negative.
+N $76B1 Update the fuel gauge display.
+  $76B1,$01 Get the fuel high byte.
+  $76B2,$04 Divide it by #N$04.
+  $76B6,$01 Invert the byte for the gauge display.
+  $76B7,$02 Abjust by an offset of #N$0C bytes for where the gauge displays.
+  $76B9,$01 Set this value in #REGl.
+  $76BA,$02 Load the high byte in #REGh with #N$BA.
+  $76BC,$03 Point #REGde to the gauge position #N$5A65 (attribute buffer
+. location).
   $76BF,$03 Call #R$6893.
+N $76C2 Handle fuel-related audio effects during gameplay.
   $76C2,$03 #REGhl=*#R$783C.
-  $76C5,$01 #REGa=#REGh.
-  $76C6,$02 Compare #REGa with #N$04.
-  $76C8,$03 Call #R$6D50 is higher.
-  $76CB,$02 Test bit 6 of #REGl.
-  $76CD,$03 Call #R$6D50 not zero.
+  $76C5,$0B Call #R$6D50 if the fuel level is #N$0400 or higher, or for every
+. #N$40 fuel units (which creates pulses as the fuel decreases).
   $76D0,$03 Jump to #R$EBF3.
 
 u $76D3
@@ -2484,26 +2569,36 @@ N $77F1 Set the player lives to #N$01 this is decreased to #N$00 by #R$7552 so i
 b $77F9
 
 b $7800
-
-b $7802
+  $7800,$14,$02
 
 g $7814
 B $7814,$01
 
 g $7815
+W $7815,$02
 
-g $7817
+g $7817 Current Screen Position
+@ $7817 label=Current_ScreenPosition
+W $7817,$02
 
-g $7819
+g $7819 Scroll Phase Counter
+@ $7819 label=ScrollPhase_Counter
 B $7819,$01
 
 g $781A
 B $781A,$01
 
-g $781B
+g $781B Active Sprite Blocks
+@ $781B label=ActiveSpriteBlocks
+D $781B The number of sprite character blocks (8x8 pixels) currently active.
+.
+. A single sprite may span multiple character blocks, this is where it's
+. tracked.
 B $781B,$01
 
-g $781C
+g $781C Pointer: Sprite Background Buffer
+@ $781C label=SpriteBackgroundBuffer_Pointer
+D $781C Pointer to buffer containing saved background data for sprite removal.
 W $781C,$02
 
 g $781E Random Number Seed?
@@ -2554,11 +2649,12 @@ B $7830,$01
 g $7831
 W $7831,$02
 
-g $7833
+g $7833 Player Y Position
+@ $7833 label=PlayerPosition_Y
 B $7833,$01
 
-g $7834 Wheelie
-@ $7834 label=Wheelie
+g $7834 Player Sprite ID
+@ $7834 label=PlayerSpriteID
 B $7834,$01
 
 g $7835
@@ -2633,7 +2729,7 @@ b $786C Graphics: Arrow Top
 @ $7874 label=Graphics_ArrowTopRight
   $7874,$08 #UDGTABLE(default,centre) { #UDG$7874(arrow-top-right) } UDGTABLE#
 
-b $787C  Graphics: Arrow Middle
+b $787C Graphics: Arrow Middle
 @ $787C label=Graphics_ArrowMiddleLeft
   $787C,$08 #UDGTABLE(default,centre) { #UDG$787C(arrow-middle-left) } UDGTABLE#
 @ $7884 label=Graphics_ArrowMiddleRight
@@ -2658,15 +2754,33 @@ b $78CC
 
 b $78E0
 
-b $8960 Level Data?
-@ $8960 label=Data_Level1
+b $8000 Graphics Data
+  $8000,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_solid)
+  $8020,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_stripes)
+  $8040,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge1)
+  $8060,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge2)
+  $8080,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge3)
+  $80A0,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge4)
 
-b $9E00 Level Buffer?
+g $8960 Data: Level 1
+@ $8960 label=Data_Level_1
+N $8960 Page #N($01+(#PC-$8960)/$A0).
+B $8960,$A0,$20
+L $8960,$A0,$10
+
+g $9360 Data: Level 2
+@ $9360 label=Data_Level_2
+N $9360 Page #N($01+(#PC-$9360)/$A0).
+B $9360,$A0,$20
+L $9360,$A0,$10
+
+g $9E00 Level Buffer
 @ $9E00 label=LevelBuffer
-
-b $A101
-
-b $A1E0
+D $9E00 #N$20 columns x #N$50 rows, organised as #N$10 pages of #N$A0 bytes
+. each (each page is #N$05 rows x #N$20 columns).
+N $9E00 Page #N($01+(#PC-$9E00)/$A0).
+B $9E00,$A0,$20
+L $9E00,$A0,$10
 
 t $A800 Messaging: Start Screen
 @ $A800 label=Messaging_StartScreen
@@ -2687,6 +2801,27 @@ D $A900 #SCR$02,$00,$00,$20,$08,$A900,$B100(footer)
 
 b $B200 Shadow Buffer?
 @ $B200 label=ShadowBuffer
+
+b $B400
+  $B400,$0C,$04 #UDGTABLE #TILES(#PC,$04,$03) TABLE#
+L $B400,$0C,$09
+
+g $B46C Terrain Data
+@ $B46C label=Data_Terrain_01
+@ $B472 label=Data_Terrain_02
+@ $B478 label=Data_Terrain_03
+@ $B47E label=Data_Terrain_04
+@ $B484 label=Data_Terrain_05
+@ $B48A label=Data_Terrain_06
+@ $B490 label=Data_Terrain_07
+@ $B496 label=Data_Terrain_08
+N $B46C Terrain object #N($01+(#PC-$B46C)/$06).
+B $B46C,$04
+N $B470 Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
+B $B470,$02
+L $B46C,$06,$08
+
+g $B49C
 
 w $B4DC Actions Jump Table
 @ $B4DC label=JumpTable_Actions
@@ -2793,6 +2928,7 @@ b $BC80
 b $BC9E
 
 b $BD0E
+  $BD21
 
 b $BD34
 
@@ -2840,295 +2976,295 @@ b $C400
 
 b $C500 Data: Graphics
 @ $C500 label=Graphics_Data
-N $C500 Graphic #N$01.
+N $C500 Graphic #N$00.
   $C50A,$01 Terminator.
-N $C50B Graphic #N$02.
+N $C50B Graphic #N$01.
   $C515,$01 Terminator.
-N $C516 Graphic #N$03.
+N $C516 Graphic #N$02.
   $C521,$01 Terminator.
-N $C522 Graphic #N$04.
+N $C522 Graphic #N$03.
   $C52C,$01 Terminator.
-N $C52D Graphic #N$05.
+N $C52D Graphic #N$04.
   $C540,$01 Terminator.
-N $C541 Graphic #N$06.
+N $C541 Graphic #N$05.
   $C542,$01 Terminator.
-N $C543 Graphic #N$07.
+N $C543 Graphic #N$06.
   $C54B,$01 Terminator.
-N $C54C Graphic #N$08.
+N $C54C Graphic #N$07.
   $C55F,$01 Terminator.
-N $C560 Graphic #N$09.
+N $C560 Graphic #N$08.
   $C561,$01 Terminator.
-N $C562 Graphic #N$0A.
+N $C562 Graphic #N$09.
   $C572,$01 Terminator.
-N $C573 Graphic #N$0B.
+N $C573 Graphic #N$0A.
   $C57F,$01 Terminator.
-N $C580 Graphic #N$0C.
+N $C580 Graphic #N$0B.
   $C581,$01 Terminator.
-N $C582 Graphic #N$0D.
+N $C582 Graphic #N$0C.
   $C592,$01 Terminator.
-N $C593 Graphic #N$0E.
+N $C593 Graphic #N$0D.
   $C5A6,$01 Terminator.
-N $C5A7 Graphic #N$0F.
+N $C5A7 Graphic #N$0E.
   $C5A8,$01 Terminator.
-N $C5A9 Graphic #N$10.
+N $C5A9 Graphic #N$0F.
   $C5C1,$01 Terminator.
-N $C5C2 Graphic #N$11.
+N $C5C2 Graphic #N$10.
   $C5DC,$01 Terminator.
-N $C5DD Graphic #N$12.
+N $C5DD Graphic #N$11.
   $C5E8,$01 Terminator.
-N $C5E9 Graphic #N$13.
+N $C5E9 Graphic #N$12.
   $C603,$01 Terminator.
-N $C604 Graphic #N$14.
+N $C604 Graphic #N$13.
   $C61E,$01 Terminator.
-N $C61F Graphic #N$15.
+N $C61F Graphic #N$14.
   $C62A,$01 Terminator.
-N $C62B Graphic #N$16.
+N $C62B Graphic #N$15.
   $C645,$01 Terminator.
-N $C646 Graphic #N$17.
+N $C646 Graphic #N$16.
   $C660,$01 Terminator.
-N $C661 Graphic #N$18.
+N $C661 Graphic #N$17.
   $C663,$01 Terminator.
-N $C664 Graphic #N$19.
+N $C664 Graphic #N$18.
   $C674,$01 Terminator.
-N $C675 Graphic #N$1A.
+N $C675 Graphic #N$19.
   $C687,$01 Terminator.
-N $C688 Graphic #N$1B.
+N $C688 Graphic #N$1A.
   $C689,$01 Terminator.
-N $C68A Graphic #N$1C.
+N $C68A Graphic #N$1B.
   $C6A2,$01 Terminator.
-N $C6A3 Graphic #N$1D.
+N $C6A3 Graphic #N$1C.
   $C6A5,$01 Terminator.
-N $C6A6 Graphic #N$1E.
+N $C6A6 Graphic #N$1D.
   $C6B6,$01 Terminator.
-N $C6B7 Graphic #N$1F.
+N $C6B7 Graphic #N$1E.
   $C6C9,$01 Terminator.
-N $C6CA Graphic #N$20.
+N $C6CA Graphic #N$1F.
   $C6E4,$01 Terminator.
-N $C6E5 Graphic #N$21.
+N $C6E5 Graphic #N$20.
   $C6EF,$01 Terminator.
-N $C6F0 Graphic #N$22.
+N $C6F0 Graphic #N$21.
   $C6F2,$01 Terminator.
-N $C6F3 Graphic #N$23.
+N $C6F3 Graphic #N$22.
   $C703,$01 Terminator.
-N $C704 Graphic #N$24.
+N $C704 Graphic #N$23.
   $C705,$01 Terminator.
-N $C706 Graphic #N$25.
+N $C706 Graphic #N$24.
   $C716,$01 Terminator.
-N $C717 Graphic #N$26.
+N $C717 Graphic #N$25.
   $C718,$01 Terminator.
-N $C719 Graphic #N$27.
+N $C719 Graphic #N$26.
   $C731,$01 Terminator.
-N $C732 Graphic #N$28.
+N $C732 Graphic #N$27.
   $C733,$01 Terminator.
-N $C734 Graphic #N$29.
+N $C734 Graphic #N$28.
   $C73C,$01 Terminator.
-N $C73D Graphic #N$2A.
+N $C73D Graphic #N$29.
   $C73F,$01 Terminator.
-N $C740 Graphic #N$2B.
+N $C740 Graphic #N$2A.
   $C750,$01 Terminator.
-N $C751 Graphic #N$2C.
+N $C751 Graphic #N$2B.
   $C752,$01 Terminator.
-N $C753 Graphic #N$2D.
+N $C753 Graphic #N$2C.
   $C763,$01 Terminator.
-N $C764 Graphic #N$2E.
+N $C764 Graphic #N$2D.
   $C765,$01 Terminator.
-N $C766 Graphic #N$2F.
+N $C766 Graphic #N$2E.
   $C776,$01 Terminator.
-N $C777 Graphic #N$30.
+N $C777 Graphic #N$2F.
   $C781,$01 Terminator.
-N $C782 Graphic #N$31.
+N $C782 Graphic #N$30.
   $C784,$01 Terminator.
-N $C785 Graphic #N$32.
+N $C785 Graphic #N$31.
   $C795,$01 Terminator.
-N $C796 Graphic #N$33.
+N $C796 Graphic #N$32.
   $C7B0,$01 Terminator.
-N $C7B1 Graphic #N$34.
+N $C7B1 Graphic #N$33.
   $C7B2,$01 Terminator.
-N $C7B3 Graphic #N$35.
+N $C7B3 Graphic #N$34.
   $C7C3,$01 Terminator.
-N $C7C4 Graphic #N$36.
+N $C7C4 Graphic #N$35.
   $C7C5,$01 Terminator.
-N $C7C6 Graphic #N$37.
+N $C7C6 Graphic #N$36.
   $C7D6,$01 Terminator.
-N $C7D7 Graphic #N$38.
+N $C7D7 Graphic #N$37.
   $C7D9,$01 Terminator.
-N $C7DA Graphic #N$39.
+N $C7DA Graphic #N$38.
   $C7EA,$01 Terminator.
-N $C7EB Graphic #N$3A.
+N $C7EB Graphic #N$39.
   $C805,$01 Terminator.
-N $C806 Graphic #N$3B.
+N $C806 Graphic #N$3A.
   $C807,$01 Terminator.
-N $C808 Graphic #N$3C.
+N $C808 Graphic #N$3B.
   $C818,$01 Terminator.
-N $C819 Graphic #N$3D.
+N $C819 Graphic #N$3C.
   $C81A,$01 Terminator.
-N $C81B Graphic #N$3E.
+N $C81B Graphic #N$3D.
   $C823,$01 Terminator.
-N $C824 Graphic #N$3F.
+N $C824 Graphic #N$3E.
   $C826,$01 Terminator.
-N $C827 Graphic #N$40.
+N $C827 Graphic #N$3F.
   $C837,$01 Terminator.
-N $C838 Graphic #N$41.
+N $C838 Graphic #N$40.
   $C852,$01 Terminator.
-N $C853 Graphic #N$42.
+N $C853 Graphic #N$41.
   $C865,$01 Terminator.
-N $C866 Graphic #N$43.
+N $C866 Graphic #N$42.
   $C881,$01 Terminator.
-N $C882 Graphic #N$44.
+N $C882 Graphic #N$43.
   $C89C,$01 Terminator.
-N $C89D Graphic #N$45.
+N $C89D Graphic #N$44.
   $C8AF,$01 Terminator.
-N $C8B0 Graphic #N$46.
+N $C8B0 Graphic #N$45.
   $C8CB,$01 Terminator.
-N $C8CC Graphic #N$47.
+N $C8CC Graphic #N$46.
   $C8E6,$01 Terminator.
-N $C8E7 Graphic #N$48.
+N $C8E7 Graphic #N$47.
   $C8F9,$01 Terminator.
-N $C8FA Graphic #N$49.
+N $C8FA Graphic #N$48.
   $C915,$01 Terminator.
-N $C916 Graphic #N$4A.
+N $C916 Graphic #N$49.
   $C930,$01 Terminator.
-N $C931 Graphic #N$4B.
+N $C931 Graphic #N$4A.
   $C93B,$01 Terminator.
-N $C93C Graphic #N$4C.
+N $C93C Graphic #N$4B.
   $C93D,$01 Terminator.
-N $C93E Graphic #N$4D.
+N $C93E Graphic #N$4C.
   $C94F,$01 Terminator.
-N $C950 Graphic #N$4E.
+N $C950 Graphic #N$4D.
   $C951,$01 Terminator.
-N $C952 Graphic #N$4F.
+N $C952 Graphic #N$4E.
   $C96A,$01 Terminator.
-N $C96B Graphic #N$50.
+N $C96B Graphic #N$4F.
   $C985,$01 Terminator.
-N $C986 Graphic #N$51.
+N $C986 Graphic #N$50.
   $C991,$01 Terminator.
-N $C992 Graphic #N$52.
+N $C992 Graphic #N$51.
   $C99C,$01 Terminator.
-N $C99D Graphic #N$53.
+N $C99D Graphic #N$52.
   $C9A8,$01 Terminator.
-N $C9A9 Graphic #N$54.
+N $C9A9 Graphic #N$53.
   $C9B3,$01 Terminator.
-N $C9B4 Graphic #N$55.
+N $C9B4 Graphic #N$54.
   $C9C7,$01 Terminator.
-N $C9C8 Graphic #N$56.
+N $C9C8 Graphic #N$55.
   $C9C9,$01 Terminator.
-N $C9CA Graphic #N$57.
+N $C9CA Graphic #N$56.
   $C9D2,$01 Terminator.
-N $C9D3 Graphic #N$58.
+N $C9D3 Graphic #N$57.
   $C9E6,$01 Terminator.
-N $C9E7 Graphic #N$59.
+N $C9E7 Graphic #N$58.
   $C9E8,$01 Terminator.
-N $C9E9 Graphic #N$5A.
+N $C9E9 Graphic #N$59.
   $C9F9,$01 Terminator.
-N $C9FA Graphic #N$5B.
+N $C9FA Graphic #N$5A.
   $CA06,$01 Terminator.
-N $CA07 Graphic #N$5C.
+N $CA07 Graphic #N$5B.
   $CA08,$01 Terminator.
-N $CA09 Graphic #N$5D.
+N $CA09 Graphic #N$5C.
   $CA19,$01 Terminator.
-N $CA1A Graphic #N$5E.
+N $CA1A Graphic #N$5D.
   $CA2D,$01 Terminator.
-N $CA2E Graphic #N$5F.
+N $CA2E Graphic #N$5E.
   $CA2F,$01 Terminator.
-N $CA30 Graphic #N$60.
+N $CA30 Graphic #N$5F.
   $CA48,$01 Terminator.
-N $CA49 Graphic #N$61.
+N $CA49 Graphic #N$60.
   $CA63,$01 Terminator.
-N $CA64 Graphic #N$62.
+N $CA64 Graphic #N$61.
   $CA6F,$01 Terminator.
-N $CA70 Graphic #N$63.
+N $CA70 Graphic #N$62.
   $CA8A,$01 Terminator.
-N $CA8B Graphic #N$64.
+N $CA8B Graphic #N$63.
   $CAA5,$01 Terminator.
-N $CAA6 Graphic #N$65.
+N $CAA6 Graphic #N$64.
   $CAB1,$01 Terminator.
-N $CAB2 Graphic #N$66.
+N $CAB2 Graphic #N$65.
   $CACC,$01 Terminator.
-N $CACD Graphic #N$67.
+N $CACD Graphic #N$66.
   $CAE7,$01 Terminator.
-N $CAE8 Graphic #N$68.
+N $CAE8 Graphic #N$67.
   $CAEA,$01 Terminator.
-N $CAEB Graphic #N$69.
+N $CAEB Graphic #N$68.
   $CAFB,$01 Terminator.
-N $CAFC Graphic #N$6A.
+N $CAFC Graphic #N$69.
   $CB0E,$01 Terminator.
-N $CB0F Graphic #N$6B.
+N $CB0F Graphic #N$6A.
   $CB10,$01 Terminator.
-N $CB11 Graphic #N$6C.
+N $CB11 Graphic #N$6B.
   $CB29,$01 Terminator.
-N $CB2A Graphic #N$6D.
+N $CB2A Graphic #N$6C.
   $CB2C,$01 Terminator.
-N $CB2D Graphic #N$6E.
+N $CB2D Graphic #N$6D.
   $CB3D,$01 Terminator.
-N $CB3E Graphic #N$6F.
+N $CB3E Graphic #N$6E.
   $CB50,$01 Terminator.
-N $CB51 Graphic #N$70.
+N $CB51 Graphic #N$6F.
   $CB6B,$01 Terminator.
-N $CB6C Graphic #N$71.
+N $CB6C Graphic #N$70.
   $CB76,$01 Terminator.
-N $CB77 Graphic #N$72.
+N $CB77 Graphic #N$71.
   $CB79,$01 Terminator.
-N $CB7A Graphic #N$73.
+N $CB7A Graphic #N$72.
   $CB8A,$01 Terminator.
-N $CB8B Graphic #N$74.
+N $CB8B Graphic #N$73.
   $CB8C,$01 Terminator.
-N $CB8D Graphic #N$75.
+N $CB8D Graphic #N$74.
   $CB9D,$01 Terminator.
-N $CB9E Graphic #N$76.
+N $CB9E Graphic #N$75.
   $CB9F,$01 Terminator.
-N $CBA0 Graphic #N$77.
+N $CBA0 Graphic #N$76.
   $CBB8,$01 Terminator.
-N $CBB9 Graphic #N$78.
+N $CBB9 Graphic #N$77.
   $CBBA,$01 Terminator.
-N $CBBB Graphic #N$79.
+N $CBBB Graphic #N$78.
   $CBC3,$01 Terminator.
-N $CBC4 Graphic #N$7A.
+N $CBC4 Graphic #N$79.
   $CBC6,$01 Terminator.
-N $CBC7 Graphic #N$7B.
+N $CBC7 Graphic #N$7A.
   $CBD7,$01 Terminator.
-N $CBD8 Graphic #N$7C.
+N $CBD8 Graphic #N$7B.
   $CBD9,$01 Terminator.
-N $CBDA Graphic #N$7D.
+N $CBDA Graphic #N$7C.
   $CBEA,$01 Terminator.
-N $CBEB Graphic #N$7E.
+N $CBEB Graphic #N$7D.
   $CBEC,$01 Terminator.
-N $CBED Graphic #N$7F.
+N $CBED Graphic #N$7E.
   $CBFD,$01 Terminator.
-N $CBFE Graphic #N$80.
+N $CBFE Graphic #N$7F.
   $CC08,$01 Terminator.
-N $CC09 Graphic #N$81.
+N $CC09 Graphic #N$80.
   $CC0B,$01 Terminator.
-N $CC0C Graphic #N$82.
+N $CC0C Graphic #N$81.
   $CC1C,$01 Terminator.
-N $CC1D Graphic #N$83.
+N $CC1D Graphic #N$82.
   $CC37,$01 Terminator.
-N $CC38 Graphic #N$84.
+N $CC38 Graphic #N$83.
   $CC39,$01 Terminator.
-N $CC3A Graphic #N$85.
+N $CC3A Graphic #N$84.
   $CC4A,$01 Terminator.
-N $CC4B Graphic #N$86.
+N $CC4B Graphic #N$85.
   $CC4C,$01 Terminator.
-N $CC4D Graphic #N$87.
+N $CC4D Graphic #N$86.
   $CC5D,$01 Terminator.
-N $CC5E Graphic #N$88.
+N $CC5E Graphic #N$87.
   $CC60,$01 Terminator.
-N $CC61 Graphic #N$89.
+N $CC61 Graphic #N$88.
   $CC71,$01 Terminator.
-N $CC72 Graphic #N$8A.
+N $CC72 Graphic #N$89.
   $CC8C,$01 Terminator.
-N $CC8D Graphic #N$8B.
+N $CC8D Graphic #N$8A.
   $CC8E,$01 Terminator.
-N $CC8F Graphic #N$8C.
+N $CC8F Graphic #N$8B.
   $CC9F,$01 Terminator.
-N $CCA0 Graphic #N$8D.
+N $CCA0 Graphic #N$8C.
   $CCA1,$01 Terminator.
-N $CCA2 Graphic #N$8E.
+N $CCA2 Graphic #N$8D.
   $CCAA,$01 Terminator.
-N $CCAB Graphic #N$8F.
+N $CCAB Graphic #N$8E.
   $CCAD,$01 Terminator.
-N $CCAE Graphic #N$90.
+N $CCAE Graphic #N$8F.
   $CCBE,$01 Terminator.
-N $CCBF Graphic #N$91.
+N $CCBF Graphic #N$90.
   $CCD9,$01 Terminator.
 N $CCDA Graphic #N$92.
   $CCEC,$01 Terminator.
@@ -4288,7 +4424,10 @@ b $EB00 User-Defined Keys Input
 c $EB43 Display Change Controls
 @ $EB43 label=DisplayChangeControls
 D $EB43 Used by the routine at #R$E80E.
-.       #UDGTABLE(default,centre) { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$EB43,stop=$E8DD) #SCR$02(change-controls) #POPS } UDGTABLE#
+. #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$E821,stop=$E8C0)#SIM(start=$EB43,stop=$E8DD)
+.   #SCR$02(change-controls)
+. } UDGTABLE# #POPS
   $EB43,$03 #REGhl=#R$E900.
   $EB46,$02 #REGc=#N$04 (four "blocks" of text).
   $EB48,$01 Switch to the shadow registers.
@@ -4297,7 +4436,7 @@ D $EB43 Used by the routine at #R$E80E.
 N $EB4D Re-use the same printing routine as the start screen.
   $EB4D,$03 Call #R$E8CA.
   $EB50,$06 #HTML(Write #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C09.html">*REPDEL</a>
-.           and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
+. and #N$01 to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C0A.html">*REPPER</a>.)
 N $EB56 Add a little pause to debounce the keypress from the previous page.
   $EB56,$03 #REGhl=#N($0000,$04,$04).
 @ $EB59 label=ChangeControls_DebounceLoop
@@ -4325,7 +4464,10 @@ N $EB76 Handle both AGF interface and "other" (user defined keys) selections.
   $EB81,$01 No operation.
   $EB82,$01 No operation.
 N $EB83 Ask the user to set user-defined keys.
-N $EB83 #UDGTABLE(default,centre) { #PUSHS #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3) #SCR$02(user-defined-left) #POPS } UDGTABLE#
+N $EB83 #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)
+.   #SCR$02(user-defined-left)
+. } UDGTABLE# #POPS
   $EB83,$03 Call #R$EBE3.
 N $EB86 Set the attributes.
   $EB86,$03 #REGhl=#N$5900 (attribute buffer location).
@@ -4371,7 +4513,10 @@ N $EBC5 Fetch the user keypress.
   $EBC8,$01 Write the keypress to the current position in *#R$7853.
   $EBC9,$01 Move onto the next control key.
 N $EBCA Warn the user that we debounce using pauses rather than wait for the key to be released.
-N $EBCA #UDGTABLE(default,centre) { #PUSHS #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)#SIM(start=$EBCA,stop=$EBD6) #SCR$02(user-defined-warning) #POPS } UDGTABLE#
+N $EBCA #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$749C,stop=$74A8)#SIM(start=$EB86,stop=$EBB3)#SIM(start=$EBCA,stop=$EBD6)
+.   #SCR$02(user-defined-warning)
+. } UDGTABLE# #POPS
   $EBCA,$03 #REGhl=#R$EA20.
   $EBCD,$02 #REGb=#N$40 (counter; number of characters in the warning messaging).
 N $EBCF Set the screen buffer position.
@@ -4662,9 +4807,10 @@ N $ED5F Prints the "#STR($EE94,$03,$20)" footer messaging.
   $ED61,$03 #REGhl=#R$EE94.
   $ED64,$03 Call #R$74C3.
 N $ED67 Display the instructions for page one.
-N $ED67 #UDGTABLE(default,centre)
-. { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8C) #SCR$02(instruction-01) #POPS }
-. UDGTABLE#
+N $ED67 #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8C)
+.   #SCR$02(instruction-01)
+. } UDGTABLE# #POPS
 N $ED67 Set the attributes.
   $ED67,$03 #REGhl=#N$5840 (attribute buffer location).
   $ED6A,$02 #REGb=#N$A0 (counter).
@@ -4696,9 +4842,10 @@ N $ED86 Now display the text for page one on the screen.
   $ED90,$03 Call #R$6828.
   $ED93,$03 Jump to #R$ED90 until any key is pressed.
 N $ED96 Display the instructions for page two.
-N $ED96 #UDGTABLE(default,centre)
-. { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA7) #SCR$02(instruction-02) #POPS }
-. UDGTABLE#
+N $ED96 #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA7)
+.   #SCR$02(instruction-02)
+. } UDGTABLE# #POPS
 N $ED96 Set the attributes.
   $ED96,$03 #REGhl=#N$5840 (attribute buffer location).
   $ED99,$02 Write #N$0F (#COLOUR$0F) to *#REGhl.
@@ -4714,9 +4861,10 @@ N $EDA3 Now display the text for page two on the screen.
   $EDAB,$03 Call #R$6828.
   $EDAE,$03 Jump to #R$EDAB until any key is pressed.
 N $EDB1 Display the instructions for page three.
-N $EDB1 #UDGTABLE(default,centre)
-. { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE4) #SCR$02(instruction-03) #POPS }
-. UDGTABLE#
+N $EDB1 #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE4)
+.   #SCR$02(instruction-03)
+. } UDGTABLE# #POPS
 N $EDB1 Set the attributes.
   $EDB1,$03 #REGhl=#N$5960 (attribute buffer location).
   $EDB4,$02 #REGb=#N$80 (counter).
@@ -4760,9 +4908,10 @@ N $EDE0 Now display the text for page three on the screen.
   $EDE8,$03 Call #R$6828.
   $EDEB,$03 Jump to #R$EDE8 until any key is pressed.
 N $EDEE Display the instructions for page four.
-N $EDEE #UDGTABLE(default,centre)
-. { #PUSHS #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE5)#SIM(start=$EDEE,stop=$EDFF) #SCR$02(instruction-04) #POPS }
-. UDGTABLE#
+N $EDEE #PUSHS #UDGTABLE(default,centre) {
+.   #SIM(start=$E821,stop=$E8C0)#SIM(start=$ED52,stop=$ED8D)#SIM(start=$ED96,stop=$EDA8)#SIM(start=$EDB1,stop=$EDE5)#SIM(start=$EDEE,stop=$EDFF)
+.   #SCR$02(instruction-04)
+. } UDGTABLE# #POPS
 N $EDEE Set the attributes.
   $EDEE,$03 #REGhl=#N$5840 (attribute buffer location).
   $EDF1,$02 Write #N$30 (#COLOUR$30) to *#REGhl.
