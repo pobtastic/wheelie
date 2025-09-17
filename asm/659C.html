@@ -41,7 +41,7 @@ Next: <a href="664E.html">664E</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</a>, <a href="6C00.html">6C00</a> and <a href="6E18.html">6E18</a>.
+Scrolls the play area horizontally by shifting pixel data left using <code>RLD</code> instructions.
 </div>
 </div>
 </td>
@@ -50,55 +50,54 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="asm-label">ScrollPlayarea</td>
 <td class="address-2"><span id="659c"></span>659C</td>
 <td class="instruction">LD HL,($7817)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7817.html">7817</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7817.html">Current_ScreenPosition</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="659f"></span>659F</td>
 <td class="instruction">LD D,H</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="2">Copy the screen position pointer into <span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65a0"></span>65A0</td>
 <td class="instruction">LD E,L</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65a1"></span>65A1</td>
 <td class="instruction">LD A,($7819)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7819.html">7819</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7819.html">ScrollPhase_Counter</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65a4"></span>65A4</td>
 <td class="instruction">LD C,A</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Copy the scroll phase counter into <span class="register">C</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65a5"></span>65A5</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the scroll phase counter by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65a6"></span>65A6</td>
 <td class="instruction">AND %00000111</td>
-<td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
+<td class="comment-1" rowspan="1">Ensure the counter is limited to being a number between 00-07.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65a8"></span>65A8</td>
 <td class="instruction">LD ($7819),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7819.html">7819</a>.</td>
+<td class="comment-1" rowspan="1">Write the scroll phase counter back to *<a href="7819.html">ScrollPhase_Counter</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65ab"></span>65AB</td>
-<td class="instruction">JR NZ,<a href="659C.html#65b7">ScrollPlayarea_1</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="659C.html#65b7">ScrollPlayarea_1</a> if <span class="register">A</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="659C.html#65b7">ScrollPlayarea_UpdateColumnPointer</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="659C.html#65b7">ScrollPlayarea_UpdateColumnPointer</a> if <span class="register">A</span> is not zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -109,8 +108,8 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65ae"></span>65AE</td>
-<td class="instruction">JR NZ,<a href="659C.html#65b4">ScrollPlayarea_0</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="659C.html#65b4">ScrollPlayarea_0</a> if <span class="register">L</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="659C.html#65b4">ScrollPlayarea_StorePointer</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="659C.html#65b4">ScrollPlayarea_StorePointer</a> if <span class="register">L</span> is not zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -129,13 +128,23 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="instruction">LD H,A</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_0</td>
+<td class="asm-label">ScrollPlayarea_StorePointer</td>
 <td class="address-2"><span id="65b4"></span>65B4</td>
 <td class="instruction">LD ($7817),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7817.html">7817</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7817.html">Current_ScreenPosition</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_1</td>
+<td class="routine-comment" colspan="5">
+<span id="65b7"></span>
+<div class="comments">
+<div class="paragraph">
+Set up the column data pointer for new graphics data.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ScrollPlayarea_UpdateColumnPointer</td>
 <td class="address-2"><span id="65b7"></span>65B7</td>
 <td class="instruction">LD A,E</td>
 <td class="comment-1" rowspan="3"><span class="register">E</span>+=08.</td>
@@ -153,8 +162,8 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65bb"></span>65BB</td>
-<td class="instruction">JR NC,<a href="659C.html#65c1">ScrollPlayarea_2</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="659C.html#65c1">ScrollPlayarea_2</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="659C.html#65c1">ScrollPlayarea_SetupScroll</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="659C.html#65c1">ScrollPlayarea_SetupScroll</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -173,22 +182,32 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="instruction">LD D,A</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_2</td>
+<td class="asm-label">ScrollPlayarea_SetupScroll</td>
 <td class="address-2"><span id="65c1"></span>65C1</td>
 <td class="instruction">LD A,C</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+<td class="comment-1" rowspan="1">Load the original scroll phase counter value into <span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65c2"></span>65C2</td>
 <td class="instruction">LD B,$01</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=01.</td>
+<td class="comment-1" rowspan="1">Set a counter in <span class="register">B</span> for 01 column to process.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65c4"></span>65C4</td>
-<td class="instruction">CALL <a href="6564.html">$6564</a></td>
-<td class="comment-1" rowspan="1">Call <a href="6564.html">6564</a>.</td>
+<td class="instruction">CALL <a href="6564.html">PrepareScrollData</a></td>
+<td class="comment-1" rowspan="1">Call <a href="6564.html">PrepareScrollData</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="65c7"></span>
+<div class="comments">
+<div class="paragraph">
+Start of screen buffer.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -200,13 +219,12 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="asm-label"></td>
 <td class="address-1"><span id="65ca"></span>65CA</td>
 <td class="instruction">LD D,H</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="2">Copy the screen position pointer into <span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65cb"></span>65CB</td>
 <td class="instruction">LD E,L</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -215,7 +233,7 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_3</td>
+<td class="asm-label">ScrollPlayarea_ProcessRows</td>
 <td class="address-2"><span id="65cd"></span>65CD</td>
 <td class="instruction">LD A,(DE)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">DE</span>.</td>
@@ -263,7 +281,7 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="comment-1" rowspan="1"><span class="register">B</span>=04.</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_4</td>
+<td class="asm-label">ScrollPlayarea_0</td>
 <td class="address-2"><span id="65d7"></span>65D7</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -684,14 +702,14 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="663d"></span>663D</td>
-<td class="instruction">DJNZ <a href="659C.html#65d7">ScrollPlayarea_4</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="659C.html#65d7">ScrollPlayarea_4</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="659C.html#65d7">ScrollPlayarea_0</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="659C.html#65d7">ScrollPlayarea_0</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="663f"></span>663F</td>
 <td class="instruction">LD A,$20</td>
-<td class="comment-1" rowspan="3"><span class="register">E</span>+=20.</td>
+<td class="comment-1" rowspan="3">Move down one character row.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -707,13 +725,13 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="asm-label"></td>
 <td class="address-1"><span id="6643"></span>6643</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Update the screen pointer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6644"></span>6644</td>
-<td class="instruction">JR NC,<a href="659C.html#6648">ScrollPlayarea_5</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="659C.html#6648">ScrollPlayarea_5</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="659C.html#6648">ScrollPlayarea_NextRow</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="659C.html#6648">ScrollPlayarea_NextRow</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -722,10 +740,10 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <td class="comment-1" rowspan="1"><span class="register">D</span>=48.</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_5</td>
+<td class="asm-label">ScrollPlayarea_NextRow</td>
 <td class="address-2"><span id="6648"></span>6648</td>
 <td class="instruction">LD H,D</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">D</span>.</td>
+<td class="comment-1" rowspan="1">Update the screen pointer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -736,14 +754,14 @@ Used by the routines at <a href="6800.html">6800</a>, <a href="6AAC.html">6AAC</
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="664a"></span>664A</td>
-<td class="instruction">DJNZ <a href="659C.html#65cd">ScrollPlayarea_3</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="659C.html#65cd">ScrollPlayarea_3</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="659C.html#65cd">ScrollPlayarea_ProcessRows</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="659C.html#65cd">ScrollPlayarea_ProcessRows</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="664c"></span>664C</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

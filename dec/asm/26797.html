@@ -35,22 +35,22 @@ Next: <a href="26856.html">26856</a>
 </td>
 </tr>
 </table>
-<div class="description">26797: Routine at 68AD</div>
+<div class="description">26797: Remove Sprites</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">27648</a>, <a href="28184.html">28184</a>, <a href="30268.html">30268</a> and <a href="30423.html">30423</a>.
+Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">Game_Loop</a>, <a href="28184.html">28184</a>, <a href="30268.html">Handler_Fuel</a> and <a href="30423.html">30423</a>.
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label">RemoveSprite</td>
+<td class="asm-label">RemoveSprites</td>
 <td class="address-2"><span id="26797"></span>26797</td>
 <td class="instruction">LD A,(30747)</td>
-<td class="comment-1" rowspan="3">Return if *<a href="30747.html">30747</a> is zero.</td>
+<td class="comment-1" rowspan="3">Return if *<a href="30747.html">ActiveSpriteBlocks</a> is zero (no sprite blocks on the screen).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -63,94 +63,109 @@ Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">276
 <td class="instruction">RET Z</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="26802"></span>
+<div class="comments">
+<div class="paragraph">
+Whilst this routine is clearing sprites, the data is stored per character block, e.g. a kangaroo may span 3 character blocks - and data is stored individually for each of those three blocks, so the count is +3 for a kangaroo (when it is covering those three blocks).
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26802"></span>26802</td>
 <td class="instruction">LD HL,(30748)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30748.html">30748</a>.</td>
+<td class="comment-1" rowspan="1">Load *<a href="30748.html">SpriteBackgroundBuffer_Pointer</a> into <span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26805"></span>26805</td>
 <td class="instruction">LD B,A</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Set a counter in <span class="register">B</span> of the number of character blocks needed to clear all the sprites.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26806"></span>26806</td>
 <td class="instruction">LD C,0</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=0.</td>
+<td class="comment-1" rowspan="1">Set a "clear" value (0) in <span class="register">C</span>.</td>
 </tr>
 <tr>
-<td class="asm-label">RemoveSprite_0</td>
+<td class="asm-label">RemoveSingleSpriteBlock_Loop</td>
 <td class="address-2"><span id="26808"></span>26808</td>
 <td class="instruction">DEC HL</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
+<td class="comment-1" rowspan="4">Load <span class="register">DE</span> with the attribute buffer address of the sprite block.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26809"></span>26809</td>
 <td class="instruction">LD D,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26810"></span>26810</td>
 <td class="instruction">DEC HL</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26811"></span>26811</td>
 <td class="instruction">LD E,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26812"></span>26812</td>
 <td class="instruction">DEC HL</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
+<td class="comment-1" rowspan="2">Fetch the background attribute value.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26813"></span>26813</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26814"></span>26814</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Write the background attribute value to the attribute buffer address held in <span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26815"></span>26815</td>
 <td class="instruction">DEC HL</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to next buffer entry.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="26816"></span>
+<div class="comments">
+<div class="paragraph">
+Convert the attribute address to the corresponding screen buffer address.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26816"></span>26816</td>
 <td class="instruction">LD A,D</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+<td class="comment-1" rowspan="2">Taking the attribute buffer high byte, subtract 17.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26817"></span>26817</td>
 <td class="instruction">SUB 17</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=17.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26819"></span>26819</td>
 <td class="instruction">OR %00000111</td>
-<td class="comment-1" rowspan="1">Set bits 0-2.</td>
+<td class="comment-1" rowspan="1">Adjust for the screen buffer memory layout.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26821"></span>26821</td>
 <td class="instruction">LD D,A</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Write this back into <span class="register">D</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -299,20 +314,30 @@ Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">276
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26846"></span>26846</td>
-<td class="instruction">DJNZ <a href="26797.html#26808">RemoveSprite_0</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="26797.html#26808">RemoveSprite_0</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="26797.html#26808">RemoveSingleSpriteBlock_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease the sprite block counter by one and loop back to <a href="26797.html#26808">RemoveSingleSpriteBlock_Loop</a> until all the sprite blocks have been reverted to backgrounds.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="26848"></span>
+<div class="comments">
+<div class="paragraph">
+All sprite blocks are now reverted!
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26848"></span>26848</td>
 <td class="instruction">LD (30748),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30748.html">30748</a>.</td>
+<td class="comment-1" rowspan="1">Update the buffer position at *<a href="30748.html">SpriteBackgroundBuffer_Pointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26851"></span>26851</td>
 <td class="instruction">XOR A</td>
-<td class="comment-1" rowspan="2">Write 0 to *<a href="30747.html">30747</a>.</td>
+<td class="comment-1" rowspan="2">Mark that no sprite blocks are now active at *<a href="30747.html">ActiveSpriteBlocks</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

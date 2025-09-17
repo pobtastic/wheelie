@@ -35,134 +35,169 @@ Next: <a href="30419.html">30419</a>
 </td>
 </tr>
 </table>
-<div class="description">30268: Routine at 763C</div>
+<div class="description">30268: Handler: Fuel</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="27648.html">27648</a>.
+Used by the routine at <a href="27648.html">Game_Loop</a>.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">Handler_Fuel</td>
 <td class="address-2"><span id="30268"></span>30268</td>
 <td class="instruction">CALL <a href="29728.html">29728</a></td>
 <td class="comment-1" rowspan="1">Call <a href="29728.html">29728</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30271"></span>30271</td>
 <td class="instruction">LD HL,(30780)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30780.html">Fuel</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30274"></span>30274</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-1" rowspan="3">Jump to <a href="30268.html#30362">30362</a> if <span class="register">H</span> is lower than 128.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="30268.html#30362">ProcessFuelConsumption</a> if <span class="register">H</span> is lower than 128.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30275"></span>30275</td>
 <td class="instruction">CP 128</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30277"></span>30277</td>
-<td class="instruction">JR C,<a href="30268.html#30362">30362</a></td>
+<td class="instruction">JR C,<a href="30268.html#30362">ProcessFuelConsumption</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30279"></span>30279</td>
 <td class="instruction">LD HL,(30766)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30282"></span>30282</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30283"></span>30283</td>
 <td class="instruction">DEC A</td>
 <td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30284"></span>30284</td>
-<td class="instruction">JR Z,<a href="30268.html#30300">30300</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30300">30300</a> if <span class="register">A</span> is zero.</td>
+<td class="instruction">JR Z,<a href="30268.html#30300">TriggerOutOfFuel</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30300">TriggerOutOfFuel</a> if <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30286"></span>30286</td>
 <td class="instruction">CP 49</td>
 <td class="comment-1" rowspan="2">Call <a href="60403.html">60403</a> if <span class="register">A</span> is higher than 49.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30288"></span>30288</td>
 <td class="instruction">CALL NC,<a href="60403.html">60403</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30291"></span>30291</td>
 <td class="instruction">CP 45</td>
 <td class="comment-1" rowspan="2">Call <a href="60403.html">60403</a> if <span class="register">A</span> is lower than 45.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30293"></span>30293</td>
 <td class="instruction">CALL C,<a href="60403.html">60403</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30296"></span>30296</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="4">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30297"></span>30297</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30298"></span>30298</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30299"></span>30299</td>
 <td class="instruction">NOP</td>
 </tr>
 <tr>
-<td class="address-2"><span id="30300"></span>30300</td>
-<td class="instruction">CALL <a href="26797.html">RemoveSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprite</a>.</td>
+<td class="routine-comment" colspan="5">
+<span id="30300"></span>
+<div class="comments">
+<div class="paragraph">
+Start the "Out Of Fuel" sequence.
+</div>
+</div>
+</td>
 </tr>
 <tr>
+<td class="asm-label">TriggerOutOfFuel</td>
+<td class="address-2"><span id="30300"></span>30300</td>
+<td class="instruction">CALL <a href="26797.html">RemoveSprites</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprites</a>.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30303"></span>30303</td>
 <td class="instruction">LD A,(30754)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30306"></span>30306</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Check the direction bit.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30308"></span>30308</td>
 <td class="instruction">LD A,135</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=135.</td>
+<td class="comment-1" rowspan="1">Load the base player sprite into <span class="register">A</span> (135).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30310"></span>30310</td>
-<td class="instruction">JR NZ,<a href="30268.html#30314">30314</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30314">30314</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="30268.html#30314">SetWheelieSprite</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30314">SetWheelieSprite</a> if the player is moving left.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30312"></span>30312</td>
 <td class="instruction">ADD A,64</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=64.</td>
+<td class="comment-1" rowspan="1">Modify the player sprite ID for the player moving right (199).</td>
 </tr>
 <tr>
+<td class="asm-label">SetWheelieSprite</td>
 <td class="address-2"><span id="30314"></span>30314</td>
 <td class="instruction">LD (30772),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30772.html">Wheelie</a>.</td>
+<td class="comment-1" rowspan="1">Write the player sprite ID to *<a href="30772.html">PlayerSpriteID</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30317"></span>30317</td>
-<td class="instruction">CALL <a href="27437.html">27437</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27437.html">27437</a>.</td>
+<td class="instruction">CALL <a href="27437.html">Handler: PlayerSprite</a></td>
+<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler: PlayerSprite</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -178,6 +213,7 @@ Print the "OUT OF FUEL" messaging in the footer.
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30320"></span>30320</td>
 <td class="instruction">LD A,169</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=169 (INK:
@@ -188,240 +224,344 @@ CYAN
 FLASH: ON).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30322"></span>30322</td>
 <td class="instruction">LD HL,47750</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="47750.html">Messaging_OutOfFuel</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30325"></span>30325</td>
 <td class="instruction">CALL <a href="29891.html">PrintFooterColourString</a></td>
 <td class="comment-1" rowspan="1">Call <a href="29891.html">PrintFooterColourString</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30328"></span>
+<div class="comments">
+<div class="paragraph">
+Play the "out of fuel" audio.
+</div>
+<div class="paragraph">
+<audio controls="" src="../../audio/out-of-fuel.wav">
+<p>Your browser doesn't support HTML5 audio. Here is a <a href="../../audio/out-of-fuel.wav">link to the audio</a> instead.</p>
+</audio>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30328"></span>30328</td>
 <td class="instruction">LD D,16</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=16.</td>
+<td class="comment-1" rowspan="1">Set an outer loop count in <span class="register">D</span> for 16 iterations.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30330"></span>30330</td>
 <td class="instruction">LD C,1</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=1.</td>
+<td class="comment-1" rowspan="1">Set the initial tone value in <span class="register">C</span> to 1.</td>
 </tr>
 <tr>
+<td class="asm-label">PlayFuelSound_OuterLoop</td>
 <td class="address-2"><span id="30332"></span>30332</td>
 <td class="instruction">LD HL,7680</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=7680.</td>
+<td class="comment-1" rowspan="1">Set the tone duration counter in <span class="register">HL</span> to 7680.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30335"></span>30335</td>
 <td class="instruction">LD A,C</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+<td class="comment-1" rowspan="1">Get current tone value.</td>
 </tr>
 <tr>
+<td class="asm-label">PlayFuelSound_ToneLoop</td>
 <td class="address-2"><span id="30336"></span>30336</td>
 <td class="instruction">LD B,C</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
+<td class="comment-1" rowspan="1">Set inner delay counter.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30337"></span>30337</td>
 <td class="instruction">OUT (254),A</td>
-<td class="comment-1" rowspan="1">OUT 254</td>
+<td class="comment-1" rowspan="1">Send to the speaker.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30339"></span>30339</td>
 <td class="instruction">XOR %00010000</td>
-<td class="comment-1" rowspan="1">Flip bits 4.</td>
+<td class="comment-1" rowspan="1">Flip the speaker bit.</td>
 </tr>
 <tr>
+<td class="asm-label">PlayFuelSound_InnerDelayLoop</td>
 <td class="address-2"><span id="30341"></span>30341</td>
-<td class="instruction">DJNZ <a href="30268.html#30341">30341</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30268.html#30341">30341</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="30268.html#30341">PlayFuelSound_InnerDelayLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease the inner delay counter by one and loop back to <a href="30268.html#30341">PlayFuelSound_InnerDelayLoop</a> until the counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30343"></span>30343</td>
 <td class="instruction">DEC L</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="1">Decrease the tone duration low byte by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30344"></span>30344</td>
-<td class="instruction">JR NZ,<a href="30268.html#30336">30336</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30336">30336</a> if <span class="register">L</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="30268.html#30336">PlayFuelSound_ToneLoop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="30268.html#30336">PlayFuelSound_ToneLoop</a> until the tone duration low byte is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30346"></span>30346</td>
 <td class="instruction">DEC H</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">H</span> by one.</td>
+<td class="comment-1" rowspan="1">Decrease the tone duration high byte by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30347"></span>30347</td>
-<td class="instruction">JR NZ,<a href="30268.html#30336">30336</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30336">30336</a> if <span class="register">H</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="30268.html#30336">PlayFuelSound_ToneLoop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="30268.html#30336">PlayFuelSound_ToneLoop</a> until the tone duration high byte is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30349"></span>30349</td>
 <td class="instruction">INC C</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">C</span> by one.</td>
+<td class="comment-1" rowspan="1">Increase the tone frequency by one (higher pitch).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30350"></span>30350</td>
 <td class="instruction">DEC D</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">D</span> by one.</td>
+<td class="comment-1" rowspan="1">Decrease the outer loop counter by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30351"></span>30351</td>
-<td class="instruction">JR NZ,<a href="30268.html#30332">30332</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30332">30332</a> if <span class="register">D</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="30268.html#30332">PlayFuelSound_OuterLoop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="30268.html#30332">PlayFuelSound_OuterLoop</a> until the outer loop counter is zero.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30353"></span>
+<div class="comments">
+<div class="paragraph">
+Reset the players fuel and restart the game.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30353"></span>30353</td>
 <td class="instruction">LD HL,13312</td>
 <td class="comment-1" rowspan="2">Write 13312 to *<a href="30780.html">Fuel</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30356"></span>30356</td>
 <td class="instruction">LD (30780),HL</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30359"></span>30359</td>
 <td class="instruction">JP <a href="29025.html">29025</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="29025.html">29025</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30362"></span>
+<div class="comments">
+<div class="paragraph">
+Normal fuel consumption processing.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ProcessFuelConsumption</td>
 <td class="address-2"><span id="30362"></span>30362</td>
 <td class="instruction">LD A,(30754)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30365"></span>30365</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Check the direction bit.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30367"></span>30367</td>
-<td class="instruction">JR NZ,<a href="30268.html#30370">30370</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30370">30370</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="30268.html#30370">CalculateFuelConsumption</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30370">CalculateFuelConsumption</a> if the player is moving backwards.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30369"></span>
+<div class="comments">
+<div class="paragraph">
+The player is moving forwards.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30369"></span>30369</td>
 <td class="instruction">CPL</td>
-<td class="comment-1" rowspan="1">Invert the bits in <span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Invert the speed for forward movement calculation.</td>
 </tr>
 <tr>
+<td class="asm-label">CalculateFuelConsumption</td>
 <td class="address-2"><span id="30370"></span>30370</td>
 <td class="instruction">SUB 126</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=126.</td>
+<td class="comment-1" rowspan="4">Calculate the fuel consumption rate in <span class="register">DE</span>; (speed-126)/2.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30372"></span>30372</td>
 <td class="instruction">SRL A</td>
-<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30374"></span>30374</td>
 <td class="instruction">LD E,A</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30375"></span>30375</td>
 <td class="instruction">LD D,0</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=0.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30377"></span>30377</td>
 <td class="instruction">AND A</td>
-<td class="comment-1" rowspan="1">Set flags.</td>
+<td class="comment-1" rowspan="2">Subtract the consumption from the players fuel level.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30378"></span>30378</td>
 <td class="instruction">SBC HL,DE</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">DE</span> (with carry).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30380"></span>30380</td>
 <td class="instruction">LD (30780),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30780.html">Fuel</a>.</td>
+<td class="comment-1" rowspan="1">Write the updated fuel value back to *<a href="30780.html">Fuel</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30383"></span>30383</td>
-<td class="instruction">JR C,<a href="30268.html#30416">30416</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30416">30416</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="30268.html#30416">Handler_Fuel_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30268.html#30416">Handler_Fuel_0</a> if the fuel value is negative.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30385"></span>
+<div class="comments">
+<div class="paragraph">
+Update the fuel gauge display.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30385"></span>30385</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="1">Get the fuel high byte.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30386"></span>30386</td>
 <td class="instruction">SRL A</td>
-<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
+<td class="comment-1" rowspan="2">Divide it by 4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30388"></span>30388</td>
 <td class="instruction">SRL A</td>
-<td class="comment-1" rowspan="1">Shift <span class="register">A</span> right.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30390"></span>30390</td>
 <td class="instruction">CPL</td>
-<td class="comment-1" rowspan="1">Invert the bits in <span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Invert the byte for the gauge display.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30391"></span>30391</td>
 <td class="instruction">SUB 12</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=12.</td>
+<td class="comment-1" rowspan="1">Abjust by an offset of 12 bytes for where the gauge displays.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30393"></span>30393</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Set this value in <span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30394"></span>30394</td>
 <td class="instruction">LD H,186</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=186.</td>
+<td class="comment-1" rowspan="1">Load the high byte in <span class="register">H</span> with 186.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30396"></span>30396</td>
 <td class="instruction">LD DE,23141</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=23141 (attribute buffer location).</td>
+<td class="comment-1" rowspan="1">Point <span class="register">DE</span> to the gauge position 23141 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30399"></span>30399</td>
-<td class="instruction">CALL <a href="26771.html">26771</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26771.html">26771</a>.</td>
+<td class="instruction">CALL <a href="26771.html">CopyTwelveBytes</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26771.html">CopyTwelveBytes</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="30402"></span>
+<div class="comments">
+<div class="paragraph">
+Handle fuel-related audio effects during gameplay.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30402"></span>30402</td>
 <td class="instruction">LD HL,(30780)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30780.html">Fuel</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30405"></span>30405</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="5">Call <a href="27977.html#27984">27984</a> if the fuel level is 1024 or higher, or for every 64 fuel units (which creates pulses as the fuel decreases).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30406"></span>30406</td>
 <td class="instruction">CP 4</td>
-<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30408"></span>30408</td>
 <td class="instruction">CALL NC,<a href="27977.html#27984">27984</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27977.html#27984">27984</a> is higher.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30411"></span>30411</td>
 <td class="instruction">BIT 6,L</td>
-<td class="comment-1" rowspan="1">Test bit 6 of <span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="30413"></span>30413</td>
 <td class="instruction">CALL NZ,<a href="27977.html#27984">27984</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27977.html#27984">27984</a> not zero.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_Fuel_0</td>
 <td class="address-2"><span id="30416"></span>30416</td>
 <td class="instruction">JP <a href="60403.html">60403</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="60403.html">60403</a>.</td>

@@ -35,75 +35,136 @@ Next: <a href="28829.html">28829</a>
 </td>
 </tr>
 </table>
-<div class="description">28808: Routine at 7088</div>
+<div class="description">28808: Contextual Random Number</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="25770.html">25770</a>.
+Used by the routine at <a href="25770.html">ObjectPlacement_SpecialTerrain</a>.
 </div>
 </div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">H</td>
+<td class="register-desc">Seed value</td>
+</tr>
+</table>
+<table class="output">
+<tr class="asm-output-header">
+<th colspan="2">Output</th>
+</tr>
+<tr>
+<td class="register">A</td>
+<td class="register-desc">Random number betwen 0-255</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
+<td class="asm-label">ContextualRandomNumber</td>
 <td class="address-2"><span id="28808"></span>28808</td>
 <td class="instruction">CALL <a href="25600.html">GetRandomNumber</a></td>
 <td class="comment-1" rowspan="2"><span class="register">E</span>=random number between 0-255.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28811"></span>28811</td>
 <td class="instruction">LD E,A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28812"></span>28812</td>
 <td class="instruction">LD A,H</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="1">Get the seed number.</td>
 </tr>
 <tr>
+<td class="asm-label">CheckSeedNumber</td>
 <td class="address-2"><span id="28813"></span>28813</td>
 <td class="instruction">CP 159</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28808.html#28827">28827</a> if <span class="register">A</span> is lower than 159.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28808.html#28827">ReturnFullValue</a> if the seed number in <span class="register">H</span> is lower than 159.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28815"></span>28815</td>
-<td class="instruction">JR C,<a href="28808.html#28827">28827</a></td>
+<td class="instruction">JR C,<a href="28808.html#28827">ReturnFullValue</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28817"></span>28817</td>
-<td class="instruction">JR Z,<a href="28808.html#28823">28823</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28808.html#28823">28823</a> if <span class="register">A</span> is equal to 159.</td>
+<td class="instruction">JR Z,<a href="28808.html#28823">ReturnBoolean</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28808.html#28823">ReturnBoolean</a> if the seed number in <span class="register">H</span> is equal to 159.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="28819"></span>
+<div class="comments">
+<div class="paragraph">
+Else, subtract 5 and loop back to try again.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28819"></span>28819</td>
 <td class="instruction">SUB 5</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=5.</td>
+<td class="comment-1" rowspan="1">Subtract 5 from the seed number.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28821"></span>28821</td>
-<td class="instruction">JR <a href="28808.html#28813">28813</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28808.html#28813">28813</a>.</td>
+<td class="instruction">JR <a href="28808.html#28813">CheckSeedNumber</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="28808.html#28813">CheckSeedNumber</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="28823"></span>
+<div class="comments">
+<div class="paragraph">
+Return either 0 or 1 using bit 0 of the random number.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ReturnBoolean</td>
 <td class="address-2"><span id="28823"></span>28823</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="2"><span class="register">A</span>=bit 0 of the random number stored in <span class="register">E</span> (so ensure it is either 0 or 1).</td>
+<td class="comment-1" rowspan="2"><span class="register">A</span>=bit 0 of the random number stored in <span class="register">E</span> (ensure it is either 0 or 1).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28824"></span>28824</td>
 <td class="instruction">AND %00000001</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28826"></span>28826</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="28827"></span>
+<div class="comments">
+<div class="paragraph">
+Just return the full random number between 0-255.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">ReturnFullValue</td>
 <td class="address-2"><span id="28827"></span>28827</td>
 <td class="instruction">LD A,E</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=the random number stored in <span class="register">E</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="28828"></span>28828</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

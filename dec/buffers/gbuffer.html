@@ -53,7 +53,7 @@ gtag('config', 'G-75RERFCHBG');
 <td class="map-g"><span id="30743"></span><a href="../asm/30743.html">30743</a></td>
 <td class="map-length">2</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30743.html">Game status buffer entry at 7817</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30743.html">Current Screen Position</a></div>
 <div class="map-entry-desc">
 </div>
 </td>
@@ -62,7 +62,7 @@ gtag('config', 'G-75RERFCHBG');
 <td class="map-g"><span id="30745"></span><a href="../asm/30745.html">30745</a></td>
 <td class="map-length">1</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30745.html">Game status buffer entry at 7819</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30745.html">Scroll Phase Counter</a></div>
 <div class="map-entry-desc">
 </div>
 </td>
@@ -80,8 +80,14 @@ gtag('config', 'G-75RERFCHBG');
 <td class="map-g"><span id="30747"></span><a href="../asm/30747.html">30747</a></td>
 <td class="map-length">1</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30747.html">Game status buffer entry at 781B</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30747.html">Active Sprite Blocks</a></div>
 <div class="map-entry-desc">
+<div class="paragraph">
+The number of sprite character blocks (8x8 pixels) currently active.
+</div>
+<div class="paragraph">
+A single sprite may span multiple character blocks, this is where it's tracked.
+</div>
 </div>
 </td>
 </tr>
@@ -89,8 +95,11 @@ gtag('config', 'G-75RERFCHBG');
 <td class="map-g"><span id="30748"></span><a href="../asm/30748.html">30748</a></td>
 <td class="map-length">2</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30748.html">Game status buffer entry at 781C</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30748.html">Pointer: Sprite Background Buffer</a></div>
 <div class="map-entry-desc">
+<div class="paragraph">
+Pointer to buffer containing saved background data for sprite removal.
+</div>
 </div>
 </td>
 </tr>
@@ -218,7 +227,7 @@ See <a href="../asm/25620.html">SetRandomNumberSeed</a> for how this is generate
 <td class="map-g"><span id="30771"></span><a href="../asm/30771.html">30771</a></td>
 <td class="map-length">1</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30771.html">Game status buffer entry at 7833</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30771.html">Player Y Position</a></div>
 <div class="map-entry-desc">
 </div>
 </td>
@@ -227,7 +236,7 @@ See <a href="../asm/25620.html">SetRandomNumberSeed</a> for how this is generate
 <td class="map-g"><span id="30772"></span><a href="../asm/30772.html">30772</a></td>
 <td class="map-length">1</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30772.html">Wheelie</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30772.html">Player Sprite ID</a></div>
 <div class="map-entry-desc">
 </div>
 </td>
@@ -384,6 +393,54 @@ Pointer to the routine which will handle retrieving the player controls.
 <td class="map-length">5</td>
 <td class="map-g-desc">
 <div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30811.html">AGF Interface KeyMap</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="35168"></span><a href="../asm/35168.html">35168</a></td>
+<td class="map-length">2560</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/35168.html">Data: Level 1</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="37728"></span><a href="../asm/37728.html">37728</a></td>
+<td class="map-length">2720</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/37728.html">Data: Level 2</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="40448"></span><a href="../asm/40448.html">40448</a></td>
+<td class="map-length">2560</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/40448.html">Level Buffer</a></div>
+<div class="map-entry-desc">
+<div class="paragraph">
+32 columns x 80 rows, organised as 16 pages of 160 bytes each (each page is 5 rows x 32 columns).
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="46188"></span><a href="../asm/46188.html">46188</a></td>
+<td class="map-length">48</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46188.html">Terrain Data</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="46236"></span><a href="../asm/46236.html">46236</a></td>
+<td class="map-length">64</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46236.html">Game status buffer entry at B49C</a></div>
 <div class="map-entry-desc">
 </div>
 </td>

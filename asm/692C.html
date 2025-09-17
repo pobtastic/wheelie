@@ -35,197 +35,267 @@ Next: <a href="6992.html">6992</a>
 </td>
 </tr>
 </table>
-<div class="description">692C: Routine at 692C</div>
+<div class="description">692C: Draw Sprite Object</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="6B2D.html">6B2D</a> and <a href="76D7.html">76D7</a>.
+Used by the routines at <a href="6B2D.html">Handler: PlayerSprite</a> and <a href="76D7.html">76D7</a>.
 </div>
 </div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">DE</td>
+<td class="register-desc">Sprite screen position</td>
+</tr>
+<tr>
+<td class="register">A</td>
+<td class="register-desc">Sprite frame ID</td>
+</tr>
+<tr>
+<td class="register">C</td>
+<td class="register-desc">Sprite colour</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
+<td class="asm-label">DrawSpriteObject</td>
 <td class="address-2"><span id="692c"></span>692C</td>
 <td class="instruction">LD B,A</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Store the sprite frame ID in <span class="register">B</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="692d"></span>692D</td>
 <td class="instruction">LD A,C</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
+<td class="comment-1" rowspan="1">Load the sprite attribute value into <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="692e"></span>692E</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="692f"></span>692F</td>
 <td class="instruction">LD HL,($781C)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL'</span>=*<a href="781C.html">781C</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL'</span>=*<a href="781C.html">SpriteBackgroundBuffer_Pointer</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6932"></span>6932</td>
 <td class="instruction">LD C,A</td>
-<td class="comment-1" rowspan="1"><span class="register">C'</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Load the sprite attribute value into <span class="register">C'</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6933"></span>6933</td>
 <td class="instruction">LD A,($781B)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="781B.html">781B</a>.</td>
+<td class="comment-1" rowspan="2">Load *<a href="781B.html">ActiveSpriteBlocks</a> into <span class="register">B'</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6936"></span>6936</td>
 <td class="instruction">LD B,A</td>
-<td class="comment-1" rowspan="1"><span class="register">B'</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6937"></span>6937</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6938"></span>
+<div class="comments">
+<div class="paragraph">
+Calculate the sprite data address from the frame ID.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6938"></span>6938</td>
 <td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">B</span>.</td>
+<td class="comment-1" rowspan="3">Load <span class="register">L</span> with the frame ID multiplied by 02.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6939"></span>6939</td>
 <td class="instruction">ADD A,A</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="693a"></span>693A</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="693b"></span>693B</td>
 <td class="instruction">ADC A,$BE</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=BE (including carry).</td>
+<td class="comment-1" rowspan="3">Load <span class="register">H</span> with the high byte for the graphics data: BE.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="693d"></span>693D</td>
 <td class="instruction">SUB L</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="693e"></span>693E</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="693f"></span>693F</td>
 <td class="instruction">LD A,B</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">B</span>.</td>
+<td class="comment-1" rowspan="1">Load the original frame ID into <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6940"></span>
+<div class="comments">
+<div class="paragraph">
+Fetch the sprite data.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6940"></span>6940</td>
 <td class="instruction">LD C,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">C</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6941"></span>6941</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6942"></span>6942</td>
 <td class="instruction">LD B,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6943"></span>6943</td>
 <td class="instruction">BIT 5,A</td>
 <td class="comment-1" rowspan="1">Test bit 5 of <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6945"></span>6945</td>
 <td class="instruction">JP NZ,<a href="6DA8.html">$6DA8</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="6DA8.html">6DA8</a> if {} is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6948"></span>6948</td>
 <td class="instruction">LD A,(BC)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
 </tr>
 <tr>
+<td class="asm-label">DrawSpriteObject_0</td>
 <td class="address-2"><span id="6949"></span>6949</td>
 <td class="instruction">INC BC</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="694a"></span>694A</td>
 <td class="instruction">ADD A,E</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">E</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="694b"></span>694B</td>
 <td class="instruction">LD E,A</td>
 <td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="694c"></span>694C</td>
 <td class="instruction">LD A,(BC)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="694d"></span>694D</td>
 <td class="instruction">INC BC</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label">DrawSpriteObject_1</td>
 <td class="address-2"><span id="694e"></span>694E</td>
 <td class="instruction">ADD A,D</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">D</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="694f"></span>694F</td>
 <td class="instruction">LD D,A</td>
 <td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6950"></span>6950</td>
 <td class="instruction">CP $10</td>
-<td class="comment-1" rowspan="2">Jump to <a href="692C.html#6959">6959</a> if <span class="register">A</span> is higher than 10.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="692C.html#6959">DrawSpriteObject_2</a> if <span class="register">A</span> is higher than 10.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6952"></span>6952</td>
-<td class="instruction">JR NC,<a href="692C.html#6959">$6959</a></td>
+<td class="instruction">JR NC,<a href="692C.html#6959">DrawSpriteObject_2</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6954"></span>6954</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="3">Jump to <a href="692C.html#696e">696E</a> if <span class="register">E</span> is lower than 20.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="692C.html#696e">DrawSpriteObject_4</a> if <span class="register">E</span> is lower than 20.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6955"></span>6955</td>
 <td class="instruction">CP $20</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6957"></span>6957</td>
-<td class="instruction">JR C,<a href="692C.html#696e">$696E</a></td>
+<td class="instruction">JR C,<a href="692C.html#696e">DrawSpriteObject_4</a></td>
 </tr>
 <tr>
+<td class="asm-label">DrawSpriteObject_2</td>
 <td class="address-2"><span id="6959"></span>6959</td>
 <td class="instruction">LD HL,$0008</td>
 <td class="comment-1" rowspan="4"><span class="register">BC</span>+=0008.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="695c"></span>695C</td>
 <td class="instruction">ADD HL,BC</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="695d"></span>695D</td>
 <td class="instruction">LD B,H</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="695e"></span>695E</td>
 <td class="instruction">LD C,L</td>
 </tr>
 <tr>
+<td class="asm-label">DrawSpriteObject_3</td>
 <td class="address-2"><span id="695f"></span>695F</td>
 <td class="instruction">LD A,(BC)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
@@ -241,19 +311,22 @@ Check for the terminator (FF+01 will set the Z flag).
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6960"></span>6960</td>
 <td class="instruction">INC A</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6961"></span>6961</td>
 <td class="instruction">LD A,$01</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=01.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6963"></span>6963</td>
-<td class="instruction">JR NZ,<a href="692C.html#694e">$694E</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="692C.html#694e">694E</a> if <span class="register">A</span> was not zero (on line <a href="692C.html#6960">6960</a>).</td>
+<td class="instruction">JR NZ,<a href="692C.html#694e">DrawSpriteObject_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="692C.html#694e">DrawSpriteObject_1</a> if <span class="register">A</span> was not zero (on line <a href="692C.html#6960">6960</a>).</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -266,132 +339,159 @@ We reached the terminator.
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6965"></span>6965</td>
 <td class="instruction">INC BC</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6966"></span>6966</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="692C.html#6949">6949</a> if *<span class="register">BC</span> is not equal to 80.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="692C.html#6949">DrawSpriteObject_0</a> if *<span class="register">BC</span> is not equal to 80.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6967"></span>6967</td>
 <td class="instruction">CP $80</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6969"></span>6969</td>
-<td class="instruction">JR NZ,<a href="692C.html#6949">$6949</a></td>
+<td class="instruction">JR NZ,<a href="692C.html#6949">DrawSpriteObject_0</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="696b"></span>696B</td>
 <td class="instruction">JP <a href="68EC.html">$68EC</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="68EC.html">68EC</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">DrawSpriteObject_4</td>
 <td class="address-2"><span id="696e"></span>696E</td>
 <td class="instruction">LD A,D</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="696f"></span>696F</td>
 <td class="instruction">ADD A,$40</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>+=40.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6971"></span>6971</td>
 <td class="instruction">AND %01001000</td>
 <td class="comment-1" rowspan="1">Keep only bits 3 and 6.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6973"></span>6973</td>
 <td class="instruction">LD H,A</td>
 <td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6974"></span>6974</td>
 <td class="instruction">LD A,D</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6975"></span>6975</td>
 <td class="instruction">RRCA</td>
 <td class="comment-1" rowspan="3">Rotate <span class="register">A</span> right three positions (bits 0 to 2 are now in positions 5 to 7).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6976"></span>6976</td>
 <td class="instruction">RRCA</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6977"></span>6977</td>
 <td class="instruction">RRCA</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6978"></span>6978</td>
 <td class="instruction">AND %11100000</td>
 <td class="comment-1" rowspan="1">Keep only bits 5-7.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="697a"></span>697A</td>
 <td class="instruction">ADD A,E</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">E</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="697b"></span>697B</td>
 <td class="instruction">LD L,A</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="697c"></span>697C</td>
 <td class="instruction">CALL <a href="68F6.html">DrawSprite</a></td>
 <td class="comment-1" rowspan="1">Call <a href="68F6.html">DrawSprite</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="697f"></span>697F</td>
 <td class="instruction">INC H</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">H</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6980"></span>6980</td>
 <td class="instruction">CALL <a href="68F6.html">DrawSprite</a></td>
 <td class="comment-1" rowspan="1">Call <a href="68F6.html">DrawSprite</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6983"></span>6983</td>
 <td class="instruction">CALL <a href="6910.html">ScreenBufferToAttributeBuffer</a></td>
 <td class="comment-1" rowspan="1">Call <a href="6910.html">ScreenBufferToAttributeBuffer</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6986"></span>6986</td>
-<td class="instruction">JR <a href="692C.html#695f">$695F</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="692C.html#695f">695F</a>.</td>
+<td class="instruction">JR <a href="692C.html#695f">DrawSpriteObject_3</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="692C.html#695f">DrawSpriteObject_3</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6988"></span>6988</td>
 <td class="instruction">LD ($7825),A</td>
 <td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7825.html">7825</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="698b"></span>698B</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="698c"></span>698C</td>
 <td class="instruction">LD (HL),A</td>
 <td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="698d"></span>698D</td>
 <td class="instruction">LD H,B</td>
 <td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">B</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="698e"></span>698E</td>
 <td class="instruction">LD L,C</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="698f"></span>698F</td>
 <td class="instruction">JP <a href="691B.html">ColouriseSprite</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="691B.html">ColouriseSprite</a>.</td>

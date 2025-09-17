@@ -35,13 +35,13 @@ Next: <a href="28483.html">28483</a>
 </td>
 </tr>
 </table>
-<div class="description">28184: Remove Sprite?</div>
+<div class="description">28184: Routine at 6E18</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="27648.html">27648</a>.
+Used by the routine at <a href="27648.html">Game_Loop</a>.
 </div>
 </div>
 </td>
@@ -49,8 +49,8 @@ Used by the routine at <a href="27648.html">27648</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-2"><span id="28184"></span>28184</td>
-<td class="instruction">CALL <a href="26797.html">RemoveSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprite</a>.</td>
+<td class="instruction">CALL <a href="26797.html">RemoveSprites</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprites</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -79,7 +79,7 @@ Used by the routine at <a href="27648.html">27648</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28195"></span>28195</td>
 <td class="instruction">LD (30772),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30772.html">Wheelie</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30772.html">PlayerSpriteID</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -127,7 +127,7 @@ Used by the routine at <a href="27648.html">27648</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28210"></span>28210</td>
 <td class="instruction">LD HL,30771</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30771.html">30771</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30771.html">PlayerPosition_Y</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -222,8 +222,8 @@ Used by the routine at <a href="27648.html">27648</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-2"><span id="28241"></span>28241</td>
-<td class="instruction">CALL <a href="27437.html">27437</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27437.html">27437</a>.</td>
+<td class="instruction">CALL <a href="27437.html">Handler: PlayerSprite</a></td>
+<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler: PlayerSprite</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -271,8 +271,8 @@ Used by the routine at <a href="27648.html">27648</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28254"></span>28254</td>
-<td class="instruction">CALL <a href="27437.html">27437</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27437.html">27437</a>.</td>
+<td class="instruction">CALL <a href="27437.html">Handler: PlayerSprite</a></td>
+<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler: PlayerSprite</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -344,7 +344,7 @@ Used by the routine at <a href="27648.html">27648</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28276"></span>28276</td>
 <td class="instruction">LD A,(30771)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30771.html">30771</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30771.html">PlayerPosition_Y</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -740,8 +740,8 @@ This entry point is used by the routines at <a href="29025.html">29025</a> and <
 <tr>
 <td class="asm-label"></td>
 <td class="address-2"><span id="28372"></span>28372</td>
-<td class="instruction">CALL <a href="26797.html">RemoveSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprite</a>.</td>
+<td class="instruction">CALL <a href="26797.html">RemoveSprites</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprites</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -885,25 +885,23 @@ This entry point is used by the routines at <a href="29025.html">29025</a> and <
 <td class="asm-label"></td>
 <td class="address-1"><span id="28420"></span>28420</td>
 <td class="instruction">LD HL,0</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=0000.</td>
+<td class="comment-1" rowspan="2">Write 0000 to *<a href="30740.html">30740</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28423"></span>28423</td>
 <td class="instruction">LD (30740),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30740.html">30740</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28426"></span>28426</td>
 <td class="instruction">LD HL,(30774)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30774.html">30774</a>.</td>
+<td class="comment-1" rowspan="2">Write *<a href="30774.html">30774</a> to *<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28429"></span>28429</td>
 <td class="instruction">LD (30766),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30766.html">LevelProgressPointer</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -981,7 +979,7 @@ This entry point is used by the routines at <a href="29025.html">29025</a> and <
 <td class="asm-label"></td>
 <td class="address-1"><span id="28451"></span>28451</td>
 <td class="instruction">LD (30771),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30771.html">30771</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30771.html">PlayerPosition_Y</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

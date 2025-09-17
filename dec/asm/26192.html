@@ -41,7 +41,7 @@ Next: <a href="26361.html">26361</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">27648</a> and <a href="28184.html">28184</a>.
+Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">Game_Loop</a> and <a href="28184.html">28184</a>.
 </div>
 </div>
 </td>
@@ -49,12 +49,12 @@ Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">276
 <tr>
 <td class="address-2"><span id="26192"></span>26192</td>
 <td class="instruction">LD HL,(30743)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30743.html">30743</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30743.html">Current_ScreenPosition</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26195"></span>26195</td>
 <td class="instruction">LD A,(30745)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="26192.html#26215">26215</a> if *<a href="30745.html">30745</a> is not zero.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="26192.html#26215">26215</a> if *<a href="30745.html">ScrollPhase_Counter</a> is not zero.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26198"></span>26198</td>
@@ -98,7 +98,7 @@ Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">276
 <tr>
 <td class="address-1"><span id="26210"></span>26210</td>
 <td class="instruction">LD (30743),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30743.html">30743</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30743.html">Current_ScreenPosition</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26213"></span>26213</td>
@@ -113,7 +113,7 @@ Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">276
 <tr>
 <td class="address-1"><span id="26216"></span>26216</td>
 <td class="instruction">LD (30745),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30745.html">30745</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30745.html">ScrollPhase_Counter</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26219"></span>26219</td>
@@ -132,8 +132,8 @@ Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">276
 </tr>
 <tr>
 <td class="address-1"><span id="26223"></span>26223</td>
-<td class="instruction">CALL <a href="25956.html">25956</a></td>
-<td class="comment-1" rowspan="1">Call <a href="25956.html">25956</a>.</td>
+<td class="instruction">CALL <a href="25956.html">PrepareScrollData</a></td>
+<td class="comment-1" rowspan="1">Call <a href="25956.html">PrepareScrollData</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="26226"></span>26226</td>

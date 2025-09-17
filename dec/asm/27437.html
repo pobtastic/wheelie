@@ -35,72 +35,86 @@ Next: <a href="27460.html">27460</a>
 </td>
 </tr>
 </table>
-<div class="description">27437: Routine at 6B2D</div>
+<div class="description">27437: Handler: Player Sprite</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="28184.html">28184</a>, <a href="29457.html">29457</a>, <a href="30268.html">30268</a> and <a href="30423.html">30423</a>.
+Used by the routines at <a href="28184.html">28184</a>, <a href="29457.html">29457</a>, <a href="30268.html">Handler_Fuel</a> and <a href="30423.html">30423</a>.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">Handler: PlayerSprite</td>
 <td class="address-2"><span id="27437"></span>27437</td>
 <td class="instruction">LD A,(30754)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
+<td class="comment-1" rowspan="1">Load <span class="register">A</span> with *<a href="30754.html">Speed</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27440"></span>27440</td>
 <td class="instruction">LD E,13</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=13.</td>
+<td class="comment-1" rowspan="1">Set the sprite offset in <span class="register">E</span> (13 bytes).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27442"></span>27442</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="2">Jump to <a href="27437.html#27448">27448</a> if *<a href="30754.html">Speed</a> is higher than 128 (i.e. moving right).</td>
+<td class="comment-1" rowspan="1">Check the direction bit.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27444"></span>27444</td>
-<td class="instruction">JR NZ,<a href="27437.html#27448">27448</a></td>
+<td class="instruction">JR NZ,<a href="27437.html#27448">SetPlayerSpriteDirection</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="27437.html#27448">SetPlayerSpriteDirection</a> if the player is moving fowards.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27446"></span>27446</td>
 <td class="instruction">LD E,18</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=18.</td>
+<td class="comment-1" rowspan="1">Set an alternate sprite offset for the left-facing sprite (18 bytes).</td>
 </tr>
 <tr>
+<td class="asm-label">SetPlayerSpriteDirection</td>
 <td class="address-2"><span id="27448"></span>27448</td>
 <td class="instruction">LD C,7</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=7.</td>
+<td class="comment-1" rowspan="1">Set 
+
+
+WHITE to <span class="register">C</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27450"></span>27450</td>
 <td class="instruction">LD HL,30771</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="30771.html">30771</a>.</td>
+<td class="comment-1" rowspan="2">Fetch <a href="30771.html">PlayerPosition_Y</a> in <span class="register">D</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27453"></span>27453</td>
 <td class="instruction">LD D,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27454"></span>27454</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
+<td class="comment-1" rowspan="2">Fetch <a href="30772.html">PlayerSpriteID</a> in <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27455"></span>27455</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27456"></span>27456</td>
-<td class="instruction">CALL <a href="26924.html">26924</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26924.html">26924</a>.</td>
+<td class="instruction">CALL <a href="26924.html">DrawSpriteObject</a></td>
+<td class="comment-1" rowspan="1">Call <a href="26924.html">DrawSpriteObject</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="27459"></span>27459</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

@@ -75,7 +75,7 @@ Used by the routine at <a href="6500.html">InitialiseLevel</a>.
 <td class="asm-label">CopyLevelDataToBuffer_CopyByte</td>
 <td class="address-2"><span id="6428"></span>6428</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-1" rowspan="1">Fetch a byte from the source data.</td>
+<td class="comment-1" rowspan="1">Fetch a terrain byte from the source data.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -121,17 +121,19 @@ Handle updating the destination pointer positioning after each row.
 <td class="asm-label"></td>
 <td class="address-1"><span id="642f"></span>642F</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="3">Keep only the upper 3 bits of the <span class="register">E</span> co-ordinate.</td>
+<td class="comment-1" rowspan="1">Align to a 20 byte boundary.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6430"></span>6430</td>
 <td class="instruction">AND %11100000</td>
+<td class="comment-1" rowspan="1">Keep only the upper 3 bits of the <span class="register">E</span> co-ordinate.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6432"></span>6432</td>
 <td class="instruction">LD E,A</td>
+<td class="comment-1" rowspan="1">Reset to the start of the current 20 byte block.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -156,7 +158,7 @@ Handle updating the destination pointer positioning after each row.
 <span id="6437"></span>
 <div class="comments">
 <div class="paragraph">
-Adjust the destination pointer after copying a complete block.
+Adjust the destination pointer after copying a complete 05x20 block.
 </div>
 </div>
 </td>
@@ -177,7 +179,7 @@ Adjust the destination pointer after copying a complete block.
 <td class="asm-label"></td>
 <td class="address-1"><span id="643a"></span>643A</td>
 <td class="instruction">RET Z</td>
-<td class="comment-1" rowspan="1">Return if <span class="register">E</span> wrapped around to 00 (reached the end of the buffer).</td>
+<td class="comment-1" rowspan="1">Return if <span class="register">E</span> wrapped around to 00 (we reached the end of the buffer).</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">

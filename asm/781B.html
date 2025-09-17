@@ -35,15 +35,22 @@ Next: <a href="781C.html">781C</a>
 </td>
 </tr>
 </table>
-<div class="description">781B: Game status buffer entry at 781B</div>
+<div class="description">781B: Active Sprite Blocks</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+The number of sprite character blocks (8x8 pixels) currently active.
+</div>
+<div class="paragraph">
+A single sprite may span multiple character blocks, this is where it's tracked.
+</div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">ActiveSpriteBlocks</td>
 <td class="address-1"><span id="781b"></span>781B</td>
 <td class="instruction">DEFB $00</td>
 <td class="comment-0" rowspan="1"></td>
