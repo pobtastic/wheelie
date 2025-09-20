@@ -1630,8 +1630,24 @@ c$692C LD B,A        ; Store the sprite frame ID in #REGb.
  $6938 LD A,B        ; {Load #REGl with the frame ID multiplied by #N$02.
  $6939 ADD A,A       ;
  $693A LD L,A        ; }
- $693B ADC A,$BE     ; {Load #REGh with the high byte for the graphics data:
- $693D SUB L         ; #N$BE.
+; This is quite clever, and very subtle. It's probably easier here to
+; show examples:
+; #TABLE(default,centre,centre)
+;   { =h Input Value | =h Output in #REGhl }
+;   #FOREACH($87,$C7)(n,{ #Nn | #SIM(start=$692C,stop=$693F,a=n)#R({sim[HL]})(#N({sim[HL]})) })
+; TABLE#
+; From a quick glance, the following code looks pretty straight-forward, just a
+; little strange: #REGh=(frame ID * #N$02) + #N$BE - (frame ID * #N$02).
+; .
+; #HTML(The cleverness here is with the carry flag and the <code>ADC</code>
+; instruction.)
+; .
+; #HTML(When the multiplication of the frame ID passes #N$100, the carry flag
+; is set and this is included when adding the graphics high byte #N$BE. The
+; <code>SUB #REGl</code> then removes the "frame ID * #N$02" part, leaving just
+; #N$BE + carry flag.)
+ $693B ADC A,$BE     ; {Load #REGh with the high byte for the graphics data: #N$BE + the
+ $693D SUB L         ; carry flag.
  $693E LD H,A        ; }
  $693F LD A,B        ; Load the original frame ID into #REGa.
 ; Fetch the sprite data.
@@ -1653,6 +1669,7 @@ c$692C LD B,A        ; Store the sprite frame ID in #REGb.
  $6954 LD A,E        ; {Jump to #R$696E if #REGe is lower than #N$20.
  $6955 CP $20        ;
  $6957 JR C,$696E    ; }
+@label=CheckNextFrame
 *$6959 LD HL,$0008   ; {#REGbc+=#N($0008,$04,$04).
  $695C ADD HL,BC     ;
  $695D LD B,H        ;
@@ -1679,16 +1696,16 @@ c$692C LD B,A        ; Store the sprite frame ID in #REGb.
  $6978 AND %11100000 ; Keep only bits 5-7.
  $697A ADD A,E       ; #REGa+=#REGe.
  $697B LD L,A        ; #REGl=#REGa.
- $697C CALL $68F6    ; Call #R$68F6.
- $697F INC H         ; Increment #REGh by one.
- $6980 CALL $68F6    ; Call #R$68F6.
+ $697C CALL $68F6    ; Call #R$68F6 to draw the top of the sprite.
+ $697F INC H         ; Move to the next screen row.
+ $6980 CALL $68F6    ; Call #R$68F6 to draw the bottom of the sprite.
  $6983 CALL $6910    ; Call #R$6910.
  $6986 JR $695F      ; Jump to #R$695F.
  $6988 LD ($7825),A  ; Write #REGa to *#R$7825.
  $698B EXX           ; Switch to the shadow registers.
  $698C LD (HL),A     ; Write #REGa to *#REGhl.
- $698D LD H,B        ; #REGh=#REGb.
- $698E LD L,C        ; #REGl=#REGc.
+ $698D LD H,B        ; Load the active sprite block count into #REGh.
+ $698E LD L,C        ; Load the attribute byte into #REGl.
  $698F JP $691B      ; Jump to #R$691B.
 
 ; Unused
@@ -4400,8 +4417,8 @@ c$76D7 CALL $692C    ; Call #R$692C.
  $77B9 NOP           ;
  $77BA NOP           ;
  $77BB NOP           ; }
- $77BC LD HL,$7839   ; #REGhl=#R$7839.
- $77BF LD (HL),$05   ; Write #N$05 to *#REGhl.
+ $77BC LD HL,$7839   ; {Write #N$05 to *#R$7839.
+ $77BF LD (HL),$05   ; }
  $77C1 CALL $ED39    ; Call #R$ED39.
 ; Print the "#STR($BAC6,$03,$20)" messaging in the footer.
 ; .
@@ -4511,7 +4528,8 @@ g$7822 DEFB $00      ; Pivots around #N$80 for direction - right >= #N$80, left
 ; Game status buffer entry at 7824
 g$7824 DEFB $02
 
-; Game status buffer entry at 7825
+; Sprite State
+@label=SpriteState
 g$7825 DEFB $00
 
 ; Game status buffer entry at 7826
@@ -4570,9 +4588,10 @@ g$783A DEFW $0000
 
 ; Fuel
 @label=Fuel
-g$783C DEFB $00
- $783D DEFB $01
- $783E DEFB $00,$00
+g$783C DEFW $0100
+
+; Game status buffer entry at 783E
+g$783E DEFB $00,$00
 
 ; Game status buffer entry at 7840
 g$7840 DEFB $00
@@ -4613,7 +4632,8 @@ g$7853 DEFB $05
 ; Game status buffer entry at 7858
 g$7858 DEFB $00,$04
 
-; Game status buffer entry at 785A
+; Frame Count
+@label=FrameCount
 g$785A DEFB $04
 
 ; AGF Interface KeyMap
@@ -6147,40 +6167,44 @@ b$BDB8 DEFB $88,$23,$89,$24,$8A,$25,$8B,$26
  $BDE8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $BDF0 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $BDF8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $BE00 DEFB $77,$D9,$CC,$D9,$94,$C5,$DE,$C5
- $BE08 DEFB $20,$C6,$62,$C6,$A4,$C6,$F1,$C6
- $BE10 DEFB $3E,$C7,$83,$C7,$D8,$C7,$25,$C8
- $BE18 DEFB $67,$C8,$B1,$C8,$FB,$C8,$3D,$C9
- $BE20 DEFB $0E,$CE,$58,$CE,$A2,$CE,$F7,$CE
- $BE28 DEFB $3C,$CF,$86,$CF,$D0,$CF,$1A,$D0
- $BE30 DEFB $77,$D0,$CF,$D0,$11,$D1,$6E,$D1
- $BE38 DEFB $DC,$D1,$42,$D2,$C8,$D2,$23,$D3
- $BE40 DEFB $00,$C5,$4A,$C5,$94,$C5,$DE,$C5
- $BE48 DEFB $20,$C6,$62,$C6,$A4,$C6,$F1,$C6
- $BE50 DEFB $3E,$C7,$83,$C7,$D8,$C7,$25,$C8
- $BE58 DEFB $67,$C8,$B1,$C8,$FB,$C8,$3D,$C9
- $BE60 DEFB $0E,$CE,$58,$CE,$A2,$CE,$F7,$CE
- $BE68 DEFB $3C,$CF,$86,$CF,$D0,$CF,$1A,$D0
- $BE70 DEFB $77,$D0,$CF,$D0,$11,$D1,$6E,$D1
- $BE78 DEFB $DC,$D1,$42,$D2,$C8,$D2,$23,$D3
- $BE80 DEFB $29,$D9,$50,$D9,$1B,$CA,$65,$CA
- $BE88 DEFB $A7,$CA,$E9,$CA,$2B,$CB,$78,$CB
- $BE90 DEFB $C5,$CB,$0A,$CC,$5F,$CC,$AC,$CC
- $BE98 DEFB $EE,$CC,$38,$CD,$82,$CD,$C4,$CD
- $BEA0 DEFB $21,$DA,$6B,$DA,$B5,$DA,$0A,$DB
- $BEA8 DEFB $4F,$DB,$99,$DB,$E3,$DB,$2D,$DC
- $BEB0 DEFB $8A,$DC,$E2,$DC,$24,$DD,$81,$DD
- $BEB8 DEFB $EF,$DD,$55,$DE,$DB,$DE,$36,$DF
- $BEC0 DEFB $87,$C9,$D1,$C9,$1B,$CA,$65,$CA
- $BEC8 DEFB $A7,$CA,$E9,$CA,$2B,$CB,$78,$CB
- $BED0 DEFB $C5,$CB,$0A,$CC,$5F,$CC,$AC,$CC
- $BED8 DEFB $EE,$CC,$38,$CD,$82,$CD,$C4,$CD
- $BEE0 DEFB $21,$DA,$6B,$DA,$B5,$DA,$0A,$DB
- $BEE8 DEFB $4F,$DB,$99,$DB,$E3,$DB,$2D,$DC
- $BEF0 DEFB $8A,$DC,$E2,$DC,$24,$DD,$81,$DD
- $BEF8 DEFB $EF,$DD,$55,$DE,$DB,$DE,$36,$DF
- $BF00 DEFB $86,$D3,$DC,$D3,$26,$D4,$7B,$D4
- $BF08 DEFB $C5,$D4,$25,$D5,$85,$D5,$CA,$D5
+
+; Game status buffer entry at BE00
+g$BE00 DEFW $D977
+ $BE02 DEFB $CC,$D9,$94,$C5,$DE,$C5,$20,$C6
+ $BE0A DEFB $62,$C6,$A4,$C6,$F1,$C6,$3E,$C7
+ $BE12 DEFB $83,$C7,$D8,$C7,$25,$C8,$67,$C8
+ $BE1A DEFB $B1,$C8,$FB,$C8,$3D,$C9,$0E,$CE
+ $BE22 DEFB $58,$CE,$A2,$CE,$F7,$CE,$3C,$CF
+ $BE2A DEFB $86,$CF,$D0,$CF,$1A,$D0,$77,$D0
+ $BE32 DEFB $CF,$D0,$11,$D1,$6E,$D1,$DC,$D1
+ $BE3A DEFB $42,$D2,$C8,$D2,$23,$D3,$00,$C5
+ $BE42 DEFB $4A,$C5,$94,$C5,$DE,$C5,$20,$C6
+ $BE4A DEFB $62,$C6,$A4,$C6,$F1,$C6,$3E,$C7
+ $BE52 DEFB $83,$C7,$D8,$C7,$25,$C8,$67,$C8
+ $BE5A DEFB $B1,$C8,$FB,$C8,$3D,$C9,$0E,$CE
+ $BE62 DEFB $58,$CE,$A2,$CE,$F7,$CE,$3C,$CF
+ $BE6A DEFB $86,$CF,$D0,$CF,$1A,$D0,$77,$D0
+ $BE72 DEFB $CF,$D0,$11,$D1,$6E,$D1,$DC,$D1
+ $BE7A DEFB $42,$D2,$C8,$D2,$23,$D3,$29,$D9
+ $BE82 DEFB $50,$D9,$1B,$CA,$65,$CA,$A7,$CA
+ $BE8A DEFB $E9,$CA,$2B,$CB,$78,$CB,$C5,$CB
+ $BE92 DEFB $0A,$CC,$5F,$CC,$AC,$CC,$EE,$CC
+ $BE9A DEFB $38,$CD,$82,$CD,$C4,$CD,$21,$DA
+ $BEA2 DEFB $6B,$DA,$B5,$DA,$0A,$DB,$4F,$DB
+ $BEAA DEFB $99,$DB,$E3,$DB,$2D,$DC,$8A,$DC
+ $BEB2 DEFB $E2,$DC,$24,$DD,$81,$DD,$EF,$DD
+ $BEBA DEFB $55,$DE,$DB,$DE,$36,$DF,$87,$C9
+ $BEC2 DEFB $D1,$C9,$1B,$CA,$65,$CA,$A7,$CA
+ $BECA DEFB $E9,$CA,$2B,$CB,$78,$CB,$C5,$CB
+ $BED2 DEFB $0A,$CC,$5F,$CC,$AC,$CC,$EE,$CC
+ $BEDA DEFB $38,$CD,$82,$CD,$C4,$CD,$21,$DA
+ $BEE2 DEFB $6B,$DA,$B5,$DA,$0A,$DB,$4F,$DB
+ $BEEA DEFB $99,$DB,$E3,$DB,$2D,$DC,$8A,$DC
+ $BEF2 DEFB $E2,$DC,$24,$DD,$81,$DD,$EF,$DD
+ $BEFA DEFB $55,$DE,$DB,$DE,$36,$DF,$86,$D3
+ $BF02 DEFB $DC,$D3,$26,$D4,$7B,$D4,$C5,$D4
+ $BF0A DEFB $25,$D5,$85,$D5
+ $BF0E DEFW $D5CA
  $BF10 DEFB $17,$D6,$3E,$D6,$52,$D6,$79,$D6
  $BF18 DEFB $A0,$D6,$D2,$D6,$04,$D7,$41,$D7
  $BF20 DEFB $60,$D7,$87,$D7,$A6,$D7,$CD,$D7
@@ -6196,7 +6220,8 @@ b$BDB8 DEFB $88,$23,$89,$24,$8A,$25,$8B,$26
  $BF70 DEFB $7B,$D8,$B5,$D8,$EF,$D8,$29,$D9
  $BF78 DEFB $50,$D9,$77,$D9,$CC,$D9,$00,$C5
  $BF80 DEFB $99,$DF,$EF,$DF,$39,$E0,$8E,$E0
- $BF88 DEFB $D8,$E0,$38,$E1,$98,$E1,$DD,$E1
+ $BF88 DEFB $D8,$E0,$38,$E1,$98,$E1
+ $BF8E DEFW $E1DD
  $BF90 DEFB $2A,$E2,$51,$E2,$65,$E2,$8C,$E2
  $BF98 DEFB $B3,$E2,$E5,$E2,$17,$E3,$54,$E3
  $BFA0 DEFB $73,$E3,$9A,$E3,$B9,$E3,$E0,$E3
@@ -9174,9 +9199,9 @@ c$E84D LD ($783E),HL ; Write #REGhl to *#R$783E.
  $E861 RET Z         ; }
  $E862 LD A,$4B      ; {Write #N$4B to *#R$7852.
  $E864 LD ($7852),A  ; }
- $E867 LD A,($783D)  ; #REGa=*#R$783D.
+ $E867 LD A,($783D)  ; #REGa=*#R$783C(#N$783D).
  $E86A SUB $08       ; #REGa-=#N$08.
- $E86C LD ($783D),A  ; Write #REGa to *#R$783D.
+ $E86C LD ($783D),A  ; Write #REGa to *#R$783C(#N$783D).
  $E86F POP HL        ; Restore #REGhl from the stack.
  $E870 RET           ; Return.
 
@@ -9187,7 +9212,7 @@ t$E871 DEFM "WELCOME TO THE WORLD OF WHEELIE!" ; "#STR(#PC,$04,$20)".
 ; Display Start Screen
 ;
 ; Used by the routine at #R$E80E.
-;       #UDGTABLE(default,centre) { #PUSHS #SIM(start=$E821,stop=$E8DD) #SCR$02(start-screen) #POPS } UDGTABLE#
+; #UDGTABLE(default,centre) { #PUSHS #SIM(start=$E821,stop=$E8DD) #SCR$02(start-screen) #POPS } UDGTABLE#
 ;
 ; .
 ;
@@ -9490,34 +9515,39 @@ c$EBE6 LD B,$05      ; #REGb=#N$05 (counter).
                      ; counter is zero.
  $EBF2 RET           ; Return.
 
-; Routine at EBF3
+; Frame Synchronisation
 ;
 ; Used by the routine at #R$763C.
+@label=WaitForNextFrame
 c$EBF3 LD A,($785A)  ; #REGa=*#R$785A.
 ; This entry point is used by the routine at #R$6CAA.
+@label=WaitForFrameChange
 *$EBF6 LD HL,$5C78   ; #HTML(#REGhl=<a rel="noopener nofollow"
                      ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
-*$EBF9 CP (HL)       ; {Jump to #R$EBF9 if #REGa is not equal to *#REGhl.
- $EBFA JR NZ,$EBF9   ; }
+; Wait loop, hold further execution until the frame counter changes to
+; the stored value.
+@label=FrameSyncLoop
+*$EBF9 CP (HL)       ; {#HTML(Keep jumping back to #R$EBF9 until
+ $EBFA JR NZ,$EBF9   ; <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>
+                     ; matches *#R$785A.)}
  $EBFC JP $6C00      ; Jump to #R$6C00.
 
 ; Unused
 u$EBFF DEFB $00
 
-; Routine at EC00
+; Frame Synchronisation Check
 ;
-; Used by the routine at #R$6D49.
+; Check if this is a new video frame and jump to the game loop if it is.
+@label=FrameSyncCheck
 c$EC00 EXX           ; Switch to the shadow registers.
- $EC01 LD C,A        ; #REGc'=#REGa.
- $EC02 LD A,($785A)  ; #REGa=*#R$785A.
- $EC05 LD HL,$5C78   ; #HTML(#REGhl'=<a rel="noopener nofollow"
-                     ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
- $EC08 CP (HL)       ; Compare #REGa with *#REGhl'.
- $EC09 LD A,C        ; #REGa=#REGc'.
+ $EC01 LD C,A        ; Save the #REGa register to #REGc' temporarily.
+ $EC02 LD A,($785A)  ; {#HTML(Compare *#R$785A to
+ $EC05 LD HL,$5C78   ; <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>
+ $EC08 CP (HL)       ; ).}
+ $EC09 LD A,C        ; Restore #REGa back to its original value.
  $EC0A EXX           ; Switch back to the normal registers.
- $EC0B RET NZ        ; Return if #REGa was not equal to *#REGhl' on line
-                     ; #R$EC08.
- $EC0C JP $6C00      ; Jump to #R$6C00.
+ $EC0B RET NZ        ; Return if this is still the same frame.
+ $EC0C JP $6C00      ; Jump to #R$6C00 if a new frame has started.
 
 ; Routine at EC0F
 ;
@@ -9645,18 +9675,18 @@ c$EC6E LD (IY+$07),$00 ; #HTML(Write #N$00 (cursor type "C", "K" or "L") to
  $EC72 SET 3,(IY+$30)  ; #HTML(Set CAPS LOCK on, using bit 3 of *<a
                        ; rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>).
- $EC76 LD HL,$5C3B     ; #HTML(#REGhl=<a rel="noopener nofollow"
-                       ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
- $EC79 RES 5,(HL)      ; #HTML(Reset bit 5 of
-                       ; *<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
-                       ; which resets "when a new key has been pressed".)
-*$EC7B BIT 5,(HL)      ; {Jump to #R$EC7B if no key was pressed.
+ $EC76 LD HL,$5C3B     ; {#HTML(Reset bit 5 of
+ $EC79 RES 5,(HL)      ; *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
+                       ; which resets "when a new key has been pressed".)}
+@label=PlayerInput_Loop
+*$EC7B BIT 5,(HL)      ; {Keep jumping back to #R$EC7B until a key was pressed.
  $EC7D JR Z,$EC7B      ; }
+; Check which key was pressed.
  $EC7F LD A,($5C08)    ; #HTML(#REGa=<a rel="noopener nofollow"
                        ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
- $EC82 CP $80          ; {Jump to #N$EC6F if #REGa is higher than #N$80.
- $EC84 JR NC,$EC6F     ; }
- $EC86 CP $60          ; {Return if #REGa is lower than #N$60.
+ $EC82 CP $80          ; {Jump to #N$EC6F if the ASCII value of the pressed key is #N$80 or
+ $EC84 JR NC,$EC6F     ; higher (anything higher is invalid).}
+ $EC86 CP $60          ; {Return if the ASCII value is #N$60 or lower.
  $EC88 RET C           ; }
  $EC89 RES 5,A         ; Reset bit 5 of #REGa.
  $EC8B RET             ; Return.

@@ -35,7 +35,7 @@ For infinite fuel:
 
 <hr />
 
-Fuel is held by #R$783C(#N$783C) and #R$783D(#N$783D). This changes the
+Fuel is held by #R$783C(#N$783C) and #R$783C(#N$783D). This changes the
 following two instances where the fuel is decreased.
 
 Altering where the decreased fuel is written back to #R$783C:
@@ -70,7 +70,7 @@ And similarly, altering:
   <tbody>
     <tr>
       <td class="address-1">#R$E867</td>
-      <td class="instruction">LD #REGa,#R$783D(#N$783D)</td>
+      <td class="instruction">LD #REGa,#R$783C(#N$783D)</td>
     </tr>
     <tr>
       <td class="address-1">#R$E86A</td>
@@ -78,18 +78,18 @@ And similarly, altering:
     </tr>
     <tr>
       <td class="address-1">#R$E86C</td>
-      <td class="instruction">LD (#R$783D(#N$783D)),#REGa</td>
+      <td class="instruction">LD (#R$783C(#N$783D)),#REGa</td>
     </tr>
   </tbody>
 </table>
 
-For a similar outcome (LoaDing into #REGa instead of writing to #R$783D:
+For a similar outcome (LoaDing into #REGa instead of writing to #R$783C(#N$783D):
 
 <table>
   <tbody>
     <tr>
       <td class="address-1">#R$E86C</td>
-      <td class="instruction">LD #REGa,(#R$783D(#N$783D))</td>
+      <td class="instruction">LD #REGa,(#R$783C(#N$783D))</td>
     </tr>
   </tbody>
 </table>

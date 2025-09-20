@@ -870,7 +870,24 @@ R $692C C Sprite colour
   $6937,$01 Switch back to the normal registers.
 N $6938 Calculate the sprite data address from the frame ID.
   $6938,$03 Load #REGl with the frame ID multiplied by #N$02.
-  $693B,$04 Load #REGh with the high byte for the graphics data: #N$BE.
+N $693B This is quite clever, and very subtle. It's probably easier here to
+. show examples:
+. #TABLE(default,centre,centre)
+.   { =h Input Value | =h Output in #REGhl }
+.   #FOREACH($87,$C7)(n,{ #Nn | #SIM(start=$692C,stop=$693F,a=n)#R({sim[HL]})(#N({sim[HL]})) })
+. TABLE#
+. From a quick glance, the following code looks pretty straight-forward, just a
+. little strange: #REGh=(frame ID * #N$02) + #N$BE - (frame ID * #N$02).
+.
+. #HTML(The cleverness here is with the carry flag and the <code>ADC</code>
+. instruction.)
+.
+. #HTML(When the multiplication of the frame ID passes #N$100, the carry flag
+. is set and this is included when adding the graphics high byte #N$BE. The
+. <code>SUB #REGl</code> then removes the "frame ID * #N$02" part, leaving just
+. #N$BE + carry flag.)
+  $693B,$04 Load #REGh with the high byte for the graphics data: #N$BE + the
+. carry flag.
   $693F,$01 Load the original frame ID into #REGa.
 N $6940 Fetch the sprite data.
   $6940,$01 #REGc=*#REGhl.
@@ -892,6 +909,7 @@ N $6940 Fetch the sprite data.
   $695C,$01 #REGhl+=#REGbc.
   $695D,$01 #REGb=#REGh.
   $695E,$01 #REGc=#REGl.
+@ $6959 label=CheckNextFrame
 M $6959,$06 #REGbc+=#N($0008,$04,$04).
   $695F,$01 #REGa=*#REGbc.
 N $6960 Check for the terminator (#N$FF+#N$01 will set the Z flag).
@@ -911,16 +929,17 @@ N $6965 We reached the terminator.
   $6978,$02,b$01 Keep only bits 5-7.
   $697A,$01 #REGa+=#REGe.
   $697B,$01 #REGl=#REGa.
-  $697C,$03 Call #R$68F6.
-  $697F,$01 Increment #REGh by one.
-  $6980,$03 Call #R$68F6.
+  $697C,$03 Call #R$68F6 to draw the top of the sprite.
+  $697F,$01 Move to the next screen row.
+  $6980,$03 Call #R$68F6 to draw the bottom of the sprite.
   $6983,$03 Call #R$6910.
   $6986,$02 Jump to #R$695F.
+
   $6988,$03 Write #REGa to *#R$7825.
   $698B,$01 Switch to the shadow registers.
   $698C,$01 Write #REGa to *#REGhl.
-  $698D,$01 #REGh=#REGb.
-  $698E,$01 #REGl=#REGc.
+  $698D,$01 Load the active sprite block count into #REGh.
+  $698E,$01 Load the attribute byte into #REGl.
   $698F,$03 Jump to #R$691B.
 
 u $6992
@@ -2537,8 +2556,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $77B2,$03 Call #R$7420.
   $77B5,$03 Call #R$68AD.
   $77B8,$04 No operation.
-  $77BC,$03 #REGhl=#R$7839.
-  $77BF,$02 Write #N$05 to *#REGhl.
+  $77BC,$05 Write #N$05 to *#R$7839.
   $77C1,$03 Call #R$ED39.
 N $77C4 Print the "#STR($BAC6,$03,$20)" messaging in the footer.
 N $77C4 #HTML(#FONT:(NEW CODE ABCDE-PRESS KEY TO PLAY)$3D00,attr=$9F(new-code))
@@ -2620,7 +2638,9 @@ B $7823,$01 Mirror of speed? Doesn't seem to be used. TODO.
 g $7824
 B $7824,$01
 
-g $7825
+g $7825 Sprite State
+@ $7825 label=SpriteState
+B $7825,$01
 
 g $7826
 
@@ -2672,7 +2692,9 @@ W $783A,$02
 
 g $783C Fuel
 @ $783C label=Fuel
-B $783C,$02,$01
+W $783C,$02
+
+g $783E
 
 g $7840
 
@@ -2707,7 +2729,9 @@ B $7857,$01
 
 g $7858
 
-g $785A
+g $785A Frame Count
+@ $785A label=FrameCount
+B $785A,$01
 
 g $785B AGF Interface KeyMap
 @ $785B label=AGFInterfaceKeyMap
@@ -2933,6 +2957,11 @@ b $BD0E
 b $BD34
 
 b $BDB8
+
+g $BE00
+W $BE00,$02
+W $BF0E,$02
+W $BF8E,$02
 
 t $C3E0 Messaging: MPH
 @ $C3E0 label=Messaging_MPH
@@ -4312,9 +4341,9 @@ c $E84D
   $E85B,$01 Return.
   $E85C,$06 Return if bit 4 of *#R$7828 is zero.
   $E862,$05 Write #N$4B to *#R$7852.
-  $E867,$03 #REGa=*#R$783D.
+  $E867,$03 #REGa=*#R$783C(#N$783D).
   $E86A,$02 #REGa-=#N$08.
-  $E86C,$03 Write #REGa to *#R$783D.
+  $E86C,$03 Write #REGa to *#R$783C(#N$783D).
   $E86F,$01 Restore #REGhl from the stack.
   $E870,$01 Return.
 
@@ -4325,7 +4354,7 @@ t $E871 Messaging: Welcome
 c $E891 Display Start Screen
 @ $E891 label=DisplayStartScreen
 D $E891 Used by the routine at #R$E80E.
-.       #UDGTABLE(default,centre) { #PUSHS #SIM(start=$E821,stop=$E8DD) #SCR$02(start-screen) #POPS } UDGTABLE#
+. #UDGTABLE(default,centre) { #PUSHS #SIM(start=$E821,stop=$E8DD) #SCR$02(start-screen) #POPS } UDGTABLE#
 N $E891 Colour the top two rows of the attribute buffer with magenta paper and white ink.
   $E891,$03 #REGhl=#R$5800(#N$5800) (attribute buffer location).
   $E894,$02 #REGb=#N$40 (counter - two rows).
@@ -4550,24 +4579,33 @@ N $EBE6 Countdown from #N$FFFF to #N($0000,$04,$04) a total of #N$05 times. This
   $EBF0,$02 Decrease counter by one and loop back to #R$EBEB until counter is zero.
   $EBF2,$01 Return.
 
-c $EBF3
+c $EBF3 Frame Synchronisation
+@ $EBF3 label=WaitForNextFrame
   $EBF3,$03 #REGa=*#R$785A.
+@ $EBF6 label=WaitForFrameChange
   $EBF6,$03 #HTML(#REGhl=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
-  $EBF9,$03 Jump to #R$EBF9 if #REGa is not equal to *#REGhl.
+N $EBF9 Wait loop, hold further execution until the frame counter changes to
+. the stored value.
+@ $EBF9 label=FrameSyncLoop
+  $EBF9,$03 #HTML(Keep jumping back to #R$EBF9 until
+. <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>
+. matches *#R$785A.)
   $EBFC,$03 Jump to #R$6C00.
 
 u $EBFF
 
-c $EC00
+c $EC00 Frame Synchronisation Check
+@ $EC00 label=FrameSyncCheck
+D $EC00 Check if this is a new video frame and jump to the game loop if it is.
   $EC00,$01 Switch to the shadow registers.
-  $EC01,$01 #REGc'=#REGa.
-  $EC02,$03 #REGa=*#R$785A.
-  $EC05,$03 #HTML(#REGhl'=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.)
-  $EC08,$01 Compare #REGa with *#REGhl'.
-  $EC09,$01 #REGa=#REGc'.
+  $EC01,$01 Save the #REGa register to #REGc' temporarily.
+  $EC02,$07 #HTML(Compare *#R$785A to 
+. <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>
+. ).
+  $EC09,$01 Restore #REGa back to its original value.
   $EC0A,$01 Switch back to the normal registers.
-  $EC0B,$01 Return if #REGa was not equal to *#REGhl' on line #R$EC08.
-  $EC0C,$03 Jump to #R$6C00.
+  $EC0B,$01 Return if this is still the same frame.
+  $EC0C,$03 Jump to #R$6C00 if a new frame has started.
 
 c $EC0F
   $EC0F,$03 #REGhl=#R$FA40.
@@ -4659,14 +4697,16 @@ c $EC6E
   $EC6E,$04 #HTML(Write #N$00 (cursor type "C", "K" or "L") to
 . *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
   $EC72,$04 #HTML(Set CAPS LOCK on, using bit 3 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>).
-  $EC76,$03 #HTML(#REGhl=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.)
-  $EC79,$02 #HTML(Reset bit 5 of 
-. *<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
+  $EC76,$05 #HTML(Reset bit 5 of 
+. *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
 . which resets "when a new key has been pressed".)
-  $EC7B,$04 Jump to #R$EC7B if no key was pressed.
+@ $EC7B label=PlayerInput_Loop
+  $EC7B,$04 Keep jumping back to #R$EC7B until a key was pressed.
+N $EC7F Check which key was pressed.
   $EC7F,$03 #HTML(#REGa=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)
-  $EC82,$04 Jump to #N$EC6F if #REGa is higher than #N$80.
-  $EC86,$03 Return if #REGa is lower than #N$60.
+  $EC82,$04 Jump to #N$EC6F if the ASCII value of the pressed key is #N$80 or 
+. higher (anything higher is invalid).
+  $EC86,$03 Return if the ASCII value is #N$60 or lower.
   $EC89,$02 Reset bit 5 of #REGa.
   $EC8B,$01 Return.
 
