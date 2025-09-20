@@ -35,7 +35,7 @@ Next: <a href="60415.html">60415</a>
 </td>
 </tr>
 </table>
-<div class="description">60403: Routine at EBF3</div>
+<div class="description">60403: Frame Synchronisation</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,9 +47,10 @@ Used by the routine at <a href="30268.html">Handler_Fuel</a>.
 </td>
 </tr>
 <tr>
+<td class="asm-label">WaitForNextFrame</td>
 <td class="address-2"><span id="60403"></span>60403</td>
 <td class="instruction">LD A,(30810)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30810.html">30810</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30810.html">FrameCount</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -62,20 +63,34 @@ This entry point is used by the routine at <a href="27818.html">GameInitialisati
 </td>
 </tr>
 <tr>
+<td class="asm-label">WaitForFrameChange</td>
 <td class="address-2"><span id="60406"></span>60406</td>
 <td class="instruction">LD HL,23672</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="60409"></span>
+<div class="comments">
+<div class="paragraph">
+Wait loop, hold further execution until the frame counter changes to the stored value.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">FrameSyncLoop</td>
 <td class="address-2"><span id="60409"></span>60409</td>
 <td class="instruction">CP (HL)</td>
-<td class="comment-1" rowspan="2">Jump to <a href="60403.html#60409">60409</a> if <span class="register">A</span> is not equal to *<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="2">Keep jumping back to <a href="60403.html#60409">FrameSyncLoop</a> until <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a> matches *<a href="30810.html">FrameCount</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60410"></span>60410</td>
-<td class="instruction">JR NZ,<a href="60403.html#60409">60409</a></td>
+<td class="instruction">JR NZ,<a href="60403.html#60409">FrameSyncLoop</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="60412"></span>60412</td>
 <td class="instruction">JP <a href="27648.html">Game_Loop</a></td>
 <td class="comment-1" rowspan="1">Jump to <a href="27648.html">Game_Loop</a>.</td>

@@ -56,7 +56,7 @@ Used by the routines at <a href="716E.html">716E</a> and <a href="7311.html">731
 <td class="asm-label"></td>
 <td class="address-1"><span id="76da"></span>76DA</td>
 <td class="instruction">LD A,($7825)</td>
-<td class="comment-1" rowspan="3">Return if *<a href="7825.html">7825</a> is zero.</td>
+<td class="comment-1" rowspan="3">Return if *<a href="7825.html">SpriteState</a> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -72,7 +72,7 @@ Used by the routines at <a href="716E.html">716E</a> and <a href="7311.html">731
 <td class="asm-label"></td>
 <td class="address-1"><span id="76df"></span>76DF</td>
 <td class="instruction">XOR A</td>
-<td class="comment-1" rowspan="2">Write 00 to *<a href="7825.html">7825</a>.</td>
+<td class="comment-1" rowspan="2">Write 00 to *<a href="7825.html">SpriteState</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -416,7 +416,7 @@ FLASH: ON).</td>
 <td class="asm-label"></td>
 <td class="address-1"><span id="774c"></span>774C</td>
 <td class="instruction">LD HL,($783E)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="783C.html#783e">783E</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="783E.html">783E</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -798,13 +798,12 @@ This entry point is used by the routine at <a href="EC2A.html">EC2A</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="77bc"></span>77BC</td>
 <td class="instruction">LD HL,$7839</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7839.html">Lives</a>.</td>
+<td class="comment-1" rowspan="2">Write 05 to *<a href="7839.html">Lives</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="77bf"></span>77BF</td>
 <td class="instruction">LD (HL),$05</td>
-<td class="comment-1" rowspan="1">Write 05 to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

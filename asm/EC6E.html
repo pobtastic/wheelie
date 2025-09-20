@@ -47,63 +47,85 @@ Used by the routine at <a href="ECAB.html">CheckPassword</a>.
 </td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-2"><span id="ec6e"></span>EC6E</td>
 <td class="instruction">LD (IY+$07),$00</td>
 <td class="comment-1" rowspan="1">Write 00 (cursor type "C", "K" or "L") to *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec72"></span>EC72</td>
 <td class="instruction">SET 3,(IY+$30)</td>
 <td class="comment-1" rowspan="1">Set CAPS LOCK on, using bit 3 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec76"></span>EC76</td>
 <td class="instruction">LD HL,$5C3B</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>.</td>
+<td class="comment-1" rowspan="2">Reset bit 5 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a> which resets "when a new key has been pressed".</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec79"></span>EC79</td>
 <td class="instruction">RES 5,(HL)</td>
-<td class="comment-1" rowspan="1">Reset bit 5 of *<a href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a> which resets "when a new key has been pressed".</td>
 </tr>
 <tr>
+<td class="asm-label">PlayerInput_Loop</td>
 <td class="address-2"><span id="ec7b"></span>EC7B</td>
 <td class="instruction">BIT 5,(HL)</td>
-<td class="comment-1" rowspan="2">Jump to <a href="EC6E.html#ec7b">EC7B</a> if no key was pressed.</td>
+<td class="comment-1" rowspan="2">Keep jumping back to <a href="EC6E.html#ec7b">PlayerInput_Loop</a> until a key was pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec7d"></span>EC7D</td>
-<td class="instruction">JR Z,<a href="EC6E.html#ec7b">$EC7B</a></td>
+<td class="instruction">JR Z,<a href="EC6E.html#ec7b">PlayerInput_Loop</a></td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="ec7f"></span>
+<div class="comments">
+<div class="paragraph">
+Check which key was pressed.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec7f"></span>EC7F</td>
 <td class="instruction">LD A,($5C08)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec82"></span>EC82</td>
 <td class="instruction">CP $80</td>
-<td class="comment-1" rowspan="2">Jump to EC6F if <span class="register">A</span> is higher than 80.</td>
+<td class="comment-1" rowspan="2">Jump to EC6F if the ASCII value of the pressed key is 80 or higher (anything higher is invalid).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec84"></span>EC84</td>
 <td class="instruction">JR NC,$EC6F</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec86"></span>EC86</td>
 <td class="instruction">CP $60</td>
-<td class="comment-1" rowspan="2">Return if <span class="register">A</span> is lower than 60.</td>
+<td class="comment-1" rowspan="2">Return if the ASCII value is 60 or lower.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec88"></span>EC88</td>
 <td class="instruction">RET C</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec89"></span>EC89</td>
 <td class="instruction">RES 5,A</td>
 <td class="comment-1" rowspan="1">Reset bit 5 of <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec8b"></span>EC8B</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

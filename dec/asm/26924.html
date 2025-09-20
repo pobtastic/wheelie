@@ -137,10 +137,39 @@ Calculate the sprite data address from the frame ID.
 <td class="instruction">LD L,A</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="26939"></span>
+<div class="comments">
+<div class="paragraph">
+This is quite clever, and very subtle. It's probably easier here to show examples: <table class="default">
+<tr>
+<th colspan="1" rowspan="1">Input Value</th>
+<th colspan="1" rowspan="1">Output in <span class="register">HL</span></th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">135</td>
+<td class="centre" colspan="1" rowspan="1"><a href="48640.html#48910">48910</a></td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">199</td>
+<td class="centre" colspan="1" rowspan="1"><a href="48640.html#49038">49038</a></td>
+</tr>
+</table> From a quick glance, the following code looks pretty straight-forward, just a little strange: <span class="register">H</span>=(frame ID * 2) + 190 - (frame ID * 2).
+</div>
+<div class="paragraph">
+The cleverness here is with the carry flag and the <code>ADC</code> instruction.
+</div>
+<div class="paragraph">
+When the multiplication of the frame ID passes 256 the carry flag is set and this is included when adding the graphics high byte 190. The <code>SUB <span class="register">L</span></code> then removes the "frame ID * 2" part, leaving just 190 + carry flag.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26939"></span>26939</td>
 <td class="instruction">ADC A,190</td>
-<td class="comment-1" rowspan="3">Load <span class="register">H</span> with the high byte for the graphics data: 190.</td>
+<td class="comment-1" rowspan="3">Load <span class="register">H</span> with the high byte for the graphics data: 190 + the carry flag.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -250,18 +279,18 @@ Fetch the sprite data.
 <td class="asm-label"></td>
 <td class="address-1"><span id="26960"></span>26960</td>
 <td class="instruction">CP 16</td>
-<td class="comment-1" rowspan="2">Jump to <a href="26924.html#26969">DrawSpriteObject_2</a> if <span class="register">A</span> is higher than 16.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="26924.html#26969">CheckNextFrame</a> if <span class="register">A</span> is higher than 16.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26962"></span>26962</td>
-<td class="instruction">JR NC,<a href="26924.html#26969">DrawSpriteObject_2</a></td>
+<td class="instruction">JR NC,<a href="26924.html#26969">CheckNextFrame</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26964"></span>26964</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="3">Jump to <a href="26924.html#26990">DrawSpriteObject_4</a> if <span class="register">E</span> is lower than 32.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="26924.html#26990">DrawSpriteObject_3</a> if <span class="register">E</span> is lower than 32.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -271,10 +300,10 @@ Fetch the sprite data.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26967"></span>26967</td>
-<td class="instruction">JR C,<a href="26924.html#26990">DrawSpriteObject_4</a></td>
+<td class="instruction">JR C,<a href="26924.html#26990">DrawSpriteObject_3</a></td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_2</td>
+<td class="asm-label">CheckNextFrame</td>
 <td class="address-2"><span id="26969"></span>26969</td>
 <td class="instruction">LD HL,8</td>
 <td class="comment-1" rowspan="4"><span class="register">BC</span>+=0008.</td>
@@ -295,7 +324,7 @@ Fetch the sprite data.
 <td class="instruction">LD C,L</td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_3</td>
+<td class="asm-label">DrawSpriteObject_2</td>
 <td class="address-2"><span id="26975"></span>26975</td>
 <td class="instruction">LD A,(BC)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
@@ -367,7 +396,7 @@ We reached the terminator.
 <td class="comment-1" rowspan="1">Jump to <a href="26860.html">26860</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_4</td>
+<td class="asm-label">DrawSpriteObject_3</td>
 <td class="address-2"><span id="26990"></span>26990</td>
 <td class="instruction">LD A,D</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
@@ -434,19 +463,19 @@ We reached the terminator.
 <td class="asm-label"></td>
 <td class="address-1"><span id="27004"></span>27004</td>
 <td class="instruction">CALL <a href="26870.html">DrawSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26870.html">DrawSprite</a>.</td>
+<td class="comment-1" rowspan="1">Call <a href="26870.html">DrawSprite</a> to draw the top of the sprite.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27007"></span>27007</td>
 <td class="instruction">INC H</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">H</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next screen row.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27008"></span>27008</td>
 <td class="instruction">CALL <a href="26870.html">DrawSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="26870.html">DrawSprite</a>.</td>
+<td class="comment-1" rowspan="1">Call <a href="26870.html">DrawSprite</a> to draw the bottom of the sprite.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -457,14 +486,14 @@ We reached the terminator.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27014"></span>27014</td>
-<td class="instruction">JR <a href="26924.html#26975">DrawSpriteObject_3</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="26924.html#26975">DrawSpriteObject_3</a>.</td>
+<td class="instruction">JR <a href="26924.html#26975">DrawSpriteObject_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26924.html#26975">DrawSpriteObject_2</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27016"></span>27016</td>
 <td class="instruction">LD (30757),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30757.html">30757</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30757.html">SpriteState</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -482,13 +511,13 @@ We reached the terminator.
 <td class="asm-label"></td>
 <td class="address-1"><span id="27021"></span>27021</td>
 <td class="instruction">LD H,B</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">B</span>.</td>
+<td class="comment-1" rowspan="1">Load the active sprite block count into <span class="register">H</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="27022"></span>27022</td>
 <td class="instruction">LD L,C</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">C</span>.</td>
+<td class="comment-1" rowspan="1">Load the attribute byte into <span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

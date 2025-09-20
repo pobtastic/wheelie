@@ -102,23 +102,23 @@ Used by the routine at <a href="6C00.html">Game_Loop</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="764e"></span>764E</td>
 <td class="instruction">CP $31</td>
-<td class="comment-1" rowspan="2">Call <a href="EBF3.html">EBF3</a> if <span class="register">A</span> is higher than 31.</td>
+<td class="comment-1" rowspan="2">Call <a href="EBF3.html">WaitForNextFrame</a> if <span class="register">A</span> is higher than 31.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7650"></span>7650</td>
-<td class="instruction">CALL NC,<a href="EBF3.html">$EBF3</a></td>
+<td class="instruction">CALL NC,<a href="EBF3.html">WaitForNextFrame</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7653"></span>7653</td>
 <td class="instruction">CP $2D</td>
-<td class="comment-1" rowspan="2">Call <a href="EBF3.html">EBF3</a> if <span class="register">A</span> is lower than 2D.</td>
+<td class="comment-1" rowspan="2">Call <a href="EBF3.html">WaitForNextFrame</a> if <span class="register">A</span> is lower than 2D.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7655"></span>7655</td>
-<td class="instruction">CALL C,<a href="EBF3.html">$EBF3</a></td>
+<td class="instruction">CALL C,<a href="EBF3.html">WaitForNextFrame</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -563,8 +563,8 @@ Handle fuel-related audio effects during gameplay.
 <tr>
 <td class="asm-label">Handler_Fuel_0</td>
 <td class="address-2"><span id="76d0"></span>76D0</td>
-<td class="instruction">JP <a href="EBF3.html">$EBF3</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="EBF3.html">EBF3</a>.</td>
+<td class="instruction">JP <a href="EBF3.html">WaitForNextFrame</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="EBF3.html">WaitForNextFrame</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">

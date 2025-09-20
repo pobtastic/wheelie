@@ -35,61 +35,68 @@ Next: <a href="EC0F.html">EC0F</a>
 </td>
 </tr>
 </table>
-<div class="description">EC00: Routine at EC00</div>
+<div class="description">EC00: Frame Synchronisation Check</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="6D49.html">6D49</a>.
+Check if this is a new video frame and jump to the game loop if it is.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">FrameSyncCheck</td>
 <td class="address-2"><span id="ec00"></span>EC00</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec01"></span>EC01</td>
 <td class="instruction">LD C,A</td>
-<td class="comment-1" rowspan="1"><span class="register">C'</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Save the <span class="register">A</span> register to <span class="register">C'</span> temporarily.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec02"></span>EC02</td>
 <td class="instruction">LD A,($785A)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="785A.html">785A</a>.</td>
+<td class="comment-1" rowspan="3">Compare *<a href="785A.html">FrameCount</a> to <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a> .</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec05"></span>EC05</td>
 <td class="instruction">LD HL,$5C78</td>
-<td class="comment-1" rowspan="1"><span class="register">HL'</span>=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C78.html">FRAMES</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec08"></span>EC08</td>
 <td class="instruction">CP (HL)</td>
-<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with *<span class="register">HL'</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec09"></span>EC09</td>
 <td class="instruction">LD A,C</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C'</span>.</td>
+<td class="comment-1" rowspan="1">Restore <span class="register">A</span> back to its original value.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec0a"></span>EC0A</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec0b"></span>EC0B</td>
 <td class="instruction">RET NZ</td>
-<td class="comment-1" rowspan="1">Return if <span class="register">A</span> was not equal to *<span class="register">HL'</span> on line <a href="EC00.html#ec08">EC08</a>.</td>
+<td class="comment-1" rowspan="1">Return if this is still the same frame.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="ec0c"></span>EC0C</td>
 <td class="instruction">JP <a href="6C00.html">Game_Loop</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6C00.html">Game_Loop</a>.</td>
+<td class="comment-1" rowspan="1">Jump to <a href="6C00.html">Game_Loop</a> if a new frame has started.</td>
 </tr>
 </table>
 <table class="asm-navigation">
