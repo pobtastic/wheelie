@@ -709,7 +709,7 @@ c$64AA LD HL,$9E00   ; Load #REGhl with #R$9E00.
  $64AD LD BC,$0A00   ; Set the length of the level buffer in #REGbc (#N$0A00
                      ; bytes).
 @label=ObjectPlacement_SpecialTerrain_Loop
-*$64B0 LD A,$32      ; {Search for the next #N$32 markr in the level buffer.
+*$64B0 LD A,$32      ; {Search for the next #N$32 marker in the level buffer.
  $64B2 CPIR          ; }
  $64B4 LD A,B        ; {Return if no more markers were found.
  $64B5 OR C          ;
@@ -3156,9 +3156,10 @@ c$709D LD C,(HL)     ;
  $715F NOP           ;
  $7160 NOP           ;
 
-; Routine at 7161
+; Check Demo Mode
 ;
 ; Used by the routine at #R$763C.
+@label=Check_DemoMode
 c$7161 CALL $7535    ; Call #R$7535.
  $7164 JP $6ED4      ; Jump to #R$6ED4.
 
@@ -3514,7 +3515,7 @@ c$7311 CALL $6B2D    ; Call #R$6B2D.
  $734E JR NC,$736C   ; }
  $7350 SUB $08       ; #REGa-=#N$08.
  $7352 SRA A         ;
- $7354 LD C,$44      ; #REGc=#N$44.
+ $7354 LD C,$44      ; #REGc=#COLOUR$44.
  $7356 LD E,A        ; #REGe=#REGa.
  $7357 LD D,$0B      ; #REGd=#N$0B.
  $7359 LD A,$00      ; #REGa=#N$00.
@@ -3672,56 +3673,76 @@ c$73F2 LD A,($7825)  ; #REGa=*#R$7825.
 ; Unused
 u$741E DEFB $00,$00
 
-; Routine at 7420
+; Update Score Display
 ;
 ; Used by the routines at #R$757E, #R$763C and #R$76D7.
+;
+; .
+;
+; Convert the 16-bit into a five digit score using two's complement.
+@label=UpdateScoreDisplay
 c$7420 LD HL,($7844) ; #REGhl=*#R$7844.
  $7423 LD DE,($7846) ; #REGde=*#R$7846.
- $7427 AND A         ; Set flags.
- $7428 SBC HL,DE     ; #REGhl-=#REGde (with carry).
- $742A RET Z         ; Return if the result is zero.
- $742B ADD HL,DE     ; #REGhl+=#REGde.
+ $7427 AND A         ; {Return if the players score is the same as the stored
+ $7428 SBC HL,DE     ; highscore.
+ $742A RET Z         ; }
+ $742B ADD HL,DE     ; Restore the original players score value.
 ; This entry point is used by the routine at #R$75AA.
-*$742C LD ($7846),HL ; Write #REGhl to *#R$7846.
+@label=ForceScoreUpdate
+*$742C LD ($7846),HL ; Update the stored *#R$7846 value.
  $742F EXX           ; Switch to the shadow registers.
- $7430 LD DE,$51C6   ; #REGde'=#N$51C6 (screen buffer location).
+ $7430 LD DE,$51C6   ; Set the screen buffer position for the score display.
  $7433 EXX           ; Switch back to the normal registers.
 ; This entry point is used by the routines at #R$757E and #R$75AA.
+@label=ConvertScoreToDigits
 *$7434 LD DE,$784B   ; #REGde=#R$784B.
- $7437 LD BC,$D810   ; #REGbc=#N$D810.
- $743A LD A,$FF      ; #REGa=#N$FF.
-*$743C INC A         ; Increment #REGa by one.
- $743D ADD HL,BC     ; #REGhl+=#REGbc.
- $743E JR C,$743C    ; Jump to #R$743C if {} is lower.
- $7440 SBC HL,BC     ; #REGhl-=#REGbc.
- $7442 LD (DE),A     ; Write #REGa to *#REGde.
- $7443 INC E         ; Increment #REGe by one.
- $7444 LD BC,$FC18   ; #REGbc=#N$FC18.
- $7447 LD A,$FF      ; #REGa=#N$FF.
-*$7449 INC A         ; Increment #REGa by one.
- $744A ADD HL,BC     ; #REGhl+=#REGbc.
- $744B JR C,$7449    ; Jump to #R$7449 if {} is lower.
- $744D SBC HL,BC     ; #REGhl-=#REGbc.
- $744F LD (DE),A     ; Write #REGa to *#REGde.
- $7450 INC E         ; Increment #REGe by one.
- $7451 LD BC,$FF9C   ; #REGbc=#N$FF9C.
- $7454 LD A,$FF      ; #REGa=#N$FF.
-*$7456 INC A         ; Increment #REGa by one.
- $7457 ADD HL,BC     ; #REGhl+=#REGbc.
- $7458 JR C,$7456    ; Jump to #R$7456 if {} is lower.
- $745A SBC HL,BC     ; #REGhl-=#REGbc.
- $745C LD (DE),A     ; Write #REGa to *#REGde.
- $745D INC E         ; Increment #REGe by one.
- $745E LD C,$F6      ; #REGc=#N$F6.
- $7460 LD A,$FF      ; #REGa=#N$FF.
-*$7462 INC A         ; Increment #REGa by one.
- $7463 ADD HL,BC     ; #REGhl+=#REGbc.
- $7464 JR C,$7462    ; Jump to #R$7462 if {} is lower.
- $7466 LD (DE),A     ; Write #REGa to *#REGde.
- $7467 INC E         ; Increment #REGe by one.
- $7468 LD A,L        ; #REGa=#REGl.
- $7469 ADD A,$0A     ; #REGa+=#N$0A.
- $746B LD (DE),A     ; Write #REGa to *#REGde.
+; Convert the binary score to decimal using the repeated subtraction
+; method.
+; .
+; Calculate the tens of thousands digit.
+ $7437 LD BC,$D810   ; #REGbc=-10,000 (it's technically -10,224 which is probably a
+                     ; mistake).
+ $743A LD A,$FF      ; Set the digit counter in #REGa to -01.
+@label=ExtractTenThousands_Loop
+*$743C INC A         ; Increment the digit counter by one.
+ $743D ADD HL,BC     ; Subtract 10,000 from the score.
+ $743E JR C,$743C    ; Jump back to #R$743C if the result is still positive.
+ $7440 SBC HL,BC     ; Restore the valid remainder.
+ $7442 LD (DE),A     ; Store the count to the score buffer in *#REGde.
+ $7443 INC E         ; Move to the next score digit position.
+; Calculate the thousands digit.
+ $7444 LD BC,$FC18   ; #REGbc=-1,000.
+ $7447 LD A,$FF      ; Set the digit counter in #REGa to -01.
+@label=ExtractThousands_Loop
+*$7449 INC A         ; Increment the digit counter by one.
+ $744A ADD HL,BC     ; Subtract 1,000 from the score remainder.
+ $744B JR C,$7449    ; Jump back to #R$7449 if the result is still positive.
+ $744D SBC HL,BC     ; Restore the valid remainder.
+ $744F LD (DE),A     ; Store the count to the score buffer in *#REGde.
+ $7450 INC E         ; Move to the next score digit position.
+; Calculate the hundreds digit.
+ $7451 LD BC,$FF9C   ; #REGbc=-100.
+ $7454 LD A,$FF      ; Set the digit counter in #REGa to -01.
+@label=ExtractHundreds_Loop
+*$7456 INC A         ; Increment the digit counter by one.
+ $7457 ADD HL,BC     ; Subtract 100 from the score remainder.
+ $7458 JR C,$7456    ; Jump back to #R$7456 if the result is still positive.
+ $745A SBC HL,BC     ; Restore the valid remainder.
+ $745C LD (DE),A     ; Store the count to the score buffer in *#REGde.
+ $745D INC E         ; Move to the next score digit position.
+; Calculate the tens digit.
+ $745E LD C,$F6      ; #REGc=-10.
+ $7460 LD A,$FF      ; Set the digit counter in #REGa to -01.
+@label=ExtractTens_Loop
+*$7462 INC A         ; Increment the digit counter by one.
+ $7463 ADD HL,BC     ; Subtract 10 from the score remainder.
+ $7464 JR C,$7462    ; Jump back to #R$7462 if the result is still positive.
+ $7466 LD (DE),A     ; Store the count to the score buffer in *#REGde.
+ $7467 INC E         ; Move to the next score digit position.
+; Store the units digit.
+ $7468 LD A,L        ; Get the final remainder.
+ $7469 ADD A,$0A     ; Compensate for the last subtraction.
+ $746B LD (DE),A     ; Store the result to the score buffer in *#REGde.
  $746C EXX           ; Switch to the shadow registers.
  $746D LD BC,$784B   ; #REGbc'=#R$784B.
 ; #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
@@ -3729,8 +3750,10 @@ c$7420 LD HL,($7844) ; #REGhl=*#R$7844.
 ; .
 ; This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
 ; only copies six bytes/ lines.
-@label=PrintTarget
-*$7470 LD A,(BC)     ; #REGa=*#REGbc'.
+@label=PrintScoreDigit_Loop
+*$7470 LD A,(BC)     ; Fetch the score digit value.
+; Calculate the ZX Spectrum ROM font address:
+; #N$3D00 + (digit * #N$08) + #N$01.
  $7471 ADD A,A       ; {#REGl'=#N$81+(#REGa*#N$08).
  $7472 ADD A,A       ;
  $7473 ADD A,A       ;
@@ -3738,35 +3761,36 @@ c$7420 LD HL,($7844) ; #REGhl=*#R$7844.
  $7476 LD L,A        ; }
  $7477 LD H,$3D      ; #HTML(#REGh'=<a rel="noopener nofollow"
                      ; href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">#N$3D</a>.)
+; Copy #N$06 lines of font character data (skipping top and bottom whitespace).
  $7479 LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $747A LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
- $747B INC L         ; Increment #REGl' by one.
- $747C INC D         ; Increment #REGd' by one.
+ $747B INC L         ; Move to the next font line.
+ $747C INC D         ; Move down one row in the screen buffer.
  $747D LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $747E LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
- $747F INC L         ; Increment #REGl' by one.
- $7480 INC D         ; Increment #REGd' by one.
+ $747F INC L         ; Move to the next font line.
+ $7480 INC D         ; Move down one row in the screen buffer.
  $7481 LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $7482 LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
- $7483 INC L         ; Increment #REGl' by one.
- $7484 INC D         ; Increment #REGd' by one.
+ $7483 INC L         ; Move to the next font line.
+ $7484 INC D         ; Move down one row in the screen buffer.
  $7485 LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $7486 LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
- $7487 INC L         ; Increment #REGl' by one.
- $7488 INC D         ; Increment #REGd' by one.
+ $7487 INC L         ; Move to the next font line.
+ $7488 INC D         ; Move down one row in the screen buffer.
  $7489 LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $748A LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
- $748B INC L         ; Increment #REGl' by one.
- $748C INC D         ; Increment #REGd' by one.
+ $748B INC L         ; Move to the next font line.
+ $748C INC D         ; Move down one row in the screen buffer.
  $748D LD A,(HL)     ; {Copy a number UDG byte line from the Spectum ROM
  $748E LD (DE),A     ; (*#REGhl') to the screen buffer (*#REGde').}
 ; Reset the screen buffer position.
  $748F LD D,$51      ; #REGd'=#N$51.
  $7491 INC E         ; Move right one character block in the screen buffer,
                      ; ready to print the next number.
- $7492 INC C         ; Increment #REGc' by one.
- $7493 BIT 3,C       ; {Jump to #R$7470 if bit 3 of #REGc' is not zero.
- $7495 JR NZ,$7470   ; }
+ $7492 INC C         ; Move to the next digit in the score display buffer.
+ $7493 BIT 3,C       ; {Jump back to #R$7470 until all the digits have been
+ $7495 JR NZ,$7470   ; printed.}
  $7497 EXX           ; Switch back to the normal registers.
  $7498 RET           ; Return.
 
@@ -4127,7 +4151,7 @@ c$75AA CALL $749C    ; Call #R$749C.
                      ; string).
  $75F6 CALL $74D3    ; Call #R$74D3.
 ; At the end of each string there are two more bytes which build the up/ down arrow shown above "TARGET". This is
-;       hidden by the attributes until it's shown in-game by setting the appropriate attribute values.
+; hidden by the attributes until it's shown in-game by setting the appropriate attribute values.
  $75F9 LD A,(HL)     ; #REGa=*#REGhl.
  $75FA EXX           ; Switch to the shadow registers.
  $75FB LD L,A        ; #REGl'=#REGa.
@@ -4281,9 +4305,10 @@ c$763C CALL $7420    ; Call #R$7420.
 ; Unused
 u$76D3 DEFB $00,$00,$00,$00
 
-; Routine at 76D7
+; Handler: Ghost Rider
 ;
 ; Used by the routines at #R$716E and #R$7311.
+@label=Handler_GhostRider
 c$76D7 CALL $692C    ; Call #R$692C.
  $76DA LD A,($7825)  ; {Return if *#R$7825 is zero.
  $76DD AND A         ;
@@ -4306,10 +4331,10 @@ c$76D7 CALL $692C    ; Call #R$692C.
  $76F9 LD (HL),$01   ; Write #N$01 to *#REGhl.
  $76FB CALL $EC0F    ; Call #R$EC0F.
  $76FE NOP           ; No operation.
- $76FF LD HL,($7844) ; {#REGhl=*#R$7844+#N$01F4.
+ $76FF LD HL,($7844) ; {Add #N$01F4 to *#R$7844.
  $7702 LD DE,$01F4   ;
- $7705 ADD HL,DE     ; }
- $7706 LD ($7844),HL ; Write #REGhl to *#R$7844.
+ $7705 ADD HL,DE     ;
+ $7706 LD ($7844),HL ; }
 ; Print the "#STR($BAA6,$03,$20)" messaging in the footer.
 ; .
 ; #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
@@ -4328,10 +4353,10 @@ c$76D7 CALL $692C    ; Call #R$692C.
  $7726 CALL $6D49    ; Call #R$6D49.
 *$7729 CP $46        ; {Jump to #R$7742 if #REGa is higher than #N$46.
  $772B JR NC,$7742   ; }
- $772D LD DE,$0032   ; {#REGhl=*#R$7844+#N($0032,$04,$04).
+ $772D LD DE,$0032   ; {Add #N($0032,$04,$04) to *#R$7844.
  $7730 LD HL,($7844) ;
- $7733 ADD HL,DE     ; }
- $7734 LD ($7844),HL ; Write #REGhl to *#R$7844.
+ $7733 ADD HL,DE     ;
+ $7734 LD ($7844),HL ; }
  $7737 POP HL        ; {Restore #REGhl and #REGde from the stack.
  $7738 POP DE        ; }
  $7739 PUSH DE       ; {Stash #REGde and #REGhl on the stack.
@@ -4407,10 +4432,10 @@ c$76D7 CALL $692C    ; Call #R$692C.
  $77A5 NOP           ;
  $77A6 NOP           ;
  $77A7 NOP           ; }
- $77A8 LD DE,$03E8   ; {#REGhl=*#R$7844+#N$03E8.
+ $77A8 LD DE,$03E8   ; {Add #N$03E8 to *#R$7844.
  $77AB LD HL,($7844) ;
- $77AE ADD HL,DE     ; }
- $77AF LD ($7844),HL ; Write #REGhl to *#R$7844.
+ $77AE ADD HL,DE     ;
+ $77AF LD ($7844),HL ; }
  $77B2 CALL $7420    ; Call #R$7420.
  $77B5 CALL $68AD    ; Call #R$68AD.
  $77B8 NOP           ; {No operation.
@@ -4604,12 +4629,17 @@ g$7843 DEFB $04
 
 ; Score
 @label=Score
-g$7844 DEFB $00,$00
- $7846 DEFB $05,$00
- $7848 DEFB $00,$00,$00
+g$7844 DEFW $0000
 
-; Target
-@label=Target
+; Game status buffer entry at 7846
+@label=HighScore
+g$7846 DEFW $0005
+
+; Game status buffer entry at 7848
+g$7848 DEFB $00,$00,$00
+
+; Displayed Score
+@label=DisplayedScore
 g$784B DEFB $03,$04,$00,$00,$02
 
 ; Control Method
@@ -9667,9 +9697,10 @@ c$EC68 LD HL,$EFC2   ; #REGhl=#R$EFC2.
 ; Unused
 u$EC6D DEFB $00
 
-; Routine at EC6E
+; Player Input
 ;
 ; Used by the routine at #R$ECAB.
+@label=PlayerInput
 c$EC6E LD (IY+$07),$00 ; #HTML(Write #N$00 (cursor type "C", "K" or "L") to
                        ; *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
  $EC72 SET 3,(IY+$30)  ; #HTML(Set CAPS LOCK on, using bit 3 of *<a

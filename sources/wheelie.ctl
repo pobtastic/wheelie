@@ -164,7 +164,7 @@ N $64AA Search the level buffer for special terrain markers (#N$32) and replace
   $64AA,$03 Load #REGhl with #R$9E00.
   $64AD,$03 Set the length of the level buffer in #REGbc (#N$0A00 bytes).
 @ $64B0 label=ObjectPlacement_SpecialTerrain_Loop
-  $64B0,$04 Search for the next #N$32 markr in the level buffer.
+  $64B0,$04 Search for the next #N$32 marker in the level buffer.
   $64B4,$03 Return if no more markers were found.
 N $64B7 A marker was found.
   $64B7,$02 Stash the level buffer position and buffer counter on the stack.
@@ -1676,7 +1676,8 @@ N $709B Just return the full random number between #N$00-#N$FF.
 
 c $709D
 
-c $7161
+c $7161 Check Demo Mode
+@ $7161 label=Check_DemoMode
   $7161,$03 Call #R$7535.
   $7164,$03 Jump to #R$6ED4.
 
@@ -1881,7 +1882,7 @@ c $7311
   $734C,$04 Jump to #R$736C if #REGa is higher than #N$50.
   $7350,$02 #REGa-=#N$08.
   $7352,$02
-  $7354,$02 #REGc=#N$44.
+  $7354,$02 #REGc=#COLOUR$44.
   $7356,$01 #REGe=#REGa.
   $7357,$02 #REGd=#N$0B.
   $7359,$02 #REGa=#N$00.
@@ -1992,83 +1993,100 @@ c $73F2
 
 u $741E
 
-c $7420
+c $7420 Update Score Display
+@ $7420 label=UpdateScoreDisplay
+N $7420 Convert the 16-bit into a five digit score using two's complement.
   $7420,$03 #REGhl=*#R$7844.
   $7423,$04 #REGde=*#R$7846.
-  $7427,$01 Set flags.
-  $7428,$02 #REGhl-=#REGde (with carry).
-  $742A,$01 Return if the result is zero.
-  $742B,$01 #REGhl+=#REGde.
-  $742C,$03 Write #REGhl to *#R$7846.
+  $7427,$04 Return if the players score is the same as the stored highscore.
+  $742B,$01 Restore the original players score value.
+@ $742C label=ForceScoreUpdate
+  $742C,$03 Update the stored *#R$7846 value.
   $742F,$01 Switch to the shadow registers.
-  $7430,$03 #REGde'=#N$51C6 (screen buffer location).
+  $7430,$03 Set the screen buffer position for the score display.
   $7433,$01 Switch back to the normal registers.
+@ $7434 label=ConvertScoreToDigits
   $7434,$03 #REGde=#R$784B.
-  $7437,$03 #REGbc=#N$D810.
-  $743A,$02 #REGa=#N$FF.
-  $743C,$01 Increment #REGa by one.
-  $743D,$01 #REGhl+=#REGbc.
-  $743E,$02 Jump to #R$743C if {} is lower.
-  $7440,$02 #REGhl-=#REGbc.
-  $7442,$01 Write #REGa to *#REGde.
-  $7443,$01 Increment #REGe by one.
-  $7444,$03 #REGbc=#N$FC18.
-  $7447,$02 #REGa=#N$FF.
-  $7449,$01 Increment #REGa by one.
-  $744A,$01 #REGhl+=#REGbc.
-  $744B,$02 Jump to #R$7449 if {} is lower.
-  $744D,$02 #REGhl-=#REGbc.
-  $744F,$01 Write #REGa to *#REGde.
-  $7450,$01 Increment #REGe by one.
-  $7451,$03 #REGbc=#N$FF9C.
-  $7454,$02 #REGa=#N$FF.
-  $7456,$01 Increment #REGa by one.
-  $7457,$01 #REGhl+=#REGbc.
-  $7458,$02 Jump to #R$7456 if {} is lower.
-  $745A,$02 #REGhl-=#REGbc.
-  $745C,$01 Write #REGa to *#REGde.
-  $745D,$01 Increment #REGe by one.
-  $745E,$02 #REGc=#N$F6.
-  $7460,$02 #REGa=#N$FF.
-  $7462,$01 Increment #REGa by one.
-  $7463,$01 #REGhl+=#REGbc.
-  $7464,$02 Jump to #R$7462 if {} is lower.
-  $7466,$01 Write #REGa to *#REGde.
-  $7467,$01 Increment #REGe by one.
-  $7468,$01 #REGa=#REGl.
-  $7469,$02 #REGa+=#N$0A.
-  $746B,$01 Write #REGa to *#REGde.
+N $7437 Convert the binary score to decimal using the repeated subtraction
+. method.
+N $7437 Calculate the tens of thousands digit.
+  $7437,$03 #REGbc=-10,000 (it's technically -10,224 which is probably a
+. mistake).
+  $743A,$02 Set the digit counter in #REGa to -01.
+@ $743C label=ExtractTenThousands_Loop
+  $743C,$01 Increment the digit counter by one.
+  $743D,$01 Subtract 10,000 from the score.
+  $743E,$02 Jump back to #R$743C if the result is still positive.
+  $7440,$02 Restore the valid remainder.
+  $7442,$01 Store the count to the score buffer in *#REGde.
+  $7443,$01 Move to the next score digit position.
+N $7444 Calculate the thousands digit.
+  $7444,$03 #REGbc=-1,000.
+  $7447,$02 Set the digit counter in #REGa to -01.
+@ $7449 label=ExtractThousands_Loop
+  $7449,$01 Increment the digit counter by one.
+  $744A,$01 Subtract 1,000 from the score remainder.
+  $744B,$02 Jump back to #R$7449 if the result is still positive.
+  $744D,$02 Restore the valid remainder.
+  $744F,$01 Store the count to the score buffer in *#REGde.
+  $7450,$01 Move to the next score digit position.
+N $7451 Calculate the hundreds digit.
+  $7451,$03 #REGbc=-100.
+  $7454,$02 Set the digit counter in #REGa to -01.
+@ $7456 label=ExtractHundreds_Loop
+  $7456,$01 Increment the digit counter by one.
+  $7457,$01 Subtract 100 from the score remainder.
+  $7458,$02 Jump back to #R$7456 if the result is still positive.
+  $745A,$02 Restore the valid remainder.
+  $745C,$01 Store the count to the score buffer in *#REGde.
+  $745D,$01 Move to the next score digit position.
+N $745E Calculate the tens digit.
+  $745E,$02 #REGc=-10.
+  $7460,$02 Set the digit counter in #REGa to -01.
+@ $7462 label=ExtractTens_Loop
+  $7462,$01 Increment the digit counter by one.
+  $7463,$01 Subtract 10 from the score remainder.
+  $7464,$02 Jump back to #R$7462 if the result is still positive.
+  $7466,$01 Store the count to the score buffer in *#REGde.
+  $7467,$01 Move to the next score digit position.
+N $7468 Store the units digit.
+  $7468,$01 Get the final remainder.
+  $7469,$02 Compensate for the last subtraction.
+  $746B,$01 Store the result to the score buffer in *#REGde.
   $746C,$01 Switch to the shadow registers.
   $746D,$03 #REGbc'=#R$784B.
 N $7470 #HTML(Work out the ZX Spectrum ROM location of the number UDG, e.g. "1" would be
 . <a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html#3d89">#N$3D89</a>.)
 N $7470 This calculation avoids the whitespace at the top and bottom of the ROM UDG; in the code below you'll see it
 . only copies six bytes/ lines.
-@ $7470 label=PrintTarget
-  $7470,$01 #REGa=*#REGbc'.
+@ $7470 label=PrintScoreDigit_Loop
+  $7470,$01 Fetch the score digit value.
+N $7471 Calculate the ZX Spectrum ROM font address:
+. #N$3D00 + (digit * #N$08) + #N$01.
   $7471,$06 #REGl'=#N$81+(#REGa*#N$08).
   $7477,$02 #HTML(#REGh'=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">#N$3D</a>.)
+N $7479 Copy #N$06 lines of font character data (skipping top and bottom whitespace).
   $7479,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
-  $747B,$01 Increment #REGl' by one.
-  $747C,$01 Increment #REGd' by one.
+  $747B,$01 Move to the next font line.
+  $747C,$01 Move down one row in the screen buffer.
   $747D,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
-  $747F,$01 Increment #REGl' by one.
-  $7480,$01 Increment #REGd' by one.
+  $747F,$01 Move to the next font line.
+  $7480,$01 Move down one row in the screen buffer.
   $7481,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
-  $7483,$01 Increment #REGl' by one.
-  $7484,$01 Increment #REGd' by one.
+  $7483,$01 Move to the next font line.
+  $7484,$01 Move down one row in the screen buffer.
   $7485,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
-  $7487,$01 Increment #REGl' by one.
-  $7488,$01 Increment #REGd' by one.
+  $7487,$01 Move to the next font line.
+  $7488,$01 Move down one row in the screen buffer.
   $7489,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
-  $748B,$01 Increment #REGl' by one.
-  $748C,$01 Increment #REGd' by one.
+  $748B,$01 Move to the next font line.
+  $748C,$01 Move down one row in the screen buffer.
   $748D,$02 Copy a number UDG byte line from the Spectum ROM (*#REGhl') to the screen buffer (*#REGde').
 N $748F Reset the screen buffer position.
   $748F,$02 #REGd'=#N$51.
   $7491,$01 Move right one character block in the screen buffer, ready to print the next number.
-  $7492,$01 Increment #REGc' by one.
-  $7493,$04 Jump to #R$7470 if bit 3 of #REGc' is not zero.
+  $7492,$01 Move to the next digit in the score display buffer.
+  $7493,$04 Jump back to #R$7470 until all the digits have been printed.
   $7497,$01 Switch back to the normal registers.
   $7498,$01 Return.
 
@@ -2343,7 +2361,7 @@ N $75EA Handles printing "MPH, FUEL, RPM" (bike stats) to the display.
   $75F4,$02 #REGb=#N$04 (counter; number of characters in each string).
   $75F6,$03 Call #R$74D3.
 N $75F9 At the end of each string there are two more bytes which build the up/ down arrow shown above "TARGET". This is
-.       hidden by the attributes until it's shown in-game by setting the appropriate attribute values.
+. hidden by the attributes until it's shown in-game by setting the appropriate attribute values.
   $75F9,$01 #REGa=*#REGhl.
   $75FA,$01 Switch to the shadow registers.
   $75FB,$01 #REGl'=#REGa.
@@ -2463,7 +2481,8 @@ N $76C2 Handle fuel-related audio effects during gameplay.
 
 u $76D3
 
-c $76D7
+c $76D7 Handler: Ghost Rider
+@ $76D7 label=Handler_GhostRider
   $76D7,$03 Call #R$692C.
   $76DA,$05 Return if *#R$7825 is zero.
   $76DF,$04 Write #N$00 to *#R$7825.
@@ -2478,8 +2497,7 @@ c $76D7
   $76F9,$02 Write #N$01 to *#REGhl.
   $76FB,$03 Call #R$EC0F.
   $76FE,$01 No operation.
-  $76FF,$07 #REGhl=*#R$7844+#N$01F4.
-  $7706,$03 Write #REGhl to *#R$7844.
+  $76FF,$0A Add #N$01F4 to *#R$7844.
 N $7709 Print the "#STR($BAA6,$03,$20)" messaging in the footer.
 N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $7709,$02 #REGa=#N$96 (#COLOUR$96).
@@ -2493,8 +2511,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $7725,$01 No operation.
   $7726,$03 Call #R$6D49.
   $7729,$04 Jump to #R$7742 if #REGa is higher than #N$46.
-  $772D,$07 #REGhl=*#R$7844+#N($0032,$04,$04).
-  $7734,$03 Write #REGhl to *#R$7844.
+  $772D,$0A Add #N($0032,$04,$04) to *#R$7844.
   $7737,$02 Restore #REGhl and #REGde from the stack.
   $7739,$02 Stash #REGde and #REGhl on the stack.
   $773B,$03 #REGhl=#N$FFFA.
@@ -2551,8 +2568,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $779D,$02 Set bit 7 of *#REGhl.
   $779F,$03 Jump to #R$6ED4.
   $77A2,$06 No operation.
-  $77A8,$07 #REGhl=*#R$7844+#N$03E8.
-  $77AF,$03 Write #REGhl to *#R$7844.
+  $77A8,$0A Add #N$03E8 to *#R$7844.
   $77B2,$03 Call #R$7420.
   $77B5,$03 Call #R$68AD.
   $77B8,$04 No operation.
@@ -2704,12 +2720,18 @@ g $7843
 
 g $7844 Score
 @ $7844 label=Score
-  $7846
+W $7844,$02
+
+g $7846
+@ $7846 label=HighScore
+W $7846,$02
+
+g $7848
   $7848
 
-g $784B Target
-@ $784B label=Target
-  $784B,$05
+g $784B Displayed Score
+@ $784B label=DisplayedScore
+B $784B,$05
 
 g $7850 Control Method
 @ $7850 label=ControlMethod
@@ -4693,7 +4715,8 @@ N $EC68 #HTML(#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
 
 u $EC6D
 
-c $EC6E
+c $EC6E Player Input
+@ $EC6E label=PlayerInput
   $EC6E,$04 #HTML(Write #N$00 (cursor type "C", "K" or "L") to
 . *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
   $EC72,$04 #HTML(Set CAPS LOCK on, using bit 3 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>).
