@@ -49,20 +49,20 @@ Used by the routine at <a href="754F.html">InitialiseNewGame</a>.
 <tr>
 <td class="asm-label">GameOver</td>
 <td class="address-2"><span id="757e"></span>757E</td>
-<td class="instruction">CALL <a href="7420.html">$7420</a></td>
-<td class="comment-1" rowspan="1">Call <a href="7420.html">7420</a>.</td>
+<td class="instruction">CALL <a href="7420.html">UpdateScoreDisplay</a></td>
+<td class="comment-1" rowspan="1">Call <a href="7420.html">UpdateScoreDisplay</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7581"></span>7581</td>
 <td class="instruction">LD HL,($7848)</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7844.html#7848">7848</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7848.html">7848</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7584"></span>7584</td>
 <td class="instruction">LD DE,($7846)</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=*<a href="7844.html#7846">7846</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=*<a href="7846.html">HighScore</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -92,7 +92,7 @@ Used by the routine at <a href="754F.html">InitialiseNewGame</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="758e"></span>758E</td>
 <td class="instruction">LD ($7848),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7844.html#7848">7848</a>.</td>
+<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7848.html">7848</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -115,8 +115,8 @@ Used by the routine at <a href="754F.html">InitialiseNewGame</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7596"></span>7596</td>
-<td class="instruction">CALL <a href="7420.html#7434">$7434</a></td>
-<td class="comment-1" rowspan="1">Call <a href="7420.html#7434">7434</a>.</td>
+<td class="instruction">CALL <a href="7420.html#7434">ConvertScoreToDigits</a></td>
+<td class="comment-1" rowspan="1">Call <a href="7420.html#7434">ConvertScoreToDigits</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">

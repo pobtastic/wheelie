@@ -35,7 +35,7 @@ Next: <a href="30683.html">30683</a>
 </td>
 </tr>
 </table>
-<div class="description">30423: Routine at 76D7</div>
+<div class="description">30423: Handler: Ghost Rider</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,7 +47,7 @@ Used by the routines at <a href="29038.html">29038</a> and <a href="29457.html">
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider</td>
 <td class="address-2"><span id="30423"></span>30423</td>
 <td class="instruction">CALL <a href="26924.html">DrawSpriteObject</a></td>
 <td class="comment-1" rowspan="1">Call <a href="26924.html">DrawSpriteObject</a>.</td>
@@ -117,18 +117,18 @@ Used by the routines at <a href="29038.html">29038</a> and <a href="29457.html">
 <td class="asm-label"></td>
 <td class="address-1"><span id="30443"></span>30443</td>
 <td class="instruction">CP 68</td>
-<td class="comment-1" rowspan="2">Jump to <a href="30423.html#30532">30532</a> if <span class="register">A</span> is lower than 68.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="30423.html#30532">Handler_GhostRider_2</a> if <span class="register">A</span> is lower than 68.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30445"></span>30445</td>
-<td class="instruction">JR C,<a href="30423.html#30532">30532</a></td>
+<td class="instruction">JR C,<a href="30423.html#30532">Handler_GhostRider_2</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30447"></span>30447</td>
-<td class="instruction">JR NZ,<a href="30423.html#30505">30505</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30505">30505</a> if <span class="register">A</span> is not equal to 68.</td>
+<td class="instruction">JR NZ,<a href="30423.html#30505">Handler_GhostRider_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30505">Handler_GhostRider_0</a> if <span class="register">A</span> is not equal to 68.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -174,7 +174,7 @@ Used by the routines at <a href="29038.html">29038</a> and <a href="29457.html">
 <td class="asm-label"></td>
 <td class="address-1"><span id="30463"></span>30463</td>
 <td class="instruction">LD HL,(30788)</td>
-<td class="comment-1" rowspan="3"><span class="register">HL</span>=*<a href="30788.html">Score</a>+500.</td>
+<td class="comment-1" rowspan="4">Add 500 to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -190,7 +190,6 @@ Used by the routines at <a href="29038.html">29038</a> and <a href="29457.html">
 <td class="asm-label"></td>
 <td class="address-1"><span id="30470"></span>30470</td>
 <td class="instruction">LD (30788),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -286,21 +285,21 @@ FLASH: ON).</td>
 <td class="comment-1" rowspan="1">Call <a href="27977.html">27977</a>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_0</td>
 <td class="address-2"><span id="30505"></span>30505</td>
 <td class="instruction">CP 70</td>
-<td class="comment-1" rowspan="2">Jump to <a href="30423.html#30530">30530</a> if <span class="register">A</span> is higher than 70.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="30423.html#30530">Handler_GhostRider_1</a> if <span class="register">A</span> is higher than 70.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30507"></span>30507</td>
-<td class="instruction">JR NC,<a href="30423.html#30530">30530</a></td>
+<td class="instruction">JR NC,<a href="30423.html#30530">Handler_GhostRider_1</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30509"></span>30509</td>
 <td class="instruction">LD DE,50</td>
-<td class="comment-1" rowspan="3"><span class="register">HL</span>=*<a href="30788.html">Score</a>+0050.</td>
+<td class="comment-1" rowspan="4">Add 0050 to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -316,7 +315,6 @@ FLASH: ON).</td>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30516"></span>30516</td>
 <td class="instruction">LD (30788),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -365,13 +363,13 @@ FLASH: ON).</td>
 <td class="comment-1" rowspan="1">Return.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_1</td>
 <td class="address-2"><span id="30530"></span>30530</td>
-<td class="instruction">JR NZ,<a href="30423.html#30626">30626</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30626">30626</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="30423.html#30626">Handler_GhostRider_10</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30626">Handler_GhostRider_10</a> if {} is not zero.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_2</td>
 <td class="address-2"><span id="30532"></span>30532</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="6">No operation.</td>
@@ -431,7 +429,7 @@ FLASH: ON).</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_3</td>
 <td class="address-2"><span id="30547"></span>30547</td>
 <td class="instruction">SET 7,(HL)</td>
 <td class="comment-1" rowspan="1">Set bit 7 of *<span class="register">HL</span>.</td>
@@ -451,8 +449,8 @@ FLASH: ON).</td>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30551"></span>30551</td>
-<td class="instruction">JR NZ,<a href="30423.html#30547">30547</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30547">30547</a> until <span class="register">A</span> is zero.</td>
+<td class="instruction">JR NZ,<a href="30423.html#30547">Handler_GhostRider_3</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30547">Handler_GhostRider_3</a> until <span class="register">A</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -483,7 +481,7 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_4</td>
 <td class="address-2"><span id="30559"></span>30559</td>
 <td class="instruction">PUSH HL</td>
 <td class="comment-1" rowspan="1">Stash <span class="register">HL</span> on the stack.</td>
@@ -495,7 +493,7 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="comment-1" rowspan="1"><span class="register">B</span>=6.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_5</td>
 <td class="address-2"><span id="30562"></span>30562</td>
 <td class="instruction">PUSH BC</td>
 <td class="comment-1" rowspan="1">Stash <span class="register">BC</span> on the stack.</td>
@@ -531,7 +529,7 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="comment-1" rowspan="1"><span class="register">A</span>=2.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_6</td>
 <td class="address-2"><span id="30576"></span>30576</td>
 <td class="instruction">OUT (254),A</td>
 <td class="comment-1" rowspan="1">OUT 254</td>
@@ -555,10 +553,10 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_7</td>
 <td class="address-2"><span id="30582"></span>30582</td>
-<td class="instruction">DJNZ <a href="30423.html#30582">30582</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30423.html#30582">30582</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="30423.html#30582">Handler_GhostRider_7</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30423.html#30582">Handler_GhostRider_7</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -586,8 +584,8 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30588"></span>30588</td>
-<td class="instruction">JR NZ,<a href="30423.html#30576">30576</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30576">30576</a> if <span class="register">HL</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="30423.html#30576">Handler_GhostRider_6</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30576">Handler_GhostRider_6</a> if <span class="register">HL</span> is not zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -620,7 +618,7 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="comment-1" rowspan="1"><span class="register">A</span>=6.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_8</td>
 <td class="address-2"><span id="30603"></span>30603</td>
 <td class="instruction">OUT (254),A</td>
 <td class="comment-1" rowspan="1">OUT 254</td>
@@ -644,10 +642,10 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="comment-1" rowspan="1"><span class="register">B</span>=<span class="register">C</span>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_9</td>
 <td class="address-2"><span id="30609"></span>30609</td>
-<td class="instruction">DJNZ <a href="30423.html#30609">30609</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30423.html#30609">30609</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="30423.html#30609">Handler_GhostRider_9</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30423.html#30609">Handler_GhostRider_9</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -675,8 +673,8 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30615"></span>30615</td>
-<td class="instruction">JR NZ,<a href="30423.html#30603">30603</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30603">30603</a> if <span class="register">HL</span> is not zero.</td>
+<td class="instruction">JR NZ,<a href="30423.html#30603">Handler_GhostRider_8</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="30423.html#30603">Handler_GhostRider_8</a> if <span class="register">HL</span> is not zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -687,8 +685,8 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30618"></span>30618</td>
-<td class="instruction">DJNZ <a href="30423.html#30562">30562</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30423.html#30562">30562</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="30423.html#30562">Handler_GhostRider_5</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="30423.html#30562">Handler_GhostRider_5</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -709,7 +707,7 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="comment-1" rowspan="1">Jump to <a href="28184.html#28372">28372</a>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GhostRider_10</td>
 <td class="address-2"><span id="30626"></span>30626</td>
 <td class="instruction">NOP</td>
 <td class="comment-1" rowspan="6">No operation.</td>
@@ -743,7 +741,7 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="30632"></span>30632</td>
 <td class="instruction">LD DE,1000</td>
-<td class="comment-1" rowspan="3"><span class="register">HL</span>=*<a href="30788.html">Score</a>+1000.</td>
+<td class="comment-1" rowspan="4">Add 1000 to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -759,13 +757,12 @@ This entry point is used by the routine at <a href="60458.html">60458</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="30639"></span>30639</td>
 <td class="instruction">LD (30788),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30788.html">Score</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="30642"></span>30642</td>
-<td class="instruction">CALL <a href="29728.html">29728</a></td>
-<td class="comment-1" rowspan="1">Call <a href="29728.html">29728</a>.</td>
+<td class="instruction">CALL <a href="29728.html">UpdateScoreDisplay</a></td>
+<td class="comment-1" rowspan="1">Call <a href="29728.html">UpdateScoreDisplay</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

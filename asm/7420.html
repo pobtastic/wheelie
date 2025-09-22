@@ -35,19 +35,29 @@ Next: <a href="7499.html">7499</a>
 </td>
 </tr>
 </table>
-<div class="description">7420: Routine at 7420</div>
+<div class="description">7420: Update Score Display</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="757E.html">GameOver</a>, <a href="763C.html">Handler_Fuel</a> and <a href="76D7.html">76D7</a>.
+Used by the routines at <a href="757E.html">GameOver</a>, <a href="763C.html">Handler_Fuel</a> and <a href="76D7.html">Handler_GhostRider</a>.
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="routine-comment" colspan="5">
+<span id="7420"></span>
+<div class="comments">
+<div class="paragraph">
+Convert the 16-bit into a five digit score using two's complement.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">UpdateScoreDisplay</td>
 <td class="address-2"><span id="7420"></span>7420</td>
 <td class="instruction">LD HL,($7844)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7844.html">Score</a>.</td>
@@ -56,31 +66,29 @@ Used by the routines at <a href="757E.html">GameOver</a>, <a href="763C.html">Ha
 <td class="asm-label"></td>
 <td class="address-1"><span id="7423"></span>7423</td>
 <td class="instruction">LD DE,($7846)</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=*<a href="7844.html#7846">7846</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=*<a href="7846.html">HighScore</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7427"></span>7427</td>
 <td class="instruction">AND A</td>
-<td class="comment-1" rowspan="1">Set flags.</td>
+<td class="comment-1" rowspan="3">Return if the players score is the same as the stored highscore.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7428"></span>7428</td>
 <td class="instruction">SBC HL,DE</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">DE</span> (with carry).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="742a"></span>742A</td>
 <td class="instruction">RET Z</td>
-<td class="comment-1" rowspan="1">Return if the result is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="742b"></span>742B</td>
 <td class="instruction">ADD HL,DE</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Restore the original players score value.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -93,10 +101,10 @@ This entry point is used by the routine at <a href="75AA.html">PrintGameDisplay<
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ForceScoreUpdate</td>
 <td class="address-2"><span id="742c"></span>742C</td>
 <td class="instruction">LD ($7846),HL</td>
-<td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="7844.html#7846">7846</a>.</td>
+<td class="comment-1" rowspan="1">Update the stored *<a href="7846.html">HighScore</a> value.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -108,7 +116,7 @@ This entry point is used by the routine at <a href="75AA.html">PrintGameDisplay<
 <td class="asm-label"></td>
 <td class="address-1"><span id="7430"></span>7430</td>
 <td class="instruction">LD DE,$51C6</td>
-<td class="comment-1" rowspan="1"><span class="register">DE'</span>=51C6 (screen buffer location).</td>
+<td class="comment-1" rowspan="1">Set the screen buffer position for the score display.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -127,214 +135,267 @@ This entry point is used by the routines at <a href="757E.html">GameOver</a> and
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ConvertScoreToDigits</td>
 <td class="address-2"><span id="7434"></span>7434</td>
 <td class="instruction">LD DE,$784B</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="784B.html">Target</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="784B.html">DisplayedScore</a>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7437"></span>
+<div class="comments">
+<div class="paragraph">
+Convert the binary score to decimal using the repeated subtraction method.
+</div>
+<div class="paragraph">
+Calculate the tens of thousands digit.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7437"></span>7437</td>
 <td class="instruction">LD BC,$D810</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=D810.</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=-10,000 (it's technically -10,224 which is probably a mistake).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="743a"></span>743A</td>
 <td class="instruction">LD A,$FF</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+<td class="comment-1" rowspan="1">Set the digit counter in <span class="register">A</span> to -01.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ExtractTenThousands_Loop</td>
 <td class="address-2"><span id="743c"></span>743C</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the digit counter by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="743d"></span>743D</td>
 <td class="instruction">ADD HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Subtract 10,000 from the score.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="743e"></span>743E</td>
-<td class="instruction">JR C,<a href="7420.html#743c">$743C</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="7420.html#743c">743C</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="7420.html#743c">ExtractTenThousands_Loop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="7420.html#743c">ExtractTenThousands_Loop</a> if the result is still positive.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7440"></span>7440</td>
 <td class="instruction">SBC HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Restore the valid remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7442"></span>7442</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Store the count to the score buffer in *<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7443"></span>7443</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next score digit position.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7444"></span>
+<div class="comments">
+<div class="paragraph">
+Calculate the thousands digit.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7444"></span>7444</td>
 <td class="instruction">LD BC,$FC18</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=FC18.</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=-1,000.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7447"></span>7447</td>
 <td class="instruction">LD A,$FF</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+<td class="comment-1" rowspan="1">Set the digit counter in <span class="register">A</span> to -01.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ExtractThousands_Loop</td>
 <td class="address-2"><span id="7449"></span>7449</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the digit counter by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="744a"></span>744A</td>
 <td class="instruction">ADD HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Subtract 1,000 from the score remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="744b"></span>744B</td>
-<td class="instruction">JR C,<a href="7420.html#7449">$7449</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="7420.html#7449">7449</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="7420.html#7449">ExtractThousands_Loop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="7420.html#7449">ExtractThousands_Loop</a> if the result is still positive.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="744d"></span>744D</td>
 <td class="instruction">SBC HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Restore the valid remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="744f"></span>744F</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Store the count to the score buffer in *<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7450"></span>7450</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next score digit position.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7451"></span>
+<div class="comments">
+<div class="paragraph">
+Calculate the hundreds digit.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7451"></span>7451</td>
 <td class="instruction">LD BC,$FF9C</td>
-<td class="comment-1" rowspan="1"><span class="register">BC</span>=FF9C.</td>
+<td class="comment-1" rowspan="1"><span class="register">BC</span>=-100.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7454"></span>7454</td>
 <td class="instruction">LD A,$FF</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+<td class="comment-1" rowspan="1">Set the digit counter in <span class="register">A</span> to -01.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ExtractHundreds_Loop</td>
 <td class="address-2"><span id="7456"></span>7456</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the digit counter by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7457"></span>7457</td>
 <td class="instruction">ADD HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Subtract 100 from the score remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7458"></span>7458</td>
-<td class="instruction">JR C,<a href="7420.html#7456">$7456</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="7420.html#7456">7456</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="7420.html#7456">ExtractHundreds_Loop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="7420.html#7456">ExtractHundreds_Loop</a> if the result is still positive.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="745a"></span>745A</td>
 <td class="instruction">SBC HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>-=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Restore the valid remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="745c"></span>745C</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Store the count to the score buffer in *<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="745d"></span>745D</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next score digit position.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="745e"></span>
+<div class="comments">
+<div class="paragraph">
+Calculate the tens digit.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="745e"></span>745E</td>
 <td class="instruction">LD C,$F6</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=F6.</td>
+<td class="comment-1" rowspan="1"><span class="register">C</span>=-10.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7460"></span>7460</td>
 <td class="instruction">LD A,$FF</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=FF.</td>
+<td class="comment-1" rowspan="1">Set the digit counter in <span class="register">A</span> to -01.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ExtractTens_Loop</td>
 <td class="address-2"><span id="7462"></span>7462</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the digit counter by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7463"></span>7463</td>
 <td class="instruction">ADD HL,BC</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Subtract 10 from the score remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7464"></span>7464</td>
-<td class="instruction">JR C,<a href="7420.html#7462">$7462</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="7420.html#7462">7462</a> if {} is lower.</td>
+<td class="instruction">JR C,<a href="7420.html#7462">ExtractTens_Loop</a></td>
+<td class="comment-1" rowspan="1">Jump back to <a href="7420.html#7462">ExtractTens_Loop</a> if the result is still positive.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7466"></span>7466</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Store the count to the score buffer in *<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7467"></span>7467</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next score digit position.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7468"></span>
+<div class="comments">
+<div class="paragraph">
+Store the units digit.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7468"></span>7468</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">L</span>.</td>
+<td class="comment-1" rowspan="1">Get the final remainder.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7469"></span>7469</td>
 <td class="instruction">ADD A,$0A</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=0A.</td>
+<td class="comment-1" rowspan="1">Compensate for the last subtraction.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="746b"></span>746B</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Store the result to the score buffer in *<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -346,7 +407,7 @@ This entry point is used by the routines at <a href="757E.html">GameOver</a> and
 <td class="asm-label"></td>
 <td class="address-1"><span id="746d"></span>746D</td>
 <td class="instruction">LD BC,$784B</td>
-<td class="comment-1" rowspan="1"><span class="register">BC'</span>=<a href="784B.html">Target</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">BC'</span>=<a href="784B.html">DisplayedScore</a>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -362,10 +423,20 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 </td>
 </tr>
 <tr>
-<td class="asm-label">PrintTarget</td>
+<td class="asm-label">PrintScoreDigit_Loop</td>
 <td class="address-2"><span id="7470"></span>7470</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC'</span>.</td>
+<td class="comment-1" rowspan="1">Fetch the score digit value.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="7471"></span>
+<div class="comments">
+<div class="paragraph">
+Calculate the ZX Spectrum ROM font address: 3D00 + (digit * 08) + 01.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -400,6 +471,16 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 <td class="comment-1" rowspan="1"><span class="register">H'</span>=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/3D00.html">3D</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="7479"></span>
+<div class="comments">
+<div class="paragraph">
+Copy 06 lines of font character data (skipping top and bottom whitespace).
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7479"></span>7479</td>
 <td class="instruction">LD A,(HL)</td>
@@ -414,13 +495,13 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 <td class="asm-label"></td>
 <td class="address-1"><span id="747b"></span>747B</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next font line.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="747c"></span>747C</td>
 <td class="instruction">INC D</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move down one row in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -437,13 +518,13 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 <td class="asm-label"></td>
 <td class="address-1"><span id="747f"></span>747F</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next font line.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7480"></span>7480</td>
 <td class="instruction">INC D</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move down one row in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -460,13 +541,13 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 <td class="asm-label"></td>
 <td class="address-1"><span id="7483"></span>7483</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next font line.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7484"></span>7484</td>
 <td class="instruction">INC D</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move down one row in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -483,13 +564,13 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 <td class="asm-label"></td>
 <td class="address-1"><span id="7487"></span>7487</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next font line.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7488"></span>7488</td>
 <td class="instruction">INC D</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move down one row in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -506,13 +587,13 @@ This calculation avoids the whitespace at the top and bottom of the ROM UDG; in 
 <td class="asm-label"></td>
 <td class="address-1"><span id="748b"></span>748B</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next font line.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="748c"></span>748C</td>
 <td class="instruction">INC D</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">D'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move down one row in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -551,18 +632,18 @@ Reset the screen buffer position.
 <td class="asm-label"></td>
 <td class="address-1"><span id="7492"></span>7492</td>
 <td class="instruction">INC C</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">C'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next digit in the score display buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7493"></span>7493</td>
 <td class="instruction">BIT 3,C</td>
-<td class="comment-1" rowspan="2">Jump to <a href="7420.html#7470">PrintTarget</a> if bit 3 of <span class="register">C'</span> is not zero.</td>
+<td class="comment-1" rowspan="2">Jump back to <a href="7420.html#7470">PrintScoreDigit_Loop</a> until all the digits have been printed.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="7495"></span>7495</td>
-<td class="instruction">JR NZ,<a href="7420.html#7470">PrintTarget</a></td>
+<td class="instruction">JR NZ,<a href="7420.html#7470">PrintScoreDigit_Loop</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
