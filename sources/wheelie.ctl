@@ -712,7 +712,22 @@ c $6828 Get Keyboard Input
 
 u $687D
 
-c $6880
+c $6880 Display Speedometer
+@ $6880 label=DisplaySpeedometer
+R $6880 A The speed value
+R $6880 DE Points to #N$5A45 (the attribute buffer location of the speedometer)
+E $6880 Continue on to #R$6893.
+  $6880,$04 Jump to #R$6885 if the speed value is negative.
+  $6884,$01 Make the position speed value into a negative.
+N $6885 Strip off the signed bit.
+@ $6885 label=ProcessSpeedValue
+  $6885,$02,b$01 Keep only bits 0-6.
+  $6887,$02 Divide the speed value by two and store the result in #REGl (scaled
+. speed value).
+  $6889,$02 Set the base offset value in #REGa of #N$A7.
+  $688B,$04 No operation.
+  $688F,$02 Update #REGl to #N$A7 - the scaled speed value.
+  $6891,$02 Set #REGh to the high byte of the display data table.
 
 c $6893 Copy #N$0C Bytes
 @ $6893 label=CopyTwelveBytes
@@ -874,7 +889,7 @@ N $693B This is quite clever, and very subtle. It's probably easier here to
 . show examples:
 . #TABLE(default,centre,centre)
 .   { =h Input Value | =h Output in #REGhl }
-.   #FOREACH($87,$C7)(n,{ #Nn | #SIM(start=$692C,stop=$693F,a=n)#R({sim[HL]})(#N({sim[HL]})) })
+.   #FOREACH($0D,$12,$87,$C7)(n,{ #Nn | #SIM(start=$692C,stop=$693F,a=n)#R({sim[HL]})(#N({sim[HL]})) })
 . TABLE#
 . From a quick glance, the following code looks pretty straight-forward, just a
 . little strange: #REGh=(frame ID * #N$02) + #N$BE - (frame ID * #N$02).
@@ -1112,7 +1127,7 @@ c $6AAC
 u $6B2A
 
 c $6B2D Handler: Player Sprite
-@ $6B2D label=Handler: PlayerSprite
+@ $6B2D label=Handler_PlayerSprite
   $6B2D,$03 Load #REGa with *#R$7822.
   $6B30,$02 Set the sprite offset in #REGe (#N$0D bytes).
   $6B32,$02 Check the direction bit.
@@ -1138,7 +1153,114 @@ c $6B48 Get Controls
   $6B48,$03 #REGhl=*#R$782C.
   $6B4B,$01 Jump to *#REGhl.
 
-c $6B4C
+c $6B4C Handler: Player Movement
+@ $6B4C label=Handler_PlayerMovement
+R $6B4C A Input state
+  $6B4C,$03 Store the current player input state in *#R$7828.
+N $6B4F Set up the directional indicator colors based on the input combination.
+. The indicators show which direction the player will move on slopes.
+N $6B4F Note that the middle body section is shared between the "UP" and "DOWN"
+. arrows, this is why the logic controls three colour variables.
+  $6B4F,$02 Initialise the "UP" indicator colour in #REGc to #INK$00 (OFF).
+  $6B51,$03 Set #INK$06 (ON) for both #REGd ("DOWN" indicator) and #REGe
+. (the middle body section of the indicators).
+  $6B54,$04 Jump to #R$6B61 if "DOWN" is being pressed.
+N $6B58 A "DOWN" key is not being pressed, so activate the "UP" indicator.
+  $6B58,$01 Change the "UP" indicator colour in #REGc to #INK$06 (ON).
+  $6B59,$02 Clear the "DOWN" indicator colour in #REGe to #INK$00 (OFF).
+  $6B5B,$04 Jump to #R$6B61 if "UP" is being pressed.
+N $6B5F Neither "UP" or "DOWN" are being pressed, so clear both indicators.
+  $6B5F,$01 Clear the "UP" indicator colour in #REGc to #INK$00 (OFF).
+  $6B60,$01 Clear the middle body section colour in #REGd to #INK$00 (OFF).
+N $6B61 Paint the indicators.
+N $6B61 First paint the "UP" section.
+@ $6B61 label=UpdateIndicatorDisplay
+  $6B61,$03 Set the attribute buffer location of the top of the indicators in
+. #REGhl to #N$5A53 to paint the "UP" section.
+  $6B64,$03 Write #REGc containing the "UP" indicator colour value to the
+. top left and right of the "UP" indicator.
+N $6B67 The body of the indicator is shared between both "UP" and "DOWN"
+. indicator arrows.
+  $6B67,$02 Alter the attribute buffer location to point to the body of the
+. indicator.
+  $6B69,$03 Write #REGd containing the middle section of the indicator colour
+. value to the middle left and right of the indicator body.
+N $6B6C Finally, paint the "DOWN" section.
+  $6B6C,$02 Alter the attribute buffer location to point to the bottom of the
+. indicators to paint the "DOWN" section.
+  $6B6E,$03 Write #REGe containing the "DOWN" indicator colour value to the
+. bottom left and right of the "DOWN" indicator.
+  $6B71,$03 No operation.
+  $6B74,$03 #REGhl=#R$7823.
+  $6B77,$02,b$01 Keep only bits 0-1.
+  $6B79,$02 Jump to #R$6B99 if #REGl is equal to #N$93.
+  $6B7B,$01 RRCA.
+  $6B7C,$01 #REGa=*#REGhl.
+  $6B7D,$02 Jump to #R$6B8C if #REGl is greater than or equal to #N$93.
+  $6B7F,$02 Compare #REGa with #N$96.
+  $6B81,$02 #REGa=#N$00.
+  $6B83,$02 Jump to #R$6B99 if #REGa was equal to #N$96 on line #R$6B7F.
+  $6B85,$01 Increment *#REGhl by one.
+  $6B86,$02 Test bit 7 of *#REGhl.
+  $6B88,$02 Jump to #R$6B99 if *#REGhl is not equal to #N$00.
+  $6B8A,$02 Jump to #R$6B97.
+
+  $6B8C,$02 Compare #REGa with #N$69.
+  $6B8E,$02 #REGa=#N$00.
+  $6B90,$02 Jump to #R$6B99 if #REGa was equal to #N$69 on line #R$6B8C.
+  $6B92,$01 Decrease *#REGhl by one.
+  $6B93,$02 Test bit 7 of *#REGhl.
+  $6B95,$02 Jump to #R$6B99 if *#REGhl is equal to #N$00.
+  $6B97,$05 Write #N$02 to *#R$7829.
+  $6B9C,$02 #REGl=#N$27.
+  $6B9E,$04 Jump to #R$6BA3 if *#REGhl is zero.
+  $6BA2,$01 Decrease *#REGhl by one.
+  $6BA3,$01 Decrease #REGl by one.
+  $6BA4,$04 Jump to #R$6BC3 if *#REGhl is not zero.
+  $6BA8,$02 #REGl=#N$23.
+  $6BAA,$01 #REGa=*#REGhl.
+  $6BAB,$01 Decrease #REGl by one.
+  $6BAC,$03 Jump to #R$6BC3 if #REGa is equal to *#REGhl.
+  $6BAF,$01 #REGa=*#REGhl.
+  $6BB0,$02 Jump to #R$6BB4 if #REGa is less than *#REGhl.
+  $6BB2,$02 Increment *#REGhl by two.
+  $6BB4,$01 Decrease *#REGhl by one.
+  $6BB5,$01 Set the bits from *#REGhl.
+  $6BB6,$01 Increment #REGa by one.
+  $6BB7,$02 Jump to #R$6BC3 if #REGa is not equal to *#REGhl.
+  $6BB9,$01 #REGa=*#REGhl.
+  $6BBA,$01 Decrease #REGl by one.
+  $6BBB,$01 Write #REGa to *#REGhl.
+  $6BBC,$01 RLCA.
+  $6BBD,$03 Jump to #R$6AC9 if #REGl is greater than *#REGhl.
+  $6BC0,$03 Jump to #R$6B10.
+  $6BC3,$02 #REGl=#N$22.
+  $6BC5,$01 #REGa=*#REGhl.
+  $6BC6,$01 Decrease #REGl by one.
+  $6BC7,$03 Jump to #R$6BEB if #REGa is equal to *#REGhl.
+  $6BCA,$02 Jump to #R$6BD9 if #REGa is less than *#REGhl.
+  $6BCC,$01 Increment *#REGhl by one.
+  $6BCD,$01 RLCA.
+  $6BCE,$02 Jump to #R$6BEA if *#REGhl is greater than or equal to *#REGhl.
+  $6BD0,$06 Jump to #R$6BE5 if *#R$7827 is zero.
+  $6BD6,$01 Decrease *#REGhl by one.
+  $6BD7,$02 Jump to #R$6BEA.
+  $6BD9,$01 Decrease *#REGhl by one.
+
+  $6BDA,$01 RLCA.
+  $6BDB,$02 Jump to #R$6BEA if *#REGhl is less than #REGa.
+  $6BDD,$01 Increment *#REGhl by one.
+  $6BDE,$06 Jump to #R$6BEA if *#R$7827 is not zero.
+  $6BE4,$01 Decrease *#REGhl by one.
+  $6BE5,$05 Write #N$03 to *#R$7827.
+  $6BEA,$01 No operation.
+  $6BEB,$02 #REGl=#N$22.
+  $6BED,$01 #REGa=*#REGhl.
+  $6BEE,$03 #REGde=#N$5A45 (attribute buffer location).
+  $6BF1,$03 Call #R$6880.
+  $6BF4,$03 #REGa=*#R$7823.
+  $6BF7,$02 #REGe=#N$85.
+  $6BF9,$03 Jump to #R$6D28.
 
 u $6BFC
 
@@ -1282,7 +1404,8 @@ c $6D96
 
 c $6DA8
 
-c $6E18
+c $6E18 Handler: Game Over
+@ $6E18 label=Handler_GameOver
   $6E18,$03 Call #R$68AD.
   $6E1B,$03 #REGhl=*#R$783A.
   $6E1E,$01 #REGa=*#REGhl.
@@ -1313,6 +1436,7 @@ c $6E18
   $6E4E,$03 Call #R$67E9.
   $6E51,$03 Call #R$6B2D.
   $6E54,$03 Call #R$6D50.
+@ $6E57 label=StartCarouselAnimation
   $6E57,$01 Stash #REGaf on the stack.
   $6E58,$06 No operation.
   $6E5E,$03 Call #R$6B2D.
@@ -1320,11 +1444,11 @@ c $6E18
   $6E62,$02,b$01 Keep only bits 0-3.
   $6E64,$02 #REGa-=#N$08.
   $6E66,$01 #REGb=#REGa.
-  $6E67,$03 #REGa=*#R$7822.
-  $6E6A,$02 Test bit 7 of #REGa.
-  $6E6C,$02 #REGa=#N$12.
-  $6E6E,$02 Jump to #R$6E72 if {} is zero.
-  $6E70,$02 #REGa=#N$0D.
+  $6E67,$05 Fetch *#R$7822 to determine if the player facing left or right?
+  $6E6C,$02 Set a default offset in #REGa of #N$12.
+  $6E6E,$02 Jump to #R$6E72 if the player is facing left.
+N $6E70 The player is facing right.
+  $6E70,$02 Change the offset in #REGa to #N$0D.
   $6E72,$01 #REGa+=#REGb.
   $6E73,$01 #REGl=#REGa.
   $6E74,$03 #REGa=*#R$7833.
@@ -1355,11 +1479,15 @@ c $6E18
   $6EA2,$01 #REGa-=#REGa.
   $6EA3,$02 #REGa+=#N$59.
   $6EA5,$01 #REGd=#REGa.
-  $6EA6,$02 #REGb=#N$04.
-  $6EA8,$02 #REGa=#N$06.
-  $6EAA,$01 Write #REGa to *#REGde.
-  $6EAB,$01 Increment #REGe by one.
-  $6EAC,$02 Decrease counter by one and loop back to #R$6EAA until counter is zero.
+N $6EA8 Paint the carousel.
+  $6EA6,$02 Set a counter in #REGb of #N$04 for the width of the carousel.
+  $6EA8,$02 #REGa=#COLOUR$06.
+@ $6EAA label=ColourCarousel_Loop
+  $6EAA,$01 Write the attribute byte to the attribute buffer address in
+. *#REGde.
+  $6EAB,$01 Move to the next attribute buffer position.
+  $6EAC,$02 Decrease the carousel width counter by one and loop back to #R$6EAA
+. until all of the carousel has been painted.
   $6EAE,$01 Restore #REGhl from the stack.
 N $6EAF Play the "player dead" audio.
 N $6EAF #HTML(#AUDIO(dead.wav)(#INCLUDE(Dead)))
@@ -2659,8 +2787,22 @@ g $7825 Sprite State
 B $7825,$01
 
 g $7826
+B $7826,$01
 
-g $7828
+g $7827
+B $7827,$01
+
+g $7828 Player Input
+@ $7828 label=PlayerInput
+D $7828 Relates to the direction for the current player input.
+. #TABLE(default,centre,centre)
+.   { =h Byte | =h Meaning }
+.   { #N$00 | No input }
+.   { #N$01 | Right }
+.   { #N$02 | Left }
+.   { #N$04 | Down }
+.   { #N$08 | Up }
+. TABLE#
 B $7828,$01
 
 u $7829
@@ -2771,21 +2913,21 @@ b $7864 Graphics: Blank
 
 b $786C Graphics: Arrow Top
 @ $786C label=Graphics_ArrowTopLeft
-  $786C,$08 #UDGTABLE(default,centre) { #UDG$786C(arrow-top-left) } UDGTABLE#
+  $786C,$08 #UDGTABLE(default,centre) { #UDG$786C,attr=$06(arrow-top-left) } UDGTABLE#
 @ $7874 label=Graphics_ArrowTopRight
-  $7874,$08 #UDGTABLE(default,centre) { #UDG$7874(arrow-top-right) } UDGTABLE#
+  $7874,$08 #UDGTABLE(default,centre) { #UDG$7874,attr=$06(arrow-top-right) } UDGTABLE#
 
 b $787C Graphics: Arrow Middle
 @ $787C label=Graphics_ArrowMiddleLeft
-  $787C,$08 #UDGTABLE(default,centre) { #UDG$787C(arrow-middle-left) } UDGTABLE#
+  $787C,$08 #UDGTABLE(default,centre) { #UDG$787C,attr=$06(arrow-middle-left) } UDGTABLE#
 @ $7884 label=Graphics_ArrowMiddleRight
-  $7884,$08 #UDGTABLE(default,centre) { #UDG$7884(arrow-middle-right) } UDGTABLE#
+  $7884,$08 #UDGTABLE(default,centre) { #UDG$7884,attr=$06(arrow-middle-right) } UDGTABLE#
 
 b $788C Graphics: Arrow Bottom
 @ $788C label=Graphics_ArrowBottomLeft
-  $788C,$08 #UDGTABLE(default,centre) { #UDG$788C(arrow-bottom-left) } UDGTABLE#
+  $788C,$08 #UDGTABLE(default,centre) { #UDG$788C,attr=$06(arrow-bottom-left) } UDGTABLE#
 @ $7894 label=Graphics_ArrowBottomRight
-  $7894,$08 #UDGTABLE(default,centre) { #UDG$7894(arrow-bottom-right) } UDGTABLE#
+  $7894,$08 #UDGTABLE(default,centre) { #UDG$7894,attr=$06(arrow-bottom-right) } UDGTABLE#
 
 b $789C Graphics: Bike (Start Screen)
 @ $789C label=Graphics_StartScreenBike
@@ -2798,7 +2940,12 @@ t $78AC Messaging: Ghostrider Is Finished
 
 b $78CC
 
-b $78E0
+b $78E0 Graphics: Carousel
+@ $78E0 label=Graphics_Carousel
+D $78E0 This is bit rotated by the routine at: #R$6E18.
+  $78E0,$20,$04 #UDGTABLE { #UDGARRAY$04,attr=$06,scale=$04,step=$04;(#PC)-(#PC+$1C)-$01-$20(carousel) } TABLE#
+
+b $7900
 
 b $8000 Graphics Data
   $8000,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_solid)
@@ -2867,12 +3014,30 @@ N $B470 Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
 B $B470,$02
 L $B46C,$06,$08
 
-g $B49C
+g $B49C Table: Speedometer Attributes
+@ $B49C label=Table_SpeedometerAttributes
+D $B49C Used by the routine at #R$6880.
+N $B49C These attribute bytes are copied to the attribute buffer using #R$6893.
+. The idea is that, #N$0C bytes are copied to represent the speed gauge, but
+. where they start from is determined by a calculation on the speed.
+.
+. The absolute minimum speed is #N$80 for right movement and #N$7F for left
+. movement, so aftter the calculation will use a starting address of #N$B4A7 to
+. copy the #N$0C bytes.
+.
+. The maximum speeds are #N$96 for right movement and #N$69 for left movement,
+. these both use a starting address of #N$B49C to copy the #N$0C bytes.
+B $B49C,$01 Attribute: "#INK(#PEEK(#PC))".
+L $B49C,$01,$17,$02
 
-w $B4DC Actions Jump Table
+g $B4B3
+
+g $B4BC
+
+g $B4DC Actions Jump Table
 @ $B4DC label=JumpTable_Actions
 D $B4DC Used by the routine at #R$6A27.
-  $B4DC,$02 #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+W $B4DC,$02 #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
 L $B4DC,$02,$07
 
 b $B4EA
@@ -2981,9 +3146,8 @@ b $BD34
 b $BDB8
 
 g $BE00
-W $BE00,$02
-W $BF0E,$02
-W $BF8E,$02
+W $BE00,$02 #N((#PC-$BE00)/$02).
+L $BE00,$02,$E0
 
 t $C3E0 Messaging: MPH
 @ $C3E0 label=Messaging_MPH
@@ -2991,7 +3155,7 @@ t $C3E0 Messaging: MPH
 
 b $C3E4 Graphics: Arrow Top
 @ $C3E4 label=Graphics_ArrowTop
-D $C3E4 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$07,scale=$04,step=$01;$786C-$7874-$08(arrow-top) } UDGTABLE#
+D $C3E4 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$786C-$7874-$08(arrow-top) } UDGTABLE#
   $C3E4,$01 See #R$786C.
   $C3E5,$01 See #R$7874.
 
@@ -3001,7 +3165,7 @@ t $C3E6 Messaging: Fuel
 
 b $C3EA Graphics: Arrow Middle
 @ $C3EA label=Graphics_ArrowMiddle
-D $C3EA #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$07,scale=$04,step=$01;$787C-$7884-$08(arrow-middle) } UDGTABLE#
+D $C3EA #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$787C-$7884-$08(arrow-middle) } UDGTABLE#
   $C3EA,$01 See #R$787C.
   $C3EB,$01 See #R$7884.
 
@@ -3011,7 +3175,7 @@ t $C3EC Messaging: RPM
 
 b $C3F0 Graphics: Arrow Bottom
 @ $C3F0 label=Graphics_ArrowBottom
-D $C3F0 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$07,scale=$04,step=$01;$788C-$7894-$08(arrow-bottom) } UDGTABLE#
+D $C3F0 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$788C-$7894-$08(arrow-bottom) } UDGTABLE#
   $C3F0,$01 See #R$788C.
   $C3F1,$01 See #R$7894.
 
@@ -4715,15 +4879,15 @@ N $EC68 #HTML(#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
 
 u $EC6D
 
-c $EC6E Player Input
-@ $EC6E label=PlayerInput
+c $EC6E Player Typed Input
+@ $EC6E label=PlayerTypedInput
   $EC6E,$04 #HTML(Write #N$00 (cursor type "C", "K" or "L") to
 . *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
   $EC72,$04 #HTML(Set CAPS LOCK on, using bit 3 of *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C6A.html">FLAGS2</a>).
   $EC76,$05 #HTML(Reset bit 5 of 
 . *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
 . which resets "when a new key has been pressed".)
-@ $EC7B label=PlayerInput_Loop
+@ $EC7B label=PlayerTypedInput_Loop
   $EC7B,$04 Keep jumping back to #R$EC7B until a key was pressed.
 N $EC7F Check which key was pressed.
   $EC7F,$03 #HTML(#REGa=<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C08.html">*LAST_K</a>.)

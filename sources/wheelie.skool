@@ -1425,23 +1425,30 @@ c$6828 LD DE,$FE00   ; #REGde=#R$FE00.
 ; Unused
 u$687D DEFB $00,$00,$00
 
-; Routine at 6880
+; Display Speedometer
 ;
 ; Used by the routine at #R$6B4C.
-c$6880 BIT 7,A       ;
- $6882 JR NZ,$6885   ;
- $6884 CPL           ;
-*$6885 AND $7F       ;
- $6887 RRA           ;
- $6888 LD L,A        ;
- $6889 LD A,$A7      ;
- $688B NOP           ;
+;
+; A The speed value
+; DE Points to #N$5A45 (the attribute buffer location of the speedometer)
+@label=DisplaySpeedometer
+c$6880 BIT 7,A       ; {Jump to #R$6885 if the speed value is negative.
+ $6882 JR NZ,$6885   ; }
+ $6884 CPL           ; Make the position speed value into a negative.
+; Strip off the signed bit.
+@label=ProcessSpeedValue
+*$6885 AND %01111111 ; Keep only bits 0-6.
+ $6887 RRA           ; {Divide the speed value by two and store the result in #REGl (scaled
+ $6888 LD L,A        ; speed value).}
+ $6889 LD A,$A7      ; Set the base offset value in #REGa of #N$A7.
+ $688B NOP           ; {No operation.
  $688C NOP           ;
  $688D NOP           ;
- $688E NOP           ;
- $688F SUB L         ;
- $6890 LD L,A        ;
- $6891 LD H,$B4      ;
+ $688E NOP           ; }
+ $688F SUB L         ; {Update #REGl to #N$A7 - the scaled speed value.
+ $6890 LD L,A        ; }
+ $6891 LD H,$B4      ; Set #REGh to the high byte of the display data table.
+; Continue on to #R$6893.
 
 ; Copy #N$0C Bytes
 ;
@@ -1634,7 +1641,7 @@ c$692C LD B,A        ; Store the sprite frame ID in #REGb.
 ; show examples:
 ; #TABLE(default,centre,centre)
 ;   { =h Input Value | =h Output in #REGhl }
-;   #FOREACH($87,$C7)(n,{ #Nn | #SIM(start=$692C,stop=$693F,a=n)#R({sim[HL]})(#N({sim[HL]})) })
+;   #FOREACH($0D,$12,$87,$C7)(n,{ #Nn | #SIM(start=$692C,stop=$693F,a=n)#R({sim[HL]})(#N({sim[HL]})) })
 ; TABLE#
 ; From a quick glance, the following code looks pretty straight-forward, just a
 ; little strange: #REGh=(frame ID * #N$02) + #N$BE - (frame ID * #N$02).
@@ -2010,7 +2017,7 @@ u$6B2A DEFB $00,$00,$00
 ; Handler: Player Sprite
 ;
 ; Used by the routines at #R$6E18, #R$7311, #R$763C and #R$76D7.
-@label=Handler: PlayerSprite
+@label=Handler_PlayerSprite
 c$6B2D LD A,($7822)  ; Load #REGa with *#R$7822.
  $6B30 LD E,$0D      ; Set the sprite offset in #REGe (#N$0D bytes).
  $6B32 BIT 7,A       ; Check the direction bit.
@@ -2041,116 +2048,146 @@ u$6B47 DEFB $00
 c$6B48 LD HL,($782C) ; #REGhl=*#R$782C.
  $6B4B JP (HL)       ; Jump to *#REGhl.
 
-; Routine at 6B4C
+; Handler: Player Movement
 ;
 ; Used by the routine at #R$6C00.
-c$6B4C LD ($7828),A  ;
- $6B4F LD C,$00      ;
- $6B51 LD DE,$0606   ;
- $6B54 BIT 2,A       ;
- $6B56 JR NZ,$6B61   ;
- $6B58 LD C,E        ;
- $6B59 LD E,$00      ;
- $6B5B BIT 3,A       ;
- $6B5D JR NZ,$6B61   ;
- $6B5F LD C,E        ;
- $6B60 LD D,E        ;
-*$6B61 LD HL,$5A53   ;
- $6B64 LD (HL),C     ;
- $6B65 INC L         ;
- $6B66 LD (HL),C     ;
- $6B67 LD L,$73      ;
- $6B69 LD (HL),D     ;
- $6B6A INC L         ;
- $6B6B LD (HL),D     ;
- $6B6C LD L,$93      ;
- $6B6E LD (HL),E     ;
- $6B6F INC L         ;
- $6B70 LD (HL),E     ;
- $6B71 NOP           ;
+;
+; A Input state
+@label=Handler_PlayerMovement
+c$6B4C LD ($7828),A  ; Store the current player input state in *#R$7828.
+; Set up the directional indicator colors based on the input combination.
+; The indicators show which direction the player will move on slopes.
+; .
+; Note that the middle body section is shared between the "UP" and "DOWN"
+; arrows, this is why the logic controls three colour variables.
+ $6B4F LD C,$00      ; Initialise the "UP" indicator colour in #REGc to #INK$00
+                     ; (OFF).
+ $6B51 LD DE,$0606   ; Set #INK$06 (ON) for both #REGd ("DOWN" indicator) and #REGe
+                     ; (the middle body section of the indicators).
+ $6B54 BIT 2,A       ; {Jump to #R$6B61 if "DOWN" is being pressed.
+ $6B56 JR NZ,$6B61   ; }
+; A "DOWN" key is not being pressed, so activate the "UP" indicator.
+ $6B58 LD C,E        ; Change the "UP" indicator colour in #REGc to #INK$06
+                     ; (ON).
+ $6B59 LD E,$00      ; Clear the "DOWN" indicator colour in #REGe to #INK$00
+                     ; (OFF).
+ $6B5B BIT 3,A       ; {Jump to #R$6B61 if "UP" is being pressed.
+ $6B5D JR NZ,$6B61   ; }
+; Neither "UP" or "DOWN" are being pressed, so clear both indicators.
+ $6B5F LD C,E        ; Clear the "UP" indicator colour in #REGc to #INK$00
+                     ; (OFF).
+ $6B60 LD D,E        ; Clear the middle body section colour in #REGd to #INK$00
+                     ; (OFF).
+; Paint the indicators.
+; .
+; First paint the "UP" section.
+@label=UpdateIndicatorDisplay
+*$6B61 LD HL,$5A53   ; Set the attribute buffer location of the top of the indicators in
+                     ; #REGhl to #N$5A53 to paint the "UP" section.
+ $6B64 LD (HL),C     ; {Write #REGc containing the "UP" indicator colour value to the
+ $6B65 INC L         ; top left and right of the "UP" indicator.
+ $6B66 LD (HL),C     ; }
+; The body of the indicator is shared between both "UP" and "DOWN"
+; indicator arrows.
+ $6B67 LD L,$73      ; Alter the attribute buffer location to point to the body of the
+                     ; indicator.
+ $6B69 LD (HL),D     ; {Write #REGd containing the middle section of the indicator colour
+ $6B6A INC L         ; value to the middle left and right of the indicator body.
+ $6B6B LD (HL),D     ; }
+; Finally, paint the "DOWN" section.
+ $6B6C LD L,$93      ; Alter the attribute buffer location to point to the bottom of the
+                     ; indicators to paint the "DOWN" section.
+ $6B6E LD (HL),E     ; {Write #REGe containing the "DOWN" indicator colour value to the
+ $6B6F INC L         ; bottom left and right of the "DOWN" indicator.
+ $6B70 LD (HL),E     ; }
+ $6B71 NOP           ; {No operation.
  $6B72 NOP           ;
- $6B73 NOP           ;
- $6B74 LD HL,$7823   ;
- $6B77 AND $03       ;
- $6B79 JR Z,$6B99    ;
- $6B7B RRCA          ;
- $6B7C LD A,(HL)     ;
- $6B7D JR NC,$6B8C   ;
- $6B7F CP $96        ;
- $6B81 LD A,$00      ;
- $6B83 JR Z,$6B99    ;
- $6B85 INC (HL)      ;
- $6B86 BIT 7,(HL)    ;
- $6B88 JR NZ,$6B99   ;
- $6B8A JR $6B97      ;
-*$6B8C CP $69        ;
- $6B8E LD A,$00      ;
- $6B90 JR Z,$6B99    ;
- $6B92 DEC (HL)      ;
- $6B93 BIT 7,(HL)    ;
- $6B95 JR Z,$6B99    ;
-*$6B97 LD A,$02      ;
-*$6B99 LD ($7829),A  ;
- $6B9C LD L,$27      ;
- $6B9E LD A,(HL)     ;
+ $6B73 NOP           ; }
+ $6B74 LD HL,$7823   ; #REGhl=#R$7823.
+ $6B77 AND %00000011 ; Keep only bits 0-1.
+ $6B79 JR Z,$6B99    ; Jump to #R$6B99 if #REGl is equal to #N$93.
+ $6B7B RRCA          ; RRCA.
+ $6B7C LD A,(HL)     ; #REGa=*#REGhl.
+ $6B7D JR NC,$6B8C   ; Jump to #R$6B8C if #REGl is greater than or equal to
+                     ; #N$93.
+ $6B7F CP $96        ; Compare #REGa with #N$96.
+ $6B81 LD A,$00      ; #REGa=#N$00.
+ $6B83 JR Z,$6B99    ; Jump to #R$6B99 if #REGa was equal to #N$96 on line
+                     ; #R$6B7F.
+ $6B85 INC (HL)      ; Increment *#REGhl by one.
+ $6B86 BIT 7,(HL)    ; Test bit 7 of *#REGhl.
+ $6B88 JR NZ,$6B99   ; Jump to #R$6B99 if *#REGhl is not equal to #N$00.
+ $6B8A JR $6B97      ; Jump to #R$6B97.
+*$6B8C CP $69        ; Compare #REGa with #N$69.
+ $6B8E LD A,$00      ; #REGa=#N$00.
+ $6B90 JR Z,$6B99    ; Jump to #R$6B99 if #REGa was equal to #N$69 on line
+                     ; #R$6B8C.
+ $6B92 DEC (HL)      ; Decrease *#REGhl by one.
+ $6B93 BIT 7,(HL)    ; Test bit 7 of *#REGhl.
+ $6B95 JR Z,$6B99    ; Jump to #R$6B99 if *#REGhl is equal to #N$00.
+*$6B97 LD A,$02      ; {Write #N$02 to *#R$7829.
+*$6B99 LD ($7829),A  ; }
+ $6B9C LD L,$27      ; #REGl=#N$27.
+ $6B9E LD A,(HL)     ; {Jump to #R$6BA3 if *#REGhl is zero.
  $6B9F AND A         ;
- $6BA0 JR Z,$6BA3    ;
- $6BA2 DEC (HL)      ;
-*$6BA3 DEC L         ;
- $6BA4 LD A,(HL)     ;
+ $6BA0 JR Z,$6BA3    ; }
+ $6BA2 DEC (HL)      ; Decrease *#REGhl by one.
+*$6BA3 DEC L         ; Decrease #REGl by one.
+ $6BA4 LD A,(HL)     ; {Jump to #R$6BC3 if *#REGhl is not zero.
  $6BA5 AND A         ;
- $6BA6 JR NZ,$6BC3   ;
- $6BA8 LD L,$23      ;
- $6BAA LD A,(HL)     ;
- $6BAB DEC L         ;
- $6BAC CP (HL)       ;
- $6BAD JR Z,$6BC3    ;
- $6BAF LD A,(HL)     ;
- $6BB0 JR C,$6BB4    ;
- $6BB2 INC (HL)      ;
- $6BB3 INC (HL)      ;
-*$6BB4 DEC (HL)      ;
- $6BB5 OR (HL)       ;
- $6BB6 INC A         ;
- $6BB7 JR NZ,$6BC3   ;
- $6BB9 LD A,(HL)     ;
- $6BBA DEC L         ;
- $6BBB LD (HL),A     ;
- $6BBC RLCA          ;
- $6BBD JP NC,$6AC9   ;
- $6BC0 JP $6B10      ;
-*$6BC3 LD L,$22      ;
- $6BC5 LD A,(HL)     ;
- $6BC6 DEC L         ;
- $6BC7 CP (HL)       ;
- $6BC8 JR Z,$6BEB    ;
- $6BCA JR C,$6BD9    ;
- $6BCC INC (HL)      ;
- $6BCD RLCA          ;
- $6BCE JR NC,$6BEA   ;
- $6BD0 LD A,($7827)  ;
+ $6BA6 JR NZ,$6BC3   ; }
+ $6BA8 LD L,$23      ; #REGl=#N$23.
+ $6BAA LD A,(HL)     ; #REGa=*#REGhl.
+ $6BAB DEC L         ; Decrease #REGl by one.
+ $6BAC CP (HL)       ; {Jump to #R$6BC3 if #REGa is equal to *#REGhl.
+ $6BAD JR Z,$6BC3    ; }
+ $6BAF LD A,(HL)     ; #REGa=*#REGhl.
+ $6BB0 JR C,$6BB4    ; Jump to #R$6BB4 if #REGa is less than *#REGhl.
+ $6BB2 INC (HL)      ; {Increment *#REGhl by two.
+ $6BB3 INC (HL)      ; }
+*$6BB4 DEC (HL)      ; Decrease *#REGhl by one.
+ $6BB5 OR (HL)       ; Set the bits from *#REGhl.
+ $6BB6 INC A         ; Increment #REGa by one.
+ $6BB7 JR NZ,$6BC3   ; Jump to #R$6BC3 if #REGa is not equal to *#REGhl.
+ $6BB9 LD A,(HL)     ; #REGa=*#REGhl.
+ $6BBA DEC L         ; Decrease #REGl by one.
+ $6BBB LD (HL),A     ; Write #REGa to *#REGhl.
+ $6BBC RLCA          ; RLCA.
+ $6BBD JP NC,$6AC9   ; Jump to #R$6AC9 if #REGl is greater than *#REGhl.
+ $6BC0 JP $6B10      ; Jump to #R$6B10.
+*$6BC3 LD L,$22      ; #REGl=#N$22.
+ $6BC5 LD A,(HL)     ; #REGa=*#REGhl.
+ $6BC6 DEC L         ; Decrease #REGl by one.
+ $6BC7 CP (HL)       ; {Jump to #R$6BEB if #REGa is equal to *#REGhl.
+ $6BC8 JR Z,$6BEB    ; }
+ $6BCA JR C,$6BD9    ; Jump to #R$6BD9 if #REGa is less than *#REGhl.
+ $6BCC INC (HL)      ; Increment *#REGhl by one.
+ $6BCD RLCA          ; RLCA.
+ $6BCE JR NC,$6BEA   ; Jump to #R$6BEA if *#REGhl is greater than or equal to
+                     ; *#REGhl.
+ $6BD0 LD A,($7827)  ; {Jump to #R$6BE5 if *#R$7827 is zero.
  $6BD3 AND A         ;
- $6BD4 JR Z,$6BE5    ;
- $6BD6 DEC (HL)      ;
- $6BD7 JR $6BEA      ;
-*$6BD9 DEC (HL)      ;
- $6BDA RLCA          ;
- $6BDB JR C,$6BEA    ;
- $6BDD INC (HL)      ;
- $6BDE LD A,($7827)  ;
+ $6BD4 JR Z,$6BE5    ; }
+ $6BD6 DEC (HL)      ; Decrease *#REGhl by one.
+ $6BD7 JR $6BEA      ; Jump to #R$6BEA.
+*$6BD9 DEC (HL)      ; Decrease *#REGhl by one.
+ $6BDA RLCA          ; RLCA.
+ $6BDB JR C,$6BEA    ; Jump to #R$6BEA if *#REGhl is less than #REGa.
+ $6BDD INC (HL)      ; Increment *#REGhl by one.
+ $6BDE LD A,($7827)  ; {Jump to #R$6BEA if *#R$7827 is not zero.
  $6BE1 AND A         ;
- $6BE2 JR NZ,$6BEA   ;
- $6BE4 DEC (HL)      ;
-*$6BE5 LD A,$03      ;
- $6BE7 LD ($7827),A  ;
-*$6BEA NOP           ;
-*$6BEB LD L,$22      ;
- $6BED LD A,(HL)     ;
- $6BEE LD DE,$5A45   ;
- $6BF1 CALL $6880    ;
- $6BF4 LD A,($7823)  ;
- $6BF7 LD E,$85      ;
- $6BF9 JP $6D28      ;
+ $6BE2 JR NZ,$6BEA   ; }
+ $6BE4 DEC (HL)      ; Decrease *#REGhl by one.
+*$6BE5 LD A,$03      ; {Write #N$03 to *#R$7827.
+ $6BE7 LD ($7827),A  ; }
+*$6BEA NOP           ; No operation.
+*$6BEB LD L,$22      ; #REGl=#N$22.
+ $6BED LD A,(HL)     ; #REGa=*#REGhl.
+ $6BEE LD DE,$5A45   ; #REGde=#N$5A45 (attribute buffer location).
+ $6BF1 CALL $6880    ; Call #R$6880.
+ $6BF4 LD A,($7823)  ; #REGa=*#R$7823.
+ $6BF7 LD E,$85      ; #REGe=#N$85.
+ $6BF9 JP $6D28      ; Jump to #R$6D28.
 
 ; Unused
 u$6BFC DEFB $00,$00,$00,$00
@@ -2509,9 +2546,10 @@ c$6DA8 LD A,(BC)     ;
  $6E12 LD BC,$0607   ;
  $6E15 LD BC,$0000   ;
 
-; Routine at 6E18
+; Handler: Game Over
 ;
 ; Used by the routine at #R$6C00.
+@label=Handler_GameOver
 c$6E18 CALL $68AD    ; Call #R$68AD.
  $6E1B LD HL,($783A) ; #REGhl=*#R$783A.
  $6E1E LD A,(HL)     ; #REGa=*#REGhl.
@@ -2543,6 +2581,7 @@ c$6E18 CALL $68AD    ; Call #R$68AD.
  $6E4E CALL $67E9    ; Call #R$67E9.
 *$6E51 CALL $6B2D    ; Call #R$6B2D.
  $6E54 CALL $6D50    ; Call #R$6D50.
+@label=StartCarouselAnimation
 *$6E57 PUSH AF       ; Stash #REGaf on the stack.
  $6E58 NOP           ; {No operation.
  $6E59 NOP           ;
@@ -2555,11 +2594,12 @@ c$6E18 CALL $68AD    ; Call #R$68AD.
  $6E62 AND %00001111 ; Keep only bits 0-3.
  $6E64 SUB $08       ; #REGa-=#N$08.
  $6E66 LD B,A        ; #REGb=#REGa.
- $6E67 LD A,($7822)  ; #REGa=*#R$7822.
- $6E6A BIT 7,A       ; Test bit 7 of #REGa.
- $6E6C LD A,$12      ; #REGa=#N$12.
- $6E6E JR Z,$6E72    ; Jump to #R$6E72 if {} is zero.
- $6E70 LD A,$0D      ; #REGa=#N$0D.
+ $6E67 LD A,($7822)  ; {Fetch *#R$7822 to determine if the player facing left
+ $6E6A BIT 7,A       ; or right?}
+ $6E6C LD A,$12      ; Set a default offset in #REGa of #N$12.
+ $6E6E JR Z,$6E72    ; Jump to #R$6E72 if the player is facing left.
+; The player is facing right.
+ $6E70 LD A,$0D      ; Change the offset in #REGa to #N$0D.
 *$6E72 ADD A,B       ; #REGa+=#REGb.
  $6E73 LD L,A        ; #REGl=#REGa.
  $6E74 LD A,($7833)  ; #REGa=*#R$7833.
@@ -2595,12 +2635,16 @@ c$6E18 CALL $68AD    ; Call #R$68AD.
  $6EA2 SBC A,A       ; #REGa-=#REGa.
  $6EA3 ADD A,$59     ; #REGa+=#N$59.
  $6EA5 LD D,A        ; #REGd=#REGa.
- $6EA6 LD B,$04      ; #REGb=#N$04.
- $6EA8 LD A,$06      ; #REGa=#N$06.
-*$6EAA LD (DE),A     ; Write #REGa to *#REGde.
- $6EAB INC E         ; Increment #REGe by one.
- $6EAC DJNZ $6EAA    ; Decrease counter by one and loop back to #R$6EAA until
-                     ; counter is zero.
+ $6EA6 LD B,$04      ; Set a counter in #REGb of #N$04 for the width of the
+                     ; carousel.
+; Paint the carousel.
+ $6EA8 LD A,$06      ; #REGa=#COLOUR$06.
+@label=ColourCarousel_Loop
+*$6EAA LD (DE),A     ; Write the attribute byte to the attribute buffer address in
+                     ; *#REGde.
+ $6EAB INC E         ; Move to the next attribute buffer position.
+ $6EAC DJNZ $6EAA    ; Decrease the carousel width counter by one and loop back to #R$6EAA
+                     ; until all of the carousel has been painted.
  $6EAE POP HL        ; Restore #REGhl from the stack.
 ; Play the "player dead" audio.
 ; .
@@ -4558,9 +4602,23 @@ g$7824 DEFB $02
 g$7825 DEFB $00
 
 ; Game status buffer entry at 7826
-g$7826 DEFB $00,$07
+g$7826 DEFB $00
 
-; Game status buffer entry at 7828
+; Game status buffer entry at 7827
+g$7827 DEFB $07
+
+; Player Input
+;
+; Relates to the direction for the current player input.
+; #TABLE(default,centre,centre)
+;   { =h Byte | =h Meaning }
+;   { #N$00 | No input }
+;   { #N$01 | Right }
+;   { #N$02 | Left }
+;   { #N$04 | Down }
+;   { #N$08 | Up }
+; TABLE#
+@label=PlayerInput
 g$7828 DEFB $07
 
 ; Unused
@@ -4685,32 +4743,32 @@ b$7864 DEFB $00,$00,$00,$00,$00,$00,$00,$00 ; #UDGTABLE(default,centre) {
 ; Graphics: Arrow Top
 @label=Graphics_ArrowTopLeft
 b$786C DEFB $01,$03,$07,$0F,$1F,$3F,$7F,$FF ; #UDGTABLE(default,centre) {
-                                            ; #UDG$786C(arrow-top-left) }
-                                            ; UDGTABLE#
+                                            ; #UDG$786C,attr=$06(arrow-top-left)
+                                            ; } UDGTABLE#
 @label=Graphics_ArrowTopRight
  $7874 DEFB $80,$C0,$E0,$F0,$F8,$FC,$FE,$FF ; #UDGTABLE(default,centre) {
-                                            ; #UDG$7874(arrow-top-right) }
-                                            ; UDGTABLE#
+                                            ; #UDG$7874,attr=$06(arrow-top-right)
+                                            ; } UDGTABLE#
 
 ; Graphics: Arrow Middle
 @label=Graphics_ArrowMiddleLeft
 b$787C DEFB $0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F ; #UDGTABLE(default,centre) {
-                                            ; #UDG$787C(arrow-middle-left) }
-                                            ; UDGTABLE#
+                                            ; #UDG$787C,attr=$06(arrow-middle-left)
+                                            ; } UDGTABLE#
 @label=Graphics_ArrowMiddleRight
  $7884 DEFB $F0,$F0,$F0,$F0,$F0,$F0,$F0,$F0 ; #UDGTABLE(default,centre) {
-                                            ; #UDG$7884(arrow-middle-right) }
-                                            ; UDGTABLE#
+                                            ; #UDG$7884,attr=$06(arrow-middle-right)
+                                            ; } UDGTABLE#
 
 ; Graphics: Arrow Bottom
 @label=Graphics_ArrowBottomLeft
 b$788C DEFB $FF,$7F,$3F,$1F,$0F,$07,$03,$01 ; #UDGTABLE(default,centre) {
-                                            ; #UDG$788C(arrow-bottom-left) }
-                                            ; UDGTABLE#
+                                            ; #UDG$788C,attr=$06(arrow-bottom-left)
+                                            ; } UDGTABLE#
 @label=Graphics_ArrowBottomRight
  $7894 DEFB $FF,$FE,$FC,$F8,$F0,$E0,$C0,$80 ; #UDGTABLE(default,centre) {
-                                            ; #UDG$7894(arrow-bottom-right) }
-                                            ; UDGTABLE#
+                                            ; #UDG$7894,attr=$06(arrow-bottom-right)
+                                            ; } UDGTABLE#
 
 ; Graphics: Bike (Start Screen)
 ;
@@ -4728,12 +4786,21 @@ b$78CC DEFB $10,$03,$16,$04,$28,$04,$1E,$06
  $78D4 DEFB $2D,$04,$0F,$05,$32,$01,$3E,$02
  $78DC DEFB $0A,$03,$13,$02
 
-; Data block at 78E0
-b$78E0 DEFB $00,$55,$00,$00,$00,$00,$00,$00
- $78E8 DEFB $01,$00,$41,$40,$00,$00,$00,$00
- $78F0 DEFB $04,$00,$14,$10,$00,$00,$00,$00
- $78F8 DEFB $01,$55,$41,$40,$00,$00,$00,$00
- $7900 DEFB $00,$15,$6F,$CA,$44,$30,$33,$24
+; Graphics: Carousel
+;
+; This is bit rotated by the routine at: #R$6E18.
+@label=Graphics_Carousel
+b$78E0 DEFB $00,$55,$00,$00 ; {#UDGTABLE {
+ $78E4 DEFB $00,$00,$00,$00 ; #UDGARRAY$04,attr=$06,scale=$04,step=$04;(#PC)-(#PC+$1C)-$01-$20(carousel)
+ $78E8 DEFB $01,$00,$41,$40 ; } TABLE#
+ $78EC DEFB $00,$00,$00,$00 ;
+ $78F0 DEFB $04,$00,$14,$10 ;
+ $78F4 DEFB $00,$00,$00,$00 ;
+ $78F8 DEFB $01,$55,$41,$40 ;
+ $78FC DEFB $00,$00,$00,$00 ; }
+
+; Data block at 7900
+b$7900 DEFB $00,$15,$6F,$CA,$44,$30,$33,$24
  $7908 DEFB $B1,$13,$AA,$F0,$98,$8E,$C4,$83
  $7910 DEFB $9C,$F8,$AE,$06,$C9,$26,$59,$2B
  $7918 DEFB $BF,$F7,$92,$DE,$41,$13,$C6,$2E
@@ -5824,12 +5891,53 @@ g$B46C DEFB $49,$47,$48,$49
 ; Vertical component: #MAP(#PEEK(#PC))(Yes,0:No).
  $B49A DEFB $00,$00
 
-; Game status buffer entry at B49C
-g$B49C DEFB $12,$12,$12,$12,$12,$12,$12,$12
- $B4A4 DEFB $12,$12,$12,$12,$12,$00,$00,$00
- $B4AC DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $B4B4 DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $B4BC DEFB $A7,$A6,$A5,$A4,$A3,$A2,$A1,$A0
+; Table: Speedometer Attributes
+;
+; Used by the routine at #R$6880.
+;
+; .
+;
+; These attribute bytes are copied to the attribute buffer using #R$6893.
+; The idea is that, #N$0C bytes are copied to represent the speed gauge, but
+; where they start from is determined by a calculation on the speed.
+; .
+; A speed of #N$00 is not an option, so the absolute minimum speed (#N$80 for
+; right movement, and #N$7F for left movement) will use a starting address of
+; #N$B4A7 to copy the #N$0C bytes.
+; .
+; The maximum speeds are #N$96 for right movement and #N$69 for left movement,
+; these both use a starting address of #N$B49C to copy the #N$0C bytes.
+@label=Table_SpeedometerAttributes
+g$B49C DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B49D DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B49E DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B49F DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A0 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A1 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A2 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A3 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A4 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A5 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A6 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A7 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A8 DEFB $12      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4A9 DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4AA DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4AB DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4AC DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4AD DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4AE DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4AF DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4B0 DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4B1 DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+ $B4B2 DEFB $00      ; Attribute: "#INK(#PEEK(#PC))".
+
+; Game status buffer entry at B4B3
+g$B4B3 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $B4BB DEFB $00
+
+; Game status buffer entry at B4BC
+g$B4BC DEFB $A7,$A6,$A5,$A4,$A3,$A2,$A1,$A0
  $B4C4 DEFB $9F,$A5,$A4,$A3,$A2,$A1,$A0,$9F
  $B4CC DEFB $9E,$A3,$A2,$A1,$A0,$9F,$9E,$9D
  $B4D4 DEFB $00,$00,$00,$00,$00,$00,$00,$00
@@ -5838,7 +5946,7 @@ g$B49C DEFB $12,$12,$12,$12,$12,$12,$12,$12
 ;
 ; Used by the routine at #R$6A27.
 @label=JumpTable_Actions
-w$B4DC DEFW $6F4A    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
+g$B4DC DEFW $6F4A    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
  $B4DE DEFW $6FFD    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
  $B4E0 DEFW $6FC0    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
  $B4E2 DEFW $6F99    ; #D(#PEEK(#PC)+#PEEK(#PC+$01)*$0100).
@@ -6199,65 +6307,230 @@ b$BDB8 DEFB $88,$23,$89,$24,$8A,$25,$8B,$26
  $BDF8 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; Game status buffer entry at BE00
-g$BE00 DEFW $D977
- $BE02 DEFB $CC,$D9,$94,$C5,$DE,$C5,$20,$C6
- $BE0A DEFB $62,$C6,$A4,$C6,$F1,$C6,$3E,$C7
- $BE12 DEFB $83,$C7,$D8,$C7,$25,$C8,$67,$C8
- $BE1A DEFB $B1,$C8,$FB,$C8,$3D,$C9,$0E,$CE
- $BE22 DEFB $58,$CE,$A2,$CE,$F7,$CE,$3C,$CF
- $BE2A DEFB $86,$CF,$D0,$CF,$1A,$D0,$77,$D0
- $BE32 DEFB $CF,$D0,$11,$D1,$6E,$D1,$DC,$D1
- $BE3A DEFB $42,$D2,$C8,$D2,$23,$D3,$00,$C5
- $BE42 DEFB $4A,$C5,$94,$C5,$DE,$C5,$20,$C6
- $BE4A DEFB $62,$C6,$A4,$C6,$F1,$C6,$3E,$C7
- $BE52 DEFB $83,$C7,$D8,$C7,$25,$C8,$67,$C8
- $BE5A DEFB $B1,$C8,$FB,$C8,$3D,$C9,$0E,$CE
- $BE62 DEFB $58,$CE,$A2,$CE,$F7,$CE,$3C,$CF
- $BE6A DEFB $86,$CF,$D0,$CF,$1A,$D0,$77,$D0
- $BE72 DEFB $CF,$D0,$11,$D1,$6E,$D1,$DC,$D1
- $BE7A DEFB $42,$D2,$C8,$D2,$23,$D3,$29,$D9
- $BE82 DEFB $50,$D9,$1B,$CA,$65,$CA,$A7,$CA
- $BE8A DEFB $E9,$CA,$2B,$CB,$78,$CB,$C5,$CB
- $BE92 DEFB $0A,$CC,$5F,$CC,$AC,$CC,$EE,$CC
- $BE9A DEFB $38,$CD,$82,$CD,$C4,$CD,$21,$DA
- $BEA2 DEFB $6B,$DA,$B5,$DA,$0A,$DB,$4F,$DB
- $BEAA DEFB $99,$DB,$E3,$DB,$2D,$DC,$8A,$DC
- $BEB2 DEFB $E2,$DC,$24,$DD,$81,$DD,$EF,$DD
- $BEBA DEFB $55,$DE,$DB,$DE,$36,$DF,$87,$C9
- $BEC2 DEFB $D1,$C9,$1B,$CA,$65,$CA,$A7,$CA
- $BECA DEFB $E9,$CA,$2B,$CB,$78,$CB,$C5,$CB
- $BED2 DEFB $0A,$CC,$5F,$CC,$AC,$CC,$EE,$CC
- $BEDA DEFB $38,$CD,$82,$CD,$C4,$CD,$21,$DA
- $BEE2 DEFB $6B,$DA,$B5,$DA,$0A,$DB,$4F,$DB
- $BEEA DEFB $99,$DB,$E3,$DB,$2D,$DC,$8A,$DC
- $BEF2 DEFB $E2,$DC,$24,$DD,$81,$DD,$EF,$DD
- $BEFA DEFB $55,$DE,$DB,$DE,$36,$DF,$86,$D3
- $BF02 DEFB $DC,$D3,$26,$D4,$7B,$D4,$C5,$D4
- $BF0A DEFB $25,$D5,$85,$D5
- $BF0E DEFW $D5CA
- $BF10 DEFB $17,$D6,$3E,$D6,$52,$D6,$79,$D6
- $BF18 DEFB $A0,$D6,$D2,$D6,$04,$D7,$41,$D7
- $BF20 DEFB $60,$D7,$87,$D7,$A6,$D7,$CD,$D7
- $BF28 DEFB $E4,$D7,$FB,$D7,$22,$D8,$49,$D8
- $BF30 DEFB $7B,$D8,$B5,$D8,$EF,$D8,$00,$C5
- $BF38 DEFB $17,$C5,$2E,$C5,$4D,$C5,$00,$C5
- $BF40 DEFB $86,$D3,$DC,$D3,$26,$D4,$7B,$D4
- $BF48 DEFB $C5,$D4,$25,$D5,$85,$D5,$CA,$D5
- $BF50 DEFB $17,$D6,$3E,$D6,$52,$D6,$79,$D6
- $BF58 DEFB $A0,$D6,$D2,$D6,$04,$D7,$41,$D7
- $BF60 DEFB $60,$D7,$87,$D7,$A6,$D7,$CD,$D7
- $BF68 DEFB $E4,$D7,$FB,$D7,$22,$D8,$49,$D8
- $BF70 DEFB $7B,$D8,$B5,$D8,$EF,$D8,$29,$D9
- $BF78 DEFB $50,$D9,$77,$D9,$CC,$D9,$00,$C5
- $BF80 DEFB $99,$DF,$EF,$DF,$39,$E0,$8E,$E0
- $BF88 DEFB $D8,$E0,$38,$E1,$98,$E1
- $BF8E DEFW $E1DD
- $BF90 DEFB $2A,$E2,$51,$E2,$65,$E2,$8C,$E2
- $BF98 DEFB $B3,$E2,$E5,$E2,$17,$E3,$54,$E3
- $BFA0 DEFB $73,$E3,$9A,$E3,$B9,$E3,$E0,$E3
- $BFA8 DEFB $F7,$E3,$0E,$E4,$35,$E4,$5C,$E4
- $BFB0 DEFB $8E,$E4,$C8,$E4,$02,$E5,$87,$C9
- $BFB8 DEFB $9E,$C9,$B5,$C9,$D4,$C9,$00,$C5
+g$BE00 DEFW $D977                           ; #N((#PC-$BE00)/$02).
+ $BE02 DEFW $D9CC                           ; #N((#PC-$BE00)/$02).
+ $BE04 DEFW $C594                           ; #N((#PC-$BE00)/$02).
+ $BE06 DEFW $C5DE                           ; #N((#PC-$BE00)/$02).
+ $BE08 DEFW $C620                           ; #N((#PC-$BE00)/$02).
+ $BE0A DEFW $C662                           ; #N((#PC-$BE00)/$02).
+ $BE0C DEFW $C6A4                           ; #N((#PC-$BE00)/$02).
+ $BE0E DEFW $C6F1                           ; #N((#PC-$BE00)/$02).
+ $BE10 DEFW $C73E                           ; #N((#PC-$BE00)/$02).
+ $BE12 DEFW $C783                           ; #N((#PC-$BE00)/$02).
+ $BE14 DEFW $C7D8                           ; #N((#PC-$BE00)/$02).
+ $BE16 DEFW $C825                           ; #N((#PC-$BE00)/$02).
+ $BE18 DEFW $C867                           ; #N((#PC-$BE00)/$02).
+ $BE1A DEFW $C8B1                           ; #N((#PC-$BE00)/$02).
+ $BE1C DEFW $C8FB                           ; #N((#PC-$BE00)/$02).
+ $BE1E DEFW $C93D                           ; #N((#PC-$BE00)/$02).
+ $BE20 DEFW $CE0E                           ; #N((#PC-$BE00)/$02).
+ $BE22 DEFW $CE58                           ; #N((#PC-$BE00)/$02).
+ $BE24 DEFW $CEA2                           ; #N((#PC-$BE00)/$02).
+ $BE26 DEFW $CEF7                           ; #N((#PC-$BE00)/$02).
+ $BE28 DEFW $CF3C                           ; #N((#PC-$BE00)/$02).
+ $BE2A DEFW $CF86                           ; #N((#PC-$BE00)/$02).
+ $BE2C DEFW $CFD0                           ; #N((#PC-$BE00)/$02).
+ $BE2E DEFW $D01A                           ; #N((#PC-$BE00)/$02).
+ $BE30 DEFW $D077                           ; #N((#PC-$BE00)/$02).
+ $BE32 DEFW $D0CF                           ; #N((#PC-$BE00)/$02).
+ $BE34 DEFW $D111                           ; #N((#PC-$BE00)/$02).
+ $BE36 DEFW $D16E                           ; #N((#PC-$BE00)/$02).
+ $BE38 DEFW $D1DC                           ; #N((#PC-$BE00)/$02).
+ $BE3A DEFW $D242                           ; #N((#PC-$BE00)/$02).
+ $BE3C DEFW $D2C8                           ; #N((#PC-$BE00)/$02).
+ $BE3E DEFW $D323                           ; #N((#PC-$BE00)/$02).
+ $BE40 DEFW $C500                           ; #N((#PC-$BE00)/$02).
+ $BE42 DEFW $C54A                           ; #N((#PC-$BE00)/$02).
+ $BE44 DEFW $C594                           ; #N((#PC-$BE00)/$02).
+ $BE46 DEFW $C5DE                           ; #N((#PC-$BE00)/$02).
+ $BE48 DEFW $C620                           ; #N((#PC-$BE00)/$02).
+ $BE4A DEFW $C662                           ; #N((#PC-$BE00)/$02).
+ $BE4C DEFW $C6A4                           ; #N((#PC-$BE00)/$02).
+ $BE4E DEFW $C6F1                           ; #N((#PC-$BE00)/$02).
+ $BE50 DEFW $C73E                           ; #N((#PC-$BE00)/$02).
+ $BE52 DEFW $C783                           ; #N((#PC-$BE00)/$02).
+ $BE54 DEFW $C7D8                           ; #N((#PC-$BE00)/$02).
+ $BE56 DEFW $C825                           ; #N((#PC-$BE00)/$02).
+ $BE58 DEFW $C867                           ; #N((#PC-$BE00)/$02).
+ $BE5A DEFW $C8B1                           ; #N((#PC-$BE00)/$02).
+ $BE5C DEFW $C8FB                           ; #N((#PC-$BE00)/$02).
+ $BE5E DEFW $C93D                           ; #N((#PC-$BE00)/$02).
+ $BE60 DEFW $CE0E                           ; #N((#PC-$BE00)/$02).
+ $BE62 DEFW $CE58                           ; #N((#PC-$BE00)/$02).
+ $BE64 DEFW $CEA2                           ; #N((#PC-$BE00)/$02).
+ $BE66 DEFW $CEF7                           ; #N((#PC-$BE00)/$02).
+ $BE68 DEFW $CF3C                           ; #N((#PC-$BE00)/$02).
+ $BE6A DEFW $CF86                           ; #N((#PC-$BE00)/$02).
+ $BE6C DEFW $CFD0                           ; #N((#PC-$BE00)/$02).
+ $BE6E DEFW $D01A                           ; #N((#PC-$BE00)/$02).
+ $BE70 DEFW $D077                           ; #N((#PC-$BE00)/$02).
+ $BE72 DEFW $D0CF                           ; #N((#PC-$BE00)/$02).
+ $BE74 DEFW $D111                           ; #N((#PC-$BE00)/$02).
+ $BE76 DEFW $D16E                           ; #N((#PC-$BE00)/$02).
+ $BE78 DEFW $D1DC                           ; #N((#PC-$BE00)/$02).
+ $BE7A DEFW $D242                           ; #N((#PC-$BE00)/$02).
+ $BE7C DEFW $D2C8                           ; #N((#PC-$BE00)/$02).
+ $BE7E DEFW $D323                           ; #N((#PC-$BE00)/$02).
+ $BE80 DEFW $D929                           ; #N((#PC-$BE00)/$02).
+ $BE82 DEFW $D950                           ; #N((#PC-$BE00)/$02).
+ $BE84 DEFW $CA1B                           ; #N((#PC-$BE00)/$02).
+ $BE86 DEFW $CA65                           ; #N((#PC-$BE00)/$02).
+ $BE88 DEFW $CAA7                           ; #N((#PC-$BE00)/$02).
+ $BE8A DEFW $CAE9                           ; #N((#PC-$BE00)/$02).
+ $BE8C DEFW $CB2B                           ; #N((#PC-$BE00)/$02).
+ $BE8E DEFW $CB78                           ; #N((#PC-$BE00)/$02).
+ $BE90 DEFW $CBC5                           ; #N((#PC-$BE00)/$02).
+ $BE92 DEFW $CC0A                           ; #N((#PC-$BE00)/$02).
+ $BE94 DEFW $CC5F                           ; #N((#PC-$BE00)/$02).
+ $BE96 DEFW $CCAC                           ; #N((#PC-$BE00)/$02).
+ $BE98 DEFW $CCEE                           ; #N((#PC-$BE00)/$02).
+ $BE9A DEFW $CD38                           ; #N((#PC-$BE00)/$02).
+ $BE9C DEFW $CD82                           ; #N((#PC-$BE00)/$02).
+ $BE9E DEFW $CDC4                           ; #N((#PC-$BE00)/$02).
+ $BEA0 DEFW $DA21                           ; #N((#PC-$BE00)/$02).
+ $BEA2 DEFW $DA6B                           ; #N((#PC-$BE00)/$02).
+ $BEA4 DEFW $DAB5                           ; #N((#PC-$BE00)/$02).
+ $BEA6 DEFW $DB0A                           ; #N((#PC-$BE00)/$02).
+ $BEA8 DEFW $DB4F                           ; #N((#PC-$BE00)/$02).
+ $BEAA DEFW $DB99                           ; #N((#PC-$BE00)/$02).
+ $BEAC DEFW $DBE3                           ; #N((#PC-$BE00)/$02).
+ $BEAE DEFW $DC2D                           ; #N((#PC-$BE00)/$02).
+ $BEB0 DEFW $DC8A                           ; #N((#PC-$BE00)/$02).
+ $BEB2 DEFW $DCE2                           ; #N((#PC-$BE00)/$02).
+ $BEB4 DEFW $DD24                           ; #N((#PC-$BE00)/$02).
+ $BEB6 DEFW $DD81                           ; #N((#PC-$BE00)/$02).
+ $BEB8 DEFW $DDEF                           ; #N((#PC-$BE00)/$02).
+ $BEBA DEFW $DE55                           ; #N((#PC-$BE00)/$02).
+ $BEBC DEFW $DEDB                           ; #N((#PC-$BE00)/$02).
+ $BEBE DEFW $DF36                           ; #N((#PC-$BE00)/$02).
+ $BEC0 DEFW $C987                           ; #N((#PC-$BE00)/$02).
+ $BEC2 DEFW $C9D1                           ; #N((#PC-$BE00)/$02).
+ $BEC4 DEFW $CA1B                           ; #N((#PC-$BE00)/$02).
+ $BEC6 DEFW $CA65                           ; #N((#PC-$BE00)/$02).
+ $BEC8 DEFW $CAA7                           ; #N((#PC-$BE00)/$02).
+ $BECA DEFW $CAE9                           ; #N((#PC-$BE00)/$02).
+ $BECC DEFW $CB2B                           ; #N((#PC-$BE00)/$02).
+ $BECE DEFW $CB78                           ; #N((#PC-$BE00)/$02).
+ $BED0 DEFW $CBC5                           ; #N((#PC-$BE00)/$02).
+ $BED2 DEFW $CC0A                           ; #N((#PC-$BE00)/$02).
+ $BED4 DEFW $CC5F                           ; #N((#PC-$BE00)/$02).
+ $BED6 DEFW $CCAC                           ; #N((#PC-$BE00)/$02).
+ $BED8 DEFW $CCEE                           ; #N((#PC-$BE00)/$02).
+ $BEDA DEFW $CD38                           ; #N((#PC-$BE00)/$02).
+ $BEDC DEFW $CD82                           ; #N((#PC-$BE00)/$02).
+ $BEDE DEFW $CDC4                           ; #N((#PC-$BE00)/$02).
+ $BEE0 DEFW $DA21                           ; #N((#PC-$BE00)/$02).
+ $BEE2 DEFW $DA6B                           ; #N((#PC-$BE00)/$02).
+ $BEE4 DEFW $DAB5                           ; #N((#PC-$BE00)/$02).
+ $BEE6 DEFW $DB0A                           ; #N((#PC-$BE00)/$02).
+ $BEE8 DEFW $DB4F                           ; #N((#PC-$BE00)/$02).
+ $BEEA DEFW $DB99                           ; #N((#PC-$BE00)/$02).
+ $BEEC DEFW $DBE3                           ; #N((#PC-$BE00)/$02).
+ $BEEE DEFW $DC2D                           ; #N((#PC-$BE00)/$02).
+ $BEF0 DEFW $DC8A                           ; #N((#PC-$BE00)/$02).
+ $BEF2 DEFW $DCE2                           ; #N((#PC-$BE00)/$02).
+ $BEF4 DEFW $DD24                           ; #N((#PC-$BE00)/$02).
+ $BEF6 DEFW $DD81                           ; #N((#PC-$BE00)/$02).
+ $BEF8 DEFW $DDEF                           ; #N((#PC-$BE00)/$02).
+ $BEFA DEFW $DE55                           ; #N((#PC-$BE00)/$02).
+ $BEFC DEFW $DEDB                           ; #N((#PC-$BE00)/$02).
+ $BEFE DEFW $DF36                           ; #N((#PC-$BE00)/$02).
+ $BF00 DEFW $D386                           ; #N((#PC-$BE00)/$02).
+ $BF02 DEFW $D3DC                           ; #N((#PC-$BE00)/$02).
+ $BF04 DEFW $D426                           ; #N((#PC-$BE00)/$02).
+ $BF06 DEFW $D47B                           ; #N((#PC-$BE00)/$02).
+ $BF08 DEFW $D4C5                           ; #N((#PC-$BE00)/$02).
+ $BF0A DEFW $D525                           ; #N((#PC-$BE00)/$02).
+ $BF0C DEFW $D585                           ; #N((#PC-$BE00)/$02).
+ $BF0E DEFW $D5CA                           ; #N((#PC-$BE00)/$02).
+ $BF10 DEFW $D617                           ; #N((#PC-$BE00)/$02).
+ $BF12 DEFW $D63E                           ; #N((#PC-$BE00)/$02).
+ $BF14 DEFW $D652                           ; #N((#PC-$BE00)/$02).
+ $BF16 DEFW $D679                           ; #N((#PC-$BE00)/$02).
+ $BF18 DEFW $D6A0                           ; #N((#PC-$BE00)/$02).
+ $BF1A DEFW $D6D2                           ; #N((#PC-$BE00)/$02).
+ $BF1C DEFW $D704                           ; #N((#PC-$BE00)/$02).
+ $BF1E DEFW $D741                           ; #N((#PC-$BE00)/$02).
+ $BF20 DEFW $D760                           ; #N((#PC-$BE00)/$02).
+ $BF22 DEFW $D787                           ; #N((#PC-$BE00)/$02).
+ $BF24 DEFW $D7A6                           ; #N((#PC-$BE00)/$02).
+ $BF26 DEFW $D7CD                           ; #N((#PC-$BE00)/$02).
+ $BF28 DEFW $D7E4                           ; #N((#PC-$BE00)/$02).
+ $BF2A DEFW $D7FB                           ; #N((#PC-$BE00)/$02).
+ $BF2C DEFW $D822                           ; #N((#PC-$BE00)/$02).
+ $BF2E DEFW $D849                           ; #N((#PC-$BE00)/$02).
+ $BF30 DEFW $D87B                           ; #N((#PC-$BE00)/$02).
+ $BF32 DEFW $D8B5                           ; #N((#PC-$BE00)/$02).
+ $BF34 DEFW $D8EF                           ; #N((#PC-$BE00)/$02).
+ $BF36 DEFW $C500                           ; #N((#PC-$BE00)/$02).
+ $BF38 DEFW $C517                           ; #N((#PC-$BE00)/$02).
+ $BF3A DEFW $C52E                           ; #N((#PC-$BE00)/$02).
+ $BF3C DEFW $C54D                           ; #N((#PC-$BE00)/$02).
+ $BF3E DEFW $C500                           ; #N((#PC-$BE00)/$02).
+ $BF40 DEFW $D386                           ; #N((#PC-$BE00)/$02).
+ $BF42 DEFW $D3DC                           ; #N((#PC-$BE00)/$02).
+ $BF44 DEFW $D426                           ; #N((#PC-$BE00)/$02).
+ $BF46 DEFW $D47B                           ; #N((#PC-$BE00)/$02).
+ $BF48 DEFW $D4C5                           ; #N((#PC-$BE00)/$02).
+ $BF4A DEFW $D525                           ; #N((#PC-$BE00)/$02).
+ $BF4C DEFW $D585                           ; #N((#PC-$BE00)/$02).
+ $BF4E DEFW $D5CA                           ; #N((#PC-$BE00)/$02).
+ $BF50 DEFW $D617                           ; #N((#PC-$BE00)/$02).
+ $BF52 DEFW $D63E                           ; #N((#PC-$BE00)/$02).
+ $BF54 DEFW $D652                           ; #N((#PC-$BE00)/$02).
+ $BF56 DEFW $D679                           ; #N((#PC-$BE00)/$02).
+ $BF58 DEFW $D6A0                           ; #N((#PC-$BE00)/$02).
+ $BF5A DEFW $D6D2                           ; #N((#PC-$BE00)/$02).
+ $BF5C DEFW $D704                           ; #N((#PC-$BE00)/$02).
+ $BF5E DEFW $D741                           ; #N((#PC-$BE00)/$02).
+ $BF60 DEFW $D760                           ; #N((#PC-$BE00)/$02).
+ $BF62 DEFW $D787                           ; #N((#PC-$BE00)/$02).
+ $BF64 DEFW $D7A6                           ; #N((#PC-$BE00)/$02).
+ $BF66 DEFW $D7CD                           ; #N((#PC-$BE00)/$02).
+ $BF68 DEFW $D7E4                           ; #N((#PC-$BE00)/$02).
+ $BF6A DEFW $D7FB                           ; #N((#PC-$BE00)/$02).
+ $BF6C DEFW $D822                           ; #N((#PC-$BE00)/$02).
+ $BF6E DEFW $D849                           ; #N((#PC-$BE00)/$02).
+ $BF70 DEFW $D87B                           ; #N((#PC-$BE00)/$02).
+ $BF72 DEFW $D8B5                           ; #N((#PC-$BE00)/$02).
+ $BF74 DEFW $D8EF                           ; #N((#PC-$BE00)/$02).
+ $BF76 DEFW $D929                           ; #N((#PC-$BE00)/$02).
+ $BF78 DEFW $D950                           ; #N((#PC-$BE00)/$02).
+ $BF7A DEFW $D977                           ; #N((#PC-$BE00)/$02).
+ $BF7C DEFW $D9CC                           ; #N((#PC-$BE00)/$02).
+ $BF7E DEFW $C500                           ; #N((#PC-$BE00)/$02).
+ $BF80 DEFW $DF99                           ; #N((#PC-$BE00)/$02).
+ $BF82 DEFW $DFEF                           ; #N((#PC-$BE00)/$02).
+ $BF84 DEFW $E039                           ; #N((#PC-$BE00)/$02).
+ $BF86 DEFW $E08E                           ; #N((#PC-$BE00)/$02).
+ $BF88 DEFW $E0D8                           ; #N((#PC-$BE00)/$02).
+ $BF8A DEFW $E138                           ; #N((#PC-$BE00)/$02).
+ $BF8C DEFW $E198                           ; #N((#PC-$BE00)/$02).
+ $BF8E DEFW $E1DD                           ; #N((#PC-$BE00)/$02).
+ $BF90 DEFW $E22A                           ; #N((#PC-$BE00)/$02).
+ $BF92 DEFW $E251                           ; #N((#PC-$BE00)/$02).
+ $BF94 DEFW $E265                           ; #N((#PC-$BE00)/$02).
+ $BF96 DEFW $E28C                           ; #N((#PC-$BE00)/$02).
+ $BF98 DEFW $E2B3                           ; #N((#PC-$BE00)/$02).
+ $BF9A DEFW $E2E5                           ; #N((#PC-$BE00)/$02).
+ $BF9C DEFW $E317                           ; #N((#PC-$BE00)/$02).
+ $BF9E DEFW $E354                           ; #N((#PC-$BE00)/$02).
+ $BFA0 DEFW $E373                           ; #N((#PC-$BE00)/$02).
+ $BFA2 DEFW $E39A                           ; #N((#PC-$BE00)/$02).
+ $BFA4 DEFW $E3B9                           ; #N((#PC-$BE00)/$02).
+ $BFA6 DEFW $E3E0                           ; #N((#PC-$BE00)/$02).
+ $BFA8 DEFW $E3F7                           ; #N((#PC-$BE00)/$02).
+ $BFAA DEFW $E40E                           ; #N((#PC-$BE00)/$02).
+ $BFAC DEFW $E435                           ; #N((#PC-$BE00)/$02).
+ $BFAE DEFW $E45C                           ; #N((#PC-$BE00)/$02).
+ $BFB0 DEFW $E48E                           ; #N((#PC-$BE00)/$02).
+ $BFB2 DEFW $E4C8                           ; #N((#PC-$BE00)/$02).
+ $BFB4 DEFW $E502                           ; #N((#PC-$BE00)/$02).
+ $BFB6 DEFW $C987                           ; #N((#PC-$BE00)/$02).
+ $BFB8 DEFW $C99E                           ; #N((#PC-$BE00)/$02).
+ $BFBA DEFW $C9B5                           ; #N((#PC-$BE00)/$02).
+ $BFBC DEFW $C9D4                           ; #N((#PC-$BE00)/$02).
+ $BFBE DEFW $C500                           ; #N((#PC-$BE00)/$02).
  $BFC0 DEFB $99,$DF,$EF,$DF,$39,$E0,$8E,$E0
  $BFC8 DEFB $D8,$E0,$38,$E1,$98,$E1,$DD,$E1
  $BFD0 DEFB $2A,$E2,$51,$E2,$65,$E2,$8C,$E2
@@ -6398,7 +6671,7 @@ t$C3E0 DEFM "MPH "   ; "#STR(#PC,$04,$04)".
 ; Graphics: Arrow Top
 ;
 ; #UDGTABLE(default,centre)
-; { #UDGARRAY$02,attr=$07,scale=$04,step=$01;$786C-$7874-$08(arrow-top) }
+; { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$786C-$7874-$08(arrow-top) }
 ; UDGTABLE#
 @label=Graphics_ArrowTop
 b$C3E4 DEFB $6C      ; See #R$786C.
@@ -6411,7 +6684,7 @@ t$C3E6 DEFM "FUEL"   ; "#STR(#PC,$04,$04)".
 ; Graphics: Arrow Middle
 ;
 ; #UDGTABLE(default,centre)
-; { #UDGARRAY$02,attr=$07,scale=$04,step=$01;$787C-$7884-$08(arrow-middle) }
+; { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$787C-$7884-$08(arrow-middle) }
 ; UDGTABLE#
 @label=Graphics_ArrowMiddle
 b$C3EA DEFB $7C      ; See #R$787C.
@@ -6424,7 +6697,7 @@ t$C3EC DEFM "RPM "   ; "#STR(#PC,$04,$04)".
 ; Graphics: Arrow Bottom
 ;
 ; #UDGTABLE(default,centre)
-; { #UDGARRAY$02,attr=$07,scale=$04,step=$01;$788C-$7894-$08(arrow-bottom) }
+; { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$788C-$7894-$08(arrow-bottom) }
 ; UDGTABLE#
 @label=Graphics_ArrowBottom
 b$C3F0 DEFB $8C      ; See #R$788C.
@@ -9697,10 +9970,10 @@ c$EC68 LD HL,$EFC2   ; #REGhl=#R$EFC2.
 ; Unused
 u$EC6D DEFB $00
 
-; Player Input
+; Player Typed Input
 ;
 ; Used by the routine at #R$ECAB.
-@label=PlayerInput
+@label=PlayerTypedInput
 c$EC6E LD (IY+$07),$00 ; #HTML(Write #N$00 (cursor type "C", "K" or "L") to
                        ; *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C41.html">MODE</a>.)
  $EC72 SET 3,(IY+$30)  ; #HTML(Set CAPS LOCK on, using bit 3 of *<a
@@ -9709,7 +9982,7 @@ c$EC6E LD (IY+$07),$00 ; #HTML(Write #N$00 (cursor type "C", "K" or "L") to
  $EC76 LD HL,$5C3B     ; {#HTML(Reset bit 5 of
  $EC79 RES 5,(HL)      ; *<a rel="noopener nofollow" href="https://skoolkit.ca/disassemblies/rom/hex/asm/5C3B.html">FLAGS</a>
                        ; which resets "when a new key has been pressed".)}
-@label=PlayerInput_Loop
+@label=PlayerTypedInput_Loop
 *$EC7B BIT 5,(HL)      ; {Keep jumping back to #R$EC7B until a key was pressed.
  $EC7D JR Z,$EC7B      ; }
 ; Check which key was pressed.
