@@ -35,7 +35,7 @@ Next: <a href="28483.html">28483</a>
 </td>
 </tr>
 </table>
-<div class="description">28184: Routine at 6E18</div>
+<div class="description">28184: Handler: Game Over</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,7 +47,7 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver</td>
 <td class="address-2"><span id="28184"></span>28184</td>
 <td class="instruction">CALL <a href="26797.html">RemoveSprites</a></td>
 <td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprites</a>.</td>
@@ -68,12 +68,12 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28191"></span>28191</td>
 <td class="instruction">CP 240</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28184.html#28247">28247</a> if <span class="register">A</span> is higher than 240.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28184.html#28247">StartCarouselAnimation</a> if <span class="register">A</span> is higher than 240.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28193"></span>28193</td>
-<td class="instruction">JR NC,<a href="28184.html#28247">28247</a></td>
+<td class="instruction">JR NC,<a href="28184.html#28247">StartCarouselAnimation</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -138,8 +138,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28214"></span>28214</td>
-<td class="instruction">JR NC,<a href="28184.html#28217">28217</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28217">28217</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="28184.html#28217">Handler_GameOver_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28217">Handler_GameOver_0</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -148,7 +148,7 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_0</td>
 <td class="address-2"><span id="28217"></span>28217</td>
 <td class="instruction">RLCA</td>
 <td class="comment-1" rowspan="1">RLCA.</td>
@@ -156,8 +156,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28218"></span>28218</td>
-<td class="instruction">JR NC,<a href="28184.html#28221">28221</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28221">28221</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="28184.html#28221">Handler_GameOver_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28221">Handler_GameOver_1</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -166,7 +166,7 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_1</td>
 <td class="address-2"><span id="28221"></span>28221</td>
 <td class="instruction">RLCA</td>
 <td class="comment-1" rowspan="1">RLCA.</td>
@@ -174,8 +174,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28222"></span>28222</td>
-<td class="instruction">JR NC,<a href="28184.html#28232">28232</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28232">28232</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="28184.html#28232">Handler_GameOver_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28232">Handler_GameOver_2</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -192,11 +192,11 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28230"></span>28230</td>
-<td class="instruction">JR <a href="28184.html#28241">28241</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28241">28241</a>.</td>
+<td class="instruction">JR <a href="28184.html#28241">Handler_GameOver_3</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28241">Handler_GameOver_3</a>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_2</td>
 <td class="address-2"><span id="28232"></span>28232</td>
 <td class="instruction">RLCA</td>
 <td class="comment-1" rowspan="1">RLCA.</td>
@@ -204,8 +204,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28233"></span>28233</td>
-<td class="instruction">JR NC,<a href="28184.html#28241">28241</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28241">28241</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="28184.html#28241">Handler_GameOver_3</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28241">Handler_GameOver_3</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -220,10 +220,10 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="comment-1" rowspan="1">Call <a href="26601.html">DrawPlayarea</a>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_3</td>
 <td class="address-2"><span id="28241"></span>28241</td>
-<td class="instruction">CALL <a href="27437.html">Handler: PlayerSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler: PlayerSprite</a>.</td>
+<td class="instruction">CALL <a href="27437.html">Handler_PlayerSprite</a></td>
+<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler_PlayerSprite</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -232,7 +232,7 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="comment-1" rowspan="1">Call <a href="27977.html#27984">27984</a>.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">StartCarouselAnimation</td>
 <td class="address-2"><span id="28247"></span>28247</td>
 <td class="instruction">PUSH AF</td>
 <td class="comment-1" rowspan="1">Stash <span class="register">AF</span> on the stack.</td>
@@ -271,8 +271,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28254"></span>28254</td>
-<td class="instruction">CALL <a href="27437.html">Handler: PlayerSprite</a></td>
-<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler: PlayerSprite</a>.</td>
+<td class="instruction">CALL <a href="27437.html">Handler_PlayerSprite</a></td>
+<td class="comment-1" rowspan="1">Call <a href="27437.html">Handler_PlayerSprite</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -302,34 +302,43 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28263"></span>28263</td>
 <td class="instruction">LD A,(30754)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="30754.html">Speed</a>.</td>
+<td class="comment-1" rowspan="2">Fetch *<a href="30754.html">Speed</a> to determine if the player facing left or right?</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28266"></span>28266</td>
 <td class="instruction">BIT 7,A</td>
-<td class="comment-1" rowspan="1">Test bit 7 of <span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28268"></span>28268</td>
 <td class="instruction">LD A,18</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=18.</td>
+<td class="comment-1" rowspan="1">Set a default offset in <span class="register">A</span> of 18.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28270"></span>28270</td>
-<td class="instruction">JR Z,<a href="28184.html#28274">28274</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28274">28274</a> if {} is zero.</td>
+<td class="instruction">JR Z,<a href="28184.html#28274">Handler_GameOver_4</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28274">Handler_GameOver_4</a> if the player is facing left.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="28272"></span>
+<div class="comments">
+<div class="paragraph">
+The player is facing right.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28272"></span>28272</td>
 <td class="instruction">LD A,13</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=13.</td>
+<td class="comment-1" rowspan="1">Change the offset in <span class="register">A</span> to 13.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_4</td>
 <td class="address-2"><span id="28274"></span>28274</td>
 <td class="instruction">ADD A,B</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">B</span>.</td>
@@ -362,12 +371,12 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28283"></span>28283</td>
 <td class="instruction">CP 8</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28184.html#28289">28289</a> if <span class="register">A</span> is lower than 8.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28184.html#28289">Handler_GameOver_5</a> if <span class="register">A</span> is lower than 8.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28285"></span>28285</td>
-<td class="instruction">JR C,<a href="28184.html#28289">28289</a></td>
+<td class="instruction">JR C,<a href="28184.html#28289">Handler_GameOver_5</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -376,7 +385,7 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="comment-1" rowspan="1"><span class="register">H</span>=72.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_5</td>
 <td class="address-2"><span id="28289"></span>28289</td>
 <td class="instruction">AND %00000111</td>
 <td class="comment-1" rowspan="1">Keep only bits 0-2.</td>
@@ -430,7 +439,7 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28299"></span>28299</td>
 <td class="instruction">LD DE,30944</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="30944.html">30944</a>.</td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="30944.html">Graphics_Carousel</a>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -445,13 +454,13 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="comment-1" rowspan="1">Exchange the <span class="register">DE</span> and <span class="register">HL</span> registers.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_6</td>
 <td class="address-2"><span id="28305"></span>28305</td>
 <td class="instruction">LD B,4</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=4.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_7</td>
 <td class="address-2"><span id="28307"></span>28307</td>
 <td class="instruction">LDI</td>
 <td class="comment-1" rowspan="1">LDI.</td>
@@ -459,8 +468,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28309"></span>28309</td>
-<td class="instruction">DJNZ <a href="28184.html#28307">28307</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28307">28307</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="28184.html#28307">Handler_GameOver_7</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28307">Handler_GameOver_7</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -495,8 +504,8 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28317"></span>28317</td>
-<td class="instruction">JR NZ,<a href="28184.html#28305">28305</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28305">28305</a> until <span class="register">C</span> is zero.</td>
+<td class="instruction">JR NZ,<a href="28184.html#28305">Handler_GameOver_6</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28305">Handler_GameOver_6</a> until <span class="register">C</span> is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -532,31 +541,46 @@ Used by the routine at <a href="27648.html">Game_Loop</a>.
 <td class="asm-label"></td>
 <td class="address-1"><span id="28326"></span>28326</td>
 <td class="instruction">LD B,4</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=4.</td>
+<td class="comment-1" rowspan="1">Set a counter in <span class="register">B</span> of 4 for the width of the carousel.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="28328"></span>
+<div class="comments">
+<div class="paragraph">
+Paint the carousel.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28328"></span>28328</td>
 <td class="instruction">LD A,6</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=6.</td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=INK:
+YELLOW,
+PAPER:
+BLACK
+
+.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">ColourCarousel_Loop</td>
 <td class="address-2"><span id="28330"></span>28330</td>
 <td class="instruction">LD (DE),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Write the attribute byte to the attribute buffer address in *<span class="register">DE</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28331"></span>28331</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next attribute buffer position.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28332"></span>28332</td>
-<td class="instruction">DJNZ <a href="28184.html#28330">28330</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28330">28330</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="28184.html#28330">ColourCarousel_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease the carousel width counter by one and loop back to <a href="28184.html#28330">ColourCarousel_Loop</a> until all of the carousel has been painted.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -738,7 +762,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 </td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_8</td>
 <td class="address-2"><span id="28372"></span>28372</td>
 <td class="instruction">CALL <a href="26797.html">RemoveSprites</a></td>
 <td class="comment-1" rowspan="1">Call <a href="26797.html">RemoveSprites</a>.</td>
@@ -770,8 +794,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28385"></span>28385</td>
-<td class="instruction">JR Z,<a href="28184.html#28390">28390</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28390">28390</a> if {} is zero.</td>
+<td class="instruction">JR Z,<a href="28184.html#28390">Handler_GameOver_9</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28390">Handler_GameOver_9</a> if {} is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -786,7 +810,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1"><span class="register">L</span>=4.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_9</td>
 <td class="address-2"><span id="28390"></span>28390</td>
 <td class="instruction">LD (30769),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30769.html">30769</a>.</td>
@@ -806,8 +830,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28398"></span>28398</td>
-<td class="instruction">JR Z,<a href="28184.html#28401">28401</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28401">28401</a> if {} is zero.</td>
+<td class="instruction">JR Z,<a href="28184.html#28401">Handler_GameOver_10</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28401">Handler_GameOver_10</a> if {} is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -816,7 +840,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_10</td>
 <td class="address-2"><span id="28401"></span>28401</td>
 <td class="instruction">LD L,33</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=33.</td>
@@ -828,7 +852,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1"><span class="register">B</span>=3.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_11</td>
 <td class="address-2"><span id="28405"></span>28405</td>
 <td class="instruction">LD (HL),A</td>
 <td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
@@ -842,8 +866,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28407"></span>28407</td>
-<td class="instruction">DJNZ <a href="28184.html#28405">28405</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28405">28405</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="28184.html#28405">Handler_GameOver_11</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28405">Handler_GameOver_11</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -852,7 +876,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1"><span class="register">B</span>=8.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_12</td>
 <td class="address-2"><span id="28411"></span>28411</td>
 <td class="instruction">LD (HL),0</td>
 <td class="comment-1" rowspan="1">Write 0 to *<span class="register">HL</span>.</td>
@@ -866,8 +890,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28414"></span>28414</td>
-<td class="instruction">DJNZ <a href="28184.html#28411">28411</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28411">28411</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="28184.html#28411">Handler_GameOver_12</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="28184.html#28411">Handler_GameOver_12</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -918,8 +942,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28436"></span>28436</td>
-<td class="instruction">JR NZ,<a href="28184.html#28439">28439</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28439">28439</a> if {} is not zero.</td>
+<td class="instruction">JR NZ,<a href="28184.html#28439">Handler_GameOver_13</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28439">Handler_GameOver_13</a> if {} is not zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -928,7 +952,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1">Increment <span class="register">B</span> by one.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_13</td>
 <td class="address-2"><span id="28439"></span>28439</td>
 <td class="instruction">LD A,H</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">H</span>.</td>
@@ -940,7 +964,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1"><span class="register">A</span>-=153.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_14</td>
 <td class="address-2"><span id="28442"></span>28442</td>
 <td class="instruction">SUB 5</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>-=5.</td>
@@ -948,8 +972,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28444"></span>28444</td>
-<td class="instruction">JR NC,<a href="28184.html#28442">28442</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28442">28442</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="28184.html#28442">Handler_GameOver_14</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28442">Handler_GameOver_14</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -988,7 +1012,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="comment-1" rowspan="1"><span class="register">A</span>=158.</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_15</td>
 <td class="address-2"><span id="28456"></span>28456</td>
 <td class="instruction">ADD A,5</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>+=5.</td>
@@ -997,12 +1021,12 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="asm-label"></td>
 <td class="address-1"><span id="28458"></span>28458</td>
 <td class="instruction">CP H</td>
-<td class="comment-1" rowspan="2">Jump to <a href="28184.html#28456">28456</a> if <span class="register">A</span> is lower than <span class="register">H</span>.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="28184.html#28456">Handler_GameOver_15</a> if <span class="register">A</span> is lower than <span class="register">H</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28459"></span>28459</td>
-<td class="instruction">JR C,<a href="28184.html#28456">28456</a></td>
+<td class="instruction">JR C,<a href="28184.html#28456">Handler_GameOver_15</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -1035,8 +1059,8 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="28467"></span>28467</td>
-<td class="instruction">JR NC,<a href="28184.html#28473">28473</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28473">28473</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="28184.html#28473">Handler_GameOver_16</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="28184.html#28473">Handler_GameOver_16</a> if {} is higher.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -1055,7 +1079,7 @@ This entry point is used by the routines at <a href="29025.html">Check_DemoMode<
 <td class="instruction">LD H,A</td>
 </tr>
 <tr>
-<td class="asm-label"></td>
+<td class="asm-label">Handler_GameOver_16</td>
 <td class="address-2"><span id="28473"></span>28473</td>
 <td class="instruction">XOR A</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=0.</td>

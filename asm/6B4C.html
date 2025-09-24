@@ -35,7 +35,7 @@ Next: <a href="6BFC.html">6BFC</a>
 </td>
 </tr>
 </table>
-<div class="description">6B4C: Routine at 6B4C</div>
+<div class="description">6B4C: Handler: Player Movement</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -44,542 +44,701 @@ Next: <a href="6BFC.html">6BFC</a>
 Used by the routine at <a href="6C00.html">Game_Loop</a>.
 </div>
 </div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">A</td>
+<td class="register-desc">Input state</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement</td>
 <td class="address-2"><span id="6b4c"></span>6B4C</td>
 <td class="instruction">LD ($7828),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Store the current player input state in *<a href="7828.html">PlayerInput</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6b4f"></span>
+<div class="comments">
+<div class="paragraph">
+Set up the directional indicator colors based on the input combination. The indicators show which direction the player will move on slopes.
+</div>
+<div class="paragraph">
+Note that the middle body section is shared between the "UP" and "DOWN" arrows, this is why the logic controls three colour variables.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b4f"></span>6B4F</td>
 <td class="instruction">LD C,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Initialise the "UP" indicator colour in <span class="register">C</span> to BLACK (OFF).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b51"></span>6B51</td>
 <td class="instruction">LD DE,$0606</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Set YELLOW (ON) for both <span class="register">D</span> ("DOWN" indicator) and <span class="register">E</span> (the middle body section of the indicators).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b54"></span>6B54</td>
 <td class="instruction">BIT 2,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="6B4C.html#6b61">UpdateIndicatorDisplay</a> if "DOWN" is being pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b56"></span>6B56</td>
-<td class="instruction">JR NZ,<a href="6B4C.html#6b61">$6B61</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="6B4C.html#6b61">UpdateIndicatorDisplay</a></td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6b58"></span>
+<div class="comments">
+<div class="paragraph">
+A "DOWN" key is not being pressed, so activate the "UP" indicator.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b58"></span>6B58</td>
 <td class="instruction">LD C,E</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Change the "UP" indicator colour in <span class="register">C</span> to YELLOW (ON).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b59"></span>6B59</td>
 <td class="instruction">LD E,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Clear the "DOWN" indicator colour in <span class="register">E</span> to BLACK (OFF).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b5b"></span>6B5B</td>
 <td class="instruction">BIT 3,A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="6B4C.html#6b61">UpdateIndicatorDisplay</a> if "UP" is being pressed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b5d"></span>6B5D</td>
-<td class="instruction">JR NZ,<a href="6B4C.html#6b61">$6B61</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="6B4C.html#6b61">UpdateIndicatorDisplay</a></td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6b5f"></span>
+<div class="comments">
+<div class="paragraph">
+Neither "UP" or "DOWN" are being pressed, so clear both indicators.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b5f"></span>6B5F</td>
 <td class="instruction">LD C,E</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Clear the "UP" indicator colour in <span class="register">C</span> to BLACK (OFF).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b60"></span>6B60</td>
 <td class="instruction">LD D,E</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Clear the middle body section colour in <span class="register">D</span> to BLACK (OFF).</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6b61"></span>
+<div class="comments">
+<div class="paragraph">
+Paint the indicators.
+</div>
+<div class="paragraph">
+First paint the "UP" section.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">UpdateIndicatorDisplay</td>
 <td class="address-2"><span id="6b61"></span>6B61</td>
 <td class="instruction">LD HL,$5A53</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Set the attribute buffer location of the top of the indicators in <span class="register">HL</span> to 5A53 to paint the "UP" section.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b64"></span>6B64</td>
 <td class="instruction">LD (HL),C</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Write <span class="register">C</span> containing the "UP" indicator colour value to the top left and right of the "UP" indicator.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b65"></span>6B65</td>
 <td class="instruction">INC L</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b66"></span>6B66</td>
 <td class="instruction">LD (HL),C</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6b67"></span>
+<div class="comments">
+<div class="paragraph">
+The body of the indicator is shared between both "UP" and "DOWN" indicator arrows.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b67"></span>6B67</td>
 <td class="instruction">LD L,$73</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Alter the attribute buffer location to point to the body of the indicator.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b69"></span>6B69</td>
 <td class="instruction">LD (HL),D</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Write <span class="register">D</span> containing the middle section of the indicator colour value to the middle left and right of the indicator body.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b6a"></span>6B6A</td>
 <td class="instruction">INC L</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b6b"></span>6B6B</td>
 <td class="instruction">LD (HL),D</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6b6c"></span>
+<div class="comments">
+<div class="paragraph">
+Finally, paint the "DOWN" section.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b6c"></span>6B6C</td>
 <td class="instruction">LD L,$93</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Alter the attribute buffer location to point to the bottom of the indicators to paint the "DOWN" section.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b6e"></span>6B6E</td>
 <td class="instruction">LD (HL),E</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Write <span class="register">E</span> containing the "DOWN" indicator colour value to the bottom left and right of the "DOWN" indicator.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b6f"></span>6B6F</td>
 <td class="instruction">INC L</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b70"></span>6B70</td>
 <td class="instruction">LD (HL),E</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b71"></span>6B71</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b72"></span>6B72</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b73"></span>6B73</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b74"></span>6B74</td>
 <td class="instruction">LD HL,$7823</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="7822.html#7823">7823</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b77"></span>6B77</td>
-<td class="instruction">AND $03</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">AND %00000011</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-1.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b79"></span>6B79</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6b99">$6B99</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6b99">Handler_PlayerMovement_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b99">Handler_PlayerMovement_2</a> if <span class="register">L</span> is equal to 93.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b7b"></span>6B7B</td>
 <td class="instruction">RRCA</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">RRCA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b7c"></span>6B7C</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b7d"></span>6B7D</td>
-<td class="instruction">JR NC,<a href="6B4C.html#6b8c">$6B8C</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NC,<a href="6B4C.html#6b8c">Handler_PlayerMovement_0</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b8c">Handler_PlayerMovement_0</a> if <span class="register">L</span> is greater than or equal to 93.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b7f"></span>6B7F</td>
 <td class="instruction">CP $96</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 96.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b81"></span>6B81</td>
 <td class="instruction">LD A,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=00.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b83"></span>6B83</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6b99">$6B99</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6b99">Handler_PlayerMovement_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b99">Handler_PlayerMovement_2</a> if <span class="register">A</span> was equal to 96 on line <a href="6B4C.html#6b7f">6B7F</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b85"></span>6B85</td>
 <td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b86"></span>6B86</td>
 <td class="instruction">BIT 7,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Test bit 7 of *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b88"></span>6B88</td>
-<td class="instruction">JR NZ,<a href="6B4C.html#6b99">$6B99</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="6B4C.html#6b99">Handler_PlayerMovement_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b99">Handler_PlayerMovement_2</a> if *<span class="register">HL</span> is not equal to 00.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b8a"></span>6B8A</td>
-<td class="instruction">JR <a href="6B4C.html#6b97">$6B97</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR <a href="6B4C.html#6b97">Handler_PlayerMovement_1</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b97">Handler_PlayerMovement_1</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_0</td>
 <td class="address-2"><span id="6b8c"></span>6B8C</td>
 <td class="instruction">CP $69</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Compare <span class="register">A</span> with 69.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b8e"></span>6B8E</td>
 <td class="instruction">LD A,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=00.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b90"></span>6B90</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6b99">$6B99</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6b99">Handler_PlayerMovement_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b99">Handler_PlayerMovement_2</a> if <span class="register">A</span> was equal to 69 on line <a href="6B4C.html#6b8c">Handler_PlayerMovement_0</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b92"></span>6B92</td>
 <td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b93"></span>6B93</td>
 <td class="instruction">BIT 7,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Test bit 7 of *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b95"></span>6B95</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6b99">$6B99</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6b99">Handler_PlayerMovement_2</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6b99">Handler_PlayerMovement_2</a> if *<span class="register">HL</span> is equal to 00.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_1</td>
 <td class="address-2"><span id="6b97"></span>6B97</td>
 <td class="instruction">LD A,$02</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Write 02 to *<a href="7829.html">7829</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_2</td>
 <td class="address-2"><span id="6b99"></span>6B99</td>
 <td class="instruction">LD ($7829),A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b9c"></span>6B9C</td>
 <td class="instruction">LD L,$27</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=27.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b9e"></span>6B9E</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Jump to <a href="6B4C.html#6ba3">Handler_PlayerMovement_3</a> if *<span class="register">HL</span> is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6b9f"></span>6B9F</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ba0"></span>6BA0</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6ba3">$6BA3</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6ba3">Handler_PlayerMovement_3</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ba2"></span>6BA2</td>
 <td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_3</td>
 <td class="address-2"><span id="6ba3"></span>6BA3</td>
 <td class="instruction">DEC L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ba4"></span>6BA4</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Jump to <a href="6B4C.html#6bc3">Handler_PlayerMovement_5</a> if *<span class="register">HL</span> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ba5"></span>6BA5</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ba6"></span>6BA6</td>
-<td class="instruction">JR NZ,<a href="6B4C.html#6bc3">$6BC3</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="6B4C.html#6bc3">Handler_PlayerMovement_5</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6ba8"></span>6BA8</td>
 <td class="instruction">LD L,$23</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=23.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6baa"></span>6BAA</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bab"></span>6BAB</td>
 <td class="instruction">DEC L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bac"></span>6BAC</td>
 <td class="instruction">CP (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="6B4C.html#6bc3">Handler_PlayerMovement_5</a> if <span class="register">A</span> is equal to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bad"></span>6BAD</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6bc3">$6BC3</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6bc3">Handler_PlayerMovement_5</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6baf"></span>6BAF</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb0"></span>6BB0</td>
-<td class="instruction">JR C,<a href="6B4C.html#6bb4">$6BB4</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR C,<a href="6B4C.html#6bb4">Handler_PlayerMovement_4</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6bb4">Handler_PlayerMovement_4</a> if <span class="register">A</span> is less than *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb2"></span>6BB2</td>
 <td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Increment *<span class="register">HL</span> by two.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb3"></span>6BB3</td>
 <td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_4</td>
 <td class="address-2"><span id="6bb4"></span>6BB4</td>
 <td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb5"></span>6BB5</td>
 <td class="instruction">OR (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Set the bits from *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb6"></span>6BB6</td>
 <td class="instruction">INC A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb7"></span>6BB7</td>
-<td class="instruction">JR NZ,<a href="6B4C.html#6bc3">$6BC3</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="6B4C.html#6bc3">Handler_PlayerMovement_5</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6bc3">Handler_PlayerMovement_5</a> if <span class="register">A</span> is not equal to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bb9"></span>6BB9</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bba"></span>6BBA</td>
 <td class="instruction">DEC L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bbb"></span>6BBB</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bbc"></span>6BBC</td>
 <td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">RLCA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bbd"></span>6BBD</td>
 <td class="instruction">JP NC,<a href="6AAC.html#6ac9">$6AC9</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6AAC.html#6ac9">6AC9</a> if <span class="register">L</span> is greater than *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bc0"></span>6BC0</td>
 <td class="instruction">JP <a href="6AAC.html#6b10">$6B10</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6AAC.html#6b10">6B10</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_5</td>
 <td class="address-2"><span id="6bc3"></span>6BC3</td>
 <td class="instruction">LD L,$22</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=22.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bc5"></span>6BC5</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bc6"></span>6BC6</td>
 <td class="instruction">DEC L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bc7"></span>6BC7</td>
 <td class="instruction">CP (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Jump to <a href="6B4C.html#6beb">Handler_PlayerMovement_9</a> if <span class="register">A</span> is equal to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bc8"></span>6BC8</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6beb">$6BEB</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6beb">Handler_PlayerMovement_9</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bca"></span>6BCA</td>
-<td class="instruction">JR C,<a href="6B4C.html#6bd9">$6BD9</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR C,<a href="6B4C.html#6bd9">Handler_PlayerMovement_6</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6bd9">Handler_PlayerMovement_6</a> if <span class="register">A</span> is less than *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bcc"></span>6BCC</td>
 <td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bcd"></span>6BCD</td>
 <td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">RLCA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bce"></span>6BCE</td>
-<td class="instruction">JR NC,<a href="6B4C.html#6bea">$6BEA</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NC,<a href="6B4C.html#6bea">Handler_PlayerMovement_8</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6bea">Handler_PlayerMovement_8</a> if *<span class="register">HL</span> is greater than or equal to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bd0"></span>6BD0</td>
 <td class="instruction">LD A,($7827)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Jump to <a href="6B4C.html#6be5">Handler_PlayerMovement_7</a> if *<a href="7827.html">7827</a> is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bd3"></span>6BD3</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bd4"></span>6BD4</td>
-<td class="instruction">JR Z,<a href="6B4C.html#6be5">$6BE5</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR Z,<a href="6B4C.html#6be5">Handler_PlayerMovement_7</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bd6"></span>6BD6</td>
 <td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bd7"></span>6BD7</td>
-<td class="instruction">JR <a href="6B4C.html#6bea">$6BEA</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR <a href="6B4C.html#6bea">Handler_PlayerMovement_8</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6bea">Handler_PlayerMovement_8</a>.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_6</td>
 <td class="address-2"><span id="6bd9"></span>6BD9</td>
 <td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bda"></span>6BDA</td>
 <td class="instruction">RLCA</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">RLCA.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bdb"></span>6BDB</td>
-<td class="instruction">JR C,<a href="6B4C.html#6bea">$6BEA</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR C,<a href="6B4C.html#6bea">Handler_PlayerMovement_8</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6B4C.html#6bea">Handler_PlayerMovement_8</a> if *<span class="register">HL</span> is less than <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bdd"></span>6BDD</td>
 <td class="instruction">INC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Increment *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bde"></span>6BDE</td>
 <td class="instruction">LD A,($7827)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="3">Jump to <a href="6B4C.html#6bea">Handler_PlayerMovement_8</a> if *<a href="7827.html">7827</a> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6be1"></span>6BE1</td>
 <td class="instruction">AND A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6be2"></span>6BE2</td>
-<td class="instruction">JR NZ,<a href="6B4C.html#6bea">$6BEA</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">JR NZ,<a href="6B4C.html#6bea">Handler_PlayerMovement_8</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6be4"></span>6BE4</td>
 <td class="instruction">DEC (HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Decrease *<span class="register">HL</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_7</td>
 <td class="address-2"><span id="6be5"></span>6BE5</td>
 <td class="instruction">LD A,$03</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Write 03 to *<a href="7827.html">7827</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6be7"></span>6BE7</td>
 <td class="instruction">LD ($7827),A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_8</td>
 <td class="address-2"><span id="6bea"></span>6BEA</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label">Handler_PlayerMovement_9</td>
 <td class="address-2"><span id="6beb"></span>6BEB</td>
 <td class="instruction">LD L,$22</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">L</span>=22.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bed"></span>6BED</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bee"></span>6BEE</td>
 <td class="instruction">LD DE,$5A45</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">DE</span>=5A45 (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bf1"></span>6BF1</td>
-<td class="instruction">CALL <a href="6880.html">$6880</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">CALL <a href="6880.html">DisplaySpeedometer</a></td>
+<td class="comment-1" rowspan="1">Call <a href="6880.html">DisplaySpeedometer</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bf4"></span>6BF4</td>
 <td class="instruction">LD A,($7823)</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">A</span>=*<a href="7822.html#7823">7823</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bf7"></span>6BF7</td>
 <td class="instruction">LD E,$85</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1"><span class="register">E</span>=85.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6bf9"></span>6BF9</td>
 <td class="instruction">JP <a href="6D28.html">$6D28</a></td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6D28.html">6D28</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">

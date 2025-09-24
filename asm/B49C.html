@@ -31,57 +31,174 @@ Prev: <a href="B46C.html">B46C</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#b49c">Map</a></td>
 <td class="next">
-Next: <a href="B4DC.html">B4DC</a>
+Next: <a href="B4B3.html">B4B3</a>
 </td>
 </tr>
 </table>
-<div class="description">B49C: Game status buffer entry at B49C</div>
+<div class="description">B49C: Table: Speedometer Attributes</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Used by the routine at <a href="6880.html">DisplaySpeedometer</a>.
+</div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="b49c"></span>
+<div class="comments">
+<div class="paragraph">
+These attribute bytes are copied to the attribute buffer using <a href="6893.html">CopyTwelveBytes</a>. The idea is that, 0C bytes are copied to represent the speed gauge, but where they start from is determined by a calculation on the speed.
+</div>
+<div class="paragraph">
+A speed of 00 is not an option, so the absolute minimum speed (80 for right movement, and 7F for left movement) will use a starting address of B4A7 to copy the 0C bytes.
+</div>
+<div class="paragraph">
+The maximum speeds are 96 for right movement and 69 for left movement, these both use a starting address of B49C to copy the 0C bytes.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Table_SpeedometerAttributes</td>
 <td class="address-1"><span id="b49c"></span>B49C</td>
-<td class="instruction">DEFB $12,$12,$12,$12,$12,$12,$12,$12</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b49d"></span>B49D</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b49e"></span>B49E</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b49f"></span>B49F</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a0"></span>B4A0</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a1"></span>B4A1</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a2"></span>B4A2</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a3"></span>B4A3</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="b4a4"></span>B4A4</td>
-<td class="instruction">DEFB $12,$12,$12,$12,$12,$00,$00,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a5"></span>B4A5</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a6"></span>B4A6</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a7"></span>B4A7</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a8"></span>B4A8</td>
+<td class="instruction">DEFB $12</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4a9"></span>B4A9</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4aa"></span>B4AA</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4ab"></span>B4AB</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="b4ac"></span>B4AC</td>
-<td class="instruction">DEFB $00,$00,$00,$00,$00,$00,$00,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="b4b4"></span>B4B4</td>
-<td class="instruction">DEFB $00,$00,$00,$00,$00,$00,$00,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4ad"></span>B4AD</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="b4bc"></span>B4BC</td>
-<td class="instruction">DEFB $A7,$A6,$A5,$A4,$A3,$A2,$A1,$A0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4ae"></span>B4AE</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="b4c4"></span>B4C4</td>
-<td class="instruction">DEFB $9F,$A5,$A4,$A3,$A2,$A1,$A0,$9F</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4af"></span>B4AF</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="b4cc"></span>B4CC</td>
-<td class="instruction">DEFB $9E,$A3,$A2,$A1,$A0,$9F,$9E,$9D</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4b0"></span>B4B0</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="b4d4"></span>B4D4</td>
-<td class="instruction">DEFB $00,$00,$00,$00,$00,$00,$00,$00</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4b1"></span>B4B1</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="b4b2"></span>B4B2</td>
+<td class="instruction">DEFB $00</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -91,7 +208,7 @@ Prev: <a href="B46C.html">B46C</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#b49c">Map</a></td>
 <td class="next">
-Next: <a href="B4DC.html">B4DC</a>
+Next: <a href="B4B3.html">B4B3</a>
 </td>
 </tr>
 </table>

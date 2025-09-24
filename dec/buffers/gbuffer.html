@@ -162,9 +162,18 @@ See <a href="../asm/25620.html">SetRandomNumberSeed</a> for how this is generate
 </tr>
 <tr>
 <td class="map-g"><span id="30758"></span><a href="../asm/30758.html">30758</a></td>
-<td class="map-length">2</td>
+<td class="map-length">1</td>
 <td class="map-g-desc">
 <div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30758.html">Game status buffer entry at 7826</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="30759"></span><a href="../asm/30759.html">30759</a></td>
+<td class="map-length">1</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30759.html">Game status buffer entry at 7827</a></div>
 <div class="map-entry-desc">
 </div>
 </td>
@@ -173,8 +182,36 @@ See <a href="../asm/25620.html">SetRandomNumberSeed</a> for how this is generate
 <td class="map-g"><span id="30760"></span><a href="../asm/30760.html">30760</a></td>
 <td class="map-length">1</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30760.html">Game status buffer entry at 7828</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/30760.html">Player Input</a></div>
 <div class="map-entry-desc">
+<div class="paragraph">
+Relates to the direction for the current player input. <table class="default">
+<tr>
+<th colspan="1" rowspan="1">Byte</th>
+<th colspan="1" rowspan="1">Meaning</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">0</td>
+<td class="centre" colspan="1" rowspan="1">No input</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">1</td>
+<td class="centre" colspan="1" rowspan="1">Right</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">2</td>
+<td class="centre" colspan="1" rowspan="1">Left</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">4</td>
+<td class="centre" colspan="1" rowspan="1">Down</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">8</td>
+<td class="centre" colspan="1" rowspan="1">Up</td>
+</tr>
+</table>
+</div>
 </div>
 </td>
 </tr>
@@ -465,10 +502,43 @@ Pointer to the routine which will handle retrieving the player controls.
 </tr>
 <tr>
 <td class="map-g"><span id="46236"></span><a href="../asm/46236.html">46236</a></td>
-<td class="map-length">64</td>
+<td class="map-length">23</td>
 <td class="map-g-desc">
-<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46236.html">Game status buffer entry at B49C</a></div>
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46236.html">Table: Speedometer Attributes</a></div>
 <div class="map-entry-desc">
+<div class="paragraph">
+Used by the routine at <a href="../asm/26752.html">DisplaySpeedometer</a>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="46259"></span><a href="../asm/46259.html">46259</a></td>
+<td class="map-length">9</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46259.html">Game status buffer entry at B4B3</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="46268"></span><a href="../asm/46268.html">46268</a></td>
+<td class="map-length">32</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46268.html">Game status buffer entry at B4BC</a></div>
+<div class="map-entry-desc">
+</div>
+</td>
+</tr>
+<tr>
+<td class="map-g"><span id="46300"></span><a href="../asm/46300.html">46300</a></td>
+<td class="map-length">14</td>
+<td class="map-g-desc">
+<div class="map-entry-title-11"><a class="map-entry-title" href="../asm/46300.html">Actions Jump Table</a></div>
+<div class="map-entry-desc">
+<div class="paragraph">
+Used by the routine at <a href="../asm/27175.html">27175</a>.
+</div>
 </div>
 </td>
 </tr>

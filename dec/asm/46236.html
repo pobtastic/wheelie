@@ -31,57 +31,174 @@ Prev: <a href="46188.html">46188</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#46236">Map</a></td>
 <td class="next">
-Next: <a href="46300.html">46300</a>
+Next: <a href="46259.html">46259</a>
 </td>
 </tr>
 </table>
-<div class="description">46236: Game status buffer entry at B49C</div>
+<div class="description">46236: Table: Speedometer Attributes</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
+<div class="paragraph">
+Used by the routine at <a href="26752.html">DisplaySpeedometer</a>.
+</div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="46236"></span>
+<div class="comments">
+<div class="paragraph">
+These attribute bytes are copied to the attribute buffer using <a href="26771.html">CopyTwelveBytes</a>. The idea is that, 12 bytes are copied to represent the speed gauge, but where they start from is determined by a calculation on the speed.
+</div>
+<div class="paragraph">
+A speed of 0 is not an option, so the absolute minimum speed (128 for right movement, and 127 for left movement) will use a starting address of 46247 to copy the 12 bytes.
+</div>
+<div class="paragraph">
+The maximum speeds are 150 for right movement and 105 for left movement, these both use a starting address of 46236 to copy the 12 bytes.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">Table_SpeedometerAttributes</td>
 <td class="address-1"><span id="46236"></span>46236</td>
-<td class="instruction">DEFB 18,18,18,18,18,18,18,18</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46237"></span>46237</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46238"></span>46238</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46239"></span>46239</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46240"></span>46240</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46241"></span>46241</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46242"></span>46242</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46243"></span>46243</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="46244"></span>46244</td>
-<td class="instruction">DEFB 18,18,18,18,18,0,0,0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46245"></span>46245</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46246"></span>46246</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46247"></span>46247</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46248"></span>46248</td>
+<td class="instruction">DEFB 18</td>
+<td class="comment-1" rowspan="1">Attribute: "RED".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46249"></span>46249</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46250"></span>46250</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46251"></span>46251</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="46252"></span>46252</td>
-<td class="instruction">DEFB 0,0,0,0,0,0,0,0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="46260"></span>46260</td>
-<td class="instruction">DEFB 0,0,0,0,0,0,0,0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46253"></span>46253</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="46268"></span>46268</td>
-<td class="instruction">DEFB 167,166,165,164,163,162,161,160</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46254"></span>46254</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="46276"></span>46276</td>
-<td class="instruction">DEFB 159,165,164,163,162,161,160,159</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46255"></span>46255</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="46284"></span>46284</td>
-<td class="instruction">DEFB 158,163,162,161,160,159,158,157</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46256"></span>46256</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 <tr>
-<td class="address-1"><span id="46292"></span>46292</td>
-<td class="instruction">DEFB 0,0,0,0,0,0,0,0</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46257"></span>46257</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="46258"></span>46258</td>
+<td class="instruction">DEFB 0</td>
+<td class="comment-1" rowspan="1">Attribute: "BLACK".</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -91,7 +208,7 @@ Prev: <a href="46188.html">46188</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#46236">Map</a></td>
 <td class="next">
-Next: <a href="46300.html">46300</a>
+Next: <a href="46259.html">46259</a>
 </td>
 </tr>
 </table>

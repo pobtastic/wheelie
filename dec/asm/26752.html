@@ -35,86 +35,126 @@ Next: <a href="26771.html">26771</a>
 </td>
 </tr>
 </table>
-<div class="description">26752: Routine at 6880</div>
+<div class="description">26752: Display Speedometer</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="27468.html">27468</a>.
+Used by the routine at <a href="27468.html">Handler_PlayerMovement</a>.
+</div>
+</div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">A</td>
+<td class="register-desc">The speed value</td>
+</tr>
+<tr>
+<td class="register">DE</td>
+<td class="register-desc">Points to 23109 (the attribute buffer location of the speedometer)</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td class="asm-label">DisplaySpeedometer</td>
+<td class="address-2"><span id="26752"></span>26752</td>
+<td class="instruction">BIT 7,A</td>
+<td class="comment-1" rowspan="2">Jump to <a href="26752.html#26757">ProcessSpeedValue</a> if the speed value is negative.</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26754"></span>26754</td>
+<td class="instruction">JR NZ,<a href="26752.html#26757">ProcessSpeedValue</a></td>
+</tr>
+<tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26756"></span>26756</td>
+<td class="instruction">CPL</td>
+<td class="comment-1" rowspan="1">Make the position speed value into a negative.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="26757"></span>
+<div class="comments">
+<div class="paragraph">
+Strip off the signed bit.
 </div>
 </div>
 </td>
 </tr>
 <tr>
-<td class="address-2"><span id="26752"></span>26752</td>
-<td class="instruction">BIT 7,A</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="26754"></span>26754</td>
-<td class="instruction">JR NZ,<a href="26752.html#26757">26757</a></td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
-<td class="address-1"><span id="26756"></span>26756</td>
-<td class="instruction">CPL</td>
-<td class="comment-0" rowspan="1"></td>
-</tr>
-<tr>
+<td class="asm-label">ProcessSpeedValue</td>
 <td class="address-2"><span id="26757"></span>26757</td>
-<td class="instruction">AND 127</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="instruction">AND %01111111</td>
+<td class="comment-1" rowspan="1">Keep only bits 0-6.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26759"></span>26759</td>
 <td class="instruction">RRA</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Divide the speed value by two and store the result in <span class="register">L</span> (scaled speed value).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26760"></span>26760</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26761"></span>26761</td>
 <td class="instruction">LD A,167</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Set the base offset value in <span class="register">A</span> of 167.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26763"></span>26763</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="4">No operation.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26764"></span>26764</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26765"></span>26765</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26766"></span>26766</td>
 <td class="instruction">NOP</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26767"></span>26767</td>
 <td class="instruction">SUB L</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="2">Update <span class="register">L</span> to 167 - the scaled speed value.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26768"></span>26768</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-0" rowspan="1"></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26769"></span>26769</td>
 <td class="instruction">LD H,180</td>
-<td class="comment-0" rowspan="1"></td>
+<td class="comment-1" rowspan="1">Set <span class="register">H</span> to the high byte of the display data table.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<div class="comments">
+<div class="paragraph">
+Continue on to <a href="26771.html">CopyTwelveBytes</a>.
+</div>
+</div>
+</td>
 </tr>
 </table>
 <table class="asm-navigation">
