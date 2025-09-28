@@ -35,569 +35,700 @@ Next: <a href="26361.html">26361</a>
 </td>
 </tr>
 </table>
-<div class="description">26192: Routine at 6650</div>
+<div class="description">26192: Scroll Playarea Right</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="27308.html">27308</a>, <a href="27648.html">Game_Loop</a> and <a href="28184.html">Handler_GameOver</a>.
+Scrolls the play area horizontally by shifting pixel data right using <code>RRD</code> instructions.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">ScrollPlayarea_Right</td>
 <td class="address-2"><span id="26192"></span>26192</td>
 <td class="instruction">LD HL,(30743)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="30743.html">Current_ScreenPosition</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26195"></span>26195</td>
 <td class="instruction">LD A,(30745)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="26192.html#26215">26215</a> if *<a href="30745.html">ScrollPhase_Counter</a> is not zero.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="26192.html#26215">ScrollPlayarea_Right_1</a> if *<a href="30745.html">ScrollPhase_Counter</a> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26198"></span>26198</td>
 <td class="instruction">AND A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26199"></span>26199</td>
-<td class="instruction">JR NZ,<a href="26192.html#26215">26215</a></td>
+<td class="instruction">JR NZ,<a href="26192.html#26215">ScrollPlayarea_Right_1</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26201"></span>26201</td>
 <td class="instruction">LD A,L</td>
-<td class="comment-1" rowspan="3">Jump to <a href="26192.html#26209">26209</a> if <span class="register">L</span> is not zero.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="26192.html#26209">ScrollPlayarea_Right_0</a> if <span class="register">L</span> is not zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26202"></span>26202</td>
 <td class="instruction">AND A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26203"></span>26203</td>
-<td class="instruction">JR NZ,<a href="26192.html#26209">26209</a></td>
+<td class="instruction">JR NZ,<a href="26192.html#26209">ScrollPlayarea_Right_0</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26205"></span>26205</td>
 <td class="instruction">LD A,H</td>
 <td class="comment-1" rowspan="3"><span class="register">H</span>-=5.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26206"></span>26206</td>
 <td class="instruction">SUB 5</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26208"></span>26208</td>
 <td class="instruction">LD H,A</td>
 </tr>
 <tr>
+<td class="asm-label">ScrollPlayarea_Right_0</td>
 <td class="address-2"><span id="26209"></span>26209</td>
 <td class="instruction">DEC L</td>
 <td class="comment-1" rowspan="1">Decrease <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26210"></span>26210</td>
 <td class="instruction">LD (30743),HL</td>
 <td class="comment-1" rowspan="1">Write <span class="register">HL</span> to *<a href="30743.html">Current_ScreenPosition</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26213"></span>26213</td>
 <td class="instruction">LD A,8</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=8.</td>
 </tr>
 <tr>
+<td class="asm-label">ScrollPlayarea_Right_1</td>
 <td class="address-2"><span id="26215"></span>26215</td>
 <td class="instruction">DEC A</td>
 <td class="comment-1" rowspan="1">Decrease <span class="register">A</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26216"></span>26216</td>
 <td class="instruction">LD (30745),A</td>
 <td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="30745.html">ScrollPhase_Counter</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26219"></span>26219</td>
 <td class="instruction">LD D,H</td>
 <td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">H</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26220"></span>26220</td>
 <td class="instruction">LD E,L</td>
 <td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26221"></span>26221</td>
 <td class="instruction">LD B,255</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=255.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26223"></span>26223</td>
 <td class="instruction">CALL <a href="25956.html">PrepareScrollData</a></td>
 <td class="comment-1" rowspan="1">Call <a href="25956.html">PrepareScrollData</a>.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="26226"></span>
+<div class="comments">
+<div class="paragraph">
+Start of screen buffer.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26226"></span>26226</td>
 <td class="instruction">LD HL,16384</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="16384.html">16384</a> (screen buffer).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26229"></span>26229</td>
 <td class="instruction">LD D,H</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="2">Copy the screen position pointer into <span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26230"></span>26230</td>
 <td class="instruction">LD E,L</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26231"></span>26231</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label">ScrollPlayarea_Right_2</td>
 <td class="address-2"><span id="26232"></span>26232</td>
 <td class="instruction">LD A,(DE)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">DE</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26233"></span>26233</td>
 <td class="instruction">INC E</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26234"></span>26234</td>
 <td class="instruction">LD L,A</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26235"></span>26235</td>
 <td class="instruction">LD H,31</td>
 <td class="comment-1" rowspan="1"><span class="register">H</span>=31.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26237"></span>26237</td>
 <td class="instruction">ADD HL,HL</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="2">Multiply <span class="register">HL</span> by 4.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26238"></span>26238</td>
 <td class="instruction">ADD HL,HL</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26239"></span>26239</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
-<td class="address-1"><span id="26240"></span>26240</td>
-<td class="instruction">LD B,4</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=4.</td>
+<td class="routine-comment" colspan="5">
+<span id="26240"></span>
+<div class="comments">
+<div class="paragraph">
+Scroll one character row (32 characters) left by 1 pixel using <code>RRD</code>.
+</div>
+</div>
+</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
+<td class="address-1"><span id="26240"></span>26240</td>
+<td class="instruction">LD B,4</td>
+<td class="comment-1" rowspan="1">Set a counter in <span class="register">B</span> for 4 rows.</td>
+</tr>
+<tr>
+<td class="asm-label">ScrollCharacterRow_Right</td>
 <td class="address-2"><span id="26242"></span>26242</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26243"></span>26243</td>
 <td class="instruction">LD A,(HL)</td>
 <td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26244"></span>26244</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26245"></span>26245</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26246"></span>26246</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26248"></span>26248</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26249"></span>26249</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26251"></span>26251</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26252"></span>26252</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26254"></span>26254</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26255"></span>26255</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26257"></span>26257</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26258"></span>26258</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26260"></span>26260</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26261"></span>26261</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26263"></span>26263</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26264"></span>26264</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26266"></span>26266</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26267"></span>26267</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26269"></span>26269</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26270"></span>26270</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26272"></span>26272</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26273"></span>26273</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26275"></span>26275</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26276"></span>26276</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26278"></span>26278</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26279"></span>26279</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26281"></span>26281</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26282"></span>26282</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26284"></span>26284</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26285"></span>26285</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26287"></span>26287</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26288"></span>26288</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26290"></span>26290</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26291"></span>26291</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26293"></span>26293</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26294"></span>26294</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26296"></span>26296</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26297"></span>26297</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26299"></span>26299</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26300"></span>26300</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26302"></span>26302</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26303"></span>26303</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26305"></span>26305</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26306"></span>26306</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26308"></span>26308</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26309"></span>26309</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26311"></span>26311</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26312"></span>26312</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26314"></span>26314</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26315"></span>26315</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26317"></span>26317</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26318"></span>26318</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26320"></span>26320</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26321"></span>26321</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26323"></span>26323</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26324"></span>26324</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26326"></span>26326</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26327"></span>26327</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26329"></span>26329</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26330"></span>26330</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26332"></span>26332</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26333"></span>26333</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26335"></span>26335</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26336"></span>26336</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26338"></span>26338</td>
 <td class="instruction">INC L</td>
 <td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26339"></span>26339</td>
 <td class="instruction">RRD</td>
 <td class="comment-1" rowspan="1">RRD.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26341"></span>26341</td>
 <td class="instruction">LD L,E</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">E</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26342"></span>26342</td>
 <td class="instruction">INC H</td>
 <td class="comment-1" rowspan="2">Increment <span class="register">H</span> by two.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26343"></span>26343</td>
 <td class="instruction">INC H</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26344"></span>26344</td>
-<td class="instruction">DJNZ <a href="26192.html#26242">26242</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="26192.html#26242">26242</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="26192.html#26242">ScrollCharacterRow_Right</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="26192.html#26242">ScrollCharacterRow_Right</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26346"></span>26346</td>
 <td class="instruction">LD A,32</td>
 <td class="comment-1" rowspan="3"><span class="register">E</span>+=32.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26348"></span>26348</td>
 <td class="instruction">ADD A,E</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26349"></span>26349</td>
 <td class="instruction">LD E,A</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26350"></span>26350</td>
 <td class="instruction">LD L,A</td>
 <td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26351"></span>26351</td>
-<td class="instruction">JR NC,<a href="26192.html#26355">26355</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="26192.html#26355">26355</a> if {} is higher.</td>
+<td class="instruction">JR NC,<a href="26192.html#26355">ContinueScreenScroll_Right</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="26192.html#26355">ContinueScreenScroll_Right</a> if {} is higher.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26353"></span>26353</td>
 <td class="instruction">LD D,72</td>
 <td class="comment-1" rowspan="1"><span class="register">D</span>=72.</td>
 </tr>
 <tr>
+<td class="asm-label">ContinueScreenScroll_Right</td>
 <td class="address-2"><span id="26355"></span>26355</td>
 <td class="instruction">LD H,D</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">D</span>.</td>
+<td class="comment-1" rowspan="1">Update the screen pointer.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26356"></span>26356</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26357"></span>26357</td>
-<td class="instruction">DJNZ <a href="26192.html#26232">26232</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="26192.html#26232">26232</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="26192.html#26232">ScrollPlayarea_Right_2</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="26192.html#26232">ScrollPlayarea_Right_2</a> until counter is zero.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26359"></span>26359</td>
 <td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
+<td class="comment-1" rowspan="1">Switch back to the normal registers.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="26360"></span>26360</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

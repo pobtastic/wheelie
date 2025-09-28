@@ -31,7 +31,7 @@ Prev: <a href="692B.html">692B</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#692c">Map</a></td>
 <td class="next">
-Next: <a href="6992.html">6992</a>
+Next: <a href="6988.html">6988</a>
 </td>
 </tr>
 </table>
@@ -49,16 +49,16 @@ Used by the routines at <a href="6B2D.html">Handler_PlayerSprite</a> and <a href
 <th colspan="2">Input</th>
 </tr>
 <tr>
-<td class="register">DE</td>
-<td class="register-desc">Sprite screen position</td>
-</tr>
-<tr>
 <td class="register">A</td>
 <td class="register-desc">Sprite frame ID</td>
 </tr>
 <tr>
 <td class="register">C</td>
 <td class="register-desc">Sprite colour</td>
+</tr>
+<tr>
+<td class="register">DE</td>
+<td class="register-desc">Sprite screen position</td>
 </tr>
 </table>
 </td>
@@ -209,96 +209,121 @@ Fetch the sprite data.
 <td class="asm-label"></td>
 <td class="address-1"><span id="6940"></span>6940</td>
 <td class="instruction">LD C,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=*<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="3">Fetch the sprite data address from *<span class="register">HL</span> and store it in <span class="register">BC</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6941"></span>6941</td>
 <td class="instruction">INC L</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">L</span> by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6942"></span>6942</td>
 <td class="instruction">LD B,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=*<span class="register">HL</span>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6943"></span>
+<div class="comments">
+<div class="paragraph">
+Check the sprite "type" bit.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6943"></span>6943</td>
 <td class="instruction">BIT 5,A</td>
-<td class="comment-1" rowspan="1">Test bit 5 of <span class="register">A</span>.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6DA8.html">DrawLargeSprite</a> if bit 5 of the sprite ID is set.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6945"></span>6945</td>
-<td class="instruction">JP NZ,<a href="6DA8.html">$6DA8</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6DA8.html">6DA8</a> if {} is not zero.</td>
+<td class="instruction">JP NZ,<a href="6DA8.html">DrawLargeSprite</a></td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6948"></span>
+<div class="comments">
+<div class="paragraph">
+Process regular sprite animation frames.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6948"></span>6948</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Fetch the sprite X offset and store it in <span class="register">A</span>.</td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_0</td>
+<td class="asm-label">ProcessNextFrame</td>
 <td class="address-2"><span id="6949"></span>6949</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next data byte.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="694a"></span>694A</td>
 <td class="instruction">ADD A,E</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">E</span>.</td>
+<td class="comment-1" rowspan="2"><span class="register">E</span>=base X position + the sprite X offset.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="694b"></span>694B</td>
 <td class="instruction">LD E,A</td>
-<td class="comment-1" rowspan="1"><span class="register">E</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="694c"></span>694C</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Fetch the sprite Y offset and store it in <span class="register">A</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="694d"></span>694D</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next data byte.</td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_1</td>
+<td class="asm-label">CalculatePosition</td>
 <td class="address-2"><span id="694e"></span>694E</td>
 <td class="instruction">ADD A,D</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">D</span>.</td>
+<td class="comment-1" rowspan="2"><span class="register">D</span>=base Y position + the sprite Y offset.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="694f"></span>694F</td>
 <td class="instruction">LD D,A</td>
-<td class="comment-1" rowspan="1"><span class="register">D</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6950"></span>
+<div class="comments">
+<div class="paragraph">
+Check if the sprite frame is within the screen boundaries.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6950"></span>6950</td>
 <td class="instruction">CP $10</td>
-<td class="comment-1" rowspan="2">Jump to <a href="692C.html#6959">CheckNextFrame</a> if <span class="register">A</span> is higher than 10.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="692C.html#6959">SkipToNextFrame</a> if the sprites "Y" position is higher than 10.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6952"></span>6952</td>
-<td class="instruction">JR NC,<a href="692C.html#6959">CheckNextFrame</a></td>
+<td class="instruction">JR NC,<a href="692C.html#6959">SkipToNextFrame</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6954"></span>6954</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="3">Jump to <a href="692C.html#696e">DrawSpriteObject_3</a> if <span class="register">E</span> is lower than 20.</td>
+<td class="comment-1" rowspan="3">Jump to <a href="692C.html#696e">DrawVisibleFrame</a> if the sprites "X" position is lower than 20.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -308,13 +333,23 @@ Fetch the sprite data.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6957"></span>6957</td>
-<td class="instruction">JR C,<a href="692C.html#696e">DrawSpriteObject_3</a></td>
+<td class="instruction">JR C,<a href="692C.html#696e">DrawVisibleFrame</a></td>
 </tr>
 <tr>
-<td class="asm-label">CheckNextFrame</td>
+<td class="routine-comment" colspan="5">
+<span id="6959"></span>
+<div class="comments">
+<div class="paragraph">
+Skip the current frame and advance to the next frame data.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">SkipToNextFrame</td>
 <td class="address-2"><span id="6959"></span>6959</td>
 <td class="instruction">LD HL,$0008</td>
-<td class="comment-1" rowspan="4"><span class="register">BC</span>+=0008.</td>
+<td class="comment-1" rowspan="4"><span class="register">BC</span>=sprite data pointer+0008.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -332,17 +367,17 @@ Fetch the sprite data.
 <td class="instruction">LD C,L</td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_2</td>
+<td class="asm-label">CheckNextFrame</td>
 <td class="address-2"><span id="695f"></span>695F</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="1">Load <span class="register">A</span> with the next control byte from *<span class="register">BC</span>.</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
 <span id="6960"></span>
 <div class="comments">
 <div class="paragraph">
-Check for the terminator (FF+01 will set the Z flag).
+Check for the terminator (FF+01 will set the zero flag).
 </div>
 </div>
 </td>
@@ -351,19 +386,19 @@ Check for the terminator (FF+01 will set the Z flag).
 <td class="asm-label"></td>
 <td class="address-1"><span id="6960"></span>6960</td>
 <td class="instruction">INC A</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">A</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the control byte by one.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6961"></span>6961</td>
 <td class="instruction">LD A,$01</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=01.</td>
+<td class="comment-1" rowspan="1">Set the sprite "type" flag in <span class="register">A</span> to 01.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6963"></span>6963</td>
-<td class="instruction">JR NZ,<a href="692C.html#694e">DrawSpriteObject_1</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="692C.html#694e">DrawSpriteObject_1</a> if <span class="register">A</span> was not zero (on line <a href="692C.html#6960">6960</a>).</td>
+<td class="instruction">JR NZ,<a href="692C.html#694e">CalculatePosition</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="692C.html#694e">CalculatePosition</a> if the terminator character wasn't detected (on line <a href="692C.html#6960">6960</a>).</td>
 </tr>
 <tr>
 <td class="routine-comment" colspan="5">
@@ -379,41 +414,72 @@ We reached the terminator.
 <td class="asm-label"></td>
 <td class="address-1"><span id="6965"></span>6965</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next data byte.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6966"></span>
+<div class="comments">
+<div class="paragraph">
+Check for the sequence end marker byte.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6966"></span>6966</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="3">Jump to <a href="692C.html#6949">DrawSpriteObject_0</a> if *<span class="register">BC</span> is not equal to 80.</td>
+<td class="comment-1" rowspan="1">Read the sequence control byte.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6967"></span>6967</td>
 <td class="instruction">CP $80</td>
+<td class="comment-1" rowspan="2">Jump to <a href="692C.html#6949">ProcessNextFrame</a> if the sequence control byte is not equal to 80.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6969"></span>6969</td>
-<td class="instruction">JR NZ,<a href="692C.html#6949">DrawSpriteObject_0</a></td>
+<td class="instruction">JR NZ,<a href="692C.html#6949">ProcessNextFrame</a></td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="696b"></span>696B</td>
-<td class="instruction">JP <a href="68EC.html">$68EC</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="68EC.html">68EC</a>.</td>
+<td class="instruction">JP <a href="68EC.html">CompleteSpriteSequence</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="68EC.html">CompleteSpriteSequence</a>.</td>
 </tr>
 <tr>
-<td class="asm-label">DrawSpriteObject_3</td>
+<td class="routine-comment" colspan="5">
+<span id="696e"></span>
+<div class="comments">
+<div class="paragraph">
+Draw the sprite frame to the screen.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label">DrawVisibleFrame</td>
 <td class="address-2"><span id="696e"></span>696E</td>
 <td class="instruction">LD A,D</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+<td class="comment-1" rowspan="1">Load the sprite Y position.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="696f"></span>696F</td>
 <td class="instruction">ADD A,$40</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=40.</td>
+<td class="comment-1" rowspan="1">Convert it to a screen buffer address.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="6971"></span>
+<div class="comments">
+<div class="paragraph">
+Extract the bits which relate to the ZX Spectrum screen layout.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -425,13 +491,13 @@ We reached the terminator.
 <td class="asm-label"></td>
 <td class="address-1"><span id="6973"></span>6973</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
+<td class="comment-1" rowspan="1">Store the result in <span class="register">H</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6974"></span>6974</td>
 <td class="instruction">LD A,D</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">D</span>.</td>
+<td class="comment-1" rowspan="1">Reload the sprite Y position.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -450,6 +516,16 @@ We reached the terminator.
 <td class="instruction">RRCA</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6978"></span>
+<div class="comments">
+<div class="paragraph">
+Keep only the row bits.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6978"></span>6978</td>
 <td class="instruction">AND %11100000</td>
@@ -459,13 +535,22 @@ We reached the terminator.
 <td class="asm-label"></td>
 <td class="address-1"><span id="697a"></span>697A</td>
 <td class="instruction">ADD A,E</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">E</span>.</td>
+<td class="comment-1" rowspan="2">Add the sprite X position and store the result in <span class="register">L</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="697b"></span>697B</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
+</tr>
+<tr>
+<td class="routine-comment" colspan="5">
+<span id="697c"></span>
+<div class="comments">
+<div class="paragraph">
+Draw the sprite to the screen buffer.
+</div>
+</div>
+</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -494,44 +579,8 @@ We reached the terminator.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="6986"></span>6986</td>
-<td class="instruction">JR <a href="692C.html#695f">DrawSpriteObject_2</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="692C.html#695f">DrawSpriteObject_2</a>.</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="6988"></span>6988</td>
-<td class="instruction">LD ($7825),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7825.html">SpriteState</a>.</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="698b"></span>698B</td>
-<td class="instruction">EXX</td>
-<td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="698c"></span>698C</td>
-<td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="698d"></span>698D</td>
-<td class="instruction">LD H,B</td>
-<td class="comment-1" rowspan="1">Load the active sprite block count into <span class="register">H</span>.</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="698e"></span>698E</td>
-<td class="instruction">LD L,C</td>
-<td class="comment-1" rowspan="1">Load the attribute byte into <span class="register">L</span>.</td>
-</tr>
-<tr>
-<td class="asm-label"></td>
-<td class="address-1"><span id="698f"></span>698F</td>
-<td class="instruction">JP <a href="691B.html">ColouriseSprite</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="691B.html">ColouriseSprite</a>.</td>
+<td class="instruction">JR <a href="692C.html#695f">CheckNextFrame</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="692C.html#695f">CheckNextFrame</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
@@ -541,7 +590,7 @@ Prev: <a href="692B.html">692B</a>
 </td>
 <td class="up">Up: <a href="../maps/all.html#692c">Map</a></td>
 <td class="next">
-Next: <a href="6992.html">6992</a>
+Next: <a href="6988.html">6988</a>
 </td>
 </tr>
 </table>

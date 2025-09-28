@@ -35,7 +35,7 @@ Next: <a href="664E.html">664E</a>
 </td>
 </tr>
 </table>
-<div class="description">659C: Scroll Playarea</div>
+<div class="description">659C: Scroll Playarea Left</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
@@ -47,7 +47,7 @@ Scrolls the play area horizontally by shifting pixel data left using <code>RLD</
 </td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea</td>
+<td class="asm-label">ScrollPlayarea_Left</td>
 <td class="address-2"><span id="659c"></span>659C</td>
 <td class="instruction">LD HL,($7817)</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=*<a href="7817.html">Current_ScreenPosition</a>.</td>
@@ -260,13 +260,12 @@ Start of screen buffer.
 <td class="asm-label"></td>
 <td class="address-1"><span id="65d2"></span>65D2</td>
 <td class="instruction">ADD HL,HL</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="2">Multiply <span class="register">HL</span> by 04.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65d3"></span>65D3</td>
 <td class="instruction">ADD HL,HL</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>+=<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -275,13 +274,23 @@ Start of screen buffer.
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="65d5"></span>
+<div class="comments">
+<div class="paragraph">
+Scroll one character row (20 characters) left by 01 pixel using <code>RLD</code>.
+</div>
+</div>
+</td>
+</tr>
+<tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="65d5"></span>65D5</td>
 <td class="instruction">LD B,$04</td>
 <td class="comment-1" rowspan="1"><span class="register">B</span>=04.</td>
 </tr>
 <tr>
-<td class="asm-label">ScrollPlayarea_0</td>
+<td class="asm-label">ScrollCharacterRow_Left</td>
 <td class="address-2"><span id="65d7"></span>65D7</td>
 <td class="instruction">EXX</td>
 <td class="comment-1" rowspan="1">Switch to the shadow registers.</td>
@@ -702,8 +711,8 @@ Start of screen buffer.
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="663d"></span>663D</td>
-<td class="instruction">DJNZ <a href="659C.html#65d7">ScrollPlayarea_0</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="659C.html#65d7">ScrollPlayarea_0</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="659C.html#65d7">ScrollCharacterRow_Left</a></td>
+<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="659C.html#65d7">ScrollCharacterRow_Left</a> until counter is zero.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

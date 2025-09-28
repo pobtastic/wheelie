@@ -41,16 +41,33 @@ Next: <a href="26896.html">26896</a>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="26924.html">DrawSpriteObject</a> and <a href="28072.html">28072</a>.
+Used by the routines at <a href="26924.html">DrawSpriteObject</a> and <a href="28072.html">DrawLargeSprite</a>.
 </div>
 </div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">BC</td>
+<td class="register-desc">Sprite data pointer</td>
+</tr>
+<tr>
+<td class="register">HL</td>
+<td class="register-desc">Screen buffer address</td>
+</tr>
+<tr>
+<td class="register">HL'</td>
+<td class="register-desc">Sprite background buffer</td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
 <td class="asm-label">DrawSprite</td>
 <td class="address-2"><span id="26870"></span>26870</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="1">Read the current screen data (row 1).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -62,13 +79,13 @@ Used by the routines at <a href="26924.html">DrawSpriteObject</a> and <a href="2
 <td class="asm-label"></td>
 <td class="address-1"><span id="26872"></span>26872</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL'</span>.</td>
+<td class="comment-1" rowspan="1">Save row 1 background data to the sprite background buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26873"></span>26873</td>
 <td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">HL'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next position in the background buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -80,55 +97,53 @@ Used by the routines at <a href="26924.html">DrawSpriteObject</a> and <a href="2
 <td class="asm-label"></td>
 <td class="address-1"><span id="26875"></span>26875</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="2">Write sprite pixel data to row 1 of the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26876"></span>26876</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26877"></span>26877</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next sprite data byte.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26878"></span>26878</td>
 <td class="instruction">INC H</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">H</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to row 2 in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26879"></span>26879</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="2">Write sprite pixel data to row 2 of the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26880"></span>26880</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26881"></span>26881</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next sprite data byte.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26882"></span>26882</td>
 <td class="instruction">INC H</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">H</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to row 3 in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26883"></span>26883</td>
 <td class="instruction">LD A,(HL)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="1">Read the current screen data (row 3).</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -140,13 +155,13 @@ Used by the routines at <a href="26924.html">DrawSpriteObject</a> and <a href="2
 <td class="asm-label"></td>
 <td class="address-1"><span id="26885"></span>26885</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL'</span>.</td>
+<td class="comment-1" rowspan="1">Save row 3 background data to the sprite background buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26886"></span>26886</td>
 <td class="instruction">INC HL</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">HL'</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next position in the background buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
@@ -158,43 +173,41 @@ Used by the routines at <a href="26924.html">DrawSpriteObject</a> and <a href="2
 <td class="asm-label"></td>
 <td class="address-1"><span id="26888"></span>26888</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="2">Write sprite pixel data to row 3 of the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26889"></span>26889</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26890"></span>26890</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next sprite data byte.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26891"></span>26891</td>
 <td class="instruction">INC H</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">H</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to row 4 in the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26892"></span>26892</td>
 <td class="instruction">LD A,(BC)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">BC</span>.</td>
+<td class="comment-1" rowspan="2">Write sprite pixel data to row 4 of the screen buffer.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26893"></span>26893</td>
 <td class="instruction">LD (HL),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<span class="register">HL</span>.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>
 <td class="address-1"><span id="26894"></span>26894</td>
 <td class="instruction">INC BC</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">BC</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next sprite data byte.</td>
 </tr>
 <tr>
 <td class="asm-label"></td>

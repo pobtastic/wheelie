@@ -54,7 +54,7 @@ Used by the routine at <a href="26752.html">DisplaySpeedometer</a>.
 These attribute bytes are copied to the attribute buffer using <a href="26771.html">CopyTwelveBytes</a>. The idea is that, 12 bytes are copied to represent the speed gauge, but where they start from is determined by a calculation on the speed.
 </div>
 <div class="paragraph">
-A speed of 0 is not an option, so the absolute minimum speed (128 for right movement, and 127 for left movement) will use a starting address of 46247 to copy the 12 bytes.
+The absolute minimum speed is 128 for right movement and 127 for left movement, so aftter the calculation will use a starting address of 46247 to copy the 12 bytes.
 </div>
 <div class="paragraph">
 The maximum speeds are 150 for right movement and 105 for left movement, these both use a starting address of 46236 to copy the 12 bytes.
