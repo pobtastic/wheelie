@@ -336,8 +336,8 @@ R $6564 A Scroll phase
 
 u $659B
 
-c $659C Scroll Playarea
-@ $659C label=ScrollPlayarea
+c $659C Scroll Playarea Left
+@ $659C label=ScrollPlayarea_Left
 D $659C #HTML(Scrolls the play area horizontally by shifting pixel data left
 . using <code>RLD</code> instructions.)
   $659C,$03 #REGhl=*#R$7817.
@@ -373,10 +373,12 @@ N $65C7 Start of screen buffer.
   $65CE,$01 Increment #REGe by one.
   $65CF,$01 #REGl=#REGa.
   $65D0,$02 #REGh=#N$1F.
-  $65D2,$01 #REGhl+=#REGhl.
-  $65D3,$01 #REGhl+=#REGhl.
+  $65D2,$02 Multiply #REGhl by #N$04.
   $65D4,$01 Switch to the shadow registers.
+N $65D5 #HTML(Scroll one character row (#N$20 characters) left by #N$01 pixel
+. using <code>RLD</code>.)
   $65D5,$02 #REGb=#N$04.
+@ $65D7 label=ScrollCharacterRow_Left
   $65D7,$01 Switch to the shadow registers.
   $65D8,$01 #REGa=*#REGhl.
   $65D9,$01 Increment #REGl by one.
@@ -460,7 +462,10 @@ N $65C7 Start of screen buffer.
 
 u $664E
 
-c $6650
+c $6650 Scroll Playarea Right
+@ $6650 label=ScrollPlayarea_Right
+D $6650 #HTML(Scrolls the play area horizontally by shifting pixel data right
+. using <code>RRD</code> instructions.)
   $6650,$03 #REGhl=*#R$7817.
   $6653,$06 Jump to #R$6667 if *#R$7819 is not zero.
   $6659,$04 Jump to #R$6661 if #REGl is not zero.
@@ -470,22 +475,23 @@ c $6650
   $6665,$02 #REGa=#N$08.
   $6667,$01 Decrease #REGa by one.
   $6668,$03 Write #REGa to *#R$7819.
-  $666B,$01 #REGd=#REGh.
-  $666C,$01 #REGe=#REGl.
+  $666B,$02 Copy #REGhl to #REGde.
   $666D,$02 #REGb=#N$FF.
   $666F,$03 Call #R$6564.
+N $6672 Start of screen buffer.
   $6672,$03 #REGhl=#R$4000(#N$4000) (screen buffer).
-  $6675,$01 #REGd=#REGh.
-  $6676,$01 #REGe=#REGl.
+  $6675,$02 Copy the screen position pointer into #REGde.
   $6677,$01 Switch to the shadow registers.
   $6678,$01 #REGa=*#REGde.
   $6679,$01 Increment #REGe by one.
   $667A,$01 #REGl=#REGa.
   $667B,$02 #REGh=#N$1F.
-  $667D,$01 #REGhl+=#REGhl.
-  $667E,$01 #REGhl+=#REGhl.
+  $667D,$02 Multiply #REGhl by #N$04.
   $667F,$01 Switch to the shadow registers.
-  $6680,$02 #REGb=#N$04.
+N $6680 #HTML(Scroll one character row (#N$20 characters) left by #N$01 pixel
+. using <code>RRD</code>.)
+  $6680,$02 Set a counter in #REGb for #N$04 rows.
+@ $6682 label=ScrollCharacterRow_Right
   $6682,$01 Switch to the shadow registers.
   $6683,$01 #REGa=*#REGhl.
   $6684,$01 Increment #REGl by one.
@@ -560,10 +566,11 @@ c $6650
   $66EE,$01 #REGl=#REGa.
   $66EF,$02 Jump to #R$66F3 if {} is higher.
   $66F1,$02 #REGd=#N$48.
-  $66F3,$01 #REGh=#REGd.
+@ $66F3 label=ContinueScreenScroll_Right
+  $66F3,$01 Update the screen pointer.
   $66F4,$01 Switch to the shadow registers.
   $66F5,$02 Decrease counter by one and loop back to #R$6678 until counter is zero.
-  $66F7,$01 Switch to the shadow registers.
+  $66F7,$01 Switch back to the normal registers.
   $66F8,$01 Return.
 
 u $66F9
@@ -801,41 +808,42 @@ N $68E0 All sprite blocks are now reverted!
 
 u $68E8
 
-c $68EC
+c $68EC Complete Sprite Sequence
+@ $68EC label=CompleteSpriteSequence
+R $68EC B' Active block counter
+R $68EC HL' Sprite background buffer pointer
   $68EC,$01 Switch to the shadow registers.
-  $68ED,$03 Write #REGhl' to *#R$781C.
-  $68F0,$01 #REGa=#REGb'.
-  $68F1,$03 Write #REGa to *#R$781B.
+  $68ED,$03 Write the updated sprite background buffer pointer to *#R$781C.
+  $68F0,$04 Write the updated active block counter to *#R$781B.
   $68F4,$01 Switch back to the normal registers.
   $68F5,$01 Return.
 
 c $68F6 Draw Sprite
 @ $68F6 label=DrawSprite
-  $68F6,$01 #REGa=*#REGhl.
+R $68F6 BC Sprite data pointer
+R $68F6 HL Screen buffer address
+R $68F6 HL' Sprite background buffer
+  $68F6,$01 Read the current screen data (row #N$01).
   $68F7,$01 Switch to the shadow registers.
-  $68F8,$01 Write #REGa to *#REGhl'.
-  $68F9,$01 Increment #REGhl' by one.
+  $68F8,$01 Save row #N$01 background data to the sprite background buffer.
+  $68F9,$01 Move to the next position in the background buffer.
   $68FA,$01 Switch back to the normal registers.
-  $68FB,$01 #REGa=*#REGbc.
-  $68FC,$01 Write #REGa to *#REGhl.
-  $68FD,$01 Increment #REGbc by one.
-  $68FE,$01 Increment #REGh by one.
-  $68FF,$01 #REGa=*#REGbc.
-  $6900,$01 Write #REGa to *#REGhl.
-  $6901,$01 Increment #REGbc by one.
-  $6902,$01 Increment #REGh by one.
-  $6903,$01 #REGa=*#REGhl.
+  $68FB,$02 Write sprite pixel data to row #N$01 of the screen buffer.
+  $68FD,$01 Move to the next sprite data byte.
+  $68FE,$01 Move to row #N$02 in the screen buffer.
+  $68FF,$02 Write sprite pixel data to row #N$02 of the screen buffer.
+  $6901,$01 Move to the next sprite data byte.
+  $6902,$01 Move to row #N$03 in the screen buffer.
+  $6903,$01 Read the current screen data (row #N$03).
   $6904,$01 Switch to the shadow registers.
-  $6905,$01 Write #REGa to *#REGhl'.
-  $6906,$01 Increment #REGhl' by one.
+  $6905,$01 Save row #N$03 background data to the sprite background buffer.
+  $6906,$01 Move to the next position in the background buffer.
   $6907,$01 Switch back to the normal registers.
-  $6908,$01 #REGa=*#REGbc.
-  $6909,$01 Write #REGa to *#REGhl.
-  $690A,$01 Increment #REGbc by one.
-  $690B,$01 Increment #REGh by one.
-  $690C,$01 #REGa=*#REGbc.
-  $690D,$01 Write #REGa to *#REGhl.
-  $690E,$01 Increment #REGbc by one.
+  $6908,$02 Write sprite pixel data to row #N$03 of the screen buffer.
+  $690A,$01 Move to the next sprite data byte.
+  $690B,$01 Move to row #N$04 in the screen buffer.
+  $690C,$02 Write sprite pixel data to row #N$04 of the screen buffer.
+  $690E,$01 Move to the next sprite data byte.
   $690F,$01 Return.
 
 c $6910 Convert Screen Buffer Address To Attribute Buffer
@@ -854,18 +862,26 @@ M $6918,$03 #REGde'=#REGhl (using the stack).
 
 c $691B Colourise Sprite
 @ $691B label=ColouriseSprite
-  $691B,$01 Increment #REGb' by one.
-  $691C,$01 Write #REGa to *#REGhl'.
-  $691D,$01 Increment #REGhl' by one.
-  $691E,$01 Write #REGe to *#REGhl'.
-  $691F,$01 Increment #REGhl' by one.
-  $6920,$01 Write #REGd to *#REGhl'.
-  $6921,$01 Increment #REGhl' by one.
-  $6922,$02 Compare #REGa with #N$07.
-  $6924,$01 #REGa=#REGc'.
+R $691B A Sprite data
+R $691B B' Sprite block counter
+R $691B C' Sprite attribute
+R $691B D' Sprite Y position
+R $691B E' Sprite X position
+R $691B HL' Background buffer store
+R $691B HL Attribute buffer pointer
+  $691B,$01 Increment the sprite block counter in #REGb' by one.
+  $691C,$01 Write the sprite data to the sprite background buffer.
+  $691D,$01 Increment the sprite background buffer by one.
+  $691E,$01 Write the sprite X position to the sprite background buffer.
+  $691F,$01 Increment the sprite background buffer by one.
+  $6920,$01 Write the sprite Y position to the sprite background buffer.
+  $6921,$01 Increment the sprite background buffer by one.
+  $6922,$02 Check if this is a special sprite (type #N$07).
+  $6924,$01 Load the sprite attribute from #REGc'.
   $6925,$01 Switch back to the normal registers.
-  $6926,$01 Write #REGa to *#REGhl.
-  $6927,$01 Return if #REGa was not equal to #N$07 on line #R$6922.
+  $6926,$01 Write the sprite attribute to the attribute buffer.
+  $6927,$01 Return if this isn't a special type #N$07 sprite (from line
+. #R$6922).
   $6928,$03 Jump to #R$73F2.
 
 u $692B
@@ -873,9 +889,9 @@ u $692B
 
 c $692C Draw Sprite Object
 @ $692C label=DrawSpriteObject
-R $692C DE Sprite screen position
 R $692C A Sprite frame ID
 R $692C C Sprite colour
+R $692C DE Sprite screen position
   $692C,$01 Store the sprite frame ID in #REGb.
   $692D,$01 Load the sprite attribute value into #REGa.
   $692E,$01 Switch to the shadow registers.
@@ -905,51 +921,57 @@ N $693B This is quite clever, and very subtle. It's probably easier here to
 . carry flag.
   $693F,$01 Load the original frame ID into #REGa.
 N $6940 Fetch the sprite data.
-  $6940,$01 #REGc=*#REGhl.
-  $6941,$01 Increment #REGl by one.
-  $6942,$01 #REGb=*#REGhl.
-  $6943,$02 Test bit 5 of #REGa.
-  $6945,$03 Jump to #R$6DA8 if {} is not zero.
-  $6948,$01 #REGa=*#REGbc.
-  $6949,$01 Increment #REGbc by one.
-  $694A,$01 #REGa+=#REGe.
-  $694B,$01 #REGe=#REGa.
-  $694C,$01 #REGa=*#REGbc.
-  $694D,$01 Increment #REGbc by one.
-  $694E,$01 #REGa+=#REGd.
-  $694F,$01 #REGd=#REGa.
-  $6950,$04 Jump to #R$6959 if #REGa is higher than #N$10.
-  $6954,$05 Jump to #R$696E if #REGe is lower than #N$20.
-  $6959,$03 #REGhl=#N($0008,$04,$04).
-  $695C,$01 #REGhl+=#REGbc.
-  $695D,$01 #REGb=#REGh.
-  $695E,$01 #REGc=#REGl.
-@ $6959 label=CheckNextFrame
-M $6959,$06 #REGbc+=#N($0008,$04,$04).
-  $695F,$01 #REGa=*#REGbc.
-N $6960 Check for the terminator (#N$FF+#N$01 will set the Z flag).
-  $6960,$01 Increment #REGa by one.
-  $6961,$02 #REGa=#N$01.
-  $6963,$02 Jump to #R$694E if #REGa was not zero (on line #R$6960).
+  $6940,$03 Fetch the sprite data address from *#REGhl and store it in #REGbc.
+N $6943 Check the sprite "type" bit.
+  $6943,$05 Jump to #R$6DA8 if bit 5 of the sprite ID is set.
+N $6948 Process regular sprite animation frames.
+  $6948,$01 Fetch the sprite X offset and store it in #REGa.
+@ $6949 label=ProcessNextFrame
+  $6949,$01 Move to the next data byte.
+  $694A,$02 #REGe=base X position + the sprite X offset.
+  $694C,$01 Fetch the sprite Y offset and store it in #REGa.
+  $694D,$01 Move to the next data byte.
+@ $694E label=CalculatePosition
+  $694E,$02 #REGd=base Y position + the sprite Y offset.
+N $6950 Check if the sprite frame is within the screen boundaries.
+  $6950,$04 Jump to #R$6959 if the sprites "Y" position is higher than #N$10.
+  $6954,$05 Jump to #R$696E if the sprites "X" position is lower than #N$20.
+N $6959 Skip the current frame and advance to the next frame data.
+@ $6959 label=SkipToNextFrame
+  $6959,$06 #REGbc=sprite data pointer+#N($0008,$04,$04).
+@ $695F label=CheckNextFrame
+  $695F,$01 Load #REGa with the next control byte from *#REGbc.
+N $6960 Check for the terminator (#N$FF+#N$01 will set the zero flag).
+  $6960,$01 Increment the control byte by one.
+  $6961,$02 Set the sprite "type" flag in #REGa to #N$01.
+  $6963,$02 Jump to #R$694E if the terminator character wasn't detected (on
+. line #R$6960).
 N $6965 We reached the terminator.
-  $6965,$01 Increment #REGbc by one.
-  $6966,$05 Jump to #R$6949 if *#REGbc is not equal to #N$80.
+  $6965,$01 Move to the next data byte.
+N $6966 Check for the sequence end marker byte.
+  $6966,$01 Read the sequence control byte.
+  $6967,$04 Jump to #R$6949 if the sequence control byte is not equal to #N$80.
   $696B,$03 Jump to #R$68EC.
-  $696E,$01 #REGa=#REGd.
-  $696F,$02 #REGa+=#N$40.
+N $696E Draw the sprite frame to the screen.
+@ $696E label=DrawVisibleFrame
+  $696E,$01 Load the sprite Y position.
+  $696F,$02 Convert it to a screen buffer address.
+N $6971 Extract the bits which relate to the ZX Spectrum screen layout.
   $6971,$02,b$01 Keep only bits 3 and 6.
-  $6973,$01 #REGh=#REGa.
-  $6974,$01 #REGa=#REGd.
+  $6973,$01 Store the result in #REGh.
+  $6974,$01 Reload the sprite Y position.
   $6975,$03 Rotate #REGa right three positions (bits 0 to 2 are now in positions 5 to 7).
+N $6978 Keep only the row bits.
   $6978,$02,b$01 Keep only bits 5-7.
-  $697A,$01 #REGa+=#REGe.
-  $697B,$01 #REGl=#REGa.
+  $697A,$02 Add the sprite X position and store the result in #REGl.
+N $697C Draw the sprite to the screen buffer.
   $697C,$03 Call #R$68F6 to draw the top of the sprite.
   $697F,$01 Move to the next screen row.
   $6980,$03 Call #R$68F6 to draw the bottom of the sprite.
   $6983,$03 Call #R$6910.
   $6986,$02 Jump to #R$695F.
 
+c $6988
   $6988,$03 Write #REGa to *#R$7825.
   $698B,$01 Switch to the shadow registers.
   $698C,$01 Write #REGa to *#REGhl.
@@ -1402,7 +1424,71 @@ c $6D96
   $6DA6,$01 Increment #REGh by one.
   $6DA7,$01 Return.
 
-c $6DA8
+c $6DA8 Draw Large Sprite
+@ $6DA8 label=DrawLargeSprite
+  $6DA8,$01 #REGa=*#REGbc.
+  $6DA9,$01 Increment #REGbc by one.
+  $6DAA,$01 #REGa+=#REGe.
+  $6DAB,$01 #REGe=#REGa.
+  $6DAC,$01 #REGa=*#REGbc.
+  $6DAD,$01 Increment #REGbc by one.
+  $6DAE,$01 #REGa+=#REGd.
+  $6DAF,$01 Decrease #REGa by one.
+  $6DB0,$01 #REGd=#REGa.
+  $6DB1,$02 Compare #REGa with #N$10.
+  $6DB3,$02 Jump to #R$6DBA if #REGa is greater than or equal to #N$10.
+  $6DB5,$05 Jump to #R$6DCF if #REGe is less than #N$20.
+  $6DBA,$04 #REGhl=#N($0008,$04,$04)+#REGbc.
+  $6DBE,$01 #REGb=#REGh.
+  $6DBF,$01 #REGc=#REGl.
+  $6DC0,$01 Increment #REGd by one.
+  $6DC1,$01 #REGa=*#REGbc.
+  $6DC2,$01 Increment #REGa by one.
+  $6DC3,$03 Jump to #R$6DB1 if #REGd is not equal to #N$20.
+  $6DC6,$01 Increment #REGbc by one.
+  $6DC7,$05 Jump to #R$6DA9 if *#REGbc is not equal to #N$80.
+  $6DCC,$03 Jump to #R$68EC.
+
+  $6DCF,$01 #REGa=#REGd.
+  $6DD0,$02 #REGa+=#N$40.
+  $6DD2,$02,b$01 Keep only bits 3, 6.
+  $6DD4,$01 #REGh=#REGa.
+  $6DD5,$01 #REGa=#REGd.
+  $6DD6,$01 RRCA.
+  $6DD7,$01 RRCA.
+  $6DD8,$01 RRCA.
+  $6DD9,$02,b$01 Keep only bits 5-7.
+  $6DDB,$01 #REGa+=#REGe.
+  $6DDC,$01 #REGl=#REGa.
+  $6DDD,$03 Call #R$6D96.
+  $6DE0,$01 Increment #REGh by one.
+  $6DE1,$03 Call #R$68F6.
+  $6DE4,$03 Call #R$6910.
+  $6DE7,$01 Increment #REGd by one.
+  $6DE8,$05 Jump to #R$6DF3 if #REGd is less than #N$10.
+  $6DED,$04 Increment #REGbc by four.
+  $6DF1,$02 Jump to #R$6DC1.
+
+  $6DF3,$02 #REGa+=#N$40.
+  $6DF5,$02,b$01 Keep only bits 3, 6.
+  $6DF7,$01 #REGh=#REGa.
+  $6DF8,$01 #REGa=#REGd.
+  $6DF9,$01 RRCA.
+  $6DFA,$01 RRCA.
+  $6DFB,$01 RRCA.
+  $6DFC,$02,b$01 Keep only bits 5-7.
+  $6DFE,$01 #REGa+=#REGe.
+  $6DFF,$01 #REGl=#REGa.
+  $6E00,$03 Call #R$68F6.
+  $6E03,$01 Increment #REGh by one.
+  $6E04,$01 #REGa=*#REGbc.
+  $6E05,$01 Increment #REGa by one.
+  $6E06,$02 Jump to #R$6DE1 if #REGa is not zero.
+  $6E08,$03 Call #R$6D96.
+  $6E0B,$03 Call #R$6910.
+  $6E0E,$02 Jump to #R$6DC6.
+
+b $6E10
 
 c $6E18 Handler: Game Over
 @ $6E18 label=Handler_GameOver
@@ -3189,1292 +3275,3096 @@ t $C3F8 Messaging: Target
 
 b $C400
 
-b $C500 Data: Graphics
-@ $C500 label=Graphics_Data
-N $C500 Graphic #N$00.
-  $C50A,$01 Terminator.
-N $C50B Graphic #N$01.
-  $C515,$01 Terminator.
-N $C516 Graphic #N$02.
-  $C521,$01 Terminator.
-N $C522 Graphic #N$03.
-  $C52C,$01 Terminator.
-N $C52D Graphic #N$04.
-  $C540,$01 Terminator.
-N $C541 Graphic #N$05.
-  $C542,$01 Terminator.
-N $C543 Graphic #N$06.
-  $C54B,$01 Terminator.
-N $C54C Graphic #N$07.
-  $C55F,$01 Terminator.
-N $C560 Graphic #N$08.
-  $C561,$01 Terminator.
-N $C562 Graphic #N$09.
-  $C572,$01 Terminator.
-N $C573 Graphic #N$0A.
-  $C57F,$01 Terminator.
-N $C580 Graphic #N$0B.
-  $C581,$01 Terminator.
-N $C582 Graphic #N$0C.
-  $C592,$01 Terminator.
-N $C593 Graphic #N$0D.
-  $C5A6,$01 Terminator.
-N $C5A7 Graphic #N$0E.
-  $C5A8,$01 Terminator.
-N $C5A9 Graphic #N$0F.
-  $C5C1,$01 Terminator.
-N $C5C2 Graphic #N$10.
-  $C5DC,$01 Terminator.
-N $C5DD Graphic #N$11.
-  $C5E8,$01 Terminator.
-N $C5E9 Graphic #N$12.
-  $C603,$01 Terminator.
-N $C604 Graphic #N$13.
-  $C61E,$01 Terminator.
-N $C61F Graphic #N$14.
-  $C62A,$01 Terminator.
-N $C62B Graphic #N$15.
-  $C645,$01 Terminator.
-N $C646 Graphic #N$16.
-  $C660,$01 Terminator.
-N $C661 Graphic #N$17.
-  $C663,$01 Terminator.
-N $C664 Graphic #N$18.
-  $C674,$01 Terminator.
-N $C675 Graphic #N$19.
-  $C687,$01 Terminator.
-N $C688 Graphic #N$1A.
-  $C689,$01 Terminator.
-N $C68A Graphic #N$1B.
-  $C6A2,$01 Terminator.
-N $C6A3 Graphic #N$1C.
-  $C6A5,$01 Terminator.
-N $C6A6 Graphic #N$1D.
-  $C6B6,$01 Terminator.
-N $C6B7 Graphic #N$1E.
-  $C6C9,$01 Terminator.
-N $C6CA Graphic #N$1F.
-  $C6E4,$01 Terminator.
-N $C6E5 Graphic #N$20.
-  $C6EF,$01 Terminator.
-N $C6F0 Graphic #N$21.
-  $C6F2,$01 Terminator.
-N $C6F3 Graphic #N$22.
-  $C703,$01 Terminator.
-N $C704 Graphic #N$23.
-  $C705,$01 Terminator.
-N $C706 Graphic #N$24.
-  $C716,$01 Terminator.
-N $C717 Graphic #N$25.
-  $C718,$01 Terminator.
-N $C719 Graphic #N$26.
-  $C731,$01 Terminator.
-N $C732 Graphic #N$27.
-  $C733,$01 Terminator.
-N $C734 Graphic #N$28.
-  $C73C,$01 Terminator.
-N $C73D Graphic #N$29.
-  $C73F,$01 Terminator.
-N $C740 Graphic #N$2A.
-  $C750,$01 Terminator.
-N $C751 Graphic #N$2B.
-  $C752,$01 Terminator.
-N $C753 Graphic #N$2C.
-  $C763,$01 Terminator.
-N $C764 Graphic #N$2D.
-  $C765,$01 Terminator.
-N $C766 Graphic #N$2E.
-  $C776,$01 Terminator.
-N $C777 Graphic #N$2F.
-  $C781,$01 Terminator.
-N $C782 Graphic #N$30.
-  $C784,$01 Terminator.
-N $C785 Graphic #N$31.
-  $C795,$01 Terminator.
-N $C796 Graphic #N$32.
-  $C7B0,$01 Terminator.
-N $C7B1 Graphic #N$33.
-  $C7B2,$01 Terminator.
-N $C7B3 Graphic #N$34.
-  $C7C3,$01 Terminator.
-N $C7C4 Graphic #N$35.
-  $C7C5,$01 Terminator.
-N $C7C6 Graphic #N$36.
-  $C7D6,$01 Terminator.
-N $C7D7 Graphic #N$37.
-  $C7D9,$01 Terminator.
-N $C7DA Graphic #N$38.
-  $C7EA,$01 Terminator.
-N $C7EB Graphic #N$39.
-  $C805,$01 Terminator.
-N $C806 Graphic #N$3A.
-  $C807,$01 Terminator.
-N $C808 Graphic #N$3B.
-  $C818,$01 Terminator.
-N $C819 Graphic #N$3C.
-  $C81A,$01 Terminator.
-N $C81B Graphic #N$3D.
-  $C823,$01 Terminator.
-N $C824 Graphic #N$3E.
-  $C826,$01 Terminator.
-N $C827 Graphic #N$3F.
-  $C837,$01 Terminator.
-N $C838 Graphic #N$40.
-  $C852,$01 Terminator.
-N $C853 Graphic #N$41.
-  $C865,$01 Terminator.
-N $C866 Graphic #N$42.
-  $C881,$01 Terminator.
-N $C882 Graphic #N$43.
-  $C89C,$01 Terminator.
-N $C89D Graphic #N$44.
-  $C8AF,$01 Terminator.
-N $C8B0 Graphic #N$45.
-  $C8CB,$01 Terminator.
-N $C8CC Graphic #N$46.
-  $C8E6,$01 Terminator.
-N $C8E7 Graphic #N$47.
-  $C8F9,$01 Terminator.
-N $C8FA Graphic #N$48.
-  $C915,$01 Terminator.
-N $C916 Graphic #N$49.
-  $C930,$01 Terminator.
-N $C931 Graphic #N$4A.
-  $C93B,$01 Terminator.
-N $C93C Graphic #N$4B.
-  $C93D,$01 Terminator.
-N $C93E Graphic #N$4C.
-  $C94F,$01 Terminator.
-N $C950 Graphic #N$4D.
-  $C951,$01 Terminator.
-N $C952 Graphic #N$4E.
-  $C96A,$01 Terminator.
-N $C96B Graphic #N$4F.
-  $C985,$01 Terminator.
-N $C986 Graphic #N$50.
-  $C991,$01 Terminator.
-N $C992 Graphic #N$51.
-  $C99C,$01 Terminator.
-N $C99D Graphic #N$52.
-  $C9A8,$01 Terminator.
-N $C9A9 Graphic #N$53.
-  $C9B3,$01 Terminator.
-N $C9B4 Graphic #N$54.
-  $C9C7,$01 Terminator.
-N $C9C8 Graphic #N$55.
-  $C9C9,$01 Terminator.
-N $C9CA Graphic #N$56.
-  $C9D2,$01 Terminator.
-N $C9D3 Graphic #N$57.
-  $C9E6,$01 Terminator.
-N $C9E7 Graphic #N$58.
-  $C9E8,$01 Terminator.
-N $C9E9 Graphic #N$59.
-  $C9F9,$01 Terminator.
-N $C9FA Graphic #N$5A.
-  $CA06,$01 Terminator.
-N $CA07 Graphic #N$5B.
-  $CA08,$01 Terminator.
-N $CA09 Graphic #N$5C.
-  $CA19,$01 Terminator.
-N $CA1A Graphic #N$5D.
-  $CA2D,$01 Terminator.
-N $CA2E Graphic #N$5E.
-  $CA2F,$01 Terminator.
-N $CA30 Graphic #N$5F.
-  $CA48,$01 Terminator.
-N $CA49 Graphic #N$60.
-  $CA63,$01 Terminator.
-N $CA64 Graphic #N$61.
-  $CA6F,$01 Terminator.
-N $CA70 Graphic #N$62.
-  $CA8A,$01 Terminator.
-N $CA8B Graphic #N$63.
-  $CAA5,$01 Terminator.
-N $CAA6 Graphic #N$64.
-  $CAB1,$01 Terminator.
-N $CAB2 Graphic #N$65.
-  $CACC,$01 Terminator.
-N $CACD Graphic #N$66.
-  $CAE7,$01 Terminator.
-N $CAE8 Graphic #N$67.
-  $CAEA,$01 Terminator.
-N $CAEB Graphic #N$68.
-  $CAFB,$01 Terminator.
-N $CAFC Graphic #N$69.
-  $CB0E,$01 Terminator.
-N $CB0F Graphic #N$6A.
-  $CB10,$01 Terminator.
-N $CB11 Graphic #N$6B.
-  $CB29,$01 Terminator.
-N $CB2A Graphic #N$6C.
-  $CB2C,$01 Terminator.
-N $CB2D Graphic #N$6D.
-  $CB3D,$01 Terminator.
-N $CB3E Graphic #N$6E.
-  $CB50,$01 Terminator.
-N $CB51 Graphic #N$6F.
-  $CB6B,$01 Terminator.
-N $CB6C Graphic #N$70.
-  $CB76,$01 Terminator.
-N $CB77 Graphic #N$71.
-  $CB79,$01 Terminator.
-N $CB7A Graphic #N$72.
-  $CB8A,$01 Terminator.
-N $CB8B Graphic #N$73.
-  $CB8C,$01 Terminator.
-N $CB8D Graphic #N$74.
-  $CB9D,$01 Terminator.
-N $CB9E Graphic #N$75.
-  $CB9F,$01 Terminator.
-N $CBA0 Graphic #N$76.
-  $CBB8,$01 Terminator.
-N $CBB9 Graphic #N$77.
-  $CBBA,$01 Terminator.
-N $CBBB Graphic #N$78.
-  $CBC3,$01 Terminator.
-N $CBC4 Graphic #N$79.
-  $CBC6,$01 Terminator.
-N $CBC7 Graphic #N$7A.
-  $CBD7,$01 Terminator.
-N $CBD8 Graphic #N$7B.
-  $CBD9,$01 Terminator.
-N $CBDA Graphic #N$7C.
-  $CBEA,$01 Terminator.
-N $CBEB Graphic #N$7D.
-  $CBEC,$01 Terminator.
-N $CBED Graphic #N$7E.
-  $CBFD,$01 Terminator.
-N $CBFE Graphic #N$7F.
-  $CC08,$01 Terminator.
-N $CC09 Graphic #N$80.
-  $CC0B,$01 Terminator.
-N $CC0C Graphic #N$81.
-  $CC1C,$01 Terminator.
-N $CC1D Graphic #N$82.
-  $CC37,$01 Terminator.
-N $CC38 Graphic #N$83.
-  $CC39,$01 Terminator.
-N $CC3A Graphic #N$84.
-  $CC4A,$01 Terminator.
-N $CC4B Graphic #N$85.
-  $CC4C,$01 Terminator.
-N $CC4D Graphic #N$86.
-  $CC5D,$01 Terminator.
-N $CC5E Graphic #N$87.
-  $CC60,$01 Terminator.
-N $CC61 Graphic #N$88.
-  $CC71,$01 Terminator.
-N $CC72 Graphic #N$89.
-  $CC8C,$01 Terminator.
-N $CC8D Graphic #N$8A.
-  $CC8E,$01 Terminator.
-N $CC8F Graphic #N$8B.
-  $CC9F,$01 Terminator.
-N $CCA0 Graphic #N$8C.
-  $CCA1,$01 Terminator.
-N $CCA2 Graphic #N$8D.
-  $CCAA,$01 Terminator.
-N $CCAB Graphic #N$8E.
-  $CCAD,$01 Terminator.
-N $CCAE Graphic #N$8F.
-  $CCBE,$01 Terminator.
-N $CCBF Graphic #N$90.
-  $CCD9,$01 Terminator.
-N $CCDA Graphic #N$92.
-  $CCEC,$01 Terminator.
-N $CCED Graphic #N$93.
-  $CD08,$01 Terminator.
-N $CD09 Graphic #N$94.
-  $CD23,$01 Terminator.
-N $CD24 Graphic #N$95.
-  $CD36,$01 Terminator.
-N $CD37 Graphic #N$96.
-  $CD52,$01 Terminator.
-N $CD53 Graphic #N$97.
-  $CD6D,$01 Terminator.
-N $CD6E Graphic #N$98.
-  $CD80,$01 Terminator.
-N $CD81 Graphic #N$99.
-  $CD9C,$01 Terminator.
-N $CD9D Graphic #N$9A.
-  $CDB7,$01 Terminator.
-N $CDB8 Graphic #N$9B.
-  $CDC2,$01 Terminator.
-N $CDC3 Graphic #N$9C.
-  $CDD6,$01 Terminator.
-N $CDD7 Graphic #N$9D.
-  $CDD8,$01 Terminator.
-N $CDD9 Graphic #N$9E.
-  $CDF1,$01 Terminator.
-N $CDF2 Graphic #N$9F.
-  $CE0C,$01 Terminator.
-N $CE0D Graphic #N$A0.
-  $CE28,$01 Terminator.
-N $CE29 Graphic #N$A1.
-  $CE43,$01 Terminator.
-N $CE44 Graphic #N$A2.
-  $CE45,$01 Terminator.
-N $CE46 Graphic #N$A3.
-  $CE56,$01 Terminator.
-N $CE57 Graphic #N$A4.
-  $CE72,$01 Terminator.
-N $CE73 Graphic #N$A5.
-  $CE8D,$01 Terminator.
-N $CE8E Graphic #N$A6.
-  $CE8F,$01 Terminator.
-N $CE90 Graphic #N$A7.
-  $CEA0,$01 Terminator.
-N $CEA1 Graphic #N$A8.
-  $CEA3,$01 Terminator.
-N $CEA4 Graphic #N$A9.
-  $CEB4,$01 Terminator.
-N $CEB5 Graphic #N$AA.
-  $CECF,$01 Terminator.
-N $CED0 Graphic #N$AB.
-  $CEEA,$01 Terminator.
-N $CEEB Graphic #N$AC.
-  $CEF5,$01 Terminator.
-N $CEF6 Graphic #N$AD.
-  $CEF8,$01 Terminator.
-N $CEF9 Graphic #N$AE.
-  $CF09,$01 Terminator.
-N $CF0A Graphic #N$AF.
-  $CF0B,$01 Terminator.
-N $CF0C Graphic #N$B0.
-  $CF1C,$01 Terminator.
-N $CF1D Graphic #N$B1.
-  $CF1E,$01 Terminator.
-N $CF1F Graphic #N$B2.
-  $CF2F,$01 Terminator.
-N $CF30 Graphic #N$B3.
-  $CF3A,$01 Terminator.
-N $CF3B Graphic #N$B4.
-  $CF4E,$01 Terminator.
-N $CF4F Graphic #N$B5.
-  $CF69,$01 Terminator.
-N $CF6A Graphic #N$B6.
-  $CF84,$01 Terminator.
-N $CF85 Graphic #N$B7.
-  $CF98,$01 Terminator.
-N $CF99 Graphic #N$B8.
-  $CFB3,$01 Terminator.
-N $CFB4 Graphic #N$B9.
-  $CFCE,$01 Terminator.
-N $CFCF Graphic #N$BA.
-  $CFE2,$01 Terminator.
-N $CFE3 Graphic #N$BB.
-  $CFE4,$01 Terminator.
-N $CFE5 Graphic #N$BC.
-  $CFFD,$01 Terminator.
-N $CFFE Graphic #N$BD.
-  $D018,$01 Terminator.
-N $D019 Graphic #N$BE.
-  $D034,$01 Terminator.
-N $D035 Graphic #N$BF.
-  $D04F,$01 Terminator.
-N $D050 Graphic #N$C0.
-  $D062,$01 Terminator.
-N $D063 Graphic #N$C1.
-  $D064,$01 Terminator.
-N $D065 Graphic #N$C2.
-  $D075,$01 Terminator.
-N $D076 Graphic #N$C3.
-  $D081,$01 Terminator.
-N $D082 Graphic #N$C4.
-  $D083,$01 Terminator.
-N $D084 Graphic #N$C5.
-  $D094,$01 Terminator.
-N $D095 Graphic #N$C6.
-  $D096,$01 Terminator.
-N $D097 Graphic #N$C7.
-  $D0A7,$01 Terminator.
-N $D0A8 Graphic #N$C8.
-  $D0A9,$01 Terminator.
-N $D0AA Graphic #N$C9.
-  $D0BA,$01 Terminator.
-N $D0BB Graphic #N$CA.
-  $D0BC,$01 Terminator.
-N $D0BD Graphic #N$CB.
-  $D0CD,$01 Terminator.
-N $D0CE Graphic #N$CC.
-  $D0E1,$01 Terminator.
-N $D0E2 Graphic #N$CD.
-  $D0E3,$01 Terminator.
-N $D0E4 Graphic #N$CE.
-  $D0FC,$01 Terminator.
-N $D0FD Graphic #N$CF.
-  $D0FE,$01 Terminator.
-N $D0FF Graphic #N$D0.
-  $D10F,$01 Terminator.
-N $D110 Graphic #N$D1.
-  $D123,$01 Terminator.
-N $D124 Graphic #N$D2.
-  $D125,$01 Terminator.
-N $D126 Graphic #N$D3.
-  $D13E,$01 Terminator.
-N $D13F Graphic #N$D4.
-  $D159,$01 Terminator.
-N $D15A Graphic #N$D5.
-  $D16C,$01 Terminator.
-N $D16D Graphic #N$D6.
-  $D16F,$01 Terminator.
-N $D170 Graphic #N$D7.
-  $D178,$01 Terminator.
-N $D179 Graphic #N$D8.
-  $D18B,$01 Terminator.
-N $D18C Graphic #N$D9.
-  $D18D,$01 Terminator.
-N $D18E Graphic #N$DA.
-  $D19E,$01 Terminator.
-N $D19F Graphic #N$DB.
-  $D1A0,$01 Terminator.
-N $D1A1 Graphic #N$DC.
-  $D1B1,$01 Terminator.
-N $D1B2 Graphic #N$DD.
-  $D1BC,$01 Terminator.
-N $D1BD Graphic #N$DE.
-  $D1C7,$01 Terminator.
-N $D1C8 Graphic #N$DF.
-  $D1DA,$01 Terminator.
-N $D1DB Graphic #N$E0.
-  $D1E6,$01 Terminator.
-N $D1E7 Graphic #N$E1.
-  $D1F1,$01 Terminator.
-N $D1F2 Graphic #N$E2.
-  $D1F3,$01 Terminator.
-N $D1F4 Graphic #N$E3.
-  $D204,$01 Terminator.
-N $D205 Graphic #N$E4.
-  $D20F,$01 Terminator.
-N $D210 Graphic #N$E5.
-  $D21A,$01 Terminator.
-N $D21B Graphic #N$E6.
-  $D22D,$01 Terminator.
-N $D22E Graphic #N$E7.
-  $D22F,$01 Terminator.
-N $D230 Graphic #N$E8.
-  $D240,$01 Terminator.
-N $D241 Graphic #N$E9.
-  $D243,$01 Terminator.
-N $D244 Graphic #N$EA.
-  $D24C,$01 Terminator.
-N $D24D Graphic #N$EB.
-  $D25F,$01 Terminator.
-N $D260 Graphic #N$EC.
-  $D261,$01 Terminator.
-N $D262 Graphic #N$ED.
-  $D272,$01 Terminator.
-N $D273 Graphic #N$EE.
-  $D274,$01 Terminator.
-N $D275 Graphic #N$EF.
-  $D285,$01 Terminator.
-N $D286 Graphic #N$F0.
-  $D290,$01 Terminator.
-N $D291 Graphic #N$F1.
-  $D2AB,$01 Terminator.
-N $D2AC Graphic #N$F2.
-  $D2C6,$01 Terminator.
-N $D2C7 Graphic #N$F3.
-  $D2D2,$01 Terminator.
-N $D2D3 Graphic #N$F4.
-  $D2DD,$01 Terminator.
-N $D2DE Graphic #N$F5.
-  $D2DF,$01 Terminator.
-N $D2E0 Graphic #N$F6.
-  $D2F0,$01 Terminator.
-N $D2F1 Graphic #N$F7.
-  $D2FB,$01 Terminator.
-N $D2FC Graphic #N$F8.
-  $D306,$01 Terminator.
-N $D307 Graphic #N$F9.
-  $D321,$01 Terminator.
-N $D322 Graphic #N$FA.
-  $D32D,$01 Terminator.
-N $D32E Graphic #N$FB.
-  $D338,$01 Terminator.
-N $D339 Graphic #N$FC.
-  $D33A,$01 Terminator.
-N $D33B Graphic #N$FD.
-  $D34B,$01 Terminator.
-N $D34C Graphic #N$FE.
-  $D356,$01 Terminator.
-N $D357 Graphic #N$FF.
-  $D358,$01 Terminator.
-N $D359 Graphic #N$100.
-  $D369,$01 Terminator.
-N $D36A Graphic #N$101.
-  $D384,$01 Terminator.
-N $D385 Graphic #N$102.
-  $D390,$01 Terminator.
-N $D391 Graphic #N$103.
-  $D39B,$01 Terminator.
-N $D39C Graphic #N$104.
-  $D39D,$01 Terminator.
-N $D39E Graphic #N$105.
-  $D3AE,$01 Terminator.
-N $D3AF Graphic #N$106.
-  $D3B9,$01 Terminator.
-N $D3BA Graphic #N$107.
-  $D3C4,$01 Terminator.
-N $D3C5 Graphic #N$108.
-  $D3CF,$01 Terminator.
-N $D3D0 Graphic #N$109.
-  $D3DA,$01 Terminator.
-N $D3DB Graphic #N$10A.
-  $D3EE,$01 Terminator.
-N $D3EF Graphic #N$10B.
-  $D3F0,$01 Terminator.
-N $D3F1 Graphic #N$10C.
-  $D409,$01 Terminator.
-N $D40A Graphic #N$10D.
-  $D424,$01 Terminator.
-N $D425 Graphic #N$10E.
-  $D430,$01 Terminator.
-N $D431 Graphic #N$10F.
-  $D44B,$01 Terminator.
-N $D44C Graphic #N$110.
-  $D466,$01 Terminator.
-N $D467 Graphic #N$111.
-  $D468,$01 Terminator.
-N $D469 Graphic #N$112.
-  $D479,$01 Terminator.
-N $D47A Graphic #N$113.
-  $D47C,$01 Terminator.
-N $D47D Graphic #N$114.
-  $D48D,$01 Terminator.
-N $D48E Graphic #N$115.
-  $D4A8,$01 Terminator.
-N $D4A9 Graphic #N$116.
-  $D4C3,$01 Terminator.
-N $D4C4 Graphic #N$117.
-  $D4CF,$01 Terminator.
-N $D4D0 Graphic #N$118.
-  $D4DA,$01 Terminator.
-N $D4DB Graphic #N$119.
-  $D4DC,$01 Terminator.
-N $D4DD Graphic #N$11A.
-  $D4ED,$01 Terminator.
-N $D4EE Graphic #N$11B.
-  $D508,$01 Terminator.
-N $D509 Graphic #N$11C.
-  $D523,$01 Terminator.
-N $D524 Graphic #N$11D.
-  $D52F,$01 Terminator.
-N $D530 Graphic #N$11E.
-  $D53A,$01 Terminator.
-N $D53B Graphic #N$11F.
-  $D555,$01 Terminator.
-N $D556 Graphic #N$120.
-  $D570,$01 Terminator.
-N $D571 Graphic #N$121.
-  $D572,$01 Terminator.
-N $D573 Graphic #N$122.
-  $D583,$01 Terminator.
-N $D584 Graphic #N$123.
-  $D58F,$01 Terminator.
-N $D590 Graphic #N$124.
-  $D59A,$01 Terminator.
-N $D59B Graphic #N$125.
-  $D5B5,$01 Terminator.
-N $D5B6 Graphic #N$126.
-  $D5B7,$01 Terminator.
-N $D5B8 Graphic #N$127.
-  $D5C8,$01 Terminator.
-N $D5C9 Graphic #N$128.
-  $D5CB,$01 Terminator.
-N $D5CC Graphic #N$129.
-  $D5DC,$01 Terminator.
-N $D5DD Graphic #N$12A.
-  $D5F7,$01 Terminator.
-N $D5F8 Graphic #N$12B.
-  $D5F9,$01 Terminator.
-N $D5FA Graphic #N$12C.
-  $D60A,$01 Terminator.
-N $D60B Graphic #N$12D.
-  $D615,$01 Terminator.
-N $D616 Graphic #N$12E.
-  $D618,$01 Terminator.
-N $D619 Graphic #N$12F.
-  $D629,$01 Terminator.
-N $D62A Graphic #N$130.
-  $D62B,$01 Terminator.
-N $D62C Graphic #N$131.
-  $D63C,$01 Terminator.
-N $D63D Graphic #N$132.
-  $D63F,$01 Terminator.
-N $D640 Graphic #N$133.
-  $D650,$01 Terminator.
-N $D651 Graphic #N$134.
-  $D653,$01 Terminator.
-N $D654 Graphic #N$135.
-  $D664,$01 Terminator.
-N $D665 Graphic #N$136.
-  $D666,$01 Terminator.
-N $D667 Graphic #N$137.
-  $D677,$01 Terminator.
-N $D678 Graphic #N$138.
-  $D67A,$01 Terminator.
-N $D67B Graphic #N$139.
-  $D68B,$01 Terminator.
-N $D68C Graphic #N$13A.
-  $D68D,$01 Terminator.
-N $D68E Graphic #N$13B.
-  $D69E,$01 Terminator.
-N $D69F Graphic #N$13C.
-  $D6A1,$01 Terminator.
-N $D6A2 Graphic #N$13D.
-  $D6AA,$01 Terminator.
-N $D6AB Graphic #N$13E.
-  $D6BD,$01 Terminator.
-N $D6BE Graphic #N$13F.
-  $D6BF,$01 Terminator.
-N $D6C0 Graphic #N$140.
-  $D6D0,$01 Terminator.
-N $D6D1 Graphic #N$141.
-  $D6DC,$01 Terminator.
-N $D6DD Graphic #N$142.
-  $D6DE,$01 Terminator.
-N $D6DF Graphic #N$143.
-  $D6EF,$01 Terminator.
-N $D6F0 Graphic #N$144.
-  $D6F1,$01 Terminator.
-N $D6F2 Graphic #N$145.
-  $D702,$01 Terminator.
-N $D703 Graphic #N$146.
-  $D70E,$01 Terminator.
-N $D70F Graphic #N$147.
-  $D719,$01 Terminator.
-N $D71A Graphic #N$148.
-  $D71B,$01 Terminator.
-N $D71C Graphic #N$149.
-  $D72C,$01 Terminator.
-N $D72D Graphic #N$14A.
-  $D72E,$01 Terminator.
-N $D72F Graphic #N$14B.
-  $D73F,$01 Terminator.
-N $D740 Graphic #N$14C.
-  $D741,$01 Terminator.
-N $D742 Graphic #N$14D.
-  $D74B,$01 Terminator.
-N $D74C Graphic #N$14E.
-  $D74D,$01 Terminator.
-N $D74E Graphic #N$14F.
-  $D75E,$01 Terminator.
-N $D75F Graphic #N$150.
-  $D761,$01 Terminator.
-N $D762 Graphic #N$151.
-  $D772,$01 Terminator.
-N $D773 Graphic #N$152.
-  $D774,$01 Terminator.
-N $D775 Graphic #N$153.
-  $D785,$01 Terminator.
-N $D786 Graphic #N$154.
-  $D787,$01 Terminator.
-N $D788 Graphic #N$155.
-  $D791,$01 Terminator.
-N $D792 Graphic #N$156.
-  $D793,$01 Terminator.
-N $D794 Graphic #N$157.
-  $D7A4,$01 Terminator.
-N $D7A5 Graphic #N$158.
-  $D7A7,$01 Terminator.
-N $D7A8 Graphic #N$159.
-  $D7B8,$01 Terminator.
-N $D7B9 Graphic #N$15A.
-  $D7BA,$01 Terminator.
-N $D7BB Graphic #N$15B.
-  $D7CB,$01 Terminator.
-N $D7CC Graphic #N$15C.
-  $D7D7,$01 Terminator.
-N $D7D8 Graphic #N$15D.
-  $D7E2,$01 Terminator.
-N $D7E3 Graphic #N$15E.
-  $D7EE,$01 Terminator.
-N $D7EF Graphic #N$15F.
-  $D7F9,$01 Terminator.
-N $D7FA Graphic #N$160.
-  $D80D,$01 Terminator.
-N $D80E Graphic #N$161.
-  $D80F,$01 Terminator.
-N $D810 Graphic #N$162.
-  $D820,$01 Terminator.
-N $D821 Graphic #N$163.
-  $D834,$01 Terminator.
-N $D835 Graphic #N$164.
-  $D836,$01 Terminator.
-N $D837 Graphic #N$165.
-  $D847,$01 Terminator.
-N $D848 Graphic #N$166.
-  $D849,$01 Terminator.
-N $D84A Graphic #N$167.
-  $D853,$01 Terminator.
-N $D854 Graphic #N$168.
-  $D855,$01 Terminator.
-N $D856 Graphic #N$169.
-  $D865,$01 Terminator.
-N $D866 Graphic #N$16A.
-  $D868,$01 Terminator.
-N $D869 Graphic #N$16B.
-  $D879,$01 Terminator.
-N $D87A Graphic #N$16C.
-  $D87C,$01 Terminator.
-N $D87D Graphic #N$16D.
-  $D88D,$01 Terminator.
-N $D88E Graphic #N$16E.
-  $D88F,$01 Terminator.
-N $D890 Graphic #N$16F.
-  $D89F,$01 Terminator.
-N $D8A0 Graphic #N$170.
-  $D8A2,$01 Terminator.
-N $D8A3 Graphic #N$171.
-  $D8B3,$01 Terminator.
-N $D8B4 Graphic #N$172.
-  $D8B5,$01 Terminator.
-N $D8B6 Graphic #N$173.
-  $D8C7,$01 Terminator.
-N $D8C8 Graphic #N$174.
-  $D8C9,$01 Terminator.
-N $D8CA Graphic #N$175.
-  $D8D5,$01 Terminator.
-N $D8D6 Graphic #N$176.
-  $D8DA,$01 Terminator.
-N $D8DB Graphic #N$177.
-  $D8DC,$01 Terminator.
-N $D8DD Graphic #N$178.
-  $D8ED,$01 Terminator.
-N $D8EE Graphic #N$179.
-  $D8F0,$01 Terminator.
-N $D8F1 Graphic #N$17A.
-  $D901,$01 Terminator.
-N $D902 Graphic #N$17B.
-  $D903,$01 Terminator.
-N $D904 Graphic #N$17C.
-  $D90F,$01 Terminator.
-N $D910 Graphic #N$17D.
-  $D914,$01 Terminator.
-N $D915 Graphic #N$17E.
-  $D916,$01 Terminator.
-N $D917 Graphic #N$17F.
-  $D927,$01 Terminator.
-N $D928 Graphic #N$180.
-  $D92A,$01 Terminator.
-N $D92B Graphic #N$181.
-  $D93B,$01 Terminator.
-N $D93C Graphic #N$182.
-  $D93D,$01 Terminator.
-N $D93E Graphic #N$183.
-  $D94E,$01 Terminator.
-N $D94F Graphic #N$184.
-  $D951,$01 Terminator.
-N $D952 Graphic #N$185.
-  $D962,$01 Terminator.
-N $D963 Graphic #N$186.
-  $D964,$01 Terminator.
-N $D965 Graphic #N$187.
-  $D968,$01 Terminator.
-N $D969 Graphic #N$188.
-  $D971,$01 Terminator.
-N $D972 Graphic #N$189.
-  $D975,$01 Terminator.
-N $D976 Graphic #N$18A.
-  $D978,$01 Terminator.
-N $D979 Graphic #N$18B.
-  $D989,$01 Terminator.
-N $D98A Graphic #N$18C.
-  $D9A4,$01 Terminator.
-N $D9A5 Graphic #N$18D.
-  $D9A6,$01 Terminator.
-N $D9A7 Graphic #N$18E.
-  $D9B7,$01 Terminator.
-N $D9B8 Graphic #N$18F.
-  $D9B9,$01 Terminator.
-N $D9BA Graphic #N$190.
-  $D9CA,$01 Terminator.
-N $D9CB Graphic #N$191.
-  $D9E1,$01 Terminator.
-N $D9E2 Graphic #N$192.
-  $D9E6,$01 Terminator.
-N $D9E7 Graphic #N$193.
-  $D9E8,$01 Terminator.
-N $D9E9 Graphic #N$194.
-  $D9F9,$01 Terminator.
-N $D9FA Graphic #N$195.
-  $D9FB,$01 Terminator.
-N $D9FC Graphic #N$196.
-  $DA0C,$01 Terminator.
-N $DA0D Graphic #N$197.
-  $DA0E,$01 Terminator.
-N $DA0F Graphic #N$198.
-  $DA1F,$01 Terminator.
-N $DA20 Graphic #N$199.
-  $DA21,$01 Terminator.
-N $DA22 Graphic #N$19A.
-  $DA3B,$01 Terminator.
-N $DA3C Graphic #N$19B.
-  $DA56,$01 Terminator.
-N $DA57 Graphic #N$19C.
-  $DA58,$01 Terminator.
-N $DA59 Graphic #N$19D.
-  $DA69,$01 Terminator.
-N $DA6A Graphic #N$19E.
-  $DA6B,$01 Terminator.
-N $DA6C Graphic #N$19F.
-  $DA85,$01 Terminator.
-N $DA86 Graphic #N$1A0.
-  $DAA0,$01 Terminator.
-N $DAA1 Graphic #N$1A1.
-  $DAA2,$01 Terminator.
-N $DAA3 Graphic #N$1A2.
-  $DAB3,$01 Terminator.
-N $DAB4 Graphic #N$1A3.
-  $DAB5,$01 Terminator.
-N $DAB6 Graphic #N$1A4.
-  $DAC7,$01 Terminator.
-N $DAC8 Graphic #N$1A5.
-  $DAE2,$01 Terminator.
-N $DAE3 Graphic #N$1A6.
-  $DAFD,$01 Terminator.
-N $DAFE Graphic #N$1A7.
-  $DB08,$01 Terminator.
-N $DB09 Graphic #N$1A8.
-  $DB0A,$01 Terminator.
-N $DB0B Graphic #N$1A9.
-  $DB1C,$01 Terminator.
-N $DB1D Graphic #N$1AA.
-  $DB1E,$01 Terminator.
-N $DB1F Graphic #N$1AB.
-  $DB2F,$01 Terminator.
-N $DB30 Graphic #N$1AC.
-  $DB31,$01 Terminator.
-N $DB32 Graphic #N$1AD.
-  $DB42,$01 Terminator.
-N $DB43 Graphic #N$1AE.
-  $DB4D,$01 Terminator.
-N $DB4E Graphic #N$1AF.
-  $DB4F,$01 Terminator.
-N $DB50 Graphic #N$1B0.
-  $DB61,$01 Terminator.
-N $DB62 Graphic #N$1B1.
-  $DB7C,$01 Terminator.
-N $DB7D Graphic #N$1B2.
-  $DB97,$01 Terminator.
-N $DB98 Graphic #N$1B3.
-  $DB99,$01 Terminator.
-N $DB9A Graphic #N$1B4.
-  $DBAB,$01 Terminator.
-N $DBAC Graphic #N$1B5.
-  $DBC6,$01 Terminator.
-N $DBC7 Graphic #N$1B6.
-  $DBE1,$01 Terminator.
-N $DBE2 Graphic #N$1B7.
-  $DBE3,$01 Terminator.
-N $DBE4 Graphic #N$1B8.
-  $DBF5,$01 Terminator.
-N $DBF6 Graphic #N$1B9.
-  $DBF7,$01 Terminator.
-N $DBF8 Graphic #N$1BA.
-  $DC10,$01 Terminator.
-N $DC11 Graphic #N$1BB.
-  $DC2B,$01 Terminator.
-N $DC2C Graphic #N$1BC.
-  $DC2D,$01 Terminator.
-N $DC2E Graphic #N$1BD.
-  $DC47,$01 Terminator.
-N $DC48 Graphic #N$1BE.
-  $DC62,$01 Terminator.
-N $DC63 Graphic #N$1BF.
-  $DC75,$01 Terminator.
-N $DC76 Graphic #N$1C0.
-  $DC77,$01 Terminator.
-N $DC78 Graphic #N$1C1.
-  $DC88,$01 Terminator.
-N $DC89 Graphic #N$1C2.
-  $DC8A,$01 Terminator.
-N $DC8B Graphic #N$1C3.
-  $DC94,$01 Terminator.
-N $DC95 Graphic #N$1C4.
-  $DC96,$01 Terminator.
-N $DC97 Graphic #N$1C5.
-  $DCA7,$01 Terminator.
-N $DCA8 Graphic #N$1C6.
-  $DCA9,$01 Terminator.
-N $DCAA Graphic #N$1C7.
-  $DCBA,$01 Terminator.
-N $DCBB Graphic #N$1C8.
-  $DCBC,$01 Terminator.
-N $DCBD Graphic #N$1C9.
-  $DCCD,$01 Terminator.
-N $DCCE Graphic #N$1CA.
-  $DCCF,$01 Terminator.
-N $DCD0 Graphic #N$1CB.
-  $DCE0,$01 Terminator.
-N $DCE1 Graphic #N$1CC.
-  $DCE2,$01 Terminator.
-N $DCE3 Graphic #N$1CD.
-  $DCF4,$01 Terminator.
-N $DCF5 Graphic #N$1CE.
-  $DCF6,$01 Terminator.
-N $DCF7 Graphic #N$1CF.
-  $DD0F,$01 Terminator.
-N $DD10 Graphic #N$1D0.
-  $DD11,$01 Terminator.
-N $DD12 Graphic #N$1D1.
-  $DD22,$01 Terminator.
-N $DD23 Graphic #N$1D2.
-  $DD24,$01 Terminator.
-N $DD25 Graphic #N$1D3.
-  $DD36,$01 Terminator.
-N $DD37 Graphic #N$1D4.
-  $DD38,$01 Terminator.
-N $DD39 Graphic #N$1D5.
-  $DD51,$01 Terminator.
-N $DD52 Graphic #N$1D6.
-  $DD6C,$01 Terminator.
-N $DD6D Graphic #N$1D7.
-  $DD7F,$01 Terminator.
-N $DD80 Graphic #N$1D8.
-  $DD82,$01 Terminator.
-N $DD83 Graphic #N$1D9.
-  $DD8B,$01 Terminator.
-N $DD8C Graphic #N$1DA.
-  $DD9E,$01 Terminator.
-N $DD9F Graphic #N$1DB.
-  $DDA0,$01 Terminator.
-N $DDA1 Graphic #N$1DC.
-  $DDB1,$01 Terminator.
-N $DDB2 Graphic #N$1DD.
-  $DDB3,$01 Terminator.
-N $DDB4 Graphic #N$1DE.
-  $DDC4,$01 Terminator.
-N $DDC5 Graphic #N$1DF.
-  $DDCF,$01 Terminator.
-N $DDD0 Graphic #N$1E0.
-  $DDDA,$01 Terminator.
-N $DDDB Graphic #N$1E1.
-  $DDED,$01 Terminator.
-N $DDEE Graphic #N$1E2.
-  $DDF9,$01 Terminator.
-N $DDFA Graphic #N$1E3.
-  $DE04,$01 Terminator.
-N $DE05 Graphic #N$1E4.
-  $DE06,$01 Terminator.
-N $DE07 Graphic #N$1E5.
-  $DE17,$01 Terminator.
-N $DE18 Graphic #N$1E6.
-  $DE22,$01 Terminator.
-N $DE23 Graphic #N$1E7.
-  $DE2D,$01 Terminator.
-N $DE2E Graphic #N$1E8.
-  $DE40,$01 Terminator.
-N $DE41 Graphic #N$1E9.
-  $DE42,$01 Terminator.
-N $DE43 Graphic #N$1EA.
-  $DE53,$01 Terminator.
-N $DE54 Graphic #N$1EB.
-  $DE56,$01 Terminator.
-N $DE57 Graphic #N$1EC.
-  $DE5F,$01 Terminator.
-N $DE60 Graphic #N$1ED.
-  $DE72,$01 Terminator.
-N $DE73 Graphic #N$1EE.
-  $DE74,$01 Terminator.
-N $DE75 Graphic #N$1EF.
-  $DE85,$01 Terminator.
-N $DE86 Graphic #N$1F0.
-  $DE87,$01 Terminator.
-N $DE88 Graphic #N$1F1.
-  $DE98,$01 Terminator.
-N $DE99 Graphic #N$1F2.
-  $DEA3,$01 Terminator.
-N $DEA4 Graphic #N$1F3.
-  $DEBE,$01 Terminator.
-N $DEBF Graphic #N$1F4.
-  $DED9,$01 Terminator.
-N $DEDA Graphic #N$1F5.
-  $DEE5,$01 Terminator.
-N $DEE6 Graphic #N$1F6.
-  $DEF0,$01 Terminator.
-N $DEF1 Graphic #N$1F7.
-  $DEF2,$01 Terminator.
-N $DEF3 Graphic #N$1F8.
-  $DF03,$01 Terminator.
-N $DF04 Graphic #N$1F9.
-  $DF0E,$01 Terminator.
-N $DF0F Graphic #N$1FA.
-  $DF19,$01 Terminator.
-N $DF1A Graphic #N$1FB.
-  $DF34,$01 Terminator.
-N $DF35 Graphic #N$1FC.
-  $DF40,$01 Terminator.
-N $DF41 Graphic #N$1FD.
-  $DF4B,$01 Terminator.
-N $DF4C Graphic #N$1FE.
-  $DF4D,$01 Terminator.
-N $DF4E Graphic #N$1FF.
-  $DF5E,$01 Terminator.
-N $DF5F Graphic #N$200.
-  $DF69,$01 Terminator.
-N $DF6A Graphic #N$201.
-  $DF6B,$01 Terminator.
-N $DF6C Graphic #N$202.
-  $DF7C,$01 Terminator.
-N $DF7D Graphic #N$203.
-  $DF97,$01 Terminator.
-N $DF98 Graphic #N$204.
-  $DFA3,$01 Terminator.
-N $DFA4 Graphic #N$205.
-  $DFAE,$01 Terminator.
-N $DFAF Graphic #N$206.
-  $DFB0,$01 Terminator.
-N $DFB1 Graphic #N$207.
-  $DFC1,$01 Terminator.
-N $DFC2 Graphic #N$208.
-  $DFCC,$01 Terminator.
-N $DFCD Graphic #N$209.
-  $DFD7,$01 Terminator.
-N $DFD8 Graphic #N$20A.
-  $DFE2,$01 Terminator.
-N $DFE3 Graphic #N$20B.
-  $DFED,$01 Terminator.
-N $DFEE Graphic #N$20C.
-  $E001,$01 Terminator.
-N $E002 Graphic #N$20D.
-  $E003,$01 Terminator.
-N $E004 Graphic #N$20E.
-  $E01C,$01 Terminator.
-N $E01D Graphic #N$20F.
-  $E037,$01 Terminator.
-N $E038 Graphic #N$210.
-  $E043,$01 Terminator.
-N $E044 Graphic #N$211.
-  $E05E,$01 Terminator.
-N $E05F Graphic #N$212.
-  $E079,$01 Terminator.
-N $E07A Graphic #N$213.
-  $E07B,$01 Terminator.
-N $E07C Graphic #N$214.
-  $E08C,$01 Terminator.
-N $E08D Graphic #N$215.
-  $E08F,$01 Terminator.
-N $E090 Graphic #N$216.
-  $E0A0,$01 Terminator.
-N $E0A1 Graphic #N$217.
-  $E0BB,$01 Terminator.
-N $E0BC Graphic #N$218.
-  $E0D6,$01 Terminator.
-N $E0D7 Graphic #N$219.
-  $E0E2,$01 Terminator.
-N $E0E3 Graphic #N$21A.
-  $E0ED,$01 Terminator.
-N $E0EE Graphic #N$21B.
-  $E0EF,$01 Terminator.
-N $E0F0 Graphic #N$21C.
-  $E100,$01 Terminator.
-N $E101 Graphic #N$21D.
-  $E11B,$01 Terminator.
-N $E11C Graphic #N$21E.
-  $E136,$01 Terminator.
-N $E137 Graphic #N$21F.
-  $E142,$01 Terminator.
-N $E143 Graphic #N$220.
-  $E14D,$01 Terminator.
-N $E14E Graphic #N$221.
-  $E168,$01 Terminator.
-N $E169 Graphic #N$222.
-  $E183,$01 Terminator.
-N $E184 Graphic #N$223.
-  $E185,$01 Terminator.
-N $E186 Graphic #N$224.
-  $E196,$01 Terminator.
-N $E197 Graphic #N$225.
-  $E1A2,$01 Terminator.
-N $E1A3 Graphic #N$226.
-  $E1AD,$01 Terminator.
-N $E1AE Graphic #N$227.
-  $E1C8,$01 Terminator.
-N $E1C9 Graphic #N$228.
-  $E1CA,$01 Terminator.
-N $E1CB Graphic #N$229.
-  $E1DB,$01 Terminator.
-N $E1DC Graphic #N$22A.
-  $E1DE,$01 Terminator.
-N $E1DF Graphic #N$22B.
-  $E1EF,$01 Terminator.
-N $E1F0 Graphic #N$22C.
-  $E20A,$01 Terminator.
-N $E20B Graphic #N$22D.
-  $E20C,$01 Terminator.
-N $E20D Graphic #N$22E.
-  $E21D,$01 Terminator.
-N $E21E Graphic #N$22F.
-  $E228,$01 Terminator.
-N $E229 Graphic #N$230.
-  $E22A,$01 Terminator.
-N $E22B Graphic #N$231.
-  $E23C,$01 Terminator.
-N $E23D Graphic #N$232.
-  $E23E,$01 Terminator.
-N $E23F Graphic #N$233.
-  $E24F,$01 Terminator.
-N $E250 Graphic #N$234.
-  $E252,$01 Terminator.
-N $E253 Graphic #N$235.
-  $E263,$01 Terminator.
-N $E264 Graphic #N$236.
-  $E265,$01 Terminator.
-N $E266 Graphic #N$237.
-  $E277,$01 Terminator.
-N $E278 Graphic #N$238.
-  $E279,$01 Terminator.
-N $E27A Graphic #N$239.
-  $E28A,$01 Terminator.
-N $E28B Graphic #N$23A.
-  $E28C,$01 Terminator.
-N $E28D Graphic #N$23B.
-  $E29E,$01 Terminator.
-N $E29F Graphic #N$23C.
-  $E2A0,$01 Terminator.
-N $E2A1 Graphic #N$23D.
-  $E2B1,$01 Terminator.
-N $E2B2 Graphic #N$23E.
-  $E2B4,$01 Terminator.
-N $E2B5 Graphic #N$23F.
-  $E2BD,$01 Terminator.
-N $E2BE Graphic #N$240.
-  $E2D0,$01 Terminator.
-N $E2D1 Graphic #N$241.
-  $E2D2,$01 Terminator.
-N $E2D3 Graphic #N$242.
-  $E2E3,$01 Terminator.
-N $E2E4 Graphic #N$243.
-  $E2EF,$01 Terminator.
-N $E2F0 Graphic #N$244.
-  $E2F1,$01 Terminator.
-N $E2F2 Graphic #N$245.
-  $E302,$01 Terminator.
-N $E303 Graphic #N$246.
-  $E304,$01 Terminator.
-N $E305 Graphic #N$247.
-  $E315,$01 Terminator.
-N $E316 Graphic #N$248.
-  $E321,$01 Terminator.
-N $E322 Graphic #N$249.
-  $E32C,$01 Terminator.
-N $E32D Graphic #N$24A.
-  $E32E,$01 Terminator.
-N $E32F Graphic #N$24B.
-  $E33F,$01 Terminator.
-N $E340 Graphic #N$24C.
-  $E341,$01 Terminator.
-N $E342 Graphic #N$24D.
-  $E352,$01 Terminator.
-N $E353 Graphic #N$24E.
-  $E35E,$01 Terminator.
-N $E35F Graphic #N$24F.
-  $E360,$01 Terminator.
-N $E361 Graphic #N$250.
-  $E371,$01 Terminator.
-N $E372 Graphic #N$251.
-  $E374,$01 Terminator.
-N $E375 Graphic #N$252.
-  $E385,$01 Terminator.
-N $E386 Graphic #N$253.
-  $E387,$01 Terminator.
-N $E388 Graphic #N$254.
-  $E398,$01 Terminator.
-N $E399 Graphic #N$255.
-  $E3A4,$01 Terminator.
-N $E3A5 Graphic #N$256.
-  $E3A6,$01 Terminator.
-N $E3A7 Graphic #N$257.
-  $E3B7,$01 Terminator.
-N $E3B8 Graphic #N$258.
-  $E3BA,$01 Terminator.
-N $E3BB Graphic #N$259.
-  $E3CB,$01 Terminator.
-N $E3CC Graphic #N$25A.
-  $E3CD,$01 Terminator.
-N $E3CE Graphic #N$25B.
-  $E3DE,$01 Terminator.
-N $E3DF Graphic #N$25C.
-  $E3EA,$01 Terminator.
-N $E3EB Graphic #N$25D.
-  $E3F5,$01 Terminator.
-N $E3F6 Graphic #N$25E.
-  $E401,$01 Terminator.
-N $E402 Graphic #N$25F.
-  $E40C,$01 Terminator.
-N $E40D Graphic #N$260.
-  $E420,$01 Terminator.
-N $E421 Graphic #N$261.
-  $E422,$01 Terminator.
-N $E423 Graphic #N$262.
-  $E433,$01 Terminator.
-N $E434 Graphic #N$263.
-  $E447,$01 Terminator.
-N $E448 Graphic #N$264.
-  $E449,$01 Terminator.
-N $E44A Graphic #N$265.
-  $E45A,$01 Terminator.
-N $E45B Graphic #N$266.
-  $E466,$01 Terminator.
-N $E467 Graphic #N$267.
-  $E468,$01 Terminator.
-N $E469 Graphic #N$268.
-  $E478,$01 Terminator.
-N $E479 Graphic #N$269.
-  $E47A,$01 Terminator.
-N $E47B Graphic #N$26A.
-  $E48C,$01 Terminator.
-N $E48D Graphic #N$26B.
-  $E48F,$01 Terminator.
-N $E490 Graphic #N$26C.
-  $E4A0,$01 Terminator.
-N $E4A1 Graphic #N$26D.
-  $E4A2,$01 Terminator.
-N $E4A3 Graphic #N$26E.
-  $E4B2,$01 Terminator.
-N $E4B3 Graphic #N$26F.
-  $E4B4,$01 Terminator.
-N $E4B5 Graphic #N$270.
-  $E4C6,$01 Terminator.
-N $E4C7 Graphic #N$271.
-  $E4C9,$01 Terminator.
-N $E4CA Graphic #N$272.
-  $E4DA,$01 Terminator.
-N $E4DB Graphic #N$273.
-  $E4DC,$01 Terminator.
-N $E4DD Graphic #N$274.
-  $E4E8,$01 Terminator.
-N $E4E9 Graphic #N$275.
-  $E4ED,$01 Terminator.
-N $E4EE Graphic #N$276.
-  $E4EF,$01 Terminator.
-N $E4F0 Graphic #N$277.
-  $E500,$01 Terminator.
-N $E501 Graphic #N$278.
-  $E503,$01 Terminator.
-N $E504 Graphic #N$279.
-  $E514,$01 Terminator.
-N $E515 Graphic #N$27A.
-  $E516,$01 Terminator.
-N $E517 Graphic #N$27B.
-  $E522,$01 Terminator.
-N $E523 Graphic #N$27C.
-  $E527,$01 Terminator.
-N $E528 Graphic #N$27D.
-  $E529,$01 Terminator.
-N $E52A Graphic #N$27E.
-  $E53A,$01 Terminator.
+b $C500 Sprite Animation Data
+@ $C500 label=SpriteAnimationData
+N $C500 Sprite #N$01, Frame #N$01.
+  $C500,$02 X/ Y position offsets.
+  $C502,$08 Pixel data (2 character rows × 4 bytes each).
+  $C50A,$01 Frame #N$01 terminator.
+N $C50B Sprite #N$01, Frame #N$02 ($04 bytes).
+  $C50B,$02 X/ Y position offsets.
+  $C50D,$02 Pixel/ control data.
+  $C50F,$01 Animation sequence terminator.
+  $C510,$01 Animation sequence terminator.
+N $C511 Sprite #N$03, Frame #N$01 ($04 bytes).
+  $C511,$02 X/ Y position offsets.
+  $C513,$02 Pixel/ control data.
+  $C515,$01 Frame #N$01 terminator.
+  $C516,$01 Animation sequence terminator.
+N $C517 Sprite #N$04, Frame #N$01.
+  $C517,$02 X/ Y position offsets.
+  $C519,$08 Pixel data (2 character rows × 4 bytes each).
+  $C521,$01 Frame #N$01 terminator.
+N $C522 Sprite #N$04, Frame #N$02.
+  $C522,$02 X/ Y position offsets.
+  $C524,$08 Pixel data (2 character rows × 4 bytes each).
+  $C52C,$01 Frame #N$02 terminator.
+  $C52D,$01 Animation sequence terminator.
+N $C52E Sprite #N$05, Frame #N$01 ($12 bytes).
+  $C52E,$02 X/ Y position offsets.
+  $C530,$10 Pixel/ control data.
+  $C540,$01 Frame #N$01 terminator.
+N $C541 Sprite #N$05, Frame #N$02 (control byte).
+  $C541,$01 Control data.
+  $C542,$01 Frame #N$02 terminator.
+N $C543 Sprite #N$05, Frame #N$03 (position only).
+  $C543,$02 X/ Y position offsets.
+  $C545,$01 Animation sequence terminator.
+N $C546 Sprite #N$06, Frame #N$01 ($05 bytes).
+  $C546,$02 X/ Y position offsets.
+  $C548,$03 Pixel/ control data.
+  $C54B,$01 Frame #N$01 terminator.
+  $C54C,$01 Animation sequence terminator.
+N $C54D Sprite #N$07, Frame #N$01 ($12 bytes).
+  $C54D,$02 X/ Y position offsets.
+  $C54F,$10 Pixel/ control data.
+  $C55F,$01 Frame #N$01 terminator.
+N $C560 Sprite #N$07, Frame #N$02 (control byte).
+  $C560,$01 Control data.
+  $C561,$01 Frame #N$02 terminator.
+N $C562 Sprite #N$07, Frame #N$03 ($10 bytes).
+  $C562,$02 X/ Y position offsets.
+  $C564,$0E Pixel/ control data.
+  $C572,$01 Frame #N$03 terminator.
+  $C573,$01 Animation sequence terminator.
+N $C574 Sprite #N$08, Frame #N$01 ($0B bytes).
+  $C574,$02 X/ Y position offsets.
+  $C576,$09 Pixel/ control data.
+  $C57F,$01 Frame #N$01 terminator.
+N $C580 Sprite #N$08, Frame #N$02 (control byte).
+  $C580,$01 Control data.
+  $C581,$01 Frame #N$02 terminator.
+N $C582 Sprite #N$08, Frame #N$03 (control byte).
+  $C582,$01 Control data.
+  $C583,$01 Animation sequence terminator.
+N $C584 Sprite #N$09, Frame #N$01 ($07 bytes).
+  $C584,$02 X/ Y position offsets.
+  $C586,$05 Pixel/ control data.
+  $C58B,$01 Animation sequence terminator.
+  $C58C,$01 Animation sequence terminator.
+  $C58D,$01 Animation sequence terminator.
+N $C58E Sprite #N$0C, Frame #N$01 ($04 bytes).
+  $C58E,$02 X/ Y position offsets.
+  $C590,$02 Pixel/ control data.
+  $C592,$01 Frame #N$01 terminator.
+  $C593,$01 Animation sequence terminator.
+N $C594 Sprite #N$0D, Frame #N$01 ($12 bytes).
+  $C594,$02 X/ Y position offsets.
+  $C596,$10 Pixel/ control data.
+  $C5A6,$01 Frame #N$01 terminator.
+N $C5A7 Sprite #N$0D, Frame #N$02 (control byte).
+  $C5A7,$01 Control data.
+  $C5A8,$01 Frame #N$02 terminator.
+N $C5A9 Sprite #N$0D, Frame #N$03 ($18 bytes).
+  $C5A9,$02 X/ Y position offsets.
+  $C5AB,$16 Pixel/ control data.
+  $C5C1,$01 Frame #N$03 terminator.
+N $C5C2 Sprite #N$0D, Frame #N$04 ($09 bytes).
+  $C5C2,$02 X/ Y position offsets.
+  $C5C4,$07 Pixel/ control data.
+  $C5CB,$01 Animation sequence terminator.
+N $C5CC Sprite #N$0E, Frame #N$01 ($04 bytes).
+  $C5CC,$02 X/ Y position offsets.
+  $C5CE,$02 Pixel/ control data.
+  $C5D0,$01 Animation sequence terminator.
+N $C5D1 Sprite #N$0F, Frame #N$01 ($06 bytes).
+  $C5D1,$02 X/ Y position offsets.
+  $C5D3,$04 Pixel/ control data.
+  $C5D7,$01 Animation sequence terminator.
+  $C5D8,$01 Animation sequence terminator.
+N $C5D9 Sprite #N$11, Frame #N$01 ($03 bytes).
+  $C5D9,$02 X/ Y position offsets.
+  $C5DB,$01 Pixel/ control data.
+  $C5DC,$01 Frame #N$01 terminator.
+  $C5DD,$01 Animation sequence terminator.
+N $C5DE Sprite #N$12, Frame #N$01.
+  $C5DE,$02 X/ Y position offsets.
+  $C5E0,$08 Pixel data (2 character rows × 4 bytes each).
+  $C5E8,$01 Frame #N$01 terminator.
+N $C5E9 Sprite #N$12, Frame #N$02 ($1A bytes).
+  $C5E9,$02 X/ Y position offsets.
+  $C5EB,$18 Pixel/ control data.
+  $C603,$01 Frame #N$02 terminator.
+N $C604 Sprite #N$12, Frame #N$03 ($17 bytes).
+  $C604,$02 X/ Y position offsets.
+  $C606,$15 Pixel/ control data.
+  $C61B,$01 Animation sequence terminator.
+N $C61C Sprite #N$13, Frame #N$01 (position only).
+  $C61C,$02 X/ Y position offsets.
+  $C61E,$01 Frame #N$01 terminator.
+  $C61F,$01 Animation sequence terminator.
+N $C620 Sprite #N$14, Frame #N$01.
+  $C620,$02 X/ Y position offsets.
+  $C622,$08 Pixel data (2 character rows × 4 bytes each).
+  $C62A,$01 Frame #N$01 terminator.
+N $C62B Sprite #N$14, Frame #N$02 ($1A bytes).
+  $C62B,$02 X/ Y position offsets.
+  $C62D,$18 Pixel/ control data.
+  $C645,$01 Frame #N$02 terminator.
+N $C646 Sprite #N$14, Frame #N$03.
+  $C646,$02 X/ Y position offsets.
+  $C648,$08 Pixel data (2 character rows × 4 bytes each).
+  $C650,$01 Animation sequence terminator.
+N $C651 Sprite #N$15, Frame #N$01 ($0F bytes).
+  $C651,$02 X/ Y position offsets.
+  $C653,$0D Pixel/ control data.
+  $C660,$01 Frame #N$01 terminator.
+  $C661,$01 Animation sequence terminator.
+N $C662 Sprite #N$16, Frame #N$01 (control byte).
+  $C662,$01 Control data.
+  $C663,$01 Frame #N$01 terminator.
+N $C664 Sprite #N$16, Frame #N$02 ($10 bytes).
+  $C664,$02 X/ Y position offsets.
+  $C666,$0E Pixel/ control data.
+  $C674,$01 Frame #N$02 terminator.
+N $C675 Sprite #N$16, Frame #N$03 ($12 bytes).
+  $C675,$02 X/ Y position offsets.
+  $C677,$10 Pixel/ control data.
+  $C687,$01 Frame #N$03 terminator.
+N $C688 Sprite #N$16, Frame #N$04 (control byte).
+  $C688,$01 Control data.
+  $C689,$01 Frame #N$04 terminator.
+N $C68A Sprite #N$16, Frame #N$05 ($18 bytes).
+  $C68A,$02 X/ Y position offsets.
+  $C68C,$16 Pixel/ control data.
+  $C6A2,$01 Frame #N$05 terminator.
+  $C6A3,$01 Animation sequence terminator.
+N $C6A4 Sprite #N$17, Frame #N$01 (control byte).
+  $C6A4,$01 Control data.
+  $C6A5,$01 Frame #N$01 terminator.
+N $C6A6 Sprite #N$17, Frame #N$02 ($10 bytes).
+  $C6A6,$02 X/ Y position offsets.
+  $C6A8,$0E Pixel/ control data.
+  $C6B6,$01 Frame #N$02 terminator.
+N $C6B7 Sprite #N$17, Frame #N$03 ($12 bytes).
+  $C6B7,$02 X/ Y position offsets.
+  $C6B9,$10 Pixel/ control data.
+  $C6C9,$01 Frame #N$03 terminator.
+N $C6CA Sprite #N$17, Frame #N$04 ($1A bytes).
+  $C6CA,$02 X/ Y position offsets.
+  $C6CC,$18 Pixel/ control data.
+  $C6E4,$01 Frame #N$04 terminator.
+N $C6E5 Sprite #N$17, Frame #N$05 ($04 bytes).
+  $C6E5,$02 X/ Y position offsets.
+  $C6E7,$02 Pixel/ control data.
+  $C6E9,$01 Animation sequence terminator.
+  $C6EA,$01 Animation sequence terminator.
+  $C6EB,$01 Animation sequence terminator.
+N $C6EC Sprite #N$1A, Frame #N$01 ($03 bytes).
+  $C6EC,$02 X/ Y position offsets.
+  $C6EE,$01 Pixel/ control data.
+  $C6EF,$01 Frame #N$01 terminator.
+  $C6F0,$01 Animation sequence terminator.
+N $C6F1 Sprite #N$1B, Frame #N$01 (control byte).
+  $C6F1,$01 Control data.
+  $C6F2,$01 Frame #N$01 terminator.
+N $C6F3 Sprite #N$1B, Frame #N$02 ($10 bytes).
+  $C6F3,$02 X/ Y position offsets.
+  $C6F5,$0E Pixel/ control data.
+  $C703,$01 Frame #N$02 terminator.
+N $C704 Sprite #N$1B, Frame #N$03 (control byte).
+  $C704,$01 Control data.
+  $C705,$01 Frame #N$03 terminator.
+N $C706 Sprite #N$1B, Frame #N$04 ($10 bytes).
+  $C706,$02 X/ Y position offsets.
+  $C708,$0E Pixel/ control data.
+  $C716,$01 Frame #N$04 terminator.
+N $C717 Sprite #N$1B, Frame #N$05 (control byte).
+  $C717,$01 Control data.
+  $C718,$01 Frame #N$05 terminator.
+N $C719 Sprite #N$1B, Frame #N$06 ($18 bytes).
+  $C719,$02 X/ Y position offsets.
+  $C71B,$16 Pixel/ control data.
+  $C731,$01 Frame #N$06 terminator.
+N $C732 Sprite #N$1B, Frame #N$07 (control byte).
+  $C732,$01 Control data.
+  $C733,$01 Frame #N$07 terminator.
+N $C734 Sprite #N$1B, Frame #N$08 (position only).
+  $C734,$02 X/ Y position offsets.
+  $C736,$01 Animation sequence terminator.
+  $C737,$01 Animation sequence terminator.
+  $C738,$01 Animation sequence terminator.
+N $C739 Sprite #N$1E, Frame #N$01 (control byte).
+  $C739,$01 Control data.
+  $C73A,$01 Animation sequence terminator.
+  $C73B,$01 Animation sequence terminator.
+  $C73C,$01 Frame #N$01 terminator.
+  $C73D,$01 Animation sequence terminator.
+N $C73E Sprite #N$21, Frame #N$01 (control byte).
+  $C73E,$01 Control data.
+  $C73F,$01 Frame #N$01 terminator.
+N $C740 Sprite #N$21, Frame #N$02 ($10 bytes).
+  $C740,$02 X/ Y position offsets.
+  $C742,$0E Pixel/ control data.
+  $C750,$01 Frame #N$02 terminator.
+N $C751 Sprite #N$21, Frame #N$03 (control byte).
+  $C751,$01 Control data.
+  $C752,$01 Frame #N$03 terminator.
+N $C753 Sprite #N$21, Frame #N$04 ($0E bytes).
+  $C753,$02 X/ Y position offsets.
+  $C755,$0C Pixel/ control data.
+  $C761,$01 Animation sequence terminator.
+N $C762 Sprite #N$22, Frame #N$01 (control byte).
+  $C762,$01 Control data.
+  $C763,$01 Frame #N$01 terminator.
+N $C764 Sprite #N$22, Frame #N$02 (control byte).
+  $C764,$01 Control data.
+  $C765,$01 Frame #N$02 terminator.
+N $C766 Sprite #N$22, Frame #N$03 ($10 bytes).
+  $C766,$02 X/ Y position offsets.
+  $C768,$0E Pixel/ control data.
+  $C776,$01 Frame #N$03 terminator.
+N $C777 Sprite #N$22, Frame #N$04 (position only).
+  $C777,$02 X/ Y position offsets.
+  $C779,$01 Animation sequence terminator.
+  $C77A,$01 Animation sequence terminator.
+  $C77B,$01 Animation sequence terminator.
+N $C77C Sprite #N$25, Frame #N$01 ($03 bytes).
+  $C77C,$02 X/ Y position offsets.
+  $C77E,$01 Pixel/ control data.
+  $C77F,$01 Animation sequence terminator.
+N $C780 Sprite #N$26, Frame #N$01 (control byte).
+  $C780,$01 Control data.
+  $C781,$01 Frame #N$01 terminator.
+  $C782,$01 Animation sequence terminator.
+N $C783 Sprite #N$27, Frame #N$01 (control byte).
+  $C783,$01 Control data.
+  $C784,$01 Frame #N$01 terminator.
+N $C785 Sprite #N$27, Frame #N$02 ($10 bytes).
+  $C785,$02 X/ Y position offsets.
+  $C787,$0E Pixel/ control data.
+  $C795,$01 Frame #N$02 terminator.
+N $C796 Sprite #N$27, Frame #N$03 ($10 bytes).
+  $C796,$02 X/ Y position offsets.
+  $C798,$0E Pixel/ control data.
+  $C7A6,$01 Animation sequence terminator.
+N $C7A7 Sprite #N$28, Frame #N$01 ($07 bytes).
+  $C7A7,$02 X/ Y position offsets.
+  $C7A9,$05 Pixel/ control data.
+  $C7AE,$01 Animation sequence terminator.
+N $C7AF Sprite #N$29, Frame #N$01 (control byte).
+  $C7AF,$01 Control data.
+  $C7B0,$01 Frame #N$01 terminator.
+N $C7B1 Sprite #N$29, Frame #N$02 (control byte).
+  $C7B1,$01 Control data.
+  $C7B2,$01 Frame #N$02 terminator.
+  $C7B3,$01 Animation sequence terminator.
+N $C7B4 Sprite #N$2A, Frame #N$01 ($0F bytes).
+  $C7B4,$02 X/ Y position offsets.
+  $C7B6,$0D Pixel/ control data.
+  $C7C3,$01 Frame #N$01 terminator.
+N $C7C4 Sprite #N$2A, Frame #N$02 (control byte).
+  $C7C4,$01 Control data.
+  $C7C5,$01 Frame #N$02 terminator.
+N $C7C6 Sprite #N$2A, Frame #N$03 ($06 bytes).
+  $C7C6,$02 X/ Y position offsets.
+  $C7C8,$04 Pixel/ control data.
+  $C7CC,$01 Animation sequence terminator.
+N $C7CD Sprite #N$2B, Frame #N$01 ($03 bytes).
+  $C7CD,$02 X/ Y position offsets.
+  $C7CF,$01 Pixel/ control data.
+  $C7D0,$01 Animation sequence terminator.
+N $C7D1 Sprite #N$2C, Frame #N$01 ($05 bytes).
+  $C7D1,$02 X/ Y position offsets.
+  $C7D3,$03 Pixel/ control data.
+  $C7D6,$01 Frame #N$01 terminator.
+  $C7D7,$01 Animation sequence terminator.
+N $C7D8 Sprite #N$2D, Frame #N$01 (control byte).
+  $C7D8,$01 Control data.
+  $C7D9,$01 Frame #N$01 terminator.
+N $C7DA Sprite #N$2D, Frame #N$02 ($10 bytes).
+  $C7DA,$02 X/ Y position offsets.
+  $C7DC,$0E Pixel/ control data.
+  $C7EA,$01 Frame #N$02 terminator.
+N $C7EB Sprite #N$2D, Frame #N$03 ($18 bytes).
+  $C7EB,$02 X/ Y position offsets.
+  $C7ED,$16 Pixel/ control data.
+  $C803,$01 Animation sequence terminator.
+N $C804 Sprite #N$2E, Frame #N$01 (control byte).
+  $C804,$01 Control data.
+  $C805,$01 Frame #N$01 terminator.
+N $C806 Sprite #N$2E, Frame #N$02 (control byte).
+  $C806,$01 Control data.
+  $C807,$01 Frame #N$02 terminator.
+N $C808 Sprite #N$2E, Frame #N$03 ($10 bytes).
+  $C808,$02 X/ Y position offsets.
+  $C80A,$0E Pixel/ control data.
+  $C818,$01 Frame #N$03 terminator.
+N $C819 Sprite #N$2E, Frame #N$04 (control byte).
+  $C819,$01 Control data.
+  $C81A,$01 Frame #N$04 terminator.
+N $C81B Sprite #N$2E, Frame #N$05 ($04 bytes).
+  $C81B,$02 X/ Y position offsets.
+  $C81D,$02 Pixel/ control data.
+  $C81F,$01 Animation sequence terminator.
+  $C820,$01 Animation sequence terminator.
+  $C821,$01 Animation sequence terminator.
+N $C822 Sprite #N$31, Frame #N$01 (control byte).
+  $C822,$01 Control data.
+  $C823,$01 Frame #N$01 terminator.
+  $C824,$01 Animation sequence terminator.
+N $C825 Sprite #N$32, Frame #N$01 (control byte).
+  $C825,$01 Control data.
+  $C826,$01 Frame #N$01 terminator.
+N $C827 Sprite #N$32, Frame #N$02 ($10 bytes).
+  $C827,$02 X/ Y position offsets.
+  $C829,$0E Pixel/ control data.
+  $C837,$01 Frame #N$02 terminator.
+N $C838 Sprite #N$32, Frame #N$03 ($14 bytes).
+  $C838,$02 X/ Y position offsets.
+  $C83A,$12 Pixel/ control data.
+  $C84C,$01 Animation sequence terminator.
+N $C84D Sprite #N$33, Frame #N$01 ($03 bytes).
+  $C84D,$02 X/ Y position offsets.
+  $C84F,$01 Pixel/ control data.
+  $C850,$01 Animation sequence terminator.
+N $C851 Sprite #N$34, Frame #N$01 (control byte).
+  $C851,$01 Control data.
+  $C852,$01 Frame #N$01 terminator.
+N $C853 Sprite #N$34, Frame #N$02 ($12 bytes).
+  $C853,$02 X/ Y position offsets.
+  $C855,$10 Pixel/ control data.
+  $C865,$01 Frame #N$02 terminator.
+  $C866,$01 Animation sequence terminator.
+N $C867 Sprite #N$35, Frame #N$01 ($1A bytes).
+  $C867,$02 X/ Y position offsets.
+  $C869,$18 Pixel/ control data.
+  $C881,$01 Frame #N$01 terminator.
+N $C882 Sprite #N$35, Frame #N$02 ($18 bytes).
+  $C882,$02 X/ Y position offsets.
+  $C884,$16 Pixel/ control data.
+  $C89A,$01 Animation sequence terminator.
+N $C89B Sprite #N$36, Frame #N$01 (control byte).
+  $C89B,$01 Control data.
+  $C89C,$01 Frame #N$01 terminator.
+N $C89D Sprite #N$36, Frame #N$02 ($0E bytes).
+  $C89D,$02 X/ Y position offsets.
+  $C89F,$0C Pixel/ control data.
+  $C8AB,$01 Animation sequence terminator.
+N $C8AC Sprite #N$37, Frame #N$01 ($03 bytes).
+  $C8AC,$02 X/ Y position offsets.
+  $C8AE,$01 Pixel/ control data.
+  $C8AF,$01 Frame #N$01 terminator.
+  $C8B0,$01 Animation sequence terminator.
+N $C8B1 Sprite #N$38, Frame #N$01 ($1A bytes).
+  $C8B1,$02 X/ Y position offsets.
+  $C8B3,$18 Pixel/ control data.
+  $C8CB,$01 Frame #N$01 terminator.
+N $C8CC Sprite #N$38, Frame #N$02 ($14 bytes).
+  $C8CC,$02 X/ Y position offsets.
+  $C8CE,$12 Pixel/ control data.
+  $C8E0,$01 Animation sequence terminator.
+N $C8E1 Sprite #N$39, Frame #N$01 ($03 bytes).
+  $C8E1,$02 X/ Y position offsets.
+  $C8E3,$01 Pixel/ control data.
+  $C8E4,$01 Animation sequence terminator.
+N $C8E5 Sprite #N$3A, Frame #N$01 (control byte).
+  $C8E5,$01 Control data.
+  $C8E6,$01 Frame #N$01 terminator.
+N $C8E7 Sprite #N$3A, Frame #N$02 ($12 bytes).
+  $C8E7,$02 X/ Y position offsets.
+  $C8E9,$10 Pixel/ control data.
+  $C8F9,$01 Frame #N$02 terminator.
+  $C8FA,$01 Animation sequence terminator.
+N $C8FB Sprite #N$3B, Frame #N$01 ($1A bytes).
+  $C8FB,$02 X/ Y position offsets.
+  $C8FD,$18 Pixel/ control data.
+  $C915,$01 Frame #N$01 terminator.
+N $C916 Sprite #N$3B, Frame #N$02 ($11 bytes).
+  $C916,$02 X/ Y position offsets.
+  $C918,$0F Pixel/ control data.
+  $C927,$01 Animation sequence terminator.
+  $C928,$01 Animation sequence terminator.
+  $C929,$01 Animation sequence terminator.
+  $C92A,$01 Animation sequence terminator.
+N $C92B Sprite #N$3F, Frame #N$01 ($03 bytes).
+  $C92B,$02 X/ Y position offsets.
+  $C92D,$01 Pixel/ control data.
+  $C92E,$01 Animation sequence terminator.
+N $C92F Sprite #N$40, Frame #N$01 (control byte).
+  $C92F,$01 Control data.
+  $C930,$01 Frame #N$01 terminator.
+N $C931 Sprite #N$40, Frame #N$02 ($06 bytes).
+  $C931,$02 X/ Y position offsets.
+  $C933,$04 Pixel/ control data.
+  $C937,$01 Animation sequence terminator.
+  $C938,$01 Animation sequence terminator.
+  $C939,$01 Animation sequence terminator.
+N $C93A Sprite #N$43, Frame #N$01 (control byte).
+  $C93A,$01 Control data.
+  $C93B,$01 Frame #N$01 terminator.
+  $C93C,$01 Animation sequence terminator.
+  $C93D,$01 Frame #N$01 terminator.
+N $C93E Sprite #N$44, Frame #N$02 ($11 bytes).
+  $C93E,$02 X/ Y position offsets.
+  $C940,$0F Pixel/ control data.
+  $C94F,$01 Frame #N$02 terminator.
+N $C950 Sprite #N$44, Frame #N$03 (control byte).
+  $C950,$01 Control data.
+  $C951,$01 Frame #N$03 terminator.
+N $C952 Sprite #N$44, Frame #N$04 ($18 bytes).
+  $C952,$02 X/ Y position offsets.
+  $C954,$16 Pixel/ control data.
+  $C96A,$01 Frame #N$04 terminator.
+N $C96B Sprite #N$44, Frame #N$05 ($0B bytes).
+  $C96B,$02 X/ Y position offsets.
+  $C96D,$09 Pixel/ control data.
+  $C976,$01 Animation sequence terminator.
+  $C977,$01 Animation sequence terminator.
+  $C978,$01 Animation sequence terminator.
+  $C979,$01 Animation sequence terminator.
+N $C97A Sprite #N$48, Frame #N$01 ($05 bytes).
+  $C97A,$02 X/ Y position offsets.
+  $C97C,$03 Pixel/ control data.
+  $C97F,$01 Animation sequence terminator.
+N $C980 Sprite #N$49, Frame #N$01 ($03 bytes).
+  $C980,$02 X/ Y position offsets.
+  $C982,$01 Pixel/ control data.
+  $C983,$01 Animation sequence terminator.
+N $C984 Sprite #N$4A, Frame #N$01 (control byte).
+  $C984,$01 Control data.
+  $C985,$01 Frame #N$01 terminator.
+  $C986,$01 Animation sequence terminator.
+N $C987 Sprite #N$4B, Frame #N$01.
+  $C987,$02 X/ Y position offsets.
+  $C989,$08 Pixel data (2 character rows × 4 bytes each).
+  $C991,$01 Frame #N$01 terminator.
+  $C992,$01 Frame #N$02 terminator.
+N $C993 Sprite #N$4B, Frame #N$03 ($09 bytes).
+  $C993,$02 X/ Y position offsets.
+  $C995,$07 Pixel/ control data.
+  $C99C,$01 Frame #N$03 terminator.
+  $C99D,$01 Animation sequence terminator.
+N $C99E Sprite #N$4C, Frame #N$01.
+  $C99E,$02 X/ Y position offsets.
+  $C9A0,$08 Pixel data (2 character rows × 4 bytes each).
+  $C9A8,$01 Frame #N$01 terminator.
+  $C9A9,$01 Frame #N$02 terminator.
+N $C9AA Sprite #N$4C, Frame #N$03 ($09 bytes).
+  $C9AA,$02 X/ Y position offsets.
+  $C9AC,$07 Pixel/ control data.
+  $C9B3,$01 Frame #N$03 terminator.
+  $C9B4,$01 Animation sequence terminator.
+N $C9B5 Sprite #N$4D, Frame #N$01 ($12 bytes).
+  $C9B5,$02 X/ Y position offsets.
+  $C9B7,$10 Pixel/ control data.
+  $C9C7,$01 Frame #N$01 terminator.
+  $C9C8,$01 Frame #N$02 terminator.
+  $C9C9,$01 Frame #N$03 terminator.
+N $C9CA Sprite #N$4D, Frame #N$04 ($08 bytes).
+  $C9CA,$02 X/ Y position offsets.
+  $C9CC,$06 Pixel/ control data.
+  $C9D2,$01 Frame #N$04 terminator.
+  $C9D3,$01 Animation sequence terminator.
+N $C9D4 Sprite #N$4E, Frame #N$01.
+  $C9D4,$02 X/ Y position offsets.
+  $C9D6,$08 Pixel data (2 character rows × 4 bytes each).
+  $C9DE,$01 Animation sequence terminator.
+N $C9DF Sprite #N$4F, Frame #N$01 (position only).
+  $C9DF,$02 X/ Y position offsets.
+  $C9E1,$01 Animation sequence terminator.
+N $C9E2 Sprite #N$50, Frame #N$01 ($04 bytes).
+  $C9E2,$02 X/ Y position offsets.
+  $C9E4,$02 Pixel/ control data.
+  $C9E6,$01 Frame #N$01 terminator.
+  $C9E7,$01 Frame #N$02 terminator.
+  $C9E8,$01 Frame #N$03 terminator.
+N $C9E9 Sprite #N$50, Frame #N$04 ($10 bytes).
+  $C9E9,$02 X/ Y position offsets.
+  $C9EB,$0E Pixel/ control data.
+  $C9F9,$01 Frame #N$04 terminator.
+  $C9FA,$01 Animation sequence terminator.
+N $C9FB Sprite #N$51, Frame #N$01 ($0B bytes).
+  $C9FB,$02 X/ Y position offsets.
+  $C9FD,$09 Pixel/ control data.
+  $CA06,$01 Frame #N$01 terminator.
+  $CA07,$01 Frame #N$02 terminator.
+  $CA08,$01 Frame #N$03 terminator.
+N $CA09 Sprite #N$51, Frame #N$04 ($10 bytes).
+  $CA09,$02 X/ Y position offsets.
+  $CA0B,$0E Pixel/ control data.
+  $CA19,$01 Frame #N$04 terminator.
+  $CA1A,$01 Animation sequence terminator.
+N $CA1B Sprite #N$52, Frame #N$01 ($0B bytes).
+  $CA1B,$02 X/ Y position offsets.
+  $CA1D,$09 Pixel/ control data.
+  $CA26,$01 Animation sequence terminator.
+  $CA27,$01 Animation sequence terminator.
+  $CA28,$01 Animation sequence terminator.
+N $CA29 Sprite #N$55, Frame #N$01 ($04 bytes).
+  $CA29,$02 X/ Y position offsets.
+  $CA2B,$02 Pixel/ control data.
+  $CA2D,$01 Frame #N$01 terminator.
+  $CA2E,$01 Frame #N$02 terminator.
+  $CA2F,$01 Frame #N$03 terminator.
+N $CA30 Sprite #N$55, Frame #N$04 ($18 bytes).
+  $CA30,$02 X/ Y position offsets.
+  $CA32,$16 Pixel/ control data.
+  $CA48,$01 Frame #N$04 terminator.
+  $CA49,$01 Frame #N$05 terminator.
+N $CA4A Sprite #N$55, Frame #N$06 ($19 bytes).
+  $CA4A,$02 X/ Y position offsets.
+  $CA4C,$17 Pixel/ control data.
+  $CA63,$01 Frame #N$06 terminator.
+  $CA64,$01 Animation sequence terminator.
+N $CA65 Sprite #N$56, Frame #N$01.
+  $CA65,$02 X/ Y position offsets.
+  $CA67,$08 Pixel data (2 character rows × 4 bytes each).
+  $CA6F,$01 Frame #N$01 terminator.
+  $CA70,$01 Frame #N$02 terminator.
+N $CA71 Sprite #N$56, Frame #N$03 ($19 bytes).
+  $CA71,$02 X/ Y position offsets.
+  $CA73,$17 Pixel/ control data.
+  $CA8A,$01 Frame #N$03 terminator.
+  $CA8B,$01 Frame #N$04 terminator.
+N $CA8C Sprite #N$56, Frame #N$05 ($19 bytes).
+  $CA8C,$02 X/ Y position offsets.
+  $CA8E,$17 Pixel/ control data.
+  $CAA5,$01 Frame #N$05 terminator.
+  $CAA6,$01 Animation sequence terminator.
+N $CAA7 Sprite #N$57, Frame #N$01.
+  $CAA7,$02 X/ Y position offsets.
+  $CAA9,$08 Pixel data (2 character rows × 4 bytes each).
+  $CAB1,$01 Frame #N$01 terminator.
+  $CAB2,$01 Frame #N$02 terminator.
+N $CAB3 Sprite #N$57, Frame #N$03 ($10 bytes).
+  $CAB3,$02 X/ Y position offsets.
+  $CAB5,$0E Pixel/ control data.
+  $CAC3,$01 Animation sequence terminator.
+  $CAC4,$01 Animation sequence terminator.
+  $CAC5,$01 Animation sequence terminator.
+N $CAC6 Sprite #N$5A, Frame #N$01 ($06 bytes).
+  $CAC6,$02 X/ Y position offsets.
+  $CAC8,$04 Pixel/ control data.
+  $CACC,$01 Frame #N$01 terminator.
+  $CACD,$01 Frame #N$02 terminator.
+N $CACE Sprite #N$5A, Frame #N$03 ($19 bytes).
+  $CACE,$02 X/ Y position offsets.
+  $CAD0,$17 Pixel/ control data.
+  $CAE7,$01 Frame #N$03 terminator.
+  $CAE8,$01 Animation sequence terminator.
+N $CAE9 Sprite #N$5B, Frame #N$01 (control byte).
+  $CAE9,$01 Control data.
+  $CAEA,$01 Frame #N$01 terminator.
+N $CAEB Sprite #N$5B, Frame #N$02 ($07 bytes).
+  $CAEB,$02 X/ Y position offsets.
+  $CAED,$05 Pixel/ control data.
+  $CAF2,$01 Animation sequence terminator.
+N $CAF3 Sprite #N$5C, Frame #N$01 ($08 bytes).
+  $CAF3,$02 X/ Y position offsets.
+  $CAF5,$06 Pixel/ control data.
+  $CAFB,$01 Frame #N$01 terminator.
+  $CAFC,$01 Frame #N$02 terminator.
+N $CAFD Sprite #N$5C, Frame #N$03 ($0C bytes).
+  $CAFD,$02 X/ Y position offsets.
+  $CAFF,$0A Pixel/ control data.
+  $CB09,$01 Animation sequence terminator.
+N $CB0A Sprite #N$5D, Frame #N$01 ($04 bytes).
+  $CB0A,$02 X/ Y position offsets.
+  $CB0C,$02 Pixel/ control data.
+  $CB0E,$01 Frame #N$01 terminator.
+  $CB0F,$01 Frame #N$02 terminator.
+  $CB10,$01 Frame #N$03 terminator.
+N $CB11 Sprite #N$5D, Frame #N$04 ($03 bytes).
+  $CB11,$02 X/ Y position offsets.
+  $CB13,$01 Pixel/ control data.
+  $CB14,$01 Animation sequence terminator.
+N $CB15 Sprite #N$5E, Frame #N$01 ($05 bytes).
+  $CB15,$02 X/ Y position offsets.
+  $CB17,$03 Pixel/ control data.
+  $CB1A,$01 Animation sequence terminator.
+  $CB1B,$01 Animation sequence terminator.
+N $CB1C Sprite #N$60, Frame #N$01 ($0D bytes).
+  $CB1C,$02 X/ Y position offsets.
+  $CB1E,$0B Pixel/ control data.
+  $CB29,$01 Frame #N$01 terminator.
+  $CB2A,$01 Animation sequence terminator.
+N $CB2B Sprite #N$61, Frame #N$01 (control byte).
+  $CB2B,$01 Control data.
+  $CB2C,$01 Frame #N$01 terminator.
+N $CB2D Sprite #N$61, Frame #N$02 ($08 bytes).
+  $CB2D,$02 X/ Y position offsets.
+  $CB2F,$06 Pixel/ control data.
+  $CB35,$01 Animation sequence terminator.
+N $CB36 Sprite #N$62, Frame #N$01 ($07 bytes).
+  $CB36,$02 X/ Y position offsets.
+  $CB38,$05 Pixel/ control data.
+  $CB3D,$01 Frame #N$01 terminator.
+  $CB3E,$01 Frame #N$02 terminator.
+N $CB3F Sprite #N$62, Frame #N$03 ($11 bytes).
+  $CB3F,$02 X/ Y position offsets.
+  $CB41,$0F Pixel/ control data.
+  $CB50,$01 Frame #N$03 terminator.
+  $CB51,$01 Frame #N$04 terminator.
+N $CB52 Sprite #N$62, Frame #N$05 ($10 bytes).
+  $CB52,$02 X/ Y position offsets.
+  $CB54,$0E Pixel/ control data.
+  $CB62,$01 Animation sequence terminator.
+  $CB63,$01 Animation sequence terminator.
+N $CB64 Sprite #N$64, Frame #N$01 ($07 bytes).
+  $CB64,$02 X/ Y position offsets.
+  $CB66,$05 Pixel/ control data.
+  $CB6B,$01 Frame #N$01 terminator.
+  $CB6C,$01 Frame #N$02 terminator.
+N $CB6D Sprite #N$64, Frame #N$03 ($09 bytes).
+  $CB6D,$02 X/ Y position offsets.
+  $CB6F,$07 Pixel/ control data.
+  $CB76,$01 Frame #N$03 terminator.
+  $CB77,$01 Animation sequence terminator.
+N $CB78 Sprite #N$65, Frame #N$01 (control byte).
+  $CB78,$01 Control data.
+  $CB79,$01 Frame #N$01 terminator.
+N $CB7A Sprite #N$65, Frame #N$02 ($10 bytes).
+  $CB7A,$02 X/ Y position offsets.
+  $CB7C,$0E Pixel/ control data.
+  $CB8A,$01 Frame #N$02 terminator.
+  $CB8B,$01 Frame #N$03 terminator.
+  $CB8C,$01 Frame #N$04 terminator.
+N $CB8D Sprite #N$65, Frame #N$05 ($10 bytes).
+  $CB8D,$02 X/ Y position offsets.
+  $CB8F,$0E Pixel/ control data.
+  $CB9D,$01 Frame #N$05 terminator.
+  $CB9E,$01 Frame #N$06 terminator.
+  $CB9F,$01 Frame #N$07 terminator.
+N $CBA0 Sprite #N$65, Frame #N$08 ($0D bytes).
+  $CBA0,$02 X/ Y position offsets.
+  $CBA2,$0B Pixel/ control data.
+  $CBAD,$01 Animation sequence terminator.
+N $CBAE Sprite #N$66, Frame #N$01.
+  $CBAE,$02 X/ Y position offsets.
+  $CBB0,$08 Pixel data (2 character rows × 4 bytes each).
+  $CBB8,$01 Frame #N$01 terminator.
+  $CBB9,$01 Frame #N$02 terminator.
+  $CBBA,$01 Frame #N$03 terminator.
+N $CBBB Sprite #N$66, Frame #N$04 ($08 bytes).
+  $CBBB,$02 X/ Y position offsets.
+  $CBBD,$06 Pixel/ control data.
+  $CBC3,$01 Frame #N$04 terminator.
+  $CBC4,$01 Animation sequence terminator.
+N $CBC5 Sprite #N$67, Frame #N$01 (control byte).
+  $CBC5,$01 Control data.
+  $CBC6,$01 Frame #N$01 terminator.
+N $CBC7 Sprite #N$67, Frame #N$02 ($10 bytes).
+  $CBC7,$02 X/ Y position offsets.
+  $CBC9,$0E Pixel/ control data.
+  $CBD7,$01 Frame #N$02 terminator.
+  $CBD8,$01 Frame #N$03 terminator.
+  $CBD9,$01 Frame #N$04 terminator.
+N $CBDA Sprite #N$67, Frame #N$05 ($10 bytes).
+  $CBDA,$02 X/ Y position offsets.
+  $CBDC,$0E Pixel/ control data.
+  $CBEA,$01 Frame #N$05 terminator.
+  $CBEB,$01 Frame #N$06 terminator.
+  $CBEC,$01 Frame #N$07 terminator.
+N $CBED Sprite #N$67, Frame #N$08 ($10 bytes).
+  $CBED,$02 X/ Y position offsets.
+  $CBEF,$0E Pixel/ control data.
+  $CBFD,$01 Frame #N$08 terminator.
+  $CBFE,$01 Frame #N$09 terminator.
+N $CBFF Sprite #N$67, Frame #N$0A ($09 bytes).
+  $CBFF,$02 X/ Y position offsets.
+  $CC01,$07 Pixel/ control data.
+  $CC08,$01 Frame #N$0A terminator.
+  $CC09,$01 Animation sequence terminator.
+N $CC0A Sprite #N$68, Frame #N$01 (control byte).
+  $CC0A,$01 Control data.
+  $CC0B,$01 Frame #N$01 terminator.
+N $CC0C Sprite #N$68, Frame #N$02 ($10 bytes).
+  $CC0C,$02 X/ Y position offsets.
+  $CC0E,$0E Pixel/ control data.
+  $CC1C,$01 Frame #N$02 terminator.
+  $CC1D,$01 Frame #N$03 terminator.
+N $CC1E Sprite #N$68, Frame #N$04 ($19 bytes).
+  $CC1E,$02 X/ Y position offsets.
+  $CC20,$17 Pixel/ control data.
+  $CC37,$01 Frame #N$04 terminator.
+  $CC38,$01 Frame #N$05 terminator.
+  $CC39,$01 Frame #N$06 terminator.
+N $CC3A Sprite #N$68, Frame #N$07 ($10 bytes).
+  $CC3A,$02 X/ Y position offsets.
+  $CC3C,$0E Pixel/ control data.
+  $CC4A,$01 Frame #N$07 terminator.
+  $CC4B,$01 Frame #N$08 terminator.
+  $CC4C,$01 Frame #N$09 terminator.
+N $CC4D Sprite #N$68, Frame #N$0A ($10 bytes).
+  $CC4D,$02 X/ Y position offsets.
+  $CC4F,$0E Pixel/ control data.
+  $CC5D,$01 Frame #N$0A terminator.
+  $CC5E,$01 Animation sequence terminator.
+N $CC5F Sprite #N$69, Frame #N$01 (control byte).
+  $CC5F,$01 Control data.
+  $CC60,$01 Frame #N$01 terminator.
+N $CC61 Sprite #N$69, Frame #N$02 ($04 bytes).
+  $CC61,$02 X/ Y position offsets.
+  $CC63,$02 Pixel/ control data.
+  $CC65,$01 Animation sequence terminator.
+  $CC66,$01 Animation sequence terminator.
+N $CC67 Sprite #N$6B, Frame #N$01.
+  $CC67,$02 X/ Y position offsets.
+  $CC69,$08 Pixel data (2 character rows × 4 bytes each).
+  $CC71,$01 Frame #N$01 terminator.
+  $CC72,$01 Frame #N$02 terminator.
+N $CC73 Sprite #N$6B, Frame #N$03 ($19 bytes).
+  $CC73,$02 X/ Y position offsets.
+  $CC75,$17 Pixel/ control data.
+  $CC8C,$01 Frame #N$03 terminator.
+  $CC8D,$01 Frame #N$04 terminator.
+  $CC8E,$01 Frame #N$05 terminator.
+N $CC8F Sprite #N$6B, Frame #N$06 ($10 bytes).
+  $CC8F,$02 X/ Y position offsets.
+  $CC91,$0E Pixel/ control data.
+  $CC9F,$01 Frame #N$06 terminator.
+  $CCA0,$01 Frame #N$07 terminator.
+  $CCA1,$01 Frame #N$08 terminator.
+N $CCA2 Sprite #N$6B, Frame #N$09 ($08 bytes).
+  $CCA2,$02 X/ Y position offsets.
+  $CCA4,$06 Pixel/ control data.
+  $CCAA,$01 Frame #N$09 terminator.
+  $CCAB,$01 Animation sequence terminator.
+N $CCAC Sprite #N$6C, Frame #N$01 (control byte).
+  $CCAC,$01 Control data.
+  $CCAD,$01 Frame #N$01 terminator.
+N $CCAE Sprite #N$6C, Frame #N$02 (control byte).
+  $CCAE,$01 Control data.
+  $CCAF,$01 Animation sequence terminator.
+  $CCB0,$01 Animation sequence terminator.
+  $CCB1,$01 Animation sequence terminator.
+N $CCB2 Sprite #N$6F, Frame #N$01 ($0C bytes).
+  $CCB2,$02 X/ Y position offsets.
+  $CCB4,$0A Pixel/ control data.
+  $CCBE,$01 Frame #N$01 terminator.
+  $CCBF,$01 Frame #N$02 terminator.
+N $CCC0 Sprite #N$6F, Frame #N$03 ($19 bytes).
+  $CCC0,$02 X/ Y position offsets.
+  $CCC2,$17 Pixel/ control data.
+  $CCD9,$01 Frame #N$03 terminator.
+  $CCDA,$01 Frame #N$04 terminator.
+N $CCDB Sprite #N$6F, Frame #N$05 ($11 bytes).
+  $CCDB,$02 X/ Y position offsets.
+  $CCDD,$0F Pixel/ control data.
+  $CCEC,$01 Frame #N$05 terminator.
+  $CCED,$01 Animation sequence terminator.
+N $CCEE Sprite #N$70, Frame #N$01 ($06 bytes).
+  $CCEE,$02 X/ Y position offsets.
+  $CCF0,$04 Pixel/ control data.
+  $CCF4,$01 Animation sequence terminator.
+  $CCF5,$01 Animation sequence terminator.
+N $CCF6 Sprite #N$72, Frame #N$01 ($12 bytes).
+  $CCF6,$02 X/ Y position offsets.
+  $CCF8,$10 Pixel/ control data.
+  $CD08,$01 Frame #N$01 terminator.
+  $CD09,$01 Frame #N$02 terminator.
+N $CD0A Sprite #N$72, Frame #N$03 ($19 bytes).
+  $CD0A,$02 X/ Y position offsets.
+  $CD0C,$17 Pixel/ control data.
+  $CD23,$01 Frame #N$03 terminator.
+  $CD24,$01 Frame #N$04 terminator.
+N $CD25 Sprite #N$72, Frame #N$05 ($11 bytes).
+  $CD25,$02 X/ Y position offsets.
+  $CD27,$0F Pixel/ control data.
+  $CD36,$01 Frame #N$05 terminator.
+  $CD37,$01 Animation sequence terminator.
+N $CD38 Sprite #N$73, Frame #N$01 ($1A bytes).
+  $CD38,$02 X/ Y position offsets.
+  $CD3A,$18 Pixel/ control data.
+  $CD52,$01 Frame #N$01 terminator.
+  $CD53,$01 Frame #N$02 terminator.
+N $CD54 Sprite #N$73, Frame #N$03 ($19 bytes).
+  $CD54,$02 X/ Y position offsets.
+  $CD56,$17 Pixel/ control data.
+  $CD6D,$01 Frame #N$03 terminator.
+  $CD6E,$01 Frame #N$04 terminator.
+N $CD6F Sprite #N$73, Frame #N$05 ($11 bytes).
+  $CD6F,$02 X/ Y position offsets.
+  $CD71,$0F Pixel/ control data.
+  $CD80,$01 Frame #N$05 terminator.
+  $CD81,$01 Animation sequence terminator.
+N $CD82 Sprite #N$74, Frame #N$01 ($1A bytes).
+  $CD82,$02 X/ Y position offsets.
+  $CD84,$18 Pixel/ control data.
+  $CD9C,$01 Frame #N$01 terminator.
+  $CD9D,$01 Frame #N$02 terminator.
+N $CD9E Sprite #N$74, Frame #N$03 ($19 bytes).
+  $CD9E,$02 X/ Y position offsets.
+  $CDA0,$17 Pixel/ control data.
+  $CDB7,$01 Frame #N$03 terminator.
+  $CDB8,$01 Frame #N$04 terminator.
+N $CDB9 Sprite #N$74, Frame #N$05 ($09 bytes).
+  $CDB9,$02 X/ Y position offsets.
+  $CDBB,$07 Pixel/ control data.
+  $CDC2,$01 Frame #N$05 terminator.
+  $CDC3,$01 Animation sequence terminator.
+N $CDC4 Sprite #N$75, Frame #N$01 ($0D bytes).
+  $CDC4,$02 X/ Y position offsets.
+  $CDC6,$0B Pixel/ control data.
+  $CDD1,$01 Animation sequence terminator.
+  $CDD2,$01 Animation sequence terminator.
+N $CDD3 Sprite #N$77, Frame #N$01 ($03 bytes).
+  $CDD3,$02 X/ Y position offsets.
+  $CDD5,$01 Pixel/ control data.
+  $CDD6,$01 Frame #N$01 terminator.
+  $CDD7,$01 Frame #N$02 terminator.
+  $CDD8,$01 Frame #N$03 terminator.
+N $CDD9 Sprite #N$77, Frame #N$04 ($18 bytes).
+  $CDD9,$02 X/ Y position offsets.
+  $CDDB,$16 Pixel/ control data.
+  $CDF1,$01 Frame #N$04 terminator.
+  $CDF2,$01 Frame #N$05 terminator.
+N $CDF3 Sprite #N$77, Frame #N$06 ($19 bytes).
+  $CDF3,$02 X/ Y position offsets.
+  $CDF5,$17 Pixel/ control data.
+  $CE0C,$01 Frame #N$06 terminator.
+  $CE0D,$01 Animation sequence terminator.
+N $CE0E Sprite #N$78, Frame #N$01 ($1A bytes).
+  $CE0E,$02 X/ Y position offsets.
+  $CE10,$18 Pixel/ control data.
+  $CE28,$01 Frame #N$01 terminator.
+N $CE29 Sprite #N$78, Frame #N$02 ($1A bytes).
+  $CE29,$02 X/ Y position offsets.
+  $CE2B,$18 Pixel/ control data.
+  $CE43,$01 Frame #N$02 terminator.
+N $CE44 Sprite #N$78, Frame #N$03 (control byte).
+  $CE44,$01 Control data.
+  $CE45,$01 Frame #N$03 terminator.
+N $CE46 Sprite #N$78, Frame #N$04 ($03 bytes).
+  $CE46,$02 X/ Y position offsets.
+  $CE48,$01 Pixel/ control data.
+  $CE49,$01 Animation sequence terminator.
+N $CE4A Sprite #N$79, Frame #N$01 ($0C bytes).
+  $CE4A,$02 X/ Y position offsets.
+  $CE4C,$0A Pixel/ control data.
+  $CE56,$01 Frame #N$01 terminator.
+  $CE57,$01 Animation sequence terminator.
+N $CE58 Sprite #N$7A, Frame #N$01 ($1A bytes).
+  $CE58,$02 X/ Y position offsets.
+  $CE5A,$18 Pixel/ control data.
+  $CE72,$01 Frame #N$01 terminator.
+N $CE73 Sprite #N$7A, Frame #N$02 ($17 bytes).
+  $CE73,$02 X/ Y position offsets.
+  $CE75,$15 Pixel/ control data.
+  $CE8A,$01 Animation sequence terminator.
+N $CE8B Sprite #N$7B, Frame #N$01 (position only).
+  $CE8B,$02 X/ Y position offsets.
+  $CE8D,$01 Frame #N$01 terminator.
+N $CE8E Sprite #N$7B, Frame #N$02 (control byte).
+  $CE8E,$01 Control data.
+  $CE8F,$01 Frame #N$02 terminator.
+N $CE90 Sprite #N$7B, Frame #N$03 ($03 bytes).
+  $CE90,$02 X/ Y position offsets.
+  $CE92,$01 Pixel/ control data.
+  $CE93,$01 Animation sequence terminator.
+N $CE94 Sprite #N$7C, Frame #N$01 ($0C bytes).
+  $CE94,$02 X/ Y position offsets.
+  $CE96,$0A Pixel/ control data.
+  $CEA0,$01 Frame #N$01 terminator.
+  $CEA1,$01 Animation sequence terminator.
+N $CEA2 Sprite #N$7D, Frame #N$01 (control byte).
+  $CEA2,$01 Control data.
+  $CEA3,$01 Frame #N$01 terminator.
+N $CEA4 Sprite #N$7D, Frame #N$02 ($10 bytes).
+  $CEA4,$02 X/ Y position offsets.
+  $CEA6,$0E Pixel/ control data.
+  $CEB4,$01 Frame #N$02 terminator.
+N $CEB5 Sprite #N$7D, Frame #N$03 ($1A bytes).
+  $CEB5,$02 X/ Y position offsets.
+  $CEB7,$18 Pixel/ control data.
+  $CECF,$01 Frame #N$03 terminator.
+N $CED0 Sprite #N$7D, Frame #N$04 ($07 bytes).
+  $CED0,$02 X/ Y position offsets.
+  $CED2,$05 Pixel/ control data.
+  $CED7,$01 Animation sequence terminator.
+N $CED8 Sprite #N$7E, Frame #N$01 ($12 bytes).
+  $CED8,$02 X/ Y position offsets.
+  $CEDA,$10 Pixel/ control data.
+  $CEEA,$01 Frame #N$01 terminator.
+N $CEEB Sprite #N$7E, Frame #N$02.
+  $CEEB,$02 X/ Y position offsets.
+  $CEED,$08 Pixel data (2 character rows × 4 bytes each).
+  $CEF5,$01 Frame #N$02 terminator.
+  $CEF6,$01 Animation sequence terminator.
+N $CEF7 Sprite #N$7F, Frame #N$01 (control byte).
+  $CEF7,$01 Control data.
+  $CEF8,$01 Frame #N$01 terminator.
+N $CEF9 Sprite #N$7F, Frame #N$02 ($10 bytes).
+  $CEF9,$02 X/ Y position offsets.
+  $CEFB,$0E Pixel/ control data.
+  $CF09,$01 Frame #N$02 terminator.
+N $CF0A Sprite #N$7F, Frame #N$03 (control byte).
+  $CF0A,$01 Control data.
+  $CF0B,$01 Frame #N$03 terminator.
+N $CF0C Sprite #N$7F, Frame #N$04 ($10 bytes).
+  $CF0C,$02 X/ Y position offsets.
+  $CF0E,$0E Pixel/ control data.
+  $CF1C,$01 Frame #N$04 terminator.
+N $CF1D Sprite #N$7F, Frame #N$05 (control byte).
+  $CF1D,$01 Control data.
+  $CF1E,$01 Frame #N$05 terminator.
+N $CF1F Sprite #N$7F, Frame #N$06 ($0D bytes).
+  $CF1F,$02 X/ Y position offsets.
+  $CF21,$0B Pixel/ control data.
+  $CF2C,$01 Animation sequence terminator.
+N $CF2D Sprite #N$80, Frame #N$01 (position only).
+  $CF2D,$02 X/ Y position offsets.
+  $CF2F,$01 Frame #N$01 terminator.
+N $CF30 Sprite #N$80, Frame #N$02.
+  $CF30,$02 X/ Y position offsets.
+  $CF32,$08 Pixel data (2 character rows × 4 bytes each).
+  $CF3A,$01 Frame #N$02 terminator.
+  $CF3B,$01 Animation sequence terminator.
+N $CF3C Sprite #N$81, Frame #N$01 ($12 bytes).
+  $CF3C,$02 X/ Y position offsets.
+  $CF3E,$10 Pixel/ control data.
+  $CF4E,$01 Frame #N$01 terminator.
+N $CF4F Sprite #N$81, Frame #N$02 ($1A bytes).
+  $CF4F,$02 X/ Y position offsets.
+  $CF51,$18 Pixel/ control data.
+  $CF69,$01 Frame #N$02 terminator.
+N $CF6A Sprite #N$81, Frame #N$03 ($07 bytes).
+  $CF6A,$02 X/ Y position offsets.
+  $CF6C,$05 Pixel/ control data.
+  $CF71,$01 Animation sequence terminator.
+  $CF72,$01 Animation sequence terminator.
+N $CF73 Sprite #N$83, Frame #N$01 ($11 bytes).
+  $CF73,$02 X/ Y position offsets.
+  $CF75,$0F Pixel/ control data.
+  $CF84,$01 Frame #N$01 terminator.
+  $CF85,$01 Animation sequence terminator.
+N $CF86 Sprite #N$84, Frame #N$01 ($12 bytes).
+  $CF86,$02 X/ Y position offsets.
+  $CF88,$10 Pixel/ control data.
+  $CF98,$01 Frame #N$01 terminator.
+N $CF99 Sprite #N$84, Frame #N$02 ($1A bytes).
+  $CF99,$02 X/ Y position offsets.
+  $CF9B,$18 Pixel/ control data.
+  $CFB3,$01 Frame #N$02 terminator.
+N $CFB4 Sprite #N$84, Frame #N$03 ($0C bytes).
+  $CFB4,$02 X/ Y position offsets.
+  $CFB6,$0A Pixel/ control data.
+  $CFC0,$01 Animation sequence terminator.
+N $CFC1 Sprite #N$85, Frame #N$01 ($0D bytes).
+  $CFC1,$02 X/ Y position offsets.
+  $CFC3,$0B Pixel/ control data.
+  $CFCE,$01 Frame #N$01 terminator.
+  $CFCF,$01 Animation sequence terminator.
+N $CFD0 Sprite #N$86, Frame #N$01 ($12 bytes).
+  $CFD0,$02 X/ Y position offsets.
+  $CFD2,$10 Pixel/ control data.
+  $CFE2,$01 Frame #N$01 terminator.
+N $CFE3 Sprite #N$86, Frame #N$02 (control byte).
+  $CFE3,$01 Control data.
+  $CFE4,$01 Frame #N$02 terminator.
+N $CFE5 Sprite #N$86, Frame #N$03 ($18 bytes).
+  $CFE5,$02 X/ Y position offsets.
+  $CFE7,$16 Pixel/ control data.
+  $CFFD,$01 Frame #N$03 terminator.
+N $CFFE Sprite #N$86, Frame #N$04 ($1A bytes).
+  $CFFE,$02 X/ Y position offsets.
+  $D000,$18 Pixel/ control data.
+  $D018,$01 Frame #N$04 terminator.
+  $D019,$01 Animation sequence terminator.
+N $D01A Sprite #N$87, Frame #N$01 ($1A bytes).
+  $D01A,$02 X/ Y position offsets.
+  $D01C,$18 Pixel/ control data.
+  $D034,$01 Frame #N$01 terminator.
+N $D035 Sprite #N$87, Frame #N$02 ($1A bytes).
+  $D035,$02 X/ Y position offsets.
+  $D037,$18 Pixel/ control data.
+  $D04F,$01 Frame #N$02 terminator.
+N $D050 Sprite #N$87, Frame #N$03 ($12 bytes).
+  $D050,$02 X/ Y position offsets.
+  $D052,$10 Pixel/ control data.
+  $D062,$01 Frame #N$03 terminator.
+N $D063 Sprite #N$87, Frame #N$04 (control byte).
+  $D063,$01 Control data.
+  $D064,$01 Frame #N$04 terminator.
+N $D065 Sprite #N$87, Frame #N$05 ($10 bytes).
+  $D065,$02 X/ Y position offsets.
+  $D067,$0E Pixel/ control data.
+  $D075,$01 Frame #N$05 terminator.
+  $D076,$01 Animation sequence terminator.
+N $D077 Sprite #N$88, Frame #N$01 ($05 bytes).
+  $D077,$02 X/ Y position offsets.
+  $D079,$03 Pixel/ control data.
+  $D07C,$01 Animation sequence terminator.
+N $D07D Sprite #N$89, Frame #N$01 ($04 bytes).
+  $D07D,$02 X/ Y position offsets.
+  $D07F,$02 Pixel/ control data.
+  $D081,$01 Frame #N$01 terminator.
+N $D082 Sprite #N$89, Frame #N$02 (control byte).
+  $D082,$01 Control data.
+  $D083,$01 Frame #N$02 terminator.
+N $D084 Sprite #N$89, Frame #N$03 ($10 bytes).
+  $D084,$02 X/ Y position offsets.
+  $D086,$0E Pixel/ control data.
+  $D094,$01 Frame #N$03 terminator.
+N $D095 Sprite #N$89, Frame #N$04 (control byte).
+  $D095,$01 Control data.
+  $D096,$01 Frame #N$04 terminator.
+N $D097 Sprite #N$89, Frame #N$05 ($06 bytes).
+  $D097,$02 X/ Y position offsets.
+  $D099,$04 Pixel/ control data.
+  $D09D,$01 Animation sequence terminator.
+  $D09E,$01 Animation sequence terminator.
+N $D09F Sprite #N$8B, Frame #N$01 ($08 bytes).
+  $D09F,$02 X/ Y position offsets.
+  $D0A1,$06 Pixel/ control data.
+  $D0A7,$01 Frame #N$01 terminator.
+N $D0A8 Sprite #N$8B, Frame #N$02 (control byte).
+  $D0A8,$01 Control data.
+  $D0A9,$01 Frame #N$02 terminator.
+N $D0AA Sprite #N$8B, Frame #N$03 ($10 bytes).
+  $D0AA,$02 X/ Y position offsets.
+  $D0AC,$0E Pixel/ control data.
+  $D0BA,$01 Frame #N$03 terminator.
+N $D0BB Sprite #N$8B, Frame #N$04 (control byte).
+  $D0BB,$01 Control data.
+  $D0BC,$01 Frame #N$04 terminator.
+N $D0BD Sprite #N$8B, Frame #N$05 ($0E bytes).
+  $D0BD,$02 X/ Y position offsets.
+  $D0BF,$0C Pixel/ control data.
+  $D0CB,$01 Animation sequence terminator.
+N $D0CC Sprite #N$8C, Frame #N$01 (control byte).
+  $D0CC,$01 Control data.
+  $D0CD,$01 Frame #N$01 terminator.
+  $D0CE,$01 Animation sequence terminator.
+N $D0CF Sprite #N$8D, Frame #N$01 ($12 bytes).
+  $D0CF,$02 X/ Y position offsets.
+  $D0D1,$10 Pixel/ control data.
+  $D0E1,$01 Frame #N$01 terminator.
+N $D0E2 Sprite #N$8D, Frame #N$02 (control byte).
+  $D0E2,$01 Control data.
+  $D0E3,$01 Frame #N$02 terminator.
+N $D0E4 Sprite #N$8D, Frame #N$03 ($0F bytes).
+  $D0E4,$02 X/ Y position offsets.
+  $D0E6,$0D Pixel/ control data.
+  $D0F3,$01 Animation sequence terminator.
+N $D0F4 Sprite #N$8E, Frame #N$01 ($08 bytes).
+  $D0F4,$02 X/ Y position offsets.
+  $D0F6,$06 Pixel/ control data.
+  $D0FC,$01 Frame #N$01 terminator.
+N $D0FD Sprite #N$8E, Frame #N$02 (control byte).
+  $D0FD,$01 Control data.
+  $D0FE,$01 Frame #N$02 terminator.
+N $D0FF Sprite #N$8E, Frame #N$03 ($0F bytes).
+  $D0FF,$02 X/ Y position offsets.
+  $D101,$0D Pixel/ control data.
+  $D10E,$01 Animation sequence terminator.
+  $D10F,$01 Frame #N$01 terminator.
+  $D110,$01 Animation sequence terminator.
+N $D111 Sprite #N$90, Frame #N$01 ($12 bytes).
+  $D111,$02 X/ Y position offsets.
+  $D113,$10 Pixel/ control data.
+  $D123,$01 Frame #N$01 terminator.
+N $D124 Sprite #N$90, Frame #N$02 (control byte).
+  $D124,$01 Control data.
+  $D125,$01 Frame #N$02 terminator.
+N $D126 Sprite #N$90, Frame #N$03 ($0F bytes).
+  $D126,$02 X/ Y position offsets.
+  $D128,$0D Pixel/ control data.
+  $D135,$01 Animation sequence terminator.
+N $D136 Sprite #N$91, Frame #N$01 ($08 bytes).
+  $D136,$02 X/ Y position offsets.
+  $D138,$06 Pixel/ control data.
+  $D13E,$01 Frame #N$01 terminator.
+N $D13F Sprite #N$91, Frame #N$02 ($19 bytes).
+  $D13F,$02 X/ Y position offsets.
+  $D141,$17 Pixel/ control data.
+  $D158,$01 Animation sequence terminator.
+  $D159,$01 Frame #N$01 terminator.
+N $D15A Sprite #N$92, Frame #N$02 ($12 bytes).
+  $D15A,$02 X/ Y position offsets.
+  $D15C,$10 Pixel/ control data.
+  $D16C,$01 Frame #N$02 terminator.
+  $D16D,$01 Animation sequence terminator.
+N $D16E Sprite #N$93, Frame #N$01 (control byte).
+  $D16E,$01 Control data.
+  $D16F,$01 Frame #N$01 terminator.
+N $D170 Sprite #N$93, Frame #N$02 ($08 bytes).
+  $D170,$02 X/ Y position offsets.
+  $D172,$06 Pixel/ control data.
+  $D178,$01 Frame #N$02 terminator.
+N $D179 Sprite #N$93, Frame #N$03 ($12 bytes).
+  $D179,$02 X/ Y position offsets.
+  $D17B,$10 Pixel/ control data.
+  $D18B,$01 Frame #N$03 terminator.
+N $D18C Sprite #N$93, Frame #N$04 (control byte).
+  $D18C,$01 Control data.
+  $D18D,$01 Frame #N$04 terminator.
+N $D18E Sprite #N$93, Frame #N$05 ($10 bytes).
+  $D18E,$02 X/ Y position offsets.
+  $D190,$0E Pixel/ control data.
+  $D19E,$01 Frame #N$05 terminator.
+N $D19F Sprite #N$93, Frame #N$06 (control byte).
+  $D19F,$01 Control data.
+  $D1A0,$01 Frame #N$06 terminator.
+N $D1A1 Sprite #N$93, Frame #N$07 ($05 bytes).
+  $D1A1,$02 X/ Y position offsets.
+  $D1A3,$03 Pixel/ control data.
+  $D1A6,$01 Animation sequence terminator.
+  $D1A7,$01 Animation sequence terminator.
+N $D1A8 Sprite #N$95, Frame #N$01 ($03 bytes).
+  $D1A8,$02 X/ Y position offsets.
+  $D1AA,$01 Pixel/ control data.
+  $D1AB,$01 Animation sequence terminator.
+N $D1AC Sprite #N$96, Frame #N$01 ($04 bytes).
+  $D1AC,$02 X/ Y position offsets.
+  $D1AE,$02 Pixel/ control data.
+  $D1B0,$01 Animation sequence terminator.
+  $D1B1,$01 Frame #N$01 terminator.
+N $D1B2 Sprite #N$97, Frame #N$02.
+  $D1B2,$02 X/ Y position offsets.
+  $D1B4,$08 Pixel data (2 character rows × 4 bytes each).
+  $D1BC,$01 Frame #N$02 terminator.
+N $D1BD Sprite #N$97, Frame #N$03.
+  $D1BD,$02 X/ Y position offsets.
+  $D1BF,$08 Pixel data (2 character rows × 4 bytes each).
+  $D1C7,$01 Frame #N$03 terminator.
+N $D1C8 Sprite #N$97, Frame #N$04 ($12 bytes).
+  $D1C8,$02 X/ Y position offsets.
+  $D1CA,$10 Pixel/ control data.
+  $D1DA,$01 Frame #N$04 terminator.
+  $D1DB,$01 Animation sequence terminator.
+N $D1DC Sprite #N$98, Frame #N$01.
+  $D1DC,$02 X/ Y position offsets.
+  $D1DE,$08 Pixel data (2 character rows × 4 bytes each).
+  $D1E6,$01 Frame #N$01 terminator.
+N $D1E7 Sprite #N$98, Frame #N$02 ($09 bytes).
+  $D1E7,$02 X/ Y position offsets.
+  $D1E9,$07 Pixel/ control data.
+  $D1F0,$01 Animation sequence terminator.
+  $D1F1,$01 Frame #N$01 terminator.
+N $D1F2 Sprite #N$99, Frame #N$02 (control byte).
+  $D1F2,$01 Control data.
+  $D1F3,$01 Frame #N$02 terminator.
+N $D1F4 Sprite #N$99, Frame #N$03 ($10 bytes).
+  $D1F4,$02 X/ Y position offsets.
+  $D1F6,$0E Pixel/ control data.
+  $D204,$01 Frame #N$03 terminator.
+N $D205 Sprite #N$99, Frame #N$04 ($09 bytes).
+  $D205,$02 X/ Y position offsets.
+  $D207,$07 Pixel/ control data.
+  $D20E,$01 Animation sequence terminator.
+  $D20F,$01 Frame #N$01 terminator.
+N $D210 Sprite #N$9A, Frame #N$02.
+  $D210,$02 X/ Y position offsets.
+  $D212,$08 Pixel data (2 character rows × 4 bytes each).
+  $D21A,$01 Frame #N$02 terminator.
+N $D21B Sprite #N$9A, Frame #N$03 ($12 bytes).
+  $D21B,$02 X/ Y position offsets.
+  $D21D,$10 Pixel/ control data.
+  $D22D,$01 Frame #N$03 terminator.
+N $D22E Sprite #N$9A, Frame #N$04 (control byte).
+  $D22E,$01 Control data.
+  $D22F,$01 Frame #N$04 terminator.
+N $D230 Sprite #N$9A, Frame #N$05 ($05 bytes).
+  $D230,$02 X/ Y position offsets.
+  $D232,$03 Pixel/ control data.
+  $D235,$01 Animation sequence terminator.
+  $D236,$01 Animation sequence terminator.
+N $D237 Sprite #N$9C, Frame #N$01 ($08 bytes).
+  $D237,$02 X/ Y position offsets.
+  $D239,$06 Pixel/ control data.
+  $D23F,$01 Animation sequence terminator.
+  $D240,$01 Frame #N$01 terminator.
+  $D241,$01 Animation sequence terminator.
+N $D242 Sprite #N$9E, Frame #N$01 (control byte).
+  $D242,$01 Control data.
+  $D243,$01 Frame #N$01 terminator.
+N $D244 Sprite #N$9E, Frame #N$02 ($08 bytes).
+  $D244,$02 X/ Y position offsets.
+  $D246,$06 Pixel/ control data.
+  $D24C,$01 Frame #N$02 terminator.
+N $D24D Sprite #N$9E, Frame #N$03 ($12 bytes).
+  $D24D,$02 X/ Y position offsets.
+  $D24F,$10 Pixel/ control data.
+  $D25F,$01 Frame #N$03 terminator.
+N $D260 Sprite #N$9E, Frame #N$04 (control byte).
+  $D260,$01 Control data.
+  $D261,$01 Frame #N$04 terminator.
+N $D262 Sprite #N$9E, Frame #N$05 ($10 bytes).
+  $D262,$02 X/ Y position offsets.
+  $D264,$0E Pixel/ control data.
+  $D272,$01 Frame #N$05 terminator.
+N $D273 Sprite #N$9E, Frame #N$06 (control byte).
+  $D273,$01 Control data.
+  $D274,$01 Frame #N$06 terminator.
+N $D275 Sprite #N$9E, Frame #N$07 ($05 bytes).
+  $D275,$02 X/ Y position offsets.
+  $D277,$03 Pixel/ control data.
+  $D27A,$01 Animation sequence terminator.
+  $D27B,$01 Animation sequence terminator.
+N $D27C Sprite #N$A0, Frame #N$01 ($03 bytes).
+  $D27C,$02 X/ Y position offsets.
+  $D27E,$01 Pixel/ control data.
+  $D27F,$01 Animation sequence terminator.
+N $D280 Sprite #N$A1, Frame #N$01 ($04 bytes).
+  $D280,$02 X/ Y position offsets.
+  $D282,$02 Pixel/ control data.
+  $D284,$01 Animation sequence terminator.
+  $D285,$01 Frame #N$01 terminator.
+N $D286 Sprite #N$A2, Frame #N$02.
+  $D286,$02 X/ Y position offsets.
+  $D288,$08 Pixel data (2 character rows × 4 bytes each).
+  $D290,$01 Frame #N$02 terminator.
+N $D291 Sprite #N$A2, Frame #N$03 ($1A bytes).
+  $D291,$02 X/ Y position offsets.
+  $D293,$18 Pixel/ control data.
+  $D2AB,$01 Frame #N$03 terminator.
+N $D2AC Sprite #N$A2, Frame #N$04 ($08 bytes).
+  $D2AC,$02 X/ Y position offsets.
+  $D2AE,$06 Pixel/ control data.
+  $D2B4,$01 Animation sequence terminator.
+  $D2B5,$01 Animation sequence terminator.
+  $D2B6,$01 Animation sequence terminator.
+  $D2B7,$01 Animation sequence terminator.
+  $D2B8,$01 Animation sequence terminator.
+  $D2B9,$01 Animation sequence terminator.
+  $D2BA,$01 Animation sequence terminator.
+N $D2BB Sprite #N$A9, Frame #N$01 ($0B bytes).
+  $D2BB,$02 X/ Y position offsets.
+  $D2BD,$09 Pixel/ control data.
+  $D2C6,$01 Frame #N$01 terminator.
+  $D2C7,$01 Animation sequence terminator.
+N $D2C8 Sprite #N$AA, Frame #N$01.
+  $D2C8,$02 X/ Y position offsets.
+  $D2CA,$08 Pixel data (2 character rows × 4 bytes each).
+  $D2D2,$01 Frame #N$01 terminator.
+N $D2D3 Sprite #N$AA, Frame #N$02 ($09 bytes).
+  $D2D3,$02 X/ Y position offsets.
+  $D2D5,$07 Pixel/ control data.
+  $D2DC,$01 Animation sequence terminator.
+  $D2DD,$01 Frame #N$01 terminator.
+N $D2DE Sprite #N$AB, Frame #N$02 (control byte).
+  $D2DE,$01 Control data.
+  $D2DF,$01 Frame #N$02 terminator.
+N $D2E0 Sprite #N$AB, Frame #N$03 ($10 bytes).
+  $D2E0,$02 X/ Y position offsets.
+  $D2E2,$0E Pixel/ control data.
+  $D2F0,$01 Frame #N$03 terminator.
+N $D2F1 Sprite #N$AB, Frame #N$04 ($09 bytes).
+  $D2F1,$02 X/ Y position offsets.
+  $D2F3,$07 Pixel/ control data.
+  $D2FA,$01 Animation sequence terminator.
+  $D2FB,$01 Frame #N$01 terminator.
+N $D2FC Sprite #N$AC, Frame #N$02.
+  $D2FC,$02 X/ Y position offsets.
+  $D2FE,$08 Pixel data (2 character rows × 4 bytes each).
+  $D306,$01 Frame #N$02 terminator.
+N $D307 Sprite #N$AC, Frame #N$03 ($1A bytes).
+  $D307,$02 X/ Y position offsets.
+  $D309,$18 Pixel/ control data.
+  $D321,$01 Frame #N$03 terminator.
+  $D322,$01 Animation sequence terminator.
+N $D323 Sprite #N$AD, Frame #N$01.
+  $D323,$02 X/ Y position offsets.
+  $D325,$08 Pixel data (2 character rows × 4 bytes each).
+  $D32D,$01 Frame #N$01 terminator.
+N $D32E Sprite #N$AD, Frame #N$02 ($09 bytes).
+  $D32E,$02 X/ Y position offsets.
+  $D330,$07 Pixel/ control data.
+  $D337,$01 Animation sequence terminator.
+  $D338,$01 Frame #N$01 terminator.
+N $D339 Sprite #N$AE, Frame #N$02 (control byte).
+  $D339,$01 Control data.
+  $D33A,$01 Frame #N$02 terminator.
+N $D33B Sprite #N$AE, Frame #N$03 ($10 bytes).
+  $D33B,$02 X/ Y position offsets.
+  $D33D,$0E Pixel/ control data.
+  $D34B,$01 Frame #N$03 terminator.
+N $D34C Sprite #N$AE, Frame #N$04 ($09 bytes).
+  $D34C,$02 X/ Y position offsets.
+  $D34E,$07 Pixel/ control data.
+  $D355,$01 Animation sequence terminator.
+  $D356,$01 Frame #N$01 terminator.
+N $D357 Sprite #N$AF, Frame #N$02 (control byte).
+  $D357,$01 Control data.
+  $D358,$01 Frame #N$02 terminator.
+N $D359 Sprite #N$AF, Frame #N$03 ($10 bytes).
+  $D359,$02 X/ Y position offsets.
+  $D35B,$0E Pixel/ control data.
+  $D369,$01 Frame #N$03 terminator.
+N $D36A Sprite #N$AF, Frame #N$04 ($1A bytes).
+  $D36A,$02 X/ Y position offsets.
+  $D36C,$18 Pixel/ control data.
+  $D384,$01 Frame #N$04 terminator.
+  $D385,$01 Animation sequence terminator.
+N $D386 Sprite #N$B0, Frame #N$01.
+  $D386,$02 X/ Y position offsets.
+  $D388,$08 Pixel data (2 character rows × 4 bytes each).
+  $D390,$01 Frame #N$01 terminator.
+N $D391 Sprite #N$B0, Frame #N$02 ($09 bytes).
+  $D391,$02 X/ Y position offsets.
+  $D393,$07 Pixel/ control data.
+  $D39A,$01 Animation sequence terminator.
+  $D39B,$01 Frame #N$01 terminator.
+N $D39C Sprite #N$B1, Frame #N$02 (control byte).
+  $D39C,$01 Control data.
+  $D39D,$01 Frame #N$02 terminator.
+N $D39E Sprite #N$B1, Frame #N$03 ($10 bytes).
+  $D39E,$02 X/ Y position offsets.
+  $D3A0,$0E Pixel/ control data.
+  $D3AE,$01 Frame #N$03 terminator.
+N $D3AF Sprite #N$B1, Frame #N$04 ($09 bytes).
+  $D3AF,$02 X/ Y position offsets.
+  $D3B1,$07 Pixel/ control data.
+  $D3B8,$01 Animation sequence terminator.
+  $D3B9,$01 Frame #N$01 terminator.
+N $D3BA Sprite #N$B2, Frame #N$02.
+  $D3BA,$02 X/ Y position offsets.
+  $D3BC,$08 Pixel data (2 character rows × 4 bytes each).
+  $D3C4,$01 Frame #N$02 terminator.
+N $D3C5 Sprite #N$B2, Frame #N$03.
+  $D3C5,$02 X/ Y position offsets.
+  $D3C7,$08 Pixel data (2 character rows × 4 bytes each).
+  $D3CF,$01 Frame #N$03 terminator.
+N $D3D0 Sprite #N$B2, Frame #N$04 (position only).
+  $D3D0,$02 X/ Y position offsets.
+  $D3D2,$01 Animation sequence terminator.
+N $D3D3 Sprite #N$B3, Frame #N$01 ($07 bytes).
+  $D3D3,$02 X/ Y position offsets.
+  $D3D5,$05 Pixel/ control data.
+  $D3DA,$01 Frame #N$01 terminator.
+  $D3DB,$01 Animation sequence terminator.
+N $D3DC Sprite #N$B4, Frame #N$01 ($12 bytes).
+  $D3DC,$02 X/ Y position offsets.
+  $D3DE,$10 Pixel/ control data.
+  $D3EE,$01 Frame #N$01 terminator.
+N $D3EF Sprite #N$B4, Frame #N$02 (control byte).
+  $D3EF,$01 Control data.
+  $D3F0,$01 Frame #N$02 terminator.
+N $D3F1 Sprite #N$B4, Frame #N$03 ($18 bytes).
+  $D3F1,$02 X/ Y position offsets.
+  $D3F3,$16 Pixel/ control data.
+  $D409,$01 Frame #N$03 terminator.
+N $D40A Sprite #N$B4, Frame #N$04 ($1A bytes).
+  $D40A,$02 X/ Y position offsets.
+  $D40C,$18 Pixel/ control data.
+  $D424,$01 Frame #N$04 terminator.
+  $D425,$01 Animation sequence terminator.
+N $D426 Sprite #N$B5, Frame #N$01.
+  $D426,$02 X/ Y position offsets.
+  $D428,$08 Pixel data (2 character rows × 4 bytes each).
+  $D430,$01 Frame #N$01 terminator.
+N $D431 Sprite #N$B5, Frame #N$02 ($1A bytes).
+  $D431,$02 X/ Y position offsets.
+  $D433,$18 Pixel/ control data.
+  $D44B,$01 Frame #N$02 terminator.
+N $D44C Sprite #N$B5, Frame #N$03 ($1A bytes).
+  $D44C,$02 X/ Y position offsets.
+  $D44E,$18 Pixel/ control data.
+  $D466,$01 Frame #N$03 terminator.
+N $D467 Sprite #N$B5, Frame #N$04 (control byte).
+  $D467,$01 Control data.
+  $D468,$01 Frame #N$04 terminator.
+N $D469 Sprite #N$B5, Frame #N$05 (position only).
+  $D469,$02 X/ Y position offsets.
+  $D46B,$01 Animation sequence terminator.
+  $D46C,$01 Animation sequence terminator.
+  $D46D,$01 Animation sequence terminator.
+N $D46E Sprite #N$B8, Frame #N$01 ($0B bytes).
+  $D46E,$02 X/ Y position offsets.
+  $D470,$09 Pixel/ control data.
+  $D479,$01 Frame #N$01 terminator.
+  $D47A,$01 Animation sequence terminator.
+N $D47B Sprite #N$B9, Frame #N$01 (control byte).
+  $D47B,$01 Control data.
+  $D47C,$01 Frame #N$01 terminator.
+N $D47D Sprite #N$B9, Frame #N$02 ($06 bytes).
+  $D47D,$02 X/ Y position offsets.
+  $D47F,$04 Pixel/ control data.
+  $D483,$01 Animation sequence terminator.
+N $D484 Sprite #N$BA, Frame #N$01 ($09 bytes).
+  $D484,$02 X/ Y position offsets.
+  $D486,$07 Pixel/ control data.
+  $D48D,$01 Frame #N$01 terminator.
+N $D48E Sprite #N$BA, Frame #N$02 ($0B bytes).
+  $D48E,$02 X/ Y position offsets.
+  $D490,$09 Pixel/ control data.
+  $D499,$01 Animation sequence terminator.
+  $D49A,$01 Animation sequence terminator.
+N $D49B Sprite #N$BC, Frame #N$01 ($0D bytes).
+  $D49B,$02 X/ Y position offsets.
+  $D49D,$0B Pixel/ control data.
+  $D4A8,$01 Frame #N$01 terminator.
+N $D4A9 Sprite #N$BC, Frame #N$02 ($06 bytes).
+  $D4A9,$02 X/ Y position offsets.
+  $D4AB,$04 Pixel/ control data.
+  $D4AF,$01 Animation sequence terminator.
+  $D4B0,$01 Animation sequence terminator.
+  $D4B1,$01 Animation sequence terminator.
+N $D4B2 Sprite #N$BF, Frame #N$01 (position only).
+  $D4B2,$02 X/ Y position offsets.
+  $D4B4,$01 Animation sequence terminator.
+  $D4B5,$01 Animation sequence terminator.
+N $D4B6 Sprite #N$C1, Frame #N$01 ($0D bytes).
+  $D4B6,$02 X/ Y position offsets.
+  $D4B8,$0B Pixel/ control data.
+  $D4C3,$01 Frame #N$01 terminator.
+  $D4C4,$01 Animation sequence terminator.
+N $D4C5 Sprite #N$C2, Frame #N$01.
+  $D4C5,$02 X/ Y position offsets.
+  $D4C7,$08 Pixel data (2 character rows × 4 bytes each).
+  $D4CF,$01 Frame #N$01 terminator.
+N $D4D0 Sprite #N$C2, Frame #N$02 ($09 bytes).
+  $D4D0,$02 X/ Y position offsets.
+  $D4D2,$07 Pixel/ control data.
+  $D4D9,$01 Animation sequence terminator.
+  $D4DA,$01 Frame #N$01 terminator.
+N $D4DB Sprite #N$C3, Frame #N$02 (control byte).
+  $D4DB,$01 Control data.
+  $D4DC,$01 Frame #N$02 terminator.
+N $D4DD Sprite #N$C3, Frame #N$03 ($10 bytes).
+  $D4DD,$02 X/ Y position offsets.
+  $D4DF,$0E Pixel/ control data.
+  $D4ED,$01 Frame #N$03 terminator.
+N $D4EE Sprite #N$C3, Frame #N$04 ($11 bytes).
+  $D4EE,$02 X/ Y position offsets.
+  $D4F0,$0F Pixel/ control data.
+  $D4FF,$01 Animation sequence terminator.
+N $D500 Sprite #N$C4, Frame #N$01 ($07 bytes).
+  $D500,$02 X/ Y position offsets.
+  $D502,$05 Pixel/ control data.
+  $D507,$01 Animation sequence terminator.
+  $D508,$01 Frame #N$01 terminator.
+N $D509 Sprite #N$C5, Frame #N$02 ($1A bytes).
+  $D509,$02 X/ Y position offsets.
+  $D50B,$18 Pixel/ control data.
+  $D523,$01 Frame #N$02 terminator.
+  $D524,$01 Animation sequence terminator.
+N $D525 Sprite #N$C6, Frame #N$01.
+  $D525,$02 X/ Y position offsets.
+  $D527,$08 Pixel data (2 character rows × 4 bytes each).
+  $D52F,$01 Frame #N$01 terminator.
+N $D530 Sprite #N$C6, Frame #N$02 ($09 bytes).
+  $D530,$02 X/ Y position offsets.
+  $D532,$07 Pixel/ control data.
+  $D539,$01 Animation sequence terminator.
+  $D53A,$01 Frame #N$01 terminator.
+N $D53B Sprite #N$C7, Frame #N$02 ($1A bytes).
+  $D53B,$02 X/ Y position offsets.
+  $D53D,$18 Pixel/ control data.
+  $D555,$01 Frame #N$02 terminator.
+N $D556 Sprite #N$C7, Frame #N$03 ($19 bytes).
+  $D556,$02 X/ Y position offsets.
+  $D558,$17 Pixel/ control data.
+  $D56F,$01 Animation sequence terminator.
+  $D570,$01 Frame #N$01 terminator.
+N $D571 Sprite #N$C8, Frame #N$02 (control byte).
+  $D571,$01 Control data.
+  $D572,$01 Frame #N$02 terminator.
+N $D573 Sprite #N$C8, Frame #N$03 (control byte).
+  $D573,$01 Control data.
+  $D574,$01 Animation sequence terminator.
+  $D575,$01 Animation sequence terminator.
+N $D576 Sprite #N$CA, Frame #N$01 ($08 bytes).
+  $D576,$02 X/ Y position offsets.
+  $D578,$06 Pixel/ control data.
+  $D57E,$01 Animation sequence terminator.
+N $D57F Sprite #N$CB, Frame #N$01 ($04 bytes).
+  $D57F,$02 X/ Y position offsets.
+  $D581,$02 Pixel/ control data.
+  $D583,$01 Frame #N$01 terminator.
+  $D584,$01 Animation sequence terminator.
+N $D585 Sprite #N$CC, Frame #N$01.
+  $D585,$02 X/ Y position offsets.
+  $D587,$08 Pixel data (2 character rows × 4 bytes each).
+  $D58F,$01 Frame #N$01 terminator.
+N $D590 Sprite #N$CC, Frame #N$02 ($09 bytes).
+  $D590,$02 X/ Y position offsets.
+  $D592,$07 Pixel/ control data.
+  $D599,$01 Animation sequence terminator.
+  $D59A,$01 Frame #N$01 terminator.
+N $D59B Sprite #N$CD, Frame #N$02 ($1A bytes).
+  $D59B,$02 X/ Y position offsets.
+  $D59D,$18 Pixel/ control data.
+  $D5B5,$01 Frame #N$02 terminator.
+N $D5B6 Sprite #N$CD, Frame #N$03 (control byte).
+  $D5B6,$01 Control data.
+  $D5B7,$01 Frame #N$03 terminator.
+N $D5B8 Sprite #N$CD, Frame #N$04 ($0F bytes).
+  $D5B8,$02 X/ Y position offsets.
+  $D5BA,$0D Pixel/ control data.
+  $D5C7,$01 Animation sequence terminator.
+  $D5C8,$01 Frame #N$01 terminator.
+  $D5C9,$01 Animation sequence terminator.
+N $D5CA Sprite #N$CF, Frame #N$01 (control byte).
+  $D5CA,$01 Control data.
+  $D5CB,$01 Frame #N$01 terminator.
+N $D5CC Sprite #N$CF, Frame #N$02 ($10 bytes).
+  $D5CC,$02 X/ Y position offsets.
+  $D5CE,$0E Pixel/ control data.
+  $D5DC,$01 Frame #N$02 terminator.
+N $D5DD Sprite #N$CF, Frame #N$03 ($1A bytes).
+  $D5DD,$02 X/ Y position offsets.
+  $D5DF,$18 Pixel/ control data.
+  $D5F7,$01 Frame #N$03 terminator.
+N $D5F8 Sprite #N$CF, Frame #N$04 (control byte).
+  $D5F8,$01 Control data.
+  $D5F9,$01 Frame #N$04 terminator.
+  $D5FA,$01 Animation sequence terminator.
+  $D5FB,$01 Animation sequence terminator.
+  $D5FC,$01 Animation sequence terminator.
+N $D5FD Sprite #N$D2, Frame #N$01 ($0D bytes).
+  $D5FD,$02 X/ Y position offsets.
+  $D5FF,$0B Pixel/ control data.
+  $D60A,$01 Frame #N$01 terminator.
+N $D60B Sprite #N$D2, Frame #N$02 (position only).
+  $D60B,$02 X/ Y position offsets.
+  $D60D,$01 Animation sequence terminator.
+  $D60E,$01 Animation sequence terminator.
+  $D60F,$01 Animation sequence terminator.
+N $D610 Sprite #N$D5, Frame #N$01 ($03 bytes).
+  $D610,$02 X/ Y position offsets.
+  $D612,$01 Pixel/ control data.
+  $D613,$01 Animation sequence terminator.
+N $D614 Sprite #N$D6, Frame #N$01 (control byte).
+  $D614,$01 Control data.
+  $D615,$01 Frame #N$01 terminator.
+  $D616,$01 Animation sequence terminator.
+N $D617 Sprite #N$D7, Frame #N$01 (control byte).
+  $D617,$01 Control data.
+  $D618,$01 Frame #N$01 terminator.
+N $D619 Sprite #N$D7, Frame #N$02 ($10 bytes).
+  $D619,$02 X/ Y position offsets.
+  $D61B,$0E Pixel/ control data.
+  $D629,$01 Frame #N$02 terminator.
+N $D62A Sprite #N$D7, Frame #N$03 (control byte).
+  $D62A,$01 Control data.
+  $D62B,$01 Frame #N$03 terminator.
+N $D62C Sprite #N$D7, Frame #N$04 ($10 bytes).
+  $D62C,$02 X/ Y position offsets.
+  $D62E,$0E Pixel/ control data.
+  $D63C,$01 Frame #N$04 terminator.
+  $D63D,$01 Animation sequence terminator.
+N $D63E Sprite #N$D8, Frame #N$01 (control byte).
+  $D63E,$01 Control data.
+  $D63F,$01 Frame #N$01 terminator.
+N $D640 Sprite #N$D8, Frame #N$02 ($10 bytes).
+  $D640,$02 X/ Y position offsets.
+  $D642,$0E Pixel/ control data.
+  $D650,$01 Frame #N$02 terminator.
+  $D651,$01 Animation sequence terminator.
+N $D652 Sprite #N$D9, Frame #N$01 (control byte).
+  $D652,$01 Control data.
+  $D653,$01 Frame #N$01 terminator.
+N $D654 Sprite #N$D9, Frame #N$02 ($10 bytes).
+  $D654,$02 X/ Y position offsets.
+  $D656,$0E Pixel/ control data.
+  $D664,$01 Frame #N$02 terminator.
+N $D665 Sprite #N$D9, Frame #N$03 (control byte).
+  $D665,$01 Control data.
+  $D666,$01 Frame #N$03 terminator.
+N $D667 Sprite #N$D9, Frame #N$04 (control byte).
+  $D667,$01 Control data.
+  $D668,$01 Animation sequence terminator.
+N $D669 Sprite #N$DA, Frame #N$01 ($0E bytes).
+  $D669,$02 X/ Y position offsets.
+  $D66B,$0C Pixel/ control data.
+  $D677,$01 Frame #N$01 terminator.
+  $D678,$01 Animation sequence terminator.
+N $D679 Sprite #N$DB, Frame #N$01 (control byte).
+  $D679,$01 Control data.
+  $D67A,$01 Frame #N$01 terminator.
+N $D67B Sprite #N$DB, Frame #N$02 ($10 bytes).
+  $D67B,$02 X/ Y position offsets.
+  $D67D,$0E Pixel/ control data.
+  $D68B,$01 Frame #N$02 terminator.
+N $D68C Sprite #N$DB, Frame #N$03 (control byte).
+  $D68C,$01 Control data.
+  $D68D,$01 Frame #N$03 terminator.
+N $D68E Sprite #N$DB, Frame #N$04 ($05 bytes).
+  $D68E,$02 X/ Y position offsets.
+  $D690,$03 Pixel/ control data.
+  $D693,$01 Animation sequence terminator.
+N $D694 Sprite #N$DC, Frame #N$01.
+  $D694,$02 X/ Y position offsets.
+  $D696,$08 Pixel data (2 character rows × 4 bytes each).
+  $D69E,$01 Frame #N$01 terminator.
+  $D69F,$01 Animation sequence terminator.
+N $D6A0 Sprite #N$DD, Frame #N$01 (control byte).
+  $D6A0,$01 Control data.
+  $D6A1,$01 Frame #N$01 terminator.
+N $D6A2 Sprite #N$DD, Frame #N$02 ($08 bytes).
+  $D6A2,$02 X/ Y position offsets.
+  $D6A4,$06 Pixel/ control data.
+  $D6AA,$01 Frame #N$02 terminator.
+N $D6AB Sprite #N$DD, Frame #N$03 ($12 bytes).
+  $D6AB,$02 X/ Y position offsets.
+  $D6AD,$10 Pixel/ control data.
+  $D6BD,$01 Frame #N$03 terminator.
+N $D6BE Sprite #N$DD, Frame #N$04 (control byte).
+  $D6BE,$01 Control data.
+  $D6BF,$01 Frame #N$04 terminator.
+N $D6C0 Sprite #N$DD, Frame #N$05 ($10 bytes).
+  $D6C0,$02 X/ Y position offsets.
+  $D6C2,$0E Pixel/ control data.
+  $D6D0,$01 Frame #N$05 terminator.
+  $D6D1,$01 Animation sequence terminator.
+N $D6D2 Sprite #N$DE, Frame #N$01.
+  $D6D2,$02 X/ Y position offsets.
+  $D6D4,$08 Pixel data (2 character rows × 4 bytes each).
+  $D6DC,$01 Frame #N$01 terminator.
+N $D6DD Sprite #N$DE, Frame #N$02 (control byte).
+  $D6DD,$01 Control data.
+  $D6DE,$01 Frame #N$02 terminator.
+N $D6DF Sprite #N$DE, Frame #N$03 ($10 bytes).
+  $D6DF,$02 X/ Y position offsets.
+  $D6E1,$0E Pixel/ control data.
+  $D6EF,$01 Frame #N$03 terminator.
+N $D6F0 Sprite #N$DE, Frame #N$04 (control byte).
+  $D6F0,$01 Control data.
+  $D6F1,$01 Frame #N$04 terminator.
+N $D6F2 Sprite #N$DE, Frame #N$05 ($10 bytes).
+  $D6F2,$02 X/ Y position offsets.
+  $D6F4,$0E Pixel/ control data.
+  $D702,$01 Frame #N$05 terminator.
+  $D703,$01 Animation sequence terminator.
+N $D704 Sprite #N$DF, Frame #N$01.
+  $D704,$02 X/ Y position offsets.
+  $D706,$08 Pixel data (2 character rows × 4 bytes each).
+  $D70E,$01 Frame #N$01 terminator.
+N $D70F Sprite #N$DF, Frame #N$02.
+  $D70F,$02 X/ Y position offsets.
+  $D711,$08 Pixel data (2 character rows × 4 bytes each).
+  $D719,$01 Frame #N$02 terminator.
+N $D71A Sprite #N$DF, Frame #N$03 (control byte).
+  $D71A,$01 Control data.
+  $D71B,$01 Frame #N$03 terminator.
+N $D71C Sprite #N$DF, Frame #N$04 ($10 bytes).
+  $D71C,$02 X/ Y position offsets.
+  $D71E,$0E Pixel/ control data.
+  $D72C,$01 Frame #N$04 terminator.
+N $D72D Sprite #N$DF, Frame #N$05 (control byte).
+  $D72D,$01 Control data.
+  $D72E,$01 Frame #N$05 terminator.
+N $D72F Sprite #N$DF, Frame #N$06 ($10 bytes).
+  $D72F,$02 X/ Y position offsets.
+  $D731,$0E Pixel/ control data.
+  $D73F,$01 Frame #N$06 terminator.
+  $D740,$01 Animation sequence terminator.
+  $D741,$01 Frame #N$01 terminator.
+N $D742 Sprite #N$E0, Frame #N$02 ($09 bytes).
+  $D742,$02 X/ Y position offsets.
+  $D744,$07 Pixel/ control data.
+  $D74B,$01 Frame #N$02 terminator.
+N $D74C Sprite #N$E0, Frame #N$03 (control byte).
+  $D74C,$01 Control data.
+  $D74D,$01 Frame #N$03 terminator.
+N $D74E Sprite #N$E0, Frame #N$04 ($10 bytes).
+  $D74E,$02 X/ Y position offsets.
+  $D750,$0E Pixel/ control data.
+  $D75E,$01 Frame #N$04 terminator.
+  $D75F,$01 Animation sequence terminator.
+N $D760 Sprite #N$E1, Frame #N$01 (control byte).
+  $D760,$01 Control data.
+  $D761,$01 Frame #N$01 terminator.
+N $D762 Sprite #N$E1, Frame #N$02 ($10 bytes).
+  $D762,$02 X/ Y position offsets.
+  $D764,$0E Pixel/ control data.
+  $D772,$01 Frame #N$02 terminator.
+N $D773 Sprite #N$E1, Frame #N$03 (control byte).
+  $D773,$01 Control data.
+  $D774,$01 Frame #N$03 terminator.
+N $D775 Sprite #N$E1, Frame #N$04 ($08 bytes).
+  $D775,$02 X/ Y position offsets.
+  $D777,$06 Pixel/ control data.
+  $D77D,$01 Animation sequence terminator.
+N $D77E Sprite #N$E2, Frame #N$01 (control byte).
+  $D77E,$01 Control data.
+  $D77F,$01 Animation sequence terminator.
+N $D780 Sprite #N$E3, Frame #N$01 ($05 bytes).
+  $D780,$02 X/ Y position offsets.
+  $D782,$03 Pixel/ control data.
+  $D785,$01 Frame #N$01 terminator.
+  $D786,$01 Animation sequence terminator.
+  $D787,$01 Frame #N$01 terminator.
+N $D788 Sprite #N$E4, Frame #N$02 ($09 bytes).
+  $D788,$02 X/ Y position offsets.
+  $D78A,$07 Pixel/ control data.
+  $D791,$01 Frame #N$02 terminator.
+N $D792 Sprite #N$E4, Frame #N$03 (control byte).
+  $D792,$01 Control data.
+  $D793,$01 Frame #N$03 terminator.
+N $D794 Sprite #N$E4, Frame #N$04 ($10 bytes).
+  $D794,$02 X/ Y position offsets.
+  $D796,$0E Pixel/ control data.
+  $D7A4,$01 Frame #N$04 terminator.
+  $D7A5,$01 Animation sequence terminator.
+N $D7A6 Sprite #N$E5, Frame #N$01 (control byte).
+  $D7A6,$01 Control data.
+  $D7A7,$01 Frame #N$01 terminator.
+N $D7A8 Sprite #N$E5, Frame #N$02 ($10 bytes).
+  $D7A8,$02 X/ Y position offsets.
+  $D7AA,$0E Pixel/ control data.
+  $D7B8,$01 Frame #N$02 terminator.
+N $D7B9 Sprite #N$E5, Frame #N$03 (control byte).
+  $D7B9,$01 Control data.
+  $D7BA,$01 Frame #N$03 terminator.
+N $D7BB Sprite #N$E5, Frame #N$04 ($04 bytes).
+  $D7BB,$02 X/ Y position offsets.
+  $D7BD,$02 Pixel/ control data.
+  $D7BF,$01 Animation sequence terminator.
+N $D7C0 Sprite #N$E6, Frame #N$01 (control byte).
+  $D7C0,$01 Control data.
+  $D7C1,$01 Animation sequence terminator.
+N $D7C2 Sprite #N$E7, Frame #N$01 ($09 bytes).
+  $D7C2,$02 X/ Y position offsets.
+  $D7C4,$07 Pixel/ control data.
+  $D7CB,$01 Frame #N$01 terminator.
+  $D7CC,$01 Animation sequence terminator.
+N $D7CD Sprite #N$E8, Frame #N$01.
+  $D7CD,$02 X/ Y position offsets.
+  $D7CF,$08 Pixel data (2 character rows × 4 bytes each).
+  $D7D7,$01 Frame #N$01 terminator.
+N $D7D8 Sprite #N$E8, Frame #N$02 ($04 bytes).
+  $D7D8,$02 X/ Y position offsets.
+  $D7DA,$02 Pixel/ control data.
+  $D7DC,$01 Animation sequence terminator.
+N $D7DD Sprite #N$E9, Frame #N$01 ($03 bytes).
+  $D7DD,$02 X/ Y position offsets.
+  $D7DF,$01 Pixel/ control data.
+  $D7E0,$01 Animation sequence terminator.
+N $D7E1 Sprite #N$EA, Frame #N$01 (control byte).
+  $D7E1,$01 Control data.
+  $D7E2,$01 Frame #N$01 terminator.
+  $D7E3,$01 Animation sequence terminator.
+N $D7E4 Sprite #N$EB, Frame #N$01.
+  $D7E4,$02 X/ Y position offsets.
+  $D7E6,$08 Pixel data (2 character rows × 4 bytes each).
+  $D7EE,$01 Frame #N$01 terminator.
+N $D7EF Sprite #N$EB, Frame #N$02.
+  $D7EF,$02 X/ Y position offsets.
+  $D7F1,$08 Pixel data (2 character rows × 4 bytes each).
+  $D7F9,$01 Frame #N$02 terminator.
+  $D7FA,$01 Animation sequence terminator.
+N $D7FB Sprite #N$EC, Frame #N$01 ($12 bytes).
+  $D7FB,$02 X/ Y position offsets.
+  $D7FD,$10 Pixel/ control data.
+  $D80D,$01 Frame #N$01 terminator.
+N $D80E Sprite #N$EC, Frame #N$02 (control byte).
+  $D80E,$01 Control data.
+  $D80F,$01 Frame #N$02 terminator.
+N $D810 Sprite #N$EC, Frame #N$03 ($07 bytes).
+  $D810,$02 X/ Y position offsets.
+  $D812,$05 Pixel/ control data.
+  $D817,$01 Animation sequence terminator.
+N $D818 Sprite #N$ED, Frame #N$01 (position only).
+  $D818,$02 X/ Y position offsets.
+  $D81A,$01 Animation sequence terminator.
+N $D81B Sprite #N$EE, Frame #N$01 ($05 bytes).
+  $D81B,$02 X/ Y position offsets.
+  $D81D,$03 Pixel/ control data.
+  $D820,$01 Frame #N$01 terminator.
+  $D821,$01 Animation sequence terminator.
+N $D822 Sprite #N$EF, Frame #N$01 ($12 bytes).
+  $D822,$02 X/ Y position offsets.
+  $D824,$10 Pixel/ control data.
+  $D834,$01 Frame #N$01 terminator.
+N $D835 Sprite #N$EF, Frame #N$02 (control byte).
+  $D835,$01 Control data.
+  $D836,$01 Frame #N$02 terminator.
+N $D837 Sprite #N$EF, Frame #N$03 ($10 bytes).
+  $D837,$02 X/ Y position offsets.
+  $D839,$0E Pixel/ control data.
+  $D847,$01 Frame #N$03 terminator.
+  $D848,$01 Animation sequence terminator.
+  $D849,$01 Frame #N$01 terminator.
+N $D84A Sprite #N$F0, Frame #N$02 ($09 bytes).
+  $D84A,$02 X/ Y position offsets.
+  $D84C,$07 Pixel/ control data.
+  $D853,$01 Frame #N$02 terminator.
+N $D854 Sprite #N$F0, Frame #N$03 (control byte).
+  $D854,$01 Control data.
+  $D855,$01 Frame #N$03 terminator.
+N $D856 Sprite #N$F0, Frame #N$04 ($0F bytes).
+  $D856,$02 X/ Y position offsets.
+  $D858,$0D Pixel/ control data.
+  $D865,$01 Frame #N$04 terminator.
+  $D866,$01 Frame #N$05 terminator.
+N $D867 Sprite #N$F0, Frame #N$06 (control byte).
+  $D867,$01 Control data.
+  $D868,$01 Frame #N$06 terminator.
+N $D869 Sprite #N$F0, Frame #N$07 ($04 bytes).
+  $D869,$02 X/ Y position offsets.
+  $D86B,$02 Pixel/ control data.
+  $D86D,$01 Animation sequence terminator.
+N $D86E Sprite #N$F1, Frame #N$01 ($0B bytes).
+  $D86E,$02 X/ Y position offsets.
+  $D870,$09 Pixel/ control data.
+  $D879,$01 Frame #N$01 terminator.
+  $D87A,$01 Animation sequence terminator.
+N $D87B Sprite #N$F2, Frame #N$01 (control byte).
+  $D87B,$01 Control data.
+  $D87C,$01 Frame #N$01 terminator.
+N $D87D Sprite #N$F2, Frame #N$02 ($10 bytes).
+  $D87D,$02 X/ Y position offsets.
+  $D87F,$0E Pixel/ control data.
+  $D88D,$01 Frame #N$02 terminator.
+N $D88E Sprite #N$F2, Frame #N$03 (control byte).
+  $D88E,$01 Control data.
+  $D88F,$01 Frame #N$03 terminator.
+N $D890 Sprite #N$F2, Frame #N$04 ($0F bytes).
+  $D890,$02 X/ Y position offsets.
+  $D892,$0D Pixel/ control data.
+  $D89F,$01 Frame #N$04 terminator.
+  $D8A0,$01 Frame #N$05 terminator.
+N $D8A1 Sprite #N$F2, Frame #N$06 (control byte).
+  $D8A1,$01 Control data.
+  $D8A2,$01 Frame #N$06 terminator.
+N $D8A3 Sprite #N$F2, Frame #N$07 ($07 bytes).
+  $D8A3,$02 X/ Y position offsets.
+  $D8A5,$05 Pixel/ control data.
+  $D8AA,$01 Animation sequence terminator.
+N $D8AB Sprite #N$F3, Frame #N$01 ($08 bytes).
+  $D8AB,$02 X/ Y position offsets.
+  $D8AD,$06 Pixel/ control data.
+  $D8B3,$01 Frame #N$01 terminator.
+  $D8B4,$01 Animation sequence terminator.
+  $D8B5,$01 Frame #N$01 terminator.
+  $D8B6,$01 Frame #N$02 terminator.
+N $D8B7 Sprite #N$F4, Frame #N$03 ($10 bytes).
+  $D8B7,$02 X/ Y position offsets.
+  $D8B9,$0E Pixel/ control data.
+  $D8C7,$01 Frame #N$03 terminator.
+N $D8C8 Sprite #N$F4, Frame #N$04 (control byte).
+  $D8C8,$01 Control data.
+  $D8C9,$01 Frame #N$04 terminator.
+N $D8CA Sprite #N$F4, Frame #N$05 ($0B bytes).
+  $D8CA,$02 X/ Y position offsets.
+  $D8CC,$09 Pixel/ control data.
+  $D8D5,$01 Frame #N$05 terminator.
+N $D8D6 Sprite #N$F4, Frame #N$06 ($04 bytes).
+  $D8D6,$02 X/ Y position offsets.
+  $D8D8,$02 Pixel/ control data.
+  $D8DA,$01 Frame #N$06 terminator.
+N $D8DB Sprite #N$F4, Frame #N$07 (control byte).
+  $D8DB,$01 Control data.
+  $D8DC,$01 Frame #N$07 terminator.
+  $D8DD,$01 Animation sequence terminator.
+N $D8DE Sprite #N$F5, Frame #N$01 ($0F bytes).
+  $D8DE,$02 X/ Y position offsets.
+  $D8E0,$0D Pixel/ control data.
+  $D8ED,$01 Frame #N$01 terminator.
+  $D8EE,$01 Animation sequence terminator.
+N $D8EF Sprite #N$F6, Frame #N$01 (control byte).
+  $D8EF,$01 Control data.
+  $D8F0,$01 Frame #N$01 terminator.
+N $D8F1 Sprite #N$F6, Frame #N$02 ($10 bytes).
+  $D8F1,$02 X/ Y position offsets.
+  $D8F3,$0E Pixel/ control data.
+  $D901,$01 Frame #N$02 terminator.
+N $D902 Sprite #N$F6, Frame #N$03 (control byte).
+  $D902,$01 Control data.
+  $D903,$01 Frame #N$03 terminator.
+N $D904 Sprite #N$F6, Frame #N$04 ($0B bytes).
+  $D904,$02 X/ Y position offsets.
+  $D906,$09 Pixel/ control data.
+  $D90F,$01 Frame #N$04 terminator.
+N $D910 Sprite #N$F6, Frame #N$05 ($04 bytes).
+  $D910,$02 X/ Y position offsets.
+  $D912,$02 Pixel/ control data.
+  $D914,$01 Frame #N$05 terminator.
+N $D915 Sprite #N$F6, Frame #N$06 (control byte).
+  $D915,$01 Control data.
+  $D916,$01 Frame #N$06 terminator.
+N $D917 Sprite #N$F6, Frame #N$07 ($03 bytes).
+  $D917,$02 X/ Y position offsets.
+  $D919,$01 Pixel/ control data.
+  $D91A,$01 Animation sequence terminator.
+N $D91B Sprite #N$F7, Frame #N$01 ($0C bytes).
+  $D91B,$02 X/ Y position offsets.
+  $D91D,$0A Pixel/ control data.
+  $D927,$01 Frame #N$01 terminator.
+  $D928,$01 Animation sequence terminator.
+N $D929 Sprite #N$F8, Frame #N$01 (control byte).
+  $D929,$01 Control data.
+  $D92A,$01 Frame #N$01 terminator.
+  $D92B,$01 Animation sequence terminator.
+N $D92C Sprite #N$F9, Frame #N$01 ($0C bytes).
+  $D92C,$02 X/ Y position offsets.
+  $D92E,$0A Pixel/ control data.
+  $D938,$01 Animation sequence terminator.
+  $D939,$01 Animation sequence terminator.
+  $D93A,$01 Animation sequence terminator.
+  $D93B,$01 Frame #N$01 terminator.
+N $D93C Sprite #N$FC, Frame #N$02 (control byte).
+  $D93C,$01 Control data.
+  $D93D,$01 Frame #N$02 terminator.
+N $D93E Sprite #N$FC, Frame #N$03 ($10 bytes).
+  $D93E,$02 X/ Y position offsets.
+  $D940,$0E Pixel/ control data.
+  $D94E,$01 Frame #N$03 terminator.
+  $D94F,$01 Animation sequence terminator.
+N $D950 Sprite #N$FD, Frame #N$01 (control byte).
+  $D950,$01 Control data.
+  $D951,$01 Frame #N$01 terminator.
+N $D952 Sprite #N$FD, Frame #N$02 ($10 bytes).
+  $D952,$02 X/ Y position offsets.
+  $D954,$0E Pixel/ control data.
+  $D962,$01 Frame #N$02 terminator.
+N $D963 Sprite #N$FD, Frame #N$03 (control byte).
+  $D963,$01 Control data.
+  $D964,$01 Frame #N$03 terminator.
+N $D965 Sprite #N$FD, Frame #N$04 ($03 bytes).
+  $D965,$02 X/ Y position offsets.
+  $D967,$01 Pixel/ control data.
+  $D968,$01 Frame #N$04 terminator.
+N $D969 Sprite #N$FD, Frame #N$05 ($08 bytes).
+  $D969,$02 X/ Y position offsets.
+  $D96B,$06 Pixel/ control data.
+  $D971,$01 Frame #N$05 terminator.
+N $D972 Sprite #N$FD, Frame #N$06 ($03 bytes).
+  $D972,$02 X/ Y position offsets.
+  $D974,$01 Pixel/ control data.
+  $D975,$01 Frame #N$06 terminator.
+  $D976,$01 Animation sequence terminator.
+N $D977 Sprite #N$FE, Frame #N$01 (control byte).
+  $D977,$01 Control data.
+  $D978,$01 Frame #N$01 terminator.
+N $D979 Sprite #N$FE, Frame #N$02.
+  $D979,$02 X/ Y position offsets.
+  $D97B,$08 Pixel data (2 character rows × 4 bytes each).
+  $D983,$01 Animation sequence terminator.
+N $D984 Sprite #N$FF, Frame #N$01 ($03 bytes).
+  $D984,$02 X/ Y position offsets.
+  $D986,$01 Pixel/ control data.
+  $D987,$01 Animation sequence terminator.
+N $D988 Sprite #N$100, Frame #N$01 (control byte).
+  $D988,$01 Control data.
+  $D989,$01 Frame #N$01 terminator.
+  $D98A,$01 Frame #N$02 terminator.
+N $D98B Sprite #N$100, Frame #N$03 ($19 bytes).
+  $D98B,$02 X/ Y position offsets.
+  $D98D,$17 Pixel/ control data.
+  $D9A4,$01 Frame #N$03 terminator.
+  $D9A5,$01 Frame #N$04 terminator.
+  $D9A6,$01 Frame #N$05 terminator.
+N $D9A7 Sprite #N$100, Frame #N$06 ($10 bytes).
+  $D9A7,$02 X/ Y position offsets.
+  $D9A9,$0E Pixel/ control data.
+  $D9B7,$01 Frame #N$06 terminator.
+  $D9B8,$01 Frame #N$07 terminator.
+  $D9B9,$01 Frame #N$08 terminator.
+N $D9BA Sprite #N$100, Frame #N$09 ($10 bytes).
+  $D9BA,$02 X/ Y position offsets.
+  $D9BC,$0E Pixel/ control data.
+  $D9CA,$01 Frame #N$09 terminator.
+  $D9CB,$01 Animation sequence terminator.
+N $D9CC Sprite #N$101, Frame #N$01 ($15 bytes).
+  $D9CC,$02 X/ Y position offsets.
+  $D9CE,$13 Pixel/ control data.
+  $D9E1,$01 Frame #N$01 terminator.
+N $D9E2 Sprite #N$101, Frame #N$02 ($04 bytes).
+  $D9E2,$02 X/ Y position offsets.
+  $D9E4,$02 Pixel/ control data.
+  $D9E6,$01 Frame #N$02 terminator.
+  $D9E7,$01 Frame #N$03 terminator.
+  $D9E8,$01 Frame #N$04 terminator.
+N $D9E9 Sprite #N$101, Frame #N$05 ($10 bytes).
+  $D9E9,$02 X/ Y position offsets.
+  $D9EB,$0E Pixel/ control data.
+  $D9F9,$01 Frame #N$05 terminator.
+  $D9FA,$01 Frame #N$06 terminator.
+  $D9FB,$01 Frame #N$07 terminator.
+N $D9FC Sprite #N$101, Frame #N$08 ($0F bytes).
+  $D9FC,$02 X/ Y position offsets.
+  $D9FE,$0D Pixel/ control data.
+  $DA0B,$01 Animation sequence terminator.
+  $DA0C,$01 Frame #N$01 terminator.
+  $DA0D,$01 Frame #N$02 terminator.
+  $DA0E,$01 Frame #N$03 terminator.
+N $DA0F Sprite #N$102, Frame #N$04 ($10 bytes).
+  $DA0F,$02 X/ Y position offsets.
+  $DA11,$0E Pixel/ control data.
+  $DA1F,$01 Frame #N$04 terminator.
+  $DA20,$01 Animation sequence terminator.
+  $DA21,$01 Frame #N$01 terminator.
+N $DA22 Sprite #N$103, Frame #N$02 ($19 bytes).
+  $DA22,$02 X/ Y position offsets.
+  $DA24,$17 Pixel/ control data.
+  $DA3B,$01 Frame #N$02 terminator.
+  $DA3C,$01 Frame #N$03 terminator.
+N $DA3D Sprite #N$103, Frame #N$04 ($19 bytes).
+  $DA3D,$02 X/ Y position offsets.
+  $DA3F,$17 Pixel/ control data.
+  $DA56,$01 Frame #N$04 terminator.
+  $DA57,$01 Frame #N$05 terminator.
+  $DA58,$01 Frame #N$06 terminator.
+N $DA59 Sprite #N$103, Frame #N$07 ($10 bytes).
+  $DA59,$02 X/ Y position offsets.
+  $DA5B,$0E Pixel/ control data.
+  $DA69,$01 Frame #N$07 terminator.
+  $DA6A,$01 Animation sequence terminator.
+  $DA6B,$01 Frame #N$01 terminator.
+N $DA6C Sprite #N$104, Frame #N$02 ($03 bytes).
+  $DA6C,$02 X/ Y position offsets.
+  $DA6E,$01 Pixel/ control data.
+  $DA6F,$01 Animation sequence terminator.
+N $DA70 Sprite #N$105, Frame #N$01 ($03 bytes).
+  $DA70,$02 X/ Y position offsets.
+  $DA72,$01 Pixel/ control data.
+  $DA73,$01 Animation sequence terminator.
+N $DA74 Sprite #N$106, Frame #N$01 ($03 bytes).
+  $DA74,$02 X/ Y position offsets.
+  $DA76,$01 Pixel/ control data.
+  $DA77,$01 Animation sequence terminator.
+  $DA78,$01 Animation sequence terminator.
+N $DA79 Sprite #N$108, Frame #N$01 ($0C bytes).
+  $DA79,$02 X/ Y position offsets.
+  $DA7B,$0A Pixel/ control data.
+  $DA85,$01 Frame #N$01 terminator.
+  $DA86,$01 Frame #N$02 terminator.
+N $DA87 Sprite #N$108, Frame #N$03 ($19 bytes).
+  $DA87,$02 X/ Y position offsets.
+  $DA89,$17 Pixel/ control data.
+  $DAA0,$01 Frame #N$03 terminator.
+  $DAA1,$01 Frame #N$04 terminator.
+  $DAA2,$01 Frame #N$05 terminator.
+N $DAA3 Sprite #N$108, Frame #N$06 ($10 bytes).
+  $DAA3,$02 X/ Y position offsets.
+  $DAA5,$0E Pixel/ control data.
+  $DAB3,$01 Frame #N$06 terminator.
+  $DAB4,$01 Animation sequence terminator.
+  $DAB5,$01 Frame #N$01 terminator.
+  $DAB6,$01 Frame #N$02 terminator.
+N $DAB7 Sprite #N$109, Frame #N$03 ($06 bytes).
+  $DAB7,$02 X/ Y position offsets.
+  $DAB9,$04 Pixel/ control data.
+  $DABD,$01 Animation sequence terminator.
+N $DABE Sprite #N$10A, Frame #N$01 ($09 bytes).
+  $DABE,$02 X/ Y position offsets.
+  $DAC0,$07 Pixel/ control data.
+  $DAC7,$01 Frame #N$01 terminator.
+  $DAC8,$01 Frame #N$02 terminator.
+N $DAC9 Sprite #N$10A, Frame #N$03 ($19 bytes).
+  $DAC9,$02 X/ Y position offsets.
+  $DACB,$17 Pixel/ control data.
+  $DAE2,$01 Frame #N$03 terminator.
+  $DAE3,$01 Frame #N$04 terminator.
+N $DAE4 Sprite #N$10A, Frame #N$05 ($19 bytes).
+  $DAE4,$02 X/ Y position offsets.
+  $DAE6,$17 Pixel/ control data.
+  $DAFD,$01 Frame #N$05 terminator.
+  $DAFE,$01 Frame #N$06 terminator.
+N $DAFF Sprite #N$10A, Frame #N$07 ($09 bytes).
+  $DAFF,$02 X/ Y position offsets.
+  $DB01,$07 Pixel/ control data.
+  $DB08,$01 Frame #N$07 terminator.
+  $DB09,$01 Animation sequence terminator.
+  $DB0A,$01 Frame #N$01 terminator.
+  $DB0B,$01 Frame #N$02 terminator.
+N $DB0C Sprite #N$10B, Frame #N$03 ($0F bytes).
+  $DB0C,$02 X/ Y position offsets.
+  $DB0E,$0D Pixel/ control data.
+  $DB1B,$01 Animation sequence terminator.
+  $DB1C,$01 Frame #N$01 terminator.
+  $DB1D,$01 Frame #N$02 terminator.
+  $DB1E,$01 Frame #N$03 terminator.
+N $DB1F Sprite #N$10C, Frame #N$04 ($05 bytes).
+  $DB1F,$02 X/ Y position offsets.
+  $DB21,$03 Pixel/ control data.
+  $DB24,$01 Animation sequence terminator.
+N $DB25 Sprite #N$10D, Frame #N$01.
+  $DB25,$02 X/ Y position offsets.
+  $DB27,$08 Pixel data (2 character rows × 4 bytes each).
+  $DB2F,$01 Frame #N$01 terminator.
+  $DB30,$01 Frame #N$02 terminator.
+  $DB31,$01 Frame #N$03 terminator.
+N $DB32 Sprite #N$10D, Frame #N$04 ($10 bytes).
+  $DB32,$02 X/ Y position offsets.
+  $DB34,$0E Pixel/ control data.
+  $DB42,$01 Frame #N$04 terminator.
+  $DB43,$01 Frame #N$05 terminator.
+N $DB44 Sprite #N$10D, Frame #N$06 ($09 bytes).
+  $DB44,$02 X/ Y position offsets.
+  $DB46,$07 Pixel/ control data.
+  $DB4D,$01 Frame #N$06 terminator.
+  $DB4E,$01 Animation sequence terminator.
+  $DB4F,$01 Frame #N$01 terminator.
+N $DB50 Sprite #N$10E, Frame #N$02 ($06 bytes).
+  $DB50,$02 X/ Y position offsets.
+  $DB52,$04 Pixel/ control data.
+  $DB56,$01 Animation sequence terminator.
+  $DB57,$01 Animation sequence terminator.
+N $DB58 Sprite #N$110, Frame #N$01 ($09 bytes).
+  $DB58,$02 X/ Y position offsets.
+  $DB5A,$07 Pixel/ control data.
+  $DB61,$01 Frame #N$01 terminator.
+  $DB62,$01 Frame #N$02 terminator.
+N $DB63 Sprite #N$110, Frame #N$03 ($19 bytes).
+  $DB63,$02 X/ Y position offsets.
+  $DB65,$17 Pixel/ control data.
+  $DB7C,$01 Frame #N$03 terminator.
+  $DB7D,$01 Frame #N$04 terminator.
+N $DB7E Sprite #N$110, Frame #N$05 ($19 bytes).
+  $DB7E,$02 X/ Y position offsets.
+  $DB80,$17 Pixel/ control data.
+  $DB97,$01 Frame #N$05 terminator.
+  $DB98,$01 Animation sequence terminator.
+  $DB99,$01 Frame #N$01 terminator.
+N $DB9A Sprite #N$111, Frame #N$02 ($11 bytes).
+  $DB9A,$02 X/ Y position offsets.
+  $DB9C,$0F Pixel/ control data.
+  $DBAB,$01 Frame #N$02 terminator.
+  $DBAC,$01 Frame #N$03 terminator.
+N $DBAD Sprite #N$111, Frame #N$04 ($03 bytes).
+  $DBAD,$02 X/ Y position offsets.
+  $DBAF,$01 Pixel/ control data.
+  $DBB0,$01 Animation sequence terminator.
+  $DBB1,$01 Animation sequence terminator.
+  $DBB2,$01 Animation sequence terminator.
+N $DBB3 Sprite #N$114, Frame #N$01 (control byte).
+  $DBB3,$01 Control data.
+  $DBB4,$01 Animation sequence terminator.
+N $DBB5 Sprite #N$115, Frame #N$01 ($11 bytes).
+  $DBB5,$02 X/ Y position offsets.
+  $DBB7,$0F Pixel/ control data.
+  $DBC6,$01 Frame #N$01 terminator.
+  $DBC7,$01 Frame #N$02 terminator.
+N $DBC8 Sprite #N$115, Frame #N$03 ($19 bytes).
+  $DBC8,$02 X/ Y position offsets.
+  $DBCA,$17 Pixel/ control data.
+  $DBE1,$01 Frame #N$03 terminator.
+  $DBE2,$01 Animation sequence terminator.
+  $DBE3,$01 Frame #N$01 terminator.
+N $DBE4 Sprite #N$116, Frame #N$02 ($11 bytes).
+  $DBE4,$02 X/ Y position offsets.
+  $DBE6,$0F Pixel/ control data.
+  $DBF5,$01 Frame #N$02 terminator.
+  $DBF6,$01 Frame #N$03 terminator.
+  $DBF7,$01 Frame #N$04 terminator.
+N $DBF8 Sprite #N$116, Frame #N$05 ($16 bytes).
+  $DBF8,$02 X/ Y position offsets.
+  $DBFA,$14 Pixel/ control data.
+  $DC0E,$01 Animation sequence terminator.
+N $DC0F Sprite #N$117, Frame #N$01 (control byte).
+  $DC0F,$01 Control data.
+  $DC10,$01 Frame #N$01 terminator.
+  $DC11,$01 Frame #N$02 terminator.
+N $DC12 Sprite #N$117, Frame #N$03 ($19 bytes).
+  $DC12,$02 X/ Y position offsets.
+  $DC14,$17 Pixel/ control data.
+  $DC2B,$01 Frame #N$03 terminator.
+  $DC2C,$01 Animation sequence terminator.
+  $DC2D,$01 Frame #N$01 terminator.
+N $DC2E Sprite #N$118, Frame #N$02 ($05 bytes).
+  $DC2E,$02 X/ Y position offsets.
+  $DC30,$03 Pixel/ control data.
+  $DC33,$01 Animation sequence terminator.
+N $DC34 Sprite #N$119, Frame #N$01 ($07 bytes).
+  $DC34,$02 X/ Y position offsets.
+  $DC36,$05 Pixel/ control data.
+  $DC3B,$01 Animation sequence terminator.
+N $DC3C Sprite #N$11A, Frame #N$01 ($0B bytes).
+  $DC3C,$02 X/ Y position offsets.
+  $DC3E,$09 Pixel/ control data.
+  $DC47,$01 Frame #N$01 terminator.
+  $DC48,$01 Frame #N$02 terminator.
+N $DC49 Sprite #N$11A, Frame #N$03 ($19 bytes).
+  $DC49,$02 X/ Y position offsets.
+  $DC4B,$17 Pixel/ control data.
+  $DC62,$01 Frame #N$03 terminator.
+  $DC63,$01 Frame #N$04 terminator.
+N $DC64 Sprite #N$11A, Frame #N$05 ($05 bytes).
+  $DC64,$02 X/ Y position offsets.
+  $DC66,$03 Pixel/ control data.
+  $DC69,$01 Animation sequence terminator.
+N $DC6A Sprite #N$11B, Frame #N$01 ($0B bytes).
+  $DC6A,$02 X/ Y position offsets.
+  $DC6C,$09 Pixel/ control data.
+  $DC75,$01 Frame #N$01 terminator.
+  $DC76,$01 Frame #N$02 terminator.
+  $DC77,$01 Frame #N$03 terminator.
+N $DC78 Sprite #N$11B, Frame #N$04 ($10 bytes).
+  $DC78,$02 X/ Y position offsets.
+  $DC7A,$0E Pixel/ control data.
+  $DC88,$01 Frame #N$04 terminator.
+  $DC89,$01 Animation sequence terminator.
+  $DC8A,$01 Frame #N$01 terminator.
+N $DC8B Sprite #N$11C, Frame #N$02 ($09 bytes).
+  $DC8B,$02 X/ Y position offsets.
+  $DC8D,$07 Pixel/ control data.
+  $DC94,$01 Frame #N$02 terminator.
+  $DC95,$01 Frame #N$03 terminator.
+  $DC96,$01 Frame #N$04 terminator.
+N $DC97 Sprite #N$11C, Frame #N$05 (position only).
+  $DC97,$02 X/ Y position offsets.
+  $DC99,$01 Animation sequence terminator.
+  $DC9A,$01 Animation sequence terminator.
+  $DC9B,$01 Animation sequence terminator.
+N $DC9C Sprite #N$11F, Frame #N$01 ($0B bytes).
+  $DC9C,$02 X/ Y position offsets.
+  $DC9E,$09 Pixel/ control data.
+  $DCA7,$01 Frame #N$01 terminator.
+  $DCA8,$01 Frame #N$02 terminator.
+  $DCA9,$01 Frame #N$03 terminator.
+N $DCAA Sprite #N$11F, Frame #N$04 ($10 bytes).
+  $DCAA,$02 X/ Y position offsets.
+  $DCAC,$0E Pixel/ control data.
+  $DCBA,$01 Frame #N$04 terminator.
+  $DCBB,$01 Frame #N$05 terminator.
+  $DCBC,$01 Frame #N$06 terminator.
+N $DCBD Sprite #N$11F, Frame #N$07 ($10 bytes).
+  $DCBD,$02 X/ Y position offsets.
+  $DCBF,$0E Pixel/ control data.
+  $DCCD,$01 Frame #N$07 terminator.
+  $DCCE,$01 Frame #N$08 terminator.
+  $DCCF,$01 Frame #N$09 terminator.
+N $DCD0 Sprite #N$11F, Frame #N$0A ($10 bytes).
+  $DCD0,$02 X/ Y position offsets.
+  $DCD2,$0E Pixel/ control data.
+  $DCE0,$01 Frame #N$0A terminator.
+  $DCE1,$01 Animation sequence terminator.
+  $DCE2,$01 Frame #N$01 terminator.
+N $DCE3 Sprite #N$120, Frame #N$02 ($0D bytes).
+  $DCE3,$02 X/ Y position offsets.
+  $DCE5,$0B Pixel/ control data.
+  $DCF0,$01 Animation sequence terminator.
+  $DCF1,$01 Animation sequence terminator.
+  $DCF2,$01 Animation sequence terminator.
+N $DCF3 Sprite #N$123, Frame #N$01 (control byte).
+  $DCF3,$01 Control data.
+  $DCF4,$01 Frame #N$01 terminator.
+  $DCF5,$01 Frame #N$02 terminator.
+  $DCF6,$01 Frame #N$03 terminator.
+N $DCF7 Sprite #N$123, Frame #N$04 ($18 bytes).
+  $DCF7,$02 X/ Y position offsets.
+  $DCF9,$16 Pixel/ control data.
+  $DD0F,$01 Frame #N$04 terminator.
+  $DD10,$01 Frame #N$05 terminator.
+  $DD11,$01 Frame #N$06 terminator.
+N $DD12 Sprite #N$123, Frame #N$07 ($10 bytes).
+  $DD12,$02 X/ Y position offsets.
+  $DD14,$0E Pixel/ control data.
+  $DD22,$01 Frame #N$07 terminator.
+  $DD23,$01 Animation sequence terminator.
+  $DD24,$01 Frame #N$01 terminator.
+N $DD25 Sprite #N$124, Frame #N$02 ($0D bytes).
+  $DD25,$02 X/ Y position offsets.
+  $DD27,$0B Pixel/ control data.
+  $DD32,$01 Animation sequence terminator.
+  $DD33,$01 Animation sequence terminator.
+  $DD34,$01 Animation sequence terminator.
+N $DD35 Sprite #N$127, Frame #N$01 (control byte).
+  $DD35,$01 Control data.
+  $DD36,$01 Frame #N$01 terminator.
+  $DD37,$01 Frame #N$02 terminator.
+  $DD38,$01 Frame #N$03 terminator.
+N $DD39 Sprite #N$127, Frame #N$04 ($18 bytes).
+  $DD39,$02 X/ Y position offsets.
+  $DD3B,$16 Pixel/ control data.
+  $DD51,$01 Frame #N$04 terminator.
+  $DD52,$01 Frame #N$05 terminator.
+N $DD53 Sprite #N$127, Frame #N$06 ($19 bytes).
+  $DD53,$02 X/ Y position offsets.
+  $DD55,$17 Pixel/ control data.
+  $DD6C,$01 Frame #N$06 terminator.
+  $DD6D,$01 Frame #N$07 terminator.
+N $DD6E Sprite #N$127, Frame #N$08 ($0B bytes).
+  $DD6E,$02 X/ Y position offsets.
+  $DD70,$09 Pixel/ control data.
+  $DD79,$01 Animation sequence terminator.
+N $DD7A Sprite #N$128, Frame #N$01 ($05 bytes).
+  $DD7A,$02 X/ Y position offsets.
+  $DD7C,$03 Pixel/ control data.
+  $DD7F,$01 Frame #N$01 terminator.
+  $DD80,$01 Animation sequence terminator.
+N $DD81 Sprite #N$129, Frame #N$01 (control byte).
+  $DD81,$01 Control data.
+  $DD82,$01 Frame #N$01 terminator.
+N $DD83 Sprite #N$129, Frame #N$02 (position only).
+  $DD83,$02 X/ Y position offsets.
+  $DD85,$01 Animation sequence terminator.
+N $DD86 Sprite #N$12A, Frame #N$01 ($05 bytes).
+  $DD86,$02 X/ Y position offsets.
+  $DD88,$03 Pixel/ control data.
+  $DD8B,$01 Frame #N$01 terminator.
+  $DD8C,$01 Frame #N$02 terminator.
+N $DD8D Sprite #N$12A, Frame #N$03 ($11 bytes).
+  $DD8D,$02 X/ Y position offsets.
+  $DD8F,$0F Pixel/ control data.
+  $DD9E,$01 Frame #N$03 terminator.
+  $DD9F,$01 Frame #N$04 terminator.
+  $DDA0,$01 Frame #N$05 terminator.
+N $DDA1 Sprite #N$12A, Frame #N$06 ($10 bytes).
+  $DDA1,$02 X/ Y position offsets.
+  $DDA3,$0E Pixel/ control data.
+  $DDB1,$01 Frame #N$06 terminator.
+  $DDB2,$01 Frame #N$07 terminator.
+  $DDB3,$01 Frame #N$08 terminator.
+N $DDB4 Sprite #N$12A, Frame #N$09 ($10 bytes).
+  $DDB4,$02 X/ Y position offsets.
+  $DDB6,$0E Pixel/ control data.
+  $DDC4,$01 Frame #N$09 terminator.
+N $DDC5 Sprite #N$12A, Frame #N$0A.
+  $DDC5,$02 X/ Y position offsets.
+  $DDC7,$08 Pixel data (2 character rows × 4 bytes each).
+  $DDCF,$01 Frame #N$0A terminator.
+  $DDD0,$01 Frame #N$0B terminator.
+N $DDD1 Sprite #N$12A, Frame #N$0C ($09 bytes).
+  $DDD1,$02 X/ Y position offsets.
+  $DDD3,$07 Pixel/ control data.
+  $DDDA,$01 Frame #N$0C terminator.
+  $DDDB,$01 Frame #N$0D terminator.
+N $DDDC Sprite #N$12A, Frame #N$0E ($11 bytes).
+  $DDDC,$02 X/ Y position offsets.
+  $DDDE,$0F Pixel/ control data.
+  $DDED,$01 Frame #N$0E terminator.
+  $DDEE,$01 Animation sequence terminator.
+N $DDEF Sprite #N$12B, Frame #N$01.
+  $DDEF,$02 X/ Y position offsets.
+  $DDF1,$08 Pixel data (2 character rows × 4 bytes each).
+  $DDF9,$01 Frame #N$01 terminator.
+  $DDFA,$01 Frame #N$02 terminator.
+N $DDFB Sprite #N$12B, Frame #N$03 ($09 bytes).
+  $DDFB,$02 X/ Y position offsets.
+  $DDFD,$07 Pixel/ control data.
+  $DE04,$01 Frame #N$03 terminator.
+  $DE05,$01 Frame #N$04 terminator.
+  $DE06,$01 Frame #N$05 terminator.
+N $DE07 Sprite #N$12B, Frame #N$06 ($10 bytes).
+  $DE07,$02 X/ Y position offsets.
+  $DE09,$0E Pixel/ control data.
+  $DE17,$01 Frame #N$06 terminator.
+  $DE18,$01 Frame #N$07 terminator.
+N $DE19 Sprite #N$12B, Frame #N$08 ($09 bytes).
+  $DE19,$02 X/ Y position offsets.
+  $DE1B,$07 Pixel/ control data.
+  $DE22,$01 Frame #N$08 terminator.
+N $DE23 Sprite #N$12B, Frame #N$09 ($05 bytes).
+  $DE23,$02 X/ Y position offsets.
+  $DE25,$03 Pixel/ control data.
+  $DE28,$01 Animation sequence terminator.
+N $DE29 Sprite #N$12C, Frame #N$01 ($04 bytes).
+  $DE29,$02 X/ Y position offsets.
+  $DE2B,$02 Pixel/ control data.
+  $DE2D,$01 Frame #N$01 terminator.
+  $DE2E,$01 Frame #N$02 terminator.
+N $DE2F Sprite #N$12C, Frame #N$03 ($09 bytes).
+  $DE2F,$02 X/ Y position offsets.
+  $DE31,$07 Pixel/ control data.
+  $DE38,$01 Animation sequence terminator.
+  $DE39,$01 Animation sequence terminator.
+  $DE3A,$01 Animation sequence terminator.
+  $DE3B,$01 Animation sequence terminator.
+  $DE3C,$01 Animation sequence terminator.
+  $DE3D,$01 Animation sequence terminator.
+N $DE3E Sprite #N$132, Frame #N$01 (position only).
+  $DE3E,$02 X/ Y position offsets.
+  $DE40,$01 Frame #N$01 terminator.
+  $DE41,$01 Frame #N$02 terminator.
+  $DE42,$01 Frame #N$03 terminator.
+N $DE43 Sprite #N$132, Frame #N$04 ($10 bytes).
+  $DE43,$02 X/ Y position offsets.
+  $DE45,$0E Pixel/ control data.
+  $DE53,$01 Frame #N$04 terminator.
+  $DE54,$01 Animation sequence terminator.
+N $DE55 Sprite #N$133, Frame #N$01 (control byte).
+  $DE55,$01 Control data.
+  $DE56,$01 Frame #N$01 terminator.
+N $DE57 Sprite #N$133, Frame #N$02 (position only).
+  $DE57,$02 X/ Y position offsets.
+  $DE59,$01 Animation sequence terminator.
+N $DE5A Sprite #N$134, Frame #N$01 ($05 bytes).
+  $DE5A,$02 X/ Y position offsets.
+  $DE5C,$03 Pixel/ control data.
+  $DE5F,$01 Frame #N$01 terminator.
+  $DE60,$01 Frame #N$02 terminator.
+N $DE61 Sprite #N$134, Frame #N$03 ($11 bytes).
+  $DE61,$02 X/ Y position offsets.
+  $DE63,$0F Pixel/ control data.
+  $DE72,$01 Frame #N$03 terminator.
+  $DE73,$01 Frame #N$04 terminator.
+  $DE74,$01 Frame #N$05 terminator.
+N $DE75 Sprite #N$134, Frame #N$06 ($10 bytes).
+  $DE75,$02 X/ Y position offsets.
+  $DE77,$0E Pixel/ control data.
+  $DE85,$01 Frame #N$06 terminator.
+  $DE86,$01 Frame #N$07 terminator.
+  $DE87,$01 Frame #N$08 terminator.
+N $DE88 Sprite #N$134, Frame #N$09 ($10 bytes).
+  $DE88,$02 X/ Y position offsets.
+  $DE8A,$0E Pixel/ control data.
+  $DE98,$01 Frame #N$09 terminator.
+  $DE99,$01 Frame #N$0A terminator.
+N $DE9A Sprite #N$134, Frame #N$0B ($04 bytes).
+  $DE9A,$02 X/ Y position offsets.
+  $DE9C,$02 Pixel/ control data.
+  $DE9E,$01 Animation sequence terminator.
+N $DE9F Sprite #N$135, Frame #N$01 ($04 bytes).
+  $DE9F,$02 X/ Y position offsets.
+  $DEA1,$02 Pixel/ control data.
+  $DEA3,$01 Frame #N$01 terminator.
+  $DEA4,$01 Frame #N$02 terminator.
+N $DEA5 Sprite #N$135, Frame #N$03 ($19 bytes).
+  $DEA5,$02 X/ Y position offsets.
+  $DEA7,$17 Pixel/ control data.
+  $DEBE,$01 Frame #N$03 terminator.
+  $DEBF,$01 Frame #N$04 terminator.
+N $DEC0 Sprite #N$135, Frame #N$05 ($19 bytes).
+  $DEC0,$02 X/ Y position offsets.
+  $DEC2,$17 Pixel/ control data.
+  $DED9,$01 Frame #N$05 terminator.
+  $DEDA,$01 Animation sequence terminator.
+N $DEDB Sprite #N$136, Frame #N$01.
+  $DEDB,$02 X/ Y position offsets.
+  $DEDD,$08 Pixel data (2 character rows × 4 bytes each).
+  $DEE5,$01 Frame #N$01 terminator.
+  $DEE6,$01 Frame #N$02 terminator.
+N $DEE7 Sprite #N$136, Frame #N$03 ($09 bytes).
+  $DEE7,$02 X/ Y position offsets.
+  $DEE9,$07 Pixel/ control data.
+  $DEF0,$01 Frame #N$03 terminator.
+  $DEF1,$01 Frame #N$04 terminator.
+  $DEF2,$01 Frame #N$05 terminator.
+N $DEF3 Sprite #N$136, Frame #N$06 ($10 bytes).
+  $DEF3,$02 X/ Y position offsets.
+  $DEF5,$0E Pixel/ control data.
+  $DF03,$01 Frame #N$06 terminator.
+  $DF04,$01 Frame #N$07 terminator.
+N $DF05 Sprite #N$136, Frame #N$08 ($09 bytes).
+  $DF05,$02 X/ Y position offsets.
+  $DF07,$07 Pixel/ control data.
+  $DF0E,$01 Frame #N$08 terminator.
+N $DF0F Sprite #N$136, Frame #N$09.
+  $DF0F,$02 X/ Y position offsets.
+  $DF11,$08 Pixel data (2 character rows × 4 bytes each).
+  $DF19,$01 Frame #N$09 terminator.
+  $DF1A,$01 Frame #N$0A terminator.
+N $DF1B Sprite #N$136, Frame #N$0B ($19 bytes).
+  $DF1B,$02 X/ Y position offsets.
+  $DF1D,$17 Pixel/ control data.
+  $DF34,$01 Frame #N$0B terminator.
+  $DF35,$01 Animation sequence terminator.
+N $DF36 Sprite #N$137, Frame #N$01.
+  $DF36,$02 X/ Y position offsets.
+  $DF38,$08 Pixel data (2 character rows × 4 bytes each).
+  $DF40,$01 Frame #N$01 terminator.
+  $DF41,$01 Frame #N$02 terminator.
+N $DF42 Sprite #N$137, Frame #N$03 ($09 bytes).
+  $DF42,$02 X/ Y position offsets.
+  $DF44,$07 Pixel/ control data.
+  $DF4B,$01 Frame #N$03 terminator.
+  $DF4C,$01 Frame #N$04 terminator.
+  $DF4D,$01 Frame #N$05 terminator.
+N $DF4E Sprite #N$137, Frame #N$06 ($10 bytes).
+  $DF4E,$02 X/ Y position offsets.
+  $DF50,$0E Pixel/ control data.
+  $DF5E,$01 Frame #N$06 terminator.
+  $DF5F,$01 Frame #N$07 terminator.
+N $DF60 Sprite #N$137, Frame #N$08 ($09 bytes).
+  $DF60,$02 X/ Y position offsets.
+  $DF62,$07 Pixel/ control data.
+  $DF69,$01 Frame #N$08 terminator.
+N $DF6A Sprite #N$137, Frame #N$09 (control byte).
+  $DF6A,$01 Control data.
+  $DF6B,$01 Frame #N$09 terminator.
+N $DF6C Sprite #N$137, Frame #N$0A ($10 bytes).
+  $DF6C,$02 X/ Y position offsets.
+  $DF6E,$0E Pixel/ control data.
+  $DF7C,$01 Frame #N$0A terminator.
+  $DF7D,$01 Frame #N$0B terminator.
+N $DF7E Sprite #N$137, Frame #N$0C ($19 bytes).
+  $DF7E,$02 X/ Y position offsets.
+  $DF80,$17 Pixel/ control data.
+  $DF97,$01 Frame #N$0C terminator.
+  $DF98,$01 Animation sequence terminator.
+N $DF99 Sprite #N$138, Frame #N$01.
+  $DF99,$02 X/ Y position offsets.
+  $DF9B,$08 Pixel data (2 character rows × 4 bytes each).
+  $DFA3,$01 Frame #N$01 terminator.
+  $DFA4,$01 Frame #N$02 terminator.
+N $DFA5 Sprite #N$138, Frame #N$03 ($09 bytes).
+  $DFA5,$02 X/ Y position offsets.
+  $DFA7,$07 Pixel/ control data.
+  $DFAE,$01 Frame #N$03 terminator.
+  $DFAF,$01 Frame #N$04 terminator.
+  $DFB0,$01 Frame #N$05 terminator.
+N $DFB1 Sprite #N$138, Frame #N$06 ($10 bytes).
+  $DFB1,$02 X/ Y position offsets.
+  $DFB3,$0E Pixel/ control data.
+  $DFC1,$01 Frame #N$06 terminator.
+  $DFC2,$01 Frame #N$07 terminator.
+N $DFC3 Sprite #N$138, Frame #N$08 ($09 bytes).
+  $DFC3,$02 X/ Y position offsets.
+  $DFC5,$07 Pixel/ control data.
+  $DFCC,$01 Frame #N$08 terminator.
+N $DFCD Sprite #N$138, Frame #N$09.
+  $DFCD,$02 X/ Y position offsets.
+  $DFCF,$08 Pixel data (2 character rows × 4 bytes each).
+  $DFD7,$01 Frame #N$09 terminator.
+  $DFD8,$01 Frame #N$0A terminator.
+N $DFD9 Sprite #N$138, Frame #N$0B (control byte).
+  $DFD9,$01 Control data.
+  $DFDA,$01 Animation sequence terminator.
+N $DFDB Sprite #N$139, Frame #N$01 ($07 bytes).
+  $DFDB,$02 X/ Y position offsets.
+  $DFDD,$05 Pixel/ control data.
+  $DFE2,$01 Frame #N$01 terminator.
+  $DFE3,$01 Frame #N$02 terminator.
+N $DFE4 Sprite #N$139, Frame #N$03 ($09 bytes).
+  $DFE4,$02 X/ Y position offsets.
+  $DFE6,$07 Pixel/ control data.
+  $DFED,$01 Frame #N$03 terminator.
+  $DFEE,$01 Animation sequence terminator.
+N $DFEF Sprite #N$13A, Frame #N$01 ($04 bytes).
+  $DFEF,$02 X/ Y position offsets.
+  $DFF1,$02 Pixel/ control data.
+  $DFF3,$01 Animation sequence terminator.
+  $DFF4,$01 Animation sequence terminator.
+N $DFF5 Sprite #N$13C, Frame #N$01 ($0C bytes).
+  $DFF5,$02 X/ Y position offsets.
+  $DFF7,$0A Pixel/ control data.
+  $E001,$01 Frame #N$01 terminator.
+  $E002,$01 Frame #N$02 terminator.
+  $E003,$01 Frame #N$03 terminator.
+N $E004 Sprite #N$13C, Frame #N$04 ($03 bytes).
+  $E004,$02 X/ Y position offsets.
+  $E006,$01 Pixel/ control data.
+  $E007,$01 Animation sequence terminator.
+N $E008 Sprite #N$13D, Frame #N$01 ($0D bytes).
+  $E008,$02 X/ Y position offsets.
+  $E00A,$0B Pixel/ control data.
+  $E015,$01 Animation sequence terminator.
+N $E016 Sprite #N$13E, Frame #N$01 (control byte).
+  $E016,$01 Control data.
+  $E017,$01 Animation sequence terminator.
+  $E018,$01 Animation sequence terminator.
+  $E019,$01 Animation sequence terminator.
+  $E01A,$01 Animation sequence terminator.
+  $E01B,$01 Animation sequence terminator.
+  $E01C,$01 Frame #N$01 terminator.
+  $E01D,$01 Frame #N$02 terminator.
+N $E01E Sprite #N$143, Frame #N$03 ($19 bytes).
+  $E01E,$02 X/ Y position offsets.
+  $E020,$17 Pixel/ control data.
+  $E037,$01 Frame #N$03 terminator.
+  $E038,$01 Animation sequence terminator.
+N $E039 Sprite #N$144, Frame #N$01.
+  $E039,$02 X/ Y position offsets.
+  $E03B,$08 Pixel data (2 character rows × 4 bytes each).
+  $E043,$01 Frame #N$01 terminator.
+  $E044,$01 Frame #N$02 terminator.
+N $E045 Sprite #N$144, Frame #N$03 (position only).
+  $E045,$02 X/ Y position offsets.
+  $E047,$01 Animation sequence terminator.
+N $E048 Sprite #N$145, Frame #N$01 ($16 bytes).
+  $E048,$02 X/ Y position offsets.
+  $E04A,$14 Pixel/ control data.
+  $E05E,$01 Frame #N$01 terminator.
+  $E05F,$01 Frame #N$02 terminator.
+N $E060 Sprite #N$145, Frame #N$03.
+  $E060,$02 X/ Y position offsets.
+  $E062,$08 Pixel data (2 character rows × 4 bytes each).
+  $E06A,$01 Animation sequence terminator.
+N $E06B Sprite #N$146, Frame #N$01 ($0E bytes).
+  $E06B,$02 X/ Y position offsets.
+  $E06D,$0C Pixel/ control data.
+  $E079,$01 Frame #N$01 terminator.
+  $E07A,$01 Frame #N$02 terminator.
+  $E07B,$01 Frame #N$03 terminator.
+N $E07C Sprite #N$146, Frame #N$04 ($10 bytes).
+  $E07C,$02 X/ Y position offsets.
+  $E07E,$0E Pixel/ control data.
+  $E08C,$01 Frame #N$04 terminator.
+  $E08D,$01 Animation sequence terminator.
+N $E08E Sprite #N$147, Frame #N$01 (control byte).
+  $E08E,$01 Control data.
+  $E08F,$01 Frame #N$01 terminator.
+N $E090 Sprite #N$147, Frame #N$02 ($10 bytes).
+  $E090,$02 X/ Y position offsets.
+  $E092,$0E Pixel/ control data.
+  $E0A0,$01 Frame #N$02 terminator.
+  $E0A1,$01 Frame #N$03 terminator.
+N $E0A2 Sprite #N$147, Frame #N$04 ($19 bytes).
+  $E0A2,$02 X/ Y position offsets.
+  $E0A4,$17 Pixel/ control data.
+  $E0BB,$01 Frame #N$04 terminator.
+  $E0BC,$01 Frame #N$05 terminator.
+N $E0BD Sprite #N$147, Frame #N$06 ($19 bytes).
+  $E0BD,$02 X/ Y position offsets.
+  $E0BF,$17 Pixel/ control data.
+  $E0D6,$01 Frame #N$06 terminator.
+  $E0D7,$01 Animation sequence terminator.
+N $E0D8 Sprite #N$148, Frame #N$01.
+  $E0D8,$02 X/ Y position offsets.
+  $E0DA,$08 Pixel data (2 character rows × 4 bytes each).
+  $E0E2,$01 Frame #N$01 terminator.
+  $E0E3,$01 Frame #N$02 terminator.
+N $E0E4 Sprite #N$148, Frame #N$03 ($09 bytes).
+  $E0E4,$02 X/ Y position offsets.
+  $E0E6,$07 Pixel/ control data.
+  $E0ED,$01 Frame #N$03 terminator.
+  $E0EE,$01 Frame #N$04 terminator.
+  $E0EF,$01 Frame #N$05 terminator.
+N $E0F0 Sprite #N$148, Frame #N$06 ($10 bytes).
+  $E0F0,$02 X/ Y position offsets.
+  $E0F2,$0E Pixel/ control data.
+  $E100,$01 Frame #N$06 terminator.
+  $E101,$01 Frame #N$07 terminator.
+N $E102 Sprite #N$148, Frame #N$08.
+  $E102,$02 X/ Y position offsets.
+  $E104,$08 Pixel data (2 character rows × 4 bytes each).
+  $E10C,$01 Animation sequence terminator.
+N $E10D Sprite #N$149, Frame #N$01 ($0E bytes).
+  $E10D,$02 X/ Y position offsets.
+  $E10F,$0C Pixel/ control data.
+  $E11B,$01 Frame #N$01 terminator.
+  $E11C,$01 Frame #N$02 terminator.
+N $E11D Sprite #N$149, Frame #N$03 ($19 bytes).
+  $E11D,$02 X/ Y position offsets.
+  $E11F,$17 Pixel/ control data.
+  $E136,$01 Frame #N$03 terminator.
+  $E137,$01 Animation sequence terminator.
+N $E138 Sprite #N$14A, Frame #N$01.
+  $E138,$02 X/ Y position offsets.
+  $E13A,$08 Pixel data (2 character rows × 4 bytes each).
+  $E142,$01 Frame #N$01 terminator.
+  $E143,$01 Frame #N$02 terminator.
+N $E144 Sprite #N$14A, Frame #N$03 ($09 bytes).
+  $E144,$02 X/ Y position offsets.
+  $E146,$07 Pixel/ control data.
+  $E14D,$01 Frame #N$03 terminator.
+  $E14E,$01 Frame #N$04 terminator.
+N $E14F Sprite #N$14A, Frame #N$05 ($08 bytes).
+  $E14F,$02 X/ Y position offsets.
+  $E151,$06 Pixel/ control data.
+  $E157,$01 Animation sequence terminator.
+N $E158 Sprite #N$14B, Frame #N$01 ($10 bytes).
+  $E158,$02 X/ Y position offsets.
+  $E15A,$0E Pixel/ control data.
+  $E168,$01 Frame #N$01 terminator.
+  $E169,$01 Frame #N$02 terminator.
+N $E16A Sprite #N$14B, Frame #N$03 ($0D bytes).
+  $E16A,$02 X/ Y position offsets.
+  $E16C,$0B Pixel/ control data.
+  $E177,$01 Animation sequence terminator.
+  $E178,$01 Animation sequence terminator.
+  $E179,$01 Animation sequence terminator.
+N $E17A Sprite #N$14E, Frame #N$01 ($09 bytes).
+  $E17A,$02 X/ Y position offsets.
+  $E17C,$07 Pixel/ control data.
+  $E183,$01 Frame #N$01 terminator.
+  $E184,$01 Frame #N$02 terminator.
+  $E185,$01 Frame #N$03 terminator.
+N $E186 Sprite #N$14E, Frame #N$04 ($10 bytes).
+  $E186,$02 X/ Y position offsets.
+  $E188,$0E Pixel/ control data.
+  $E196,$01 Frame #N$04 terminator.
+  $E197,$01 Animation sequence terminator.
+N $E198 Sprite #N$14F, Frame #N$01.
+  $E198,$02 X/ Y position offsets.
+  $E19A,$08 Pixel data (2 character rows × 4 bytes each).
+  $E1A2,$01 Frame #N$01 terminator.
+  $E1A3,$01 Frame #N$02 terminator.
+N $E1A4 Sprite #N$14F, Frame #N$03 ($09 bytes).
+  $E1A4,$02 X/ Y position offsets.
+  $E1A6,$07 Pixel/ control data.
+  $E1AD,$01 Frame #N$03 terminator.
+  $E1AE,$01 Frame #N$04 terminator.
+N $E1AF Sprite #N$14F, Frame #N$05 ($19 bytes).
+  $E1AF,$02 X/ Y position offsets.
+  $E1B1,$17 Pixel/ control data.
+  $E1C8,$01 Frame #N$05 terminator.
+  $E1C9,$01 Frame #N$06 terminator.
+  $E1CA,$01 Frame #N$07 terminator.
+N $E1CB Sprite #N$14F, Frame #N$08 ($10 bytes).
+  $E1CB,$02 X/ Y position offsets.
+  $E1CD,$0E Pixel/ control data.
+  $E1DB,$01 Frame #N$08 terminator.
+  $E1DC,$01 Animation sequence terminator.
+N $E1DD Sprite #N$150, Frame #N$01 (control byte).
+  $E1DD,$01 Control data.
+  $E1DE,$01 Frame #N$01 terminator.
+N $E1DF Sprite #N$150, Frame #N$02 ($10 bytes).
+  $E1DF,$02 X/ Y position offsets.
+  $E1E1,$0E Pixel/ control data.
+  $E1EF,$01 Frame #N$02 terminator.
+  $E1F0,$01 Frame #N$03 terminator.
+N $E1F1 Sprite #N$150, Frame #N$04 ($19 bytes).
+  $E1F1,$02 X/ Y position offsets.
+  $E1F3,$17 Pixel/ control data.
+  $E20A,$01 Frame #N$04 terminator.
+  $E20B,$01 Frame #N$05 terminator.
+  $E20C,$01 Frame #N$06 terminator.
+N $E20D Sprite #N$150, Frame #N$07 ($10 bytes).
+  $E20D,$02 X/ Y position offsets.
+  $E20F,$0E Pixel/ control data.
+  $E21D,$01 Frame #N$07 terminator.
+  $E21E,$01 Frame #N$08 terminator.
+N $E21F Sprite #N$150, Frame #N$09 ($09 bytes).
+  $E21F,$02 X/ Y position offsets.
+  $E221,$07 Pixel/ control data.
+  $E228,$01 Frame #N$09 terminator.
+  $E229,$01 Animation sequence terminator.
+  $E22A,$01 Frame #N$01 terminator.
+  $E22B,$01 Frame #N$02 terminator.
+N $E22C Sprite #N$151, Frame #N$03 ($03 bytes).
+  $E22C,$02 X/ Y position offsets.
+  $E22E,$01 Pixel/ control data.
+  $E22F,$01 Animation sequence terminator.
+N $E230 Sprite #N$152, Frame #N$01 ($0C bytes).
+  $E230,$02 X/ Y position offsets.
+  $E232,$0A Pixel/ control data.
+  $E23C,$01 Frame #N$01 terminator.
+  $E23D,$01 Frame #N$02 terminator.
+  $E23E,$01 Frame #N$03 terminator.
+N $E23F Sprite #N$152, Frame #N$04 ($10 bytes).
+  $E23F,$02 X/ Y position offsets.
+  $E241,$0E Pixel/ control data.
+  $E24F,$01 Frame #N$04 terminator.
+  $E250,$01 Animation sequence terminator.
+N $E251 Sprite #N$153, Frame #N$01 (control byte).
+  $E251,$01 Control data.
+  $E252,$01 Frame #N$01 terminator.
+N $E253 Sprite #N$153, Frame #N$02 ($10 bytes).
+  $E253,$02 X/ Y position offsets.
+  $E255,$0E Pixel/ control data.
+  $E263,$01 Frame #N$02 terminator.
+  $E264,$01 Animation sequence terminator.
+  $E265,$01 Frame #N$01 terminator.
+  $E266,$01 Frame #N$02 terminator.
+N $E267 Sprite #N$154, Frame #N$03 (control byte).
+  $E267,$01 Control data.
+  $E268,$01 Animation sequence terminator.
+N $E269 Sprite #N$155, Frame #N$01 (position only).
+  $E269,$02 X/ Y position offsets.
+  $E26B,$01 Animation sequence terminator.
+N $E26C Sprite #N$156, Frame #N$01 ($06 bytes).
+  $E26C,$02 X/ Y position offsets.
+  $E26E,$04 Pixel/ control data.
+  $E272,$01 Animation sequence terminator.
+  $E273,$01 Animation sequence terminator.
+N $E274 Sprite #N$158, Frame #N$01 ($03 bytes).
+  $E274,$02 X/ Y position offsets.
+  $E276,$01 Pixel/ control data.
+  $E277,$01 Frame #N$01 terminator.
+  $E278,$01 Frame #N$02 terminator.
+  $E279,$01 Frame #N$03 terminator.
+N $E27A Sprite #N$158, Frame #N$04 ($10 bytes).
+  $E27A,$02 X/ Y position offsets.
+  $E27C,$0E Pixel/ control data.
+  $E28A,$01 Frame #N$04 terminator.
+  $E28B,$01 Animation sequence terminator.
+  $E28C,$01 Frame #N$01 terminator.
+  $E28D,$01 Frame #N$02 terminator.
+N $E28E Sprite #N$159, Frame #N$03 ($0E bytes).
+  $E28E,$02 X/ Y position offsets.
+  $E290,$0C Pixel/ control data.
+  $E29C,$01 Animation sequence terminator.
+N $E29D Sprite #N$15A, Frame #N$01 (control byte).
+  $E29D,$01 Control data.
+  $E29E,$01 Frame #N$01 terminator.
+  $E29F,$01 Frame #N$02 terminator.
+  $E2A0,$01 Frame #N$03 terminator.
+N $E2A1 Sprite #N$15A, Frame #N$04 ($10 bytes).
+  $E2A1,$02 X/ Y position offsets.
+  $E2A3,$0E Pixel/ control data.
+  $E2B1,$01 Frame #N$04 terminator.
+  $E2B2,$01 Animation sequence terminator.
+N $E2B3 Sprite #N$15B, Frame #N$01 (control byte).
+  $E2B3,$01 Control data.
+  $E2B4,$01 Frame #N$01 terminator.
+N $E2B5 Sprite #N$15B, Frame #N$02 ($06 bytes).
+  $E2B5,$02 X/ Y position offsets.
+  $E2B7,$04 Pixel/ control data.
+  $E2BB,$01 Animation sequence terminator.
+  $E2BC,$01 Animation sequence terminator.
+  $E2BD,$01 Frame #N$01 terminator.
+  $E2BE,$01 Frame #N$02 terminator.
+N $E2BF Sprite #N$15D, Frame #N$03 ($0F bytes).
+  $E2BF,$02 X/ Y position offsets.
+  $E2C1,$0D Pixel/ control data.
+  $E2CE,$01 Animation sequence terminator.
+N $E2CF Sprite #N$15E, Frame #N$01 (control byte).
+  $E2CF,$01 Control data.
+  $E2D0,$01 Frame #N$01 terminator.
+  $E2D1,$01 Frame #N$02 terminator.
+  $E2D2,$01 Frame #N$03 terminator.
+N $E2D3 Sprite #N$15E, Frame #N$04 ($10 bytes).
+  $E2D3,$02 X/ Y position offsets.
+  $E2D5,$0E Pixel/ control data.
+  $E2E3,$01 Frame #N$04 terminator.
+  $E2E4,$01 Animation sequence terminator.
+N $E2E5 Sprite #N$15F, Frame #N$01.
+  $E2E5,$02 X/ Y position offsets.
+  $E2E7,$08 Pixel data (2 character rows × 4 bytes each).
+  $E2EF,$01 Frame #N$01 terminator.
+  $E2F0,$01 Frame #N$02 terminator.
+  $E2F1,$01 Frame #N$03 terminator.
+N $E2F2 Sprite #N$15F, Frame #N$04 ($10 bytes).
+  $E2F2,$02 X/ Y position offsets.
+  $E2F4,$0E Pixel/ control data.
+  $E302,$01 Frame #N$04 terminator.
+  $E303,$01 Frame #N$05 terminator.
+  $E304,$01 Frame #N$06 terminator.
+N $E305 Sprite #N$15F, Frame #N$07 ($10 bytes).
+  $E305,$02 X/ Y position offsets.
+  $E307,$0E Pixel/ control data.
+  $E315,$01 Frame #N$07 terminator.
+  $E316,$01 Animation sequence terminator.
+N $E317 Sprite #N$160, Frame #N$01 ($04 bytes).
+  $E317,$02 X/ Y position offsets.
+  $E319,$02 Pixel/ control data.
+  $E31B,$01 Animation sequence terminator.
+N $E31C Sprite #N$161, Frame #N$01 (position only).
+  $E31C,$02 X/ Y position offsets.
+  $E31E,$01 Animation sequence terminator.
+N $E31F Sprite #N$162, Frame #N$01 (position only).
+  $E31F,$02 X/ Y position offsets.
+  $E321,$01 Frame #N$01 terminator.
+  $E322,$01 Frame #N$02 terminator.
+N $E323 Sprite #N$162, Frame #N$03 ($09 bytes).
+  $E323,$02 X/ Y position offsets.
+  $E325,$07 Pixel/ control data.
+  $E32C,$01 Frame #N$03 terminator.
+  $E32D,$01 Frame #N$04 terminator.
+  $E32E,$01 Frame #N$05 terminator.
+N $E32F Sprite #N$162, Frame #N$06 ($10 bytes).
+  $E32F,$02 X/ Y position offsets.
+  $E331,$0E Pixel/ control data.
+  $E33F,$01 Frame #N$06 terminator.
+  $E340,$01 Frame #N$07 terminator.
+  $E341,$01 Frame #N$08 terminator.
+N $E342 Sprite #N$162, Frame #N$09 ($10 bytes).
+  $E342,$02 X/ Y position offsets.
+  $E344,$0E Pixel/ control data.
+  $E352,$01 Frame #N$09 terminator.
+  $E353,$01 Animation sequence terminator.
+N $E354 Sprite #N$163, Frame #N$01.
+  $E354,$02 X/ Y position offsets.
+  $E356,$08 Pixel data (2 character rows × 4 bytes each).
+  $E35E,$01 Frame #N$01 terminator.
+  $E35F,$01 Frame #N$02 terminator.
+  $E360,$01 Frame #N$03 terminator.
+N $E361 Sprite #N$163, Frame #N$04 ($10 bytes).
+  $E361,$02 X/ Y position offsets.
+  $E363,$0E Pixel/ control data.
+  $E371,$01 Frame #N$04 terminator.
+  $E372,$01 Animation sequence terminator.
+N $E373 Sprite #N$164, Frame #N$01 (control byte).
+  $E373,$01 Control data.
+  $E374,$01 Frame #N$01 terminator.
+N $E375 Sprite #N$164, Frame #N$02 ($07 bytes).
+  $E375,$02 X/ Y position offsets.
+  $E377,$05 Pixel/ control data.
+  $E37C,$01 Animation sequence terminator.
+N $E37D Sprite #N$165, Frame #N$01 ($08 bytes).
+  $E37D,$02 X/ Y position offsets.
+  $E37F,$06 Pixel/ control data.
+  $E385,$01 Frame #N$01 terminator.
+  $E386,$01 Frame #N$02 terminator.
+  $E387,$01 Frame #N$03 terminator.
+N $E388 Sprite #N$165, Frame #N$04 ($10 bytes).
+  $E388,$02 X/ Y position offsets.
+  $E38A,$0E Pixel/ control data.
+  $E398,$01 Frame #N$04 terminator.
+  $E399,$01 Animation sequence terminator.
+N $E39A Sprite #N$166, Frame #N$01.
+  $E39A,$02 X/ Y position offsets.
+  $E39C,$08 Pixel data (2 character rows × 4 bytes each).
+  $E3A4,$01 Frame #N$01 terminator.
+  $E3A5,$01 Frame #N$02 terminator.
+  $E3A6,$01 Frame #N$03 terminator.
+N $E3A7 Sprite #N$166, Frame #N$04 ($10 bytes).
+  $E3A7,$02 X/ Y position offsets.
+  $E3A9,$0E Pixel/ control data.
+  $E3B7,$01 Frame #N$04 terminator.
+  $E3B8,$01 Animation sequence terminator.
+N $E3B9 Sprite #N$167, Frame #N$01 (control byte).
+  $E3B9,$01 Control data.
+  $E3BA,$01 Frame #N$01 terminator.
+N $E3BB Sprite #N$167, Frame #N$02 ($03 bytes).
+  $E3BB,$02 X/ Y position offsets.
+  $E3BD,$01 Pixel/ control data.
+  $E3BE,$01 Animation sequence terminator.
+N $E3BF Sprite #N$168, Frame #N$01 ($0C bytes).
+  $E3BF,$02 X/ Y position offsets.
+  $E3C1,$0A Pixel/ control data.
+  $E3CB,$01 Frame #N$01 terminator.
+  $E3CC,$01 Frame #N$02 terminator.
+  $E3CD,$01 Frame #N$03 terminator.
+N $E3CE Sprite #N$168, Frame #N$04 ($10 bytes).
+  $E3CE,$02 X/ Y position offsets.
+  $E3D0,$0E Pixel/ control data.
+  $E3DE,$01 Frame #N$04 terminator.
+  $E3DF,$01 Animation sequence terminator.
+N $E3E0 Sprite #N$169, Frame #N$01.
+  $E3E0,$02 X/ Y position offsets.
+  $E3E2,$08 Pixel data (2 character rows × 4 bytes each).
+  $E3EA,$01 Frame #N$01 terminator.
+  $E3EB,$01 Frame #N$02 terminator.
+N $E3EC Sprite #N$169, Frame #N$03 ($09 bytes).
+  $E3EC,$02 X/ Y position offsets.
+  $E3EE,$07 Pixel/ control data.
+  $E3F5,$01 Frame #N$03 terminator.
+  $E3F6,$01 Animation sequence terminator.
+N $E3F7 Sprite #N$16A, Frame #N$01 ($05 bytes).
+  $E3F7,$02 X/ Y position offsets.
+  $E3F9,$03 Pixel/ control data.
+  $E3FC,$01 Animation sequence terminator.
+  $E3FD,$01 Animation sequence terminator.
+  $E3FE,$01 Animation sequence terminator.
+N $E3FF Sprite #N$16D, Frame #N$01 (position only).
+  $E3FF,$02 X/ Y position offsets.
+  $E401,$01 Frame #N$01 terminator.
+  $E402,$01 Frame #N$02 terminator.
+N $E403 Sprite #N$16D, Frame #N$03 ($09 bytes).
+  $E403,$02 X/ Y position offsets.
+  $E405,$07 Pixel/ control data.
+  $E40C,$01 Frame #N$03 terminator.
+  $E40D,$01 Animation sequence terminator.
+N $E40E Sprite #N$16E, Frame #N$01 ($12 bytes).
+  $E40E,$02 X/ Y position offsets.
+  $E410,$10 Pixel/ control data.
+  $E420,$01 Frame #N$01 terminator.
+  $E421,$01 Frame #N$02 terminator.
+  $E422,$01 Frame #N$03 terminator.
+N $E423 Sprite #N$16E, Frame #N$04 ($10 bytes).
+  $E423,$02 X/ Y position offsets.
+  $E425,$0E Pixel/ control data.
+  $E433,$01 Frame #N$04 terminator.
+  $E434,$01 Animation sequence terminator.
+N $E435 Sprite #N$16F, Frame #N$01 ($09 bytes).
+  $E435,$02 X/ Y position offsets.
+  $E437,$07 Pixel/ control data.
+  $E43E,$01 Animation sequence terminator.
+  $E43F,$01 Animation sequence terminator.
+  $E440,$01 Animation sequence terminator.
+N $E441 Sprite #N$172, Frame #N$01 ($06 bytes).
+  $E441,$02 X/ Y position offsets.
+  $E443,$04 Pixel/ control data.
+  $E447,$01 Frame #N$01 terminator.
+  $E448,$01 Frame #N$02 terminator.
+  $E449,$01 Frame #N$03 terminator.
+N $E44A Sprite #N$172, Frame #N$04 ($10 bytes).
+  $E44A,$02 X/ Y position offsets.
+  $E44C,$0E Pixel/ control data.
+  $E45A,$01 Frame #N$04 terminator.
+  $E45B,$01 Animation sequence terminator.
+N $E45C Sprite #N$173, Frame #N$01 ($05 bytes).
+  $E45C,$02 X/ Y position offsets.
+  $E45E,$03 Pixel/ control data.
+  $E461,$01 Animation sequence terminator.
+N $E462 Sprite #N$174, Frame #N$01 ($04 bytes).
+  $E462,$02 X/ Y position offsets.
+  $E464,$02 Pixel/ control data.
+  $E466,$01 Frame #N$01 terminator.
+  $E467,$01 Frame #N$02 terminator.
+  $E468,$01 Frame #N$03 terminator.
+N $E469 Sprite #N$174, Frame #N$04 ($0F bytes).
+  $E469,$02 X/ Y position offsets.
+  $E46B,$0D Pixel/ control data.
+  $E478,$01 Frame #N$04 terminator.
+  $E479,$01 Frame #N$05 terminator.
+  $E47A,$01 Frame #N$06 terminator.
+  $E47B,$01 Frame #N$07 terminator.
+N $E47C Sprite #N$174, Frame #N$08 ($0C bytes).
+  $E47C,$02 X/ Y position offsets.
+  $E47E,$0A Pixel/ control data.
+  $E488,$01 Animation sequence terminator.
+N $E489 Sprite #N$175, Frame #N$01 (control byte).
+  $E489,$01 Control data.
+  $E48A,$01 Animation sequence terminator.
+N $E48B Sprite #N$176, Frame #N$01 (control byte).
+  $E48B,$01 Control data.
+  $E48C,$01 Frame #N$01 terminator.
+  $E48D,$01 Animation sequence terminator.
+N $E48E Sprite #N$177, Frame #N$01 (control byte).
+  $E48E,$01 Control data.
+  $E48F,$01 Frame #N$01 terminator.
+N $E490 Sprite #N$177, Frame #N$02 ($05 bytes).
+  $E490,$02 X/ Y position offsets.
+  $E492,$03 Pixel/ control data.
+  $E495,$01 Animation sequence terminator.
+N $E496 Sprite #N$178, Frame #N$01.
+  $E496,$02 X/ Y position offsets.
+  $E498,$08 Pixel data (2 character rows × 4 bytes each).
+  $E4A0,$01 Frame #N$01 terminator.
+  $E4A1,$01 Frame #N$02 terminator.
+  $E4A2,$01 Frame #N$03 terminator.
+N $E4A3 Sprite #N$178, Frame #N$04 ($0F bytes).
+  $E4A3,$02 X/ Y position offsets.
+  $E4A5,$0D Pixel/ control data.
+  $E4B2,$01 Frame #N$04 terminator.
+  $E4B3,$01 Frame #N$05 terminator.
+  $E4B4,$01 Frame #N$06 terminator.
+  $E4B5,$01 Frame #N$07 terminator.
+N $E4B6 Sprite #N$178, Frame #N$08 ($10 bytes).
+  $E4B6,$02 X/ Y position offsets.
+  $E4B8,$0E Pixel/ control data.
+  $E4C6,$01 Frame #N$08 terminator.
+  $E4C7,$01 Animation sequence terminator.
+N $E4C8 Sprite #N$179, Frame #N$01 (control byte).
+  $E4C8,$01 Control data.
+  $E4C9,$01 Frame #N$01 terminator.
+N $E4CA Sprite #N$179, Frame #N$02 ($07 bytes).
+  $E4CA,$02 X/ Y position offsets.
+  $E4CC,$05 Pixel/ control data.
+  $E4D1,$01 Animation sequence terminator.
+N $E4D2 Sprite #N$17A, Frame #N$01 ($08 bytes).
+  $E4D2,$02 X/ Y position offsets.
+  $E4D4,$06 Pixel/ control data.
+  $E4DA,$01 Frame #N$01 terminator.
+  $E4DB,$01 Frame #N$02 terminator.
+  $E4DC,$01 Frame #N$03 terminator.
+N $E4DD Sprite #N$17A, Frame #N$04 ($0B bytes).
+  $E4DD,$02 X/ Y position offsets.
+  $E4DF,$09 Pixel/ control data.
+  $E4E8,$01 Frame #N$04 terminator.
+N $E4E9 Sprite #N$17A, Frame #N$05 ($04 bytes).
+  $E4E9,$02 X/ Y position offsets.
+  $E4EB,$02 Pixel/ control data.
+  $E4ED,$01 Frame #N$05 terminator.
+  $E4EE,$01 Frame #N$06 terminator.
+  $E4EF,$01 Frame #N$07 terminator.
+N $E4F0 Sprite #N$17A, Frame #N$08 ($08 bytes).
+  $E4F0,$02 X/ Y position offsets.
+  $E4F2,$06 Pixel/ control data.
+  $E4F8,$01 Animation sequence terminator.
+N $E4F9 Sprite #N$17B, Frame #N$01 (control byte).
+  $E4F9,$01 Control data.
+  $E4FA,$01 Animation sequence terminator.
+N $E4FB Sprite #N$17C, Frame #N$01 ($05 bytes).
+  $E4FB,$02 X/ Y position offsets.
+  $E4FD,$03 Pixel/ control data.
+  $E500,$01 Frame #N$01 terminator.
+  $E501,$01 Animation sequence terminator.
+N $E502 Sprite #N$17D, Frame #N$01 (control byte).
+  $E502,$01 Control data.
+  $E503,$01 Frame #N$01 terminator.
+N $E504 Sprite #N$17D, Frame #N$02 (control byte).
+  $E504,$01 Control data.
+  $E505,$01 Animation sequence terminator.
+N $E506 Sprite #N$17E, Frame #N$01 ($0E bytes).
+  $E506,$02 X/ Y position offsets.
+  $E508,$0C Pixel/ control data.
+  $E514,$01 Frame #N$01 terminator.
+  $E515,$01 Frame #N$02 terminator.
+  $E516,$01 Frame #N$03 terminator.
+N $E517 Sprite #N$17E, Frame #N$04 ($0B bytes).
+  $E517,$02 X/ Y position offsets.
+  $E519,$09 Pixel/ control data.
+  $E522,$01 Frame #N$04 terminator.
+N $E523 Sprite #N$17E, Frame #N$05 ($04 bytes).
+  $E523,$02 X/ Y position offsets.
+  $E525,$02 Pixel/ control data.
+  $E527,$01 Frame #N$05 terminator.
+  $E528,$01 Frame #N$06 terminator.
+  $E529,$01 Frame #N$07 terminator.
+N $E52A Sprite #N$17E, Frame #N$08 ($10 bytes).
+  $E52A,$02 X/ Y position offsets.
+  $E52C,$0E Pixel/ control data.
+  $E53A,$01 Frame #N$08 terminator.
 
-
-  $C740,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C740-$C748-$08(player-01) } UDGTABLE#
-  $C753,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C753-$C75B-$08(player-02) } UDGTABLE#
-  $C766,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C766-$C76E-$08(player-03) } UDGTABLE#
-  $C777,$0A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C777-$C77F-$08{$00,$00,$20,$28}(player-04) } UDGTABLE#
-  $C785,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C785-$C78D-$08(graphic-32) } UDGTABLE#
-  $C796,$1A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C796-$C7AE-$08{$00,$00,$20,$68}(graphic-33) } UDGTABLE#
+  $C502,$08 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;(#PC)-(#PC+$08)-$08(graphic-(#PC)) } TABLE#
+  $C519,$08 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;(#PC)-(#PC+$08)-$08(graphic-(#PC)) } TABLE#
+  $C740,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C740-$C748-$08(player-01) } TABLE#
+  $C753,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C753-$C75B-$08(player-02) } TABLE#
+  $C766,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C766-$C76E-$08(player-03) } TABLE#
+  $C777,$0A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C777-$C77F-$08{$00,$00,$20,$28}(player-04) } TABLE#
+  $C785,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C785-$C78D-$08(graphic-32) } TABLE#
+  $C796,$1A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C796-$C7AE-$08{$00,$00,$20,$68}(graphic-33) } TABLE#
 
 B $D59B #UDGARRAY$01,attr=$07,scale=$04,step=$01;$D59B-$D5B3-$08(kangaroo)
 

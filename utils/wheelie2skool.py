@@ -3,7 +3,6 @@ import sys
 import os
 import argparse
 from collections import OrderedDict
-from disassemble import Disassemble
 
 try:
     from skoolkit.snapshot import get_snapshot
@@ -32,39 +31,84 @@ class Wheelie:
     def address(self, addr):
         return self.snapshot[addr] + self.snapshot[addr + 0x01] * 0x100
 
-    def get_disassembly(self):
-        pc = 0x6A27
-        end = 0x6AA5
-        lines = Disassemble(get_snapshot(WHEELIE_Z80), pc, end)
-        return lines.run()
-
     def get_graphics(self):
         lines = []
 
         addr = 0xC500
-        start = 0xC500
         end = 0xE53A
-        count = 0x00
-        graphic = 0x01
-        lines.append(f"b ${addr:04X} Data: Graphics")
-        lines.append(f"@ ${addr:04X} label=Graphics_Data")
+        sprite_id = 0x01
+
+        lines.append(f"b ${addr:04X} Sprite Animation Data")
+        lines.append(f"@ ${addr:04X} label=SpriteAnimationData")
+
         while addr <= end:
-            byte = self.snapshot[addr]
-            if byte == 0xFF:
-                lines = self.fill_in_data(lines, start, graphic, count)
-                lines.append(f"  ${addr:04X},$01 Terminator.")
-                addr += 0x01
-                graphic += 0x01
-                start = addr
-                count = 0x00
-            addr += 0x01
-            count += 0x01
-        count = end-start
+            sprite_start = addr
+            frame_num = 1
+
+            # Process all frames in this sprite sequence
+            while addr <= end:
+                frame_start = addr
+
+                # Scan forward to find the next terminator (FF or 80)
+                while addr <= end and self.snapshot[addr] != 0xFF and self.snapshot[addr] != 0x80:
+                    addr += 1
+
+                if addr > end:
+                    break
+
+                # Found a terminator
+                terminator = self.snapshot[addr]
+                frame_length = addr - frame_start
+
+                # Process the frame data
+                if frame_length > 0:
+                    lines = self.fill_in_frame_data(lines, frame_start, sprite_id, frame_num, frame_length)
+
+                if terminator == 0xFF:
+                    # Frame terminator
+                    lines.append(f"  ${addr:04X},$01 Frame #N${frame_num:02X} terminator.")
+                    addr += 1
+                    frame_num += 1
+
+                    # Check if next byte is sequence terminator
+                    if addr <= end and self.snapshot[addr] == 0x80:
+                        lines.append(f"  ${addr:04X},$01 Animation sequence terminator.")
+                        addr += 1
+                        break  # End of this sprite sequence
+
+                elif terminator == 0x80:
+                    # Sequence terminator (without FF before it)
+                    lines.append(f"  ${addr:04X},$01 Animation sequence terminator.")
+                    addr += 1
+                    break  # End of this sprite sequence
+
+            sprite_id += 1
 
         return '\n'.join(lines)
 
-    def fill_in_data(self, lines, start, graphic, count):
-        lines.append(f"N ${start:04X} Graphic #N${graphic:02X}.")
+    def fill_in_frame_data(self, lines, start, sprite_id, frame_num, data_length):
+        if data_length == 0:
+            return lines
+
+        if data_length == 10:  # Standard frame: 2 offsets + 8 pixel bytes
+            lines.append(f"N ${start:04X} Sprite #N${sprite_id:02X}, Frame #N${frame_num:02X}.")
+            lines.append(f"  ${start:04X},$02 X/ Y position offsets.")
+            lines.append(f"  ${start + 2:04X},$08 Pixel data (2 character rows × 4 bytes each).")
+        elif data_length == 2:  # Just position offsets
+            lines.append(f"N ${start:04X} Sprite #N${sprite_id:02X}, Frame #N${frame_num:02X} (position only).")
+            lines.append(f"  ${start:04X},$02 X/ Y position offsets.")
+        elif data_length == 1:  # Single control byte
+            lines.append(f"N ${start:04X} Sprite #N${sprite_id:02X}, Frame #N${frame_num:02X} (control byte).")
+            lines.append(f"  ${start:04X},$01 Control data.")
+        else:  # Non-standard frame
+            lines.append(f"N ${start:04X} Sprite #N${sprite_id:02X}, Frame #N${frame_num:02X} (${data_length:02X} bytes).")
+            if data_length >= 2:
+                lines.append(f"  ${start:04X},$02 X/ Y position offsets.")
+                if data_length > 2:
+                    lines.append(f"  ${start+0x02:04X},${data_length-0x02:02X} Pixel/ control data.")
+            else:
+                lines.append(f"  ${start:04X},${data_length:02X} Frame data.")
+
         return lines
 
 
