@@ -35,148 +35,211 @@ Next: <a href="672D.html">672D</a>
 </td>
 </tr>
 </table>
-<div class="description">6700: Routine at 6700</div>
+<div class="description">6700: Fill New Attribute Column</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routines at <a href="672E.html">672E</a> and <a href="678C.html">678C</a>.
+Fills the edge column which has been newly placed on the screen.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">FillNewAttributeColumn</td>
 <td class="address-2"><span id="6700"></span>6700</td>
 <td class="instruction">LD DE,$7802</td>
 <td class="comment-1" rowspan="1"><span class="register">DE</span>=<a href="7800.html#7802">7802</a>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6703"></span>6703</td>
 <td class="instruction">LD B,$10</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=10.</td>
+<td class="comment-1" rowspan="1">Set a counter in <span class="register">B</span> to process 10 rows.</td>
 </tr>
 <tr>
+<td class="asm-label">FillNewAttributeColumn_Loop</td>
 <td class="address-2"><span id="6705"></span>6705</td>
 <td class="instruction">LD A,(DE)</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=*<span class="register">DE</span>.</td>
+<td class="comment-1" rowspan="1">Read the terrain data into <span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6706"></span>6706</td>
 <td class="instruction">INC E</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">E</span> by one.</td>
+<td class="comment-1" rowspan="1">Move to the next column of terrain data.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6707"></span>6707</td>
 <td class="instruction">LD C,$04</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=04.</td>
+<td class="comment-1" rowspan="1">Set the default colour in <span class="register">C</span> to GREEN.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6709"></span>6709</td>
 <td class="instruction">CP $0F</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">6722</a> if <span class="register">A</span> is lower than 0F.</td>
+<td class="comment-1" rowspan="4">Jump to <a href="6700.html#6722">SetNewAttributeColumn_Colour</a> if the terrain byte is lower than 0F or higher than 90.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="670b"></span>670B</td>
-<td class="instruction">JR C,<a href="6700.html#6722">$6722</a></td>
+<td class="instruction">JR C,<a href="6700.html#6722">SetNewAttributeColumn_Colour</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="670d"></span>670D</td>
 <td class="instruction">CP $90</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">6722</a> if <span class="register">A</span> is higher than 90.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="670f"></span>670F</td>
-<td class="instruction">JR NC,<a href="6700.html#6722">$6722</a></td>
+<td class="instruction">JR NC,<a href="6700.html#6722">SetNewAttributeColumn_Colour</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6711"></span>6711</td>
 <td class="instruction">INC C</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">C</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the colour byte in <span class="register">C</span> by one (to CYAN).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6712"></span>6712</td>
 <td class="instruction">CP $3D</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">6722</a> if <span class="register">A</span> is lower than 3D.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">SetNewAttributeColumn_Colour</a> if the terrain byte is lower than 3D.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6714"></span>6714</td>
-<td class="instruction">JR C,<a href="6700.html#6722">$6722</a></td>
+<td class="instruction">JR C,<a href="6700.html#6722">SetNewAttributeColumn_Colour</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6716"></span>6716</td>
 <td class="instruction">INC C</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">C</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the colour byte in <span class="register">C</span> by one (to YELLOW).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6717"></span>6717</td>
 <td class="instruction">CP $51</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">6722</a> if <span class="register">A</span> is lower than 51.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">SetNewAttributeColumn_Colour</a> if #the terrain byte is lower than 51.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6719"></span>6719</td>
-<td class="instruction">JR C,<a href="6700.html#6722">$6722</a></td>
+<td class="instruction">JR C,<a href="6700.html#6722">SetNewAttributeColumn_Colour</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="671b"></span>671B</td>
 <td class="instruction">LD C,$02</td>
-<td class="comment-1" rowspan="1"><span class="register">C</span>=02.</td>
+<td class="comment-1" rowspan="1">Set the colour in <span class="register">C</span> to RED.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="671d"></span>671D</td>
 <td class="instruction">CP $6F</td>
-<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">6722</a> if <span class="register">A</span> is lower than 6F.</td>
+<td class="comment-1" rowspan="2">Jump to <a href="6700.html#6722">SetNewAttributeColumn_Colour</a> if the terrain byte is lower than 6F.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="671f"></span>671F</td>
-<td class="instruction">JR C,<a href="6700.html#6722">$6722</a></td>
+<td class="instruction">JR C,<a href="6700.html#6722">SetNewAttributeColumn_Colour</a></td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6721"></span>6721</td>
 <td class="instruction">INC C</td>
-<td class="comment-1" rowspan="1">Increment <span class="register">C</span> by one.</td>
+<td class="comment-1" rowspan="1">Increment the colour byte in <span class="register">C</span> by one (to MAGENTA).</td>
 </tr>
 <tr>
+<td class="asm-label">SetNewAttributeColumn_Colour</td>
 <td class="address-2"><span id="6722"></span>6722</td>
 <td class="instruction">LD (HL),C</td>
-<td class="comment-1" rowspan="1">Write <span class="register">C</span> to *<span class="register">HL</span>.</td>
+<td class="comment-1" rowspan="1">Write the attribute byte in <span class="register">C</span> to the attribute buffer pointer.</td>
 </tr>
 <tr>
+<td class="routine-comment" colspan="5">
+<span id="6723"></span>
+<div class="comments">
+<div class="paragraph">
+Move down to the next row in the same column.
+</div>
+<div class="paragraph">
+This is quite clever, and very subtle. It's probably easier here to show examples: <table class="default">
+<tr>
+<th colspan="1" rowspan="1">Input in <span class="register">HL</span></th>
+<th colspan="1" rowspan="1">+20 Bytes</th>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">581F</td>
+<td class="centre" colspan="1" rowspan="1">583F</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">583F</td>
+<td class="centre" colspan="1" rowspan="1">585F</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">58DF</td>
+<td class="centre" colspan="1" rowspan="1">58FF</td>
+</tr>
+<tr>
+<td class="centre" colspan="1" rowspan="1">58FF</td>
+<td class="centre" colspan="1" rowspan="1">591F</td>
+</tr>
+</table> From a quick glance, the following code looks pretty straight-forward, just a little strange: <span class="register">L</span> = <span class="register">L</span> + 20 then <span class="register">H</span> = <span class="register">H</span> + carry - <span class="register">L</span>.
+</div>
+<div class="paragraph">
+The cleverness here is with the carry flag and the ZX Spectrum attribute buffer layout.
+</div>
+<div class="paragraph">
+When adding 20 to <span class="register">L</span> any overflow past FF causes the carry flag to be set and this moves into the next page of attribute memory. The <code>SUB <span class="register">L</span></code> instruction then removes the low byte from the high byte calculation, leaving just the original high byte + the carry flag.
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6723"></span>6723</td>
 <td class="instruction">LD A,$20</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=20.</td>
+<td class="comment-1" rowspan="3"><span class="register">L</span>+=20 to move down one position.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6725"></span>6725</td>
 <td class="instruction">ADD A,L</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6726"></span>6726</td>
 <td class="instruction">LD L,A</td>
-<td class="comment-1" rowspan="1"><span class="register">L</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6727"></span>6727</td>
 <td class="instruction">ADC A,H</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>+=<span class="register">H</span>.</td>
+<td class="comment-1" rowspan="3">Add the carry to <span class="register">H</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6728"></span>6728</td>
 <td class="instruction">SUB L</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>-=<span class="register">L</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6729"></span>6729</td>
 <td class="instruction">LD H,A</td>
-<td class="comment-1" rowspan="1"><span class="register">H</span>=<span class="register">A</span>.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="672a"></span>672A</td>
-<td class="instruction">DJNZ <a href="6700.html#6705">$6705</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="6700.html#6705">6705</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="6700.html#6705">FillNewAttributeColumn_Loop</a></td>
+<td class="comment-1" rowspan="1">Decrease the row counter by one and loop back to <a href="6700.html#6705">FillNewAttributeColumn_Loop</a> until all the rows have been processed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="672c"></span>672C</td>
 <td class="instruction">RET</td>
 <td class="comment-1" rowspan="1">Return.</td>

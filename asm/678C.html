@@ -35,186 +35,226 @@ Next: <a href="67DE.html">67DE</a>
 </td>
 </tr>
 </table>
-<div class="description">678C: Routine at 678C</div>
+<div class="description">678C: Scroll Playarea Attributes Right</div>
 <table class="disassembly">
 <tr>
 <td class="routine-comment" colspan="5">
 <div class="details">
 <div class="paragraph">
-Used by the routine at <a href="67E9.html">DrawPlayarea</a>.
+Scrolls the playarea attribute buffer right by one column to match the pixel scrolling. This keeps the colours aligned with the screen content when its scrolling horizontally.
 </div>
 </div>
 </td>
 </tr>
 <tr>
+<td class="asm-label">ScrollAttributes_Right</td>
 <td class="address-2"><span id="678c"></span>678C</td>
 <td class="instruction">LD HL,$59FE</td>
-<td class="comment-1" rowspan="1"><span class="register">HL</span>=59FE (attribute buffer location).</td>
+<td class="comment-1" rowspan="1">Set the source address in <span class="register">HL</span> to 59FE (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="678f"></span>678F</td>
 <td class="instruction">LD DE,$59FF</td>
-<td class="comment-1" rowspan="1"><span class="register">DE</span>=59FF (attribute buffer location).</td>
+<td class="comment-1" rowspan="1">And the destination address in <span class="register">DE</span> to 59FF (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6792"></span>6792</td>
 <td class="instruction">LD B,$10</td>
-<td class="comment-1" rowspan="1"><span class="register">B</span>=10.</td>
+<td class="comment-1" rowspan="1">Set a counter in <span class="register">B</span> to process 10 rows.</td>
 </tr>
 <tr>
+<td class="asm-label">ScrollAttributes_Right_RowLoop</td>
 <td class="address-2"><span id="6794"></span>6794</td>
 <td class="instruction">LD C,$FF</td>
 <td class="comment-1" rowspan="1"><span class="register">C</span>=FF.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6796"></span>6796</td>
 <td class="instruction">LDD</td>
-<td class="comment-1" rowspan="31">LDD.</td>
+<td class="comment-1" rowspan="31">Copy 1F bytes per row. This shifts the entire row right by 01 position.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="6798"></span>6798</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="679a"></span>679A</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="679c"></span>679C</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="679e"></span>679E</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67a0"></span>67A0</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67a2"></span>67A2</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67a4"></span>67A4</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67a6"></span>67A6</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67a8"></span>67A8</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67aa"></span>67AA</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ac"></span>67AC</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ae"></span>67AE</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67b0"></span>67B0</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67b2"></span>67B2</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67b4"></span>67B4</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67b6"></span>67B6</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67b8"></span>67B8</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ba"></span>67BA</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67bc"></span>67BC</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67be"></span>67BE</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67c0"></span>67C0</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67c2"></span>67C2</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67c4"></span>67C4</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67c6"></span>67C6</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67c8"></span>67C8</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ca"></span>67CA</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67cc"></span>67CC</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67ce"></span>67CE</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67d0"></span>67D0</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67d2"></span>67D2</td>
 <td class="instruction">LDD</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67d4"></span>67D4</td>
 <td class="instruction">DEC HL</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">HL</span> by one.</td>
+<td class="comment-1" rowspan="1">Skip the last column of the source row.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67d5"></span>67D5</td>
 <td class="instruction">DEC DE</td>
-<td class="comment-1" rowspan="1">Decrease <span class="register">DE</span> by one.</td>
+<td class="comment-1" rowspan="1">Skip the last column of the destination row.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67d6"></span>67D6</td>
-<td class="instruction">DJNZ <a href="678C.html#6794">$6794</a></td>
-<td class="comment-1" rowspan="1">Decrease counter by one and loop back to <a href="678C.html#6794">6794</a> until counter is zero.</td>
+<td class="instruction">DJNZ <a href="678C.html#6794">ScrollAttributes_Right_RowLoop</a></td>
+<td class="comment-1" rowspan="1">Decrease the row counter by one and loop back to <a href="678C.html#6794">ScrollAttributes_Right_RowLoop</a> until all of the rows have been processed.</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67d8"></span>67D8</td>
 <td class="instruction">LD HL,$5800</td>
 <td class="comment-1" rowspan="1"><span class="register">HL</span>=<a href="4000.html#5800">5800</a> (attribute buffer location).</td>
 </tr>
 <tr>
+<td class="asm-label"></td>
 <td class="address-1"><span id="67db"></span>67DB</td>
-<td class="instruction">JP <a href="6700.html">$6700</a></td>
-<td class="comment-1" rowspan="1">Jump to <a href="6700.html">6700</a>.</td>
+<td class="instruction">JP <a href="6700.html">FillNewAttributeColumn</a></td>
+<td class="comment-1" rowspan="1">Jump to <a href="6700.html">FillNewAttributeColumn</a>.</td>
 </tr>
 </table>
 <table class="asm-navigation">
