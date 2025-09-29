@@ -575,56 +575,92 @@ N $6680 #HTML(Scroll one character row (#N$20 characters) left by #N$01 pixel
 
 u $66F9
 
-c $6700
+c $6700 Fill New Attribute Column
+@ $6700 label=FillNewAttributeColumn
+D $6700 Fills the edge column which has been newly placed on the screen.
   $6700,$03 #REGde=#R$7802.
-  $6703,$02 #REGb=#N$10.
-  $6705,$01 #REGa=*#REGde.
-  $6706,$01 Increment #REGe by one.
-  $6707,$02 #REGc=#N$04.
-  $6709,$04 Jump to #R$6722 if #REGa is lower than #N$0F.
-  $670D,$04 Jump to #R$6722 if #REGa is higher than #N$90.
-  $6711,$01 Increment #REGc by one.
-  $6712,$04 Jump to #R$6722 if #REGa is lower than #N$3D.
-  $6716,$01 Increment #REGc by one.
-  $6717,$04 Jump to #R$6722 if #REGa is lower than #N$51.
-  $671B,$02 #REGc=#N$02.
-  $671D,$04 Jump to #R$6722 if #REGa is lower than #N$6F.
-  $6721,$01 Increment #REGc by one.
-  $6722,$01 Write #REGc to *#REGhl.
-  $6723,$02 #REGa=#N$20.
-  $6725,$01 #REGa+=#REGl.
-  $6726,$01 #REGl=#REGa.
-  $6727,$01 #REGa+=#REGh.
-  $6728,$01 #REGa-=#REGl.
-  $6729,$01 #REGh=#REGa.
-  $672A,$02 Decrease counter by one and loop back to #R$6705 until counter is zero.
+  $6703,$02 Set a counter in #REGb to process #N$10 rows.
+@ $6705 label=FillNewAttributeColumn_Loop
+  $6705,$01 Read the terrain data into #REGa.
+  $6706,$01 Move to the next column of terrain data.
+  $6707,$02 Set the default colour in #REGc to #INK$04.
+  $6709,$08 Jump to #R$6722 if the terrain byte is lower than #N$0F or higher
+. than #N$90.
+  $6711,$01 Increment the colour byte in #REGc by one (to #INK$05).
+  $6712,$04 Jump to #R$6722 if the terrain byte is lower than #N$3D.
+  $6716,$01 Increment the colour byte in #REGc by one (to #INK$06).
+  $6717,$04 Jump to #R$6722 if #the terrain byte is lower than #N$51.
+  $671B,$02 Set the colour in #REGc to #INK$02.
+  $671D,$04 Jump to #R$6722 if the terrain byte is lower than #N$6F.
+  $6721,$01 Increment the colour byte in #REGc by one (to #INK$03).
+@ $6722 label=SetNewAttributeColumn_Colour
+  $6722,$01 Write the attribute byte in #REGc to the attribute buffer pointer.
+N $6723 Move down to the next row in the same column.
+N $6723 This is quite clever, and very subtle. It's probably easier here to
+. show examples:
+. #TABLE(default,centre,centre)
+.   { =h Input in #REGhl | =h +#N$20 Bytes }
+.   #FOREACH($581F,$583F,$58DF,$58FF)(n,{ #Nn | #SIM(start=$6723,stop=$672A,hl=n)#N({sim[HL]}) })
+. TABLE#
+. From a quick glance, the following code looks pretty straight-forward, just a
+. little strange: #REGl = #REGl + #N$20, then #REGh = #REGh + carry - #REGl.
+.
+. The cleverness here is with the carry flag and the ZX Spectrum attribute
+. buffer layout.
+.
+. #HTML(When adding #N$20 to #REGl any overflow past #N$FF causes the carry
+. flag to be set and this moves into the next page of attribute memory. The
+. <code>SUB #REGl</code> instruction then removes the low byte from the high
+. byte calculation, leaving just the original high byte + the carry flag.)
+  $6723,$04 #REGl+=#N$20 to move down one position.
+  $6727,$03 Add the carry to #REGh.
+  $672A,$02 Decrease the row counter by one and loop back to #R$6705 until all
+. the rows have been processed.
   $672C,$01 Return.
 
 u $672D
 
-c $672E
-  $672E,$03 #REGhl=#N$5801 (attribute buffer location).
-  $6731,$03 #REGde=#R$5800(#N$5800) (attribute buffer location).
-  $6734,$02 #REGb=#N$10.
+c $672E Scroll Playarea Attributes Left
+@ $672E label=ScrollAttributes_Left
+D $672E Scrolls the playarea attribute buffer left by one column to match the
+. pixel scrolling. This keeps the colours aligned with the screen content when
+. its scrolling horizontally.
+  $672E,$03 Set the source address in #REGhl to #N$5801 (attribute buffer
+. location).
+  $6731,$03 And the destination address in #REGde to #R$5800(#N$5800)
+. (attribute buffer location).
+  $6734,$02 Set a counter in #REGb to process #N$10 rows.
+@ $6736 label=ScrollAttributes_Left_RowLoop
   $6736,$02 #REGc=#N$FF.
-  $6738,$3E LDI.
-  $6776,$01 Increment #REGhl by one.
-  $6777,$01 Increment #REGde by one.
-  $6778,$02 Decrease counter by one and loop back to #R$6736 until counter is zero.
+  $6738,$3E Copy #N$1F bytes per row. This shifts the entire row left by #N$01
+. position.
+  $6776,$01 Skip the last column of the source row.
+  $6777,$01 Skip the last column of the destination row.
+  $6778,$02 Decrease the row counter by one and loop back to #R$6736 until all
+. of the rows have been processed.
   $677A,$03 #REGhl=#N$581F (attribute buffer location).
   $677D,$03 Jump to #R$6700.
 
 u $6780
 
-c $678C
-  $678C,$03 #REGhl=#N$59FE (attribute buffer location).
-  $678F,$03 #REGde=#N$59FF (attribute buffer location).
-  $6792,$02 #REGb=#N$10.
+c $678C Scroll Playarea Attributes Right
+@ $678C label=ScrollAttributes_Right
+D $678C Scrolls the playarea attribute buffer right by one column to match the
+. pixel scrolling. This keeps the colours aligned with the screen content when
+. its scrolling horizontally.
+  $678C,$03 Set the source address in #REGhl to #N$59FE (attribute buffer
+. location).
+  $678F,$03 And the destination address in #REGde to #N$59FF (attribute buffer
+. location).
+  $6792,$02 Set a counter in #REGb to process #N$10 rows.
+@ $6794 label=ScrollAttributes_Right_RowLoop
   $6794,$02 #REGc=#N$FF.
-  $6796,$3E LDD.
-  $67D4,$01 Decrease #REGhl by one.
-  $67D5,$01 Decrease #REGde by one.
-  $67D6,$02 Decrease counter by one and loop back to #R$6794 until counter is zero.
+  $6796,$3E Copy #N$1F bytes per row. This shifts the entire row right by #N$01
+. position.
+  $67D4,$01 Skip the last column of the source row.
+  $67D5,$01 Skip the last column of the destination row.
+  $67D6,$02 Decrease the row counter by one and loop back to #R$6794 until all
+. of the rows have been processed.
   $67D8,$03 #REGhl=#R$5800(#N$5800) (attribute buffer location).
   $67DB,$03 Jump to #R$6700.
 

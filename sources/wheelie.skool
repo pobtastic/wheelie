@@ -1083,8 +1083,8 @@ c$6650 LD HL,($7817) ; #REGhl=*#R$7817.
  $6665 LD A,$08      ; #REGa=#N$08.
 *$6667 DEC A         ; Decrease #REGa by one.
  $6668 LD ($7819),A  ; Write #REGa to *#R$7819.
- $666B LD D,H        ; #REGd=#REGh.
- $666C LD E,L        ; #REGe=#REGl.
+ $666B LD D,H        ; {Copy #REGhl to #REGde.
+ $666C LD E,L        ; }
  $666D LD B,$FF      ; #REGb=#N$FF.
  $666F CALL $6564    ; Call #R$6564.
 ; Start of screen buffer.
@@ -1192,51 +1192,79 @@ c$6650 LD HL,($7817) ; #REGhl=*#R$7817.
 ; Unused
 u$66F9 DEFB $00,$00,$00,$00,$00,$00,$00
 
-; Routine at 6700
+; Fill New Attribute Column
 ;
-; Used by the routines at #R$672E and #R$678C.
+; Fills the edge column which has been newly placed on the screen.
+@label=FillNewAttributeColumn
 c$6700 LD DE,$7802   ; #REGde=#R$7802.
- $6703 LD B,$10      ; #REGb=#N$10.
-*$6705 LD A,(DE)     ; #REGa=*#REGde.
- $6706 INC E         ; Increment #REGe by one.
- $6707 LD C,$04      ; #REGc=#N$04.
- $6709 CP $0F        ; {Jump to #R$6722 if #REGa is lower than #N$0F.
- $670B JR C,$6722    ; }
- $670D CP $90        ; {Jump to #R$6722 if #REGa is higher than #N$90.
+ $6703 LD B,$10      ; Set a counter in #REGb to process #N$10 rows.
+@label=FillNewAttributeColumn_Loop
+*$6705 LD A,(DE)     ; Read the terrain data into #REGa.
+ $6706 INC E         ; Move to the next column of terrain data.
+ $6707 LD C,$04      ; Set the default colour in #REGc to #INK$04.
+ $6709 CP $0F        ; {Jump to #R$6722 if the terrain byte is lower than #N$0F or higher
+ $670B JR C,$6722    ; than #N$90.
+ $670D CP $90        ;
  $670F JR NC,$6722   ; }
- $6711 INC C         ; Increment #REGc by one.
- $6712 CP $3D        ; {Jump to #R$6722 if #REGa is lower than #N$3D.
- $6714 JR C,$6722    ; }
- $6716 INC C         ; Increment #REGc by one.
- $6717 CP $51        ; {Jump to #R$6722 if #REGa is lower than #N$51.
- $6719 JR C,$6722    ; }
- $671B LD C,$02      ; #REGc=#N$02.
- $671D CP $6F        ; {Jump to #R$6722 if #REGa is lower than #N$6F.
- $671F JR C,$6722    ; }
- $6721 INC C         ; Increment #REGc by one.
-*$6722 LD (HL),C     ; Write #REGc to *#REGhl.
- $6723 LD A,$20      ; #REGa=#N$20.
- $6725 ADD A,L       ; #REGa+=#REGl.
- $6726 LD L,A        ; #REGl=#REGa.
- $6727 ADC A,H       ; #REGa+=#REGh.
- $6728 SUB L         ; #REGa-=#REGl.
- $6729 LD H,A        ; #REGh=#REGa.
- $672A DJNZ $6705    ; Decrease counter by one and loop back to #R$6705 until
-                     ; counter is zero.
+ $6711 INC C         ; Increment the colour byte in #REGc by one (to #INK$05).
+ $6712 CP $3D        ; {Jump to #R$6722 if the terrain byte is lower than
+ $6714 JR C,$6722    ; #N$3D.}
+ $6716 INC C         ; Increment the colour byte in #REGc by one (to #INK$06).
+ $6717 CP $51        ; {Jump to #R$6722 if #the terrain byte is lower than
+ $6719 JR C,$6722    ; #N$51.}
+ $671B LD C,$02      ; Set the colour in #REGc to #INK$02.
+ $671D CP $6F        ; {Jump to #R$6722 if the terrain byte is lower than
+ $671F JR C,$6722    ; #N$6F.}
+ $6721 INC C         ; Increment the colour byte in #REGc by one (to #INK$03).
+@label=SetNewAttributeColumn_Colour
+*$6722 LD (HL),C     ; Write the attribute byte in #REGc to the attribute
+                     ; buffer pointer.
+; Move down to the next row in the same column.
+; .
+; This is quite clever, and very subtle. It's probably easier here to
+; show examples:
+; #TABLE(default,centre,centre)
+;   { =h Input in #REGhl | =h +#N$20 Bytes }
+;   #FOREACH($581F,$583F,$58DF,$58FF)(n,{ #Nn | #SIM(start=$6723,stop=$672A,hl=n)#N({sim[HL]}) })
+; TABLE#
+; From a quick glance, the following code looks pretty straight-forward, just a
+; little strange: #REGl = #REGl + #N$20, then #REGh = #REGh + carry - #REGl.
+; .
+; The cleverness here is with the carry flag and the ZX Spectrum attribute
+; buffer layout.
+; .
+; #HTML(When adding #N$20 to #REGl any overflow past #N$FF causes the carry
+; flag to be set and this moves into the next page of attribute memory. The
+; <code>SUB #REGl</code> instruction then removes the low byte from the high
+; byte calculation, leaving just the original high byte + the carry flag.)
+ $6723 LD A,$20      ; {#REGl+=#N$20 to move down one position.
+ $6725 ADD A,L       ;
+ $6726 LD L,A        ; }
+ $6727 ADC A,H       ; {Add the carry to #REGh.
+ $6728 SUB L         ;
+ $6729 LD H,A        ; }
+ $672A DJNZ $6705    ; Decrease the row counter by one and loop back to #R$6705 until all
+                     ; the rows have been processed.
  $672C RET           ; Return.
 
 ; Unused
 u$672D DEFB $00
 
-; Routine at 672E
+; Scroll Playarea Attributes Left
 ;
-; Used by the routine at #R$67E9.
-c$672E LD HL,$5801   ; #REGhl=#N$5801 (attribute buffer location).
- $6731 LD DE,$5800   ; #REGde=#R$5800(#N$5800) (attribute buffer location).
- $6734 LD B,$10      ; #REGb=#N$10.
+; Scrolls the playarea attribute buffer left by one column to match the
+; pixel scrolling. This keeps the colours aligned with the screen content when
+; its scrolling horizontally.
+@label=ScrollAttributes_Left
+c$672E LD HL,$5801   ; Set the source address in #REGhl to #N$5801 (attribute buffer
+                     ; location).
+ $6731 LD DE,$5800   ; And the destination address in #REGde to #R$5800(#N$5800)
+                     ; (attribute buffer location).
+ $6734 LD B,$10      ; Set a counter in #REGb to process #N$10 rows.
+@label=ScrollAttributes_Left_RowLoop
 *$6736 LD C,$FF      ; #REGc=#N$FF.
- $6738 LDI           ; {LDI.
- $673A LDI           ;
+ $6738 LDI           ; {Copy #N$1F bytes per row. This shifts the entire row left by #N$01
+ $673A LDI           ; position.
  $673C LDI           ;
  $673E LDI           ;
  $6740 LDI           ;
@@ -1266,10 +1294,10 @@ c$672E LD HL,$5801   ; #REGhl=#N$5801 (attribute buffer location).
  $6770 LDI           ;
  $6772 LDI           ;
  $6774 LDI           ; }
- $6776 INC HL        ; Increment #REGhl by one.
- $6777 INC DE        ; Increment #REGde by one.
- $6778 DJNZ $6736    ; Decrease counter by one and loop back to #R$6736 until
-                     ; counter is zero.
+ $6776 INC HL        ; Skip the last column of the source row.
+ $6777 INC DE        ; Skip the last column of the destination row.
+ $6778 DJNZ $6736    ; Decrease the row counter by one and loop back to #R$6736 until all
+                     ; of the rows have been processed.
  $677A LD HL,$581F   ; #REGhl=#N$581F (attribute buffer location).
  $677D JP $6700      ; Jump to #R$6700.
 
@@ -1277,15 +1305,21 @@ c$672E LD HL,$5801   ; #REGhl=#N$5801 (attribute buffer location).
 u$6780 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $6788 DEFB $00,$00,$00,$00
 
-; Routine at 678C
+; Scroll Playarea Attributes Right
 ;
-; Used by the routine at #R$67E9.
-c$678C LD HL,$59FE   ; #REGhl=#N$59FE (attribute buffer location).
- $678F LD DE,$59FF   ; #REGde=#N$59FF (attribute buffer location).
- $6792 LD B,$10      ; #REGb=#N$10.
+; Scrolls the playarea attribute buffer right by one column to match the
+; pixel scrolling. This keeps the colours aligned with the screen content when
+; its scrolling horizontally.
+@label=ScrollAttributes_Right
+c$678C LD HL,$59FE   ; Set the source address in #REGhl to #N$59FE (attribute buffer
+                     ; location).
+ $678F LD DE,$59FF   ; And the destination address in #REGde to #N$59FF (attribute buffer
+                     ; location).
+ $6792 LD B,$10      ; Set a counter in #REGb to process #N$10 rows.
+@label=ScrollAttributes_Right_RowLoop
 *$6794 LD C,$FF      ; #REGc=#N$FF.
- $6796 LDD           ; {LDD.
- $6798 LDD           ;
+ $6796 LDD           ; {Copy #N$1F bytes per row. This shifts the entire row right by #N$01
+ $6798 LDD           ; position.
  $679A LDD           ;
  $679C LDD           ;
  $679E LDD           ;
@@ -1315,10 +1349,10 @@ c$678C LD HL,$59FE   ; #REGhl=#N$59FE (attribute buffer location).
  $67CE LDD           ;
  $67D0 LDD           ;
  $67D2 LDD           ; }
- $67D4 DEC HL        ; Decrease #REGhl by one.
- $67D5 DEC DE        ; Decrease #REGde by one.
- $67D6 DJNZ $6794    ; Decrease counter by one and loop back to #R$6794 until
-                     ; counter is zero.
+ $67D4 DEC HL        ; Skip the last column of the source row.
+ $67D5 DEC DE        ; Skip the last column of the destination row.
+ $67D6 DJNZ $6794    ; Decrease the row counter by one and loop back to #R$6794 until all
+                     ; of the rows have been processed.
  $67D8 LD HL,$5800   ; #REGhl=#R$5800(#N$5800) (attribute buffer location).
  $67DB JP $6700      ; Jump to #R$6700.
 
