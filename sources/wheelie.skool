@@ -1843,8 +1843,8 @@ c$69BA ADD HL,HL     ; #REGhl+=#REGhl.
 u$69BD DEFB $00
 
 ; Routine at 69BE
-c$69BE LD DE,$0002   ; #REGde=#N($0002,$04,$04).
- $69C1 ADD HL,DE     ; #REGhl+=#REGde.
+c$69BE LD DE,$0002   ; {#REGhl+=#N($0002,$04,$04).
+ $69C1 ADD HL,DE     ; }
  $69C2 LD A,(HL)     ; #REGa=*#REGhl.
  $69C3 RLCA          ; RLCA.
  $69C4 SBC A,A       ; #REGa-=#REGa.
@@ -1945,13 +1945,13 @@ c$6A27 LD A,(HL)     ; #REGa=*#REGhl.
  $6A47 LD C,A        ; #REGc=#REGa.
  $6A48 JR NC,$6A6D   ; Jump to #R$6A6D if {} is higher.
  $6A4A AND %00000011 ; Keep only bits 0-1.
- $6A4C LD L,$33      ; #REGl=#N$33.
+ $6A4C LD L,$33      ; Update #REGhl to point to #R$7833.
  $6A4E JR NZ,$6A51   ; Jump to #R$6A51 if {} is not zero.
  $6A50 DEC (HL)      ; Decrease *#REGhl by one.
 *$6A51 DEC A         ; Decrease #REGa by one.
  $6A52 JR NZ,$6A55   ; Jump to #R$6A55 if #REGa is not zero.
  $6A54 INC (HL)      ; Increment *#REGhl by one.
-*$6A55 LD L,$26      ; #REGl=#N$26.
+*$6A55 LD L,$26      ; Update #REGhl to point to #R$7826.
  $6A57 LD B,A        ; #REGb=#REGa.
  $6A58 LD A,$23      ; #REGa=#N$23.
  $6A5A SUB (HL)      ; #REGa-=*#REGhl.
@@ -1967,11 +1967,11 @@ c$6A27 LD A,(HL)     ; #REGa=*#REGhl.
  $6A68 CP $96        ; {Jump to #R$6A6D if #REGa is equal to #N$96.
  $6A6A JR Z,$6A6D    ; }
  $6A6C INC (HL)      ; Increment *#REGhl by one.
-*$6A6D LD L,$26      ; #REGl=#N$26.
+*$6A6D LD L,$26      ; Update #REGhl to point to #R$7826.
  $6A6F LD A,(HL)     ; {Jump to #R$6A94 if *#REGhl is not zero.
  $6A70 AND A         ;
  $6A71 JR NZ,$6A94   ; }
- $6A73 LD L,$22      ; #REGl=#N$22.
+ $6A73 LD L,$22      ; Update #REGhl to point to #R$7822.
  $6A75 LD A,(HL)     ; {Jump to #R$6A7B if bit 7 of *#REGhl is set.
  $6A76 BIT 7,A       ;
  $6A78 JR NZ,$6A7B   ; }
@@ -3763,6 +3763,9 @@ u$73F1 DEFB $00
 ; Routine at 73F2
 ;
 ; Used by the routine at #R$691B.
+;
+; B
+; C
 c$73F2 LD A,($7825)  ; #REGa=*#R$7825.
  $73F5 AND A         ; {Return if #REGa is not zero.
  $73F6 RET NZ        ; }
@@ -3792,8 +3795,8 @@ c$73F2 LD A,($7825)  ; #REGa=*#R$7825.
  $7415 INC HL        ; {Increment #REGhl' by three.
  $7416 INC HL        ;
  $7417 INC HL        ; }
- $7418 LD A,E        ; #REGa=#REGe'.
- $7419 LD ($7825),A  ; Write #REGa to *#R$7825.
+ $7418 LD A,E        ; {Write #REGe' to *#R$7825.
+ $7419 LD ($7825),A  ; }
  $741C EXX           ; Switch back to the normal registers.
  $741D RET           ; Return.
 

@@ -1052,8 +1052,7 @@ c $69BA
 u $69BD
 
 c $69BE
-  $69BE,$03 #REGde=#N($0002,$04,$04).
-  $69C1,$01 #REGhl+=#REGde.
+  $69BE,$04 #REGhl+=#N($0002,$04,$04).
   $69C2,$01 #REGa=*#REGhl.
   $69C3,$01 RLCA.
   $69C4,$01 #REGa-=#REGa.
@@ -1061,6 +1060,7 @@ c $69BE
   $69C6,$03 Return if bit 6 of *#REGhl is zero.
   $69C9,$01 Increment #REGa by one.
   $69CA,$01 Return.
+
   $69CB,$03 Call #R$69BE.
   $69CE,$01 #REGe=#REGa.
   $69CF,$03 #REGhl=*#R$782E.
@@ -1126,13 +1126,13 @@ c $6A27
   $6A47,$01 #REGc=#REGa.
   $6A48,$02 Jump to #R$6A6D if {} is higher.
   $6A4A,$02,b$01 Keep only bits 0-1.
-  $6A4C,$02 #REGl=#N$33.
+  $6A4C,$02 Update #REGhl to point to #R$7833.
   $6A4E,$02 Jump to #R$6A51 if {} is not zero.
   $6A50,$01 Decrease *#REGhl by one.
   $6A51,$01 Decrease #REGa by one.
   $6A52,$02 Jump to #R$6A55 if #REGa is not zero.
   $6A54,$01 Increment *#REGhl by one.
-  $6A55,$02 #REGl=#N$26.
+  $6A55,$02 Update #REGhl to point to #R$7826.
   $6A57,$01 #REGb=#REGa.
   $6A58,$02 #REGa=#N$23.
   $6A5A,$01 #REGa-=*#REGhl.
@@ -1146,9 +1146,9 @@ c $6A27
   $6A66,$02 Jump to #R$6A6D if #REGb is not zero.
   $6A68,$04 Jump to #R$6A6D if #REGa is equal to #N$96.
   $6A6C,$01 Increment *#REGhl by one.
-  $6A6D,$02 #REGl=#N$26.
+  $6A6D,$02 Update #REGhl to point to #R$7826.
   $6A6F,$04 Jump to #R$6A94 if *#REGhl is not zero.
-  $6A73,$02 #REGl=#N$22.
+  $6A73,$02 Update #REGhl to point to #R$7822.
   $6A75,$05 Jump to #R$6A7B if bit 7 of *#REGhl is set.
   $6A7A,$01 Invert the bits in #REGa.
   $6A7B,$01 #REGb=#REGa.
@@ -2214,6 +2214,8 @@ M $73D4,$04 Ensure the random number is either #N$04#RAW(,) #N$08 or #N$0C.
 u $73F1
 
 c $73F2
+R $73F2 B
+R $73F2 C
   $73F2,$03 #REGa=*#R$7825.
   $73F5,$02 Return if #REGa is not zero.
   $73F7,$03 #REGhl=#R$FFF8.
@@ -2236,8 +2238,7 @@ c $73F2
   $7412,$01 Decrease #REGd' by one.
   $7413,$02 Jump to #R$7406 if #REGd' is not zero.
   $7415,$03 Increment #REGhl' by three.
-  $7418,$01 #REGa=#REGe'.
-  $7419,$03 Write #REGa to *#R$7825.
+  $7418,$04 Write #REGe' to *#R$7825.
   $741C,$01 Switch back to the normal registers.
   $741D,$01 Return.
 
