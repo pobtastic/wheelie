@@ -44,6 +44,19 @@ Next: <a href="741E.html">741E</a>
 Used by the routine at <a href="691B.html">ColouriseSprite</a>.
 </div>
 </div>
+<table class="input">
+<tr class="asm-input-header">
+<th colspan="2">Input</th>
+</tr>
+<tr>
+<td class="register">B</td>
+<td class="register-desc"></td>
+</tr>
+<tr>
+<td class="register">C</td>
+<td class="register-desc"></td>
+</tr>
+</table>
 </td>
 </tr>
 <tr>
@@ -187,12 +200,11 @@ Used by the routine at <a href="691B.html">ColouriseSprite</a>.
 <tr>
 <td class="address-1"><span id="7418"></span>7418</td>
 <td class="instruction">LD A,E</td>
-<td class="comment-1" rowspan="1"><span class="register">A</span>=<span class="register">E'</span>.</td>
+<td class="comment-1" rowspan="2">Write <span class="register">E'</span> to *<a href="7825.html">SpriteState</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="7419"></span>7419</td>
 <td class="instruction">LD ($7825),A</td>
-<td class="comment-1" rowspan="1">Write <span class="register">A</span> to *<a href="7825.html">SpriteState</a>.</td>
 </tr>
 <tr>
 <td class="address-1"><span id="741c"></span>741C</td>
