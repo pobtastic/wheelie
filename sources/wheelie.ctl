@@ -1,4 +1,4 @@
-; Copyright Microsphere 1983, 2024 ArcadeGeek LTD.
+; Copyright Microsphere 1983, 2026 ArcadeGeek LTD.
 ; NOTE: Disassembly is Work-In-Progress.
 ; Label naming is loosely based on Action_ActionName_SubAction e.g. Print_HighScore_Loop.
 
@@ -1612,7 +1612,7 @@ N $6EA8 Paint the carousel.
 . until all of the carousel has been painted.
   $6EAE,$01 Restore #REGhl from the stack.
 N $6EAF Play the "player dead" audio.
-N $6EAF #HTML(#AUDIO(dead.wav)(#INCLUDE(Dead)))
+N $6EAF #HTML(#AUDIO0(dead.wav)(#INCLUDE(Dead)))
   $6EAF,$02 #REGb=#N$14 (counter; #N$14 loops).
 @ $6EB1 label=Handler_PlayerDead
   $6EB1,$02 Stash #REGbc and #REGhl on the stack.
@@ -2482,7 +2482,7 @@ c $7535 Print "Demo Mode"
 N $7535 See #R$E800.
   $7535,$07 Jump to #R$7544 if the game is not in "demo mode" (the high-order byte of #R$782C does not contain #R$73B7(#N$73)).
 N $753C Print the "#STR($BA66,$03,$20)" messaging in the footer.
-N $753C #HTML(#FONT:(DEMO MODE-PRESS A KEY TO PLAY)$3D00,attr=$82(demo-mode))
+N $753C #HTML(#FONT$3D00,attr=$82,chars=0(DEMO MODE-PRESS A KEY TO PLAY)(demo-mode))
   $753C,$02 #REGa=#N$82 (#COLOUR$82).
   $753E,$03 #REGhl=#R$BA66.
   $7541,$03 Jump to #R$74C3.
@@ -2550,7 +2550,7 @@ c $757E Game Over
   $7595,$01 Switch back to the normal registers.
   $7596,$03 Call #R$7434.
 N $7599 Print the "#STR($BA46,$03,$20)" messaging in the footer.
-N $7599 #HTML(#FONT:(GAME OVER-PRESS KEY TO TRY AGAIN)$3D00,attr=$84(game-over))
+N $7599 #HTML(#FONT$3D00,attr=$84,chars=0(GAME OVER-PRESS KEY TO TRY AGAIN)(game-over))
 @ $7599 label=Print_GameOver
   $7599,$02 #REGa=#N$84 (#COLOUR$84).
   $759B,$03 #REGhl=#R$BA46.
@@ -2674,12 +2674,12 @@ N $765C Start the "Out Of Fuel" sequence.
   $766A,$03 Write the player sprite ID to *#R$7834.
   $766D,$03 Call #R$6B2D.
 N $7670 Print the "#STR($BA86,$03,$20)" messaging in the footer.
-N $7670 #HTML(#FONT:(OUT OF FUEL)$3D00,attr=$A9(out-of-fuel))
+N $7670 #HTML(#FONT$3D00,attr=$A9,chars=0(OUT OF FUEL)(out-of-fuel))
   $7670,$02 #REGa=#N$A9 (#COLOUR$A9).
   $7672,$03 #REGhl=#R$BA86.
   $7675,$03 Call #R$74C3.
 N $7678 Play the "out of fuel" audio.
-N $7678 #HTML(#AUDIO(out-of-fuel.wav)(#INCLUDE(OutOfFuel)))
+N $7678 #HTML(#AUDIO0(out-of-fuel.wav)(#INCLUDE(OutOfFuel)))
   $7678,$02 Set an outer loop count in #REGd for #N$10 iterations.
   $767A,$02 Set the initial tone value in #REGc to #N$01.
 @ $767C label=PlayFuelSound_OuterLoop
@@ -2750,7 +2750,7 @@ c $76D7 Handler: Ghost Rider
   $76FE,$01 No operation.
   $76FF,$0A Add #N$01F4 to *#R$7844.
 N $7709 Print the "#STR($BAA6,$03,$20)" messaging in the footer.
-N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
+N $7709 #HTML(#FONT$3D00,attr=$96,chars=0(THE RACE IS ON!)(race-is-on))
   $7709,$02 #REGa=#N$96 (#COLOUR$96).
   $770B,$03 #REGhl=#R$BAA6.
   $770E,$03 Call #R$74C3.
@@ -2826,7 +2826,7 @@ N $7709 #HTML(#FONT:(THE RACE IS ON!)$3D00,attr=$96(race-is-on))
   $77BC,$05 Write #N$05 to *#R$7839.
   $77C1,$03 Call #R$ED39.
 N $77C4 Print the "#STR($BAC6,$03,$20)" messaging in the footer.
-N $77C4 #HTML(#FONT:(NEW CODE ABCDE-PRESS KEY TO PLAY)$3D00,attr=$9F(new-code))
+N $77C4 #HTML(#FONT$3D00,attr=$9F,chars=0(NEW CODE ABCDE-PRESS KEY TO PLAY)(new-code))
   $77C4,$02 #REGa=#N$9F (#COLOUR$9F).
   $77C6,$03 #REGhl=#R$BAC6.
   $77C9,$03 Call #R$74C3.
@@ -2842,7 +2842,7 @@ u $77DB
 c $77E0
   $77E0,$06 No operation.
 N $77E6 Print the "#STR($78AC,$03,$20)" messaging in the footer.
-N $77E6 #HTML(#FONT:(THE GHOSTRIDER HAS FINISHED)$3D00,attr=$87(ghostrider-finished))
+N $77E6 #HTML(#FONT$3D00,attr=$87,chars=0(THE GHOSTRIDER HAS FINISHED)(ghostrider-finished))
   $77E6,$02 #REGa=#N$87 (#COLOUR$87).
   $77E8,$03 #REGhl=#R$78AC.
   $77EB,$03 Call #R$74C3.
@@ -3054,7 +3054,7 @@ b $788C Graphics: Arrow Bottom
 
 b $789C Graphics: Bike (Start Screen)
 @ $789C label=Graphics_StartScreenBike
-D $789C #UDGARRAY$02,attr=$1F,scale=$04,step=$01;(#PC)-(#PC+$08)-$08(bike)
+D $789C #UDGARRAY$02,attr=$1F,scale=$04,step=$01((#PC)-(#PC+$08)-$08)(bike)
   $789C,$10,$08
 
 t $78AC Messaging: Ghostrider Is Finished
@@ -3066,17 +3066,17 @@ b $78CC
 b $78E0 Graphics: Carousel
 @ $78E0 label=Graphics_Carousel
 D $78E0 This is bit rotated by the routine at: #R$6E18.
-  $78E0,$20,$04 #UDGTABLE { #UDGARRAY$04,attr=$06,scale=$04,step=$04;(#PC)-(#PC+$1C)-$01-$20(carousel) } TABLE#
+  $78E0,$20,$04 #UDGTABLE { #UDGARRAY$04,attr=$06,scale=$04,step=$04((#PC)-(#PC+$1C)-$01-$20)(carousel) } TABLE#
 
 b $7900
 
 b $8000 Graphics Data
-  $8000,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_solid)
-  $8020,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_stripes)
-  $8040,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge1)
-  $8060,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge2)
-  $8080,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge3)
-  $80A0,$20 #UDGARRAY$20,attr=$07,scale=$02;(#PC)-(#PC+$1F){$00,$00,$100,$01}(terrain_line_edge4)
+  $8000,$20 #UDGARRAY$20,attr=$07,scale=$02((#PC)-(#PC+$1F)){$00,$00,$100,$01}(terrain_line_solid)
+  $8020,$20 #UDGARRAY$20,attr=$07,scale=$02((#PC)-(#PC+$1F)){$00,$00,$100,$01}(terrain_line_stripes)
+  $8040,$20 #UDGARRAY$20,attr=$07,scale=$02((#PC)-(#PC+$1F)){$00,$00,$100,$01}(terrain_line_edge1)
+  $8060,$20 #UDGARRAY$20,attr=$07,scale=$02((#PC)-(#PC+$1F)){$00,$00,$100,$01}(terrain_line_edge2)
+  $8080,$20 #UDGARRAY$20,attr=$07,scale=$02((#PC)-(#PC+$1F)){$00,$00,$100,$01}(terrain_line_edge3)
+  $80A0,$20 #UDGARRAY$20,attr=$07,scale=$02((#PC)-(#PC+$1F)){$00,$00,$100,$01}(terrain_line_edge4)
 
 g $8960 Data: Level 1
 @ $8960 label=Data_Level_1
@@ -3196,65 +3196,65 @@ N $BBA0 Level 1.
 @ $BBA0 label=Messaging_Level1
 B $BBA0,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BBA1,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:(   THE   )$3D00,attr=$42(level-01-01) }
-. { #FONT:(BOUNCING )$3D00,attr=$42(level-01-02) }
-. { #FONT:(HEDGEHOGS)$3D00,attr=$42(level-01-03) }
+. { #FONT$3D00,attr=$42,chars=0(   THE   )(level-01-01) }
+. { #FONT$3D00,attr=$42,chars=0(BOUNCING )(level-01-02) }
+. { #FONT$3D00,attr=$42,chars=0(HEDGEHOGS)(level-01-03) }
 . UDGTABLE#
 N $BBBC Level 2.
 @ $BBBC label=Messaging_Level2
 B $BBBC,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BBBD,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:(   THE   )$3D00,attr=$45(level-02-01) }
-. { #FONT:(  WILY   )$3D00,attr=$45(level-02-02) }
-. { #FONT:(WALLABIES)$3D00,attr=$45(level-02-03) }
+. { #FONT$3D00,attr=$45,chars=0(   THE   )(level-02-01) }
+. { #FONT$3D00,attr=$45,chars=0(  WILY   )(level-02-02) }
+. { #FONT$3D00,attr=$45,chars=0(WALLABIES)(level-02-03) }
 . UDGTABLE#
 N $BBD8 Level 3.
 @ $BBD8 label=Messaging_Level3
 B $BBD8,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BBD9,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:(   THE   )$3D00,attr=$46(level-03-01) }
-. { #FONT:( KILLER  )$3D00,attr=$46(level-03-02) }
-. { #FONT:(  BEES   )$3D00,attr=$46(level-03-03) }
+. { #FONT$3D00,attr=$46,chars=0(   THE   )(level-03-01) }
+. { #FONT$3D00,attr=$46,chars=0( KILLER  )(level-03-02) }
+. { #FONT$3D00,attr=$46,chars=0(  BEES   )(level-03-03) }
 . UDGTABLE#
 N $BBF4 Level 4.
 @ $BBF4 label=Messaging_Level4
 B $BBF4,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BBF5,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:(   ALL   )$3D00,attr=$50(level-04-01) }
-. { #FONT:(  THAT   )$3D00,attr=$50(level-04-02) }
-. { #FONT:( BOUNCES )$3D00,attr=$50(level-04-03) }
+. { #FONT$3D00,attr=$50,chars=0(   ALL   )(level-04-01) }
+. { #FONT$3D00,attr=$50,chars=0(  THAT   )(level-04-02) }
+. { #FONT$3D00,attr=$50,chars=0( BOUNCES )(level-04-03) }
 . UDGTABLE#
 N $BC10 Level 5.
 @ $BC10 label=Messaging_Level5
 B $BC10,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BC11,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:(   THE   )$3D00,attr=$70(level-05-01) }
-. { #FONT:(  SWARM  )$3D00,attr=$70(level-05-02) }
-. { #FONT:(         )$3D00,attr=$70(level-05-03) }
+. { #FONT$3D00,attr=$70,chars=0(   THE   )(level-05-01) }
+. { #FONT$3D00,attr=$70,chars=0(  SWARM  )(level-05-02) }
+. { #FONT$3D00,attr=$70,chars=0(         )(level-05-03) }
 . UDGTABLE#
 N $BC2C Level 6.
 @ $BC2C label=Messaging_Level6
 B $BC2C,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BC2D,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:( SPRING  )$3D00,attr=$56(level-06-01) }
-. { #FONT:(   AND   )$3D00,attr=$56(level-06-02) }
-. { #FONT:(  STING  )$3D00,attr=$56(level-06-03) }
+. { #FONT$3D00,attr=$56,chars=0( SPRING  )(level-06-01) }
+. { #FONT$3D00,attr=$56,chars=0(   AND   )(level-06-02) }
+. { #FONT$3D00,attr=$56,chars=0(  STING  )(level-06-03) }
 . UDGTABLE#
 N $BC48 Level 7.
 @ $BC48 label=Messaging_Level7
 B $BC48,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BC49,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:(NIGHTMARE)$3D00,attr=$44(level-07-01) }
-. { #FONT:(  PARK   )$3D00,attr=$44(level-07-02) }
-. { #FONT:(         )$3D00,attr=$44(level-07-03) }
+. { #FONT$3D00,attr=$44,chars=0(NIGHTMARE)(level-07-01) }
+. { #FONT$3D00,attr=$44,chars=0(  PARK   )(level-07-02) }
+. { #FONT$3D00,attr=$44,chars=0(         )(level-07-03) }
 . UDGTABLE#
 N $BC64 Level 8.
 @ $BC64 label=Messaging_Level8
 B $BC64,$01 Attribute #COLOUR(#PEEK(#PC)).
   $BC65,$1B,$09 #UDGTABLE(default,centre)
-. { #FONT:( ABANDON )$3D00,attr=$D6(level-08-01) }
-. { #FONT:(   ALL   )$3D00,attr=$D6(level-08-02) }
-. { #FONT:(  HOPE!  )$3D00,attr=$D6(level-08-03) }
+. { #FONT$3D00,attr=$D6,chars=0( ABANDON )(level-08-01) }
+. { #FONT$3D00,attr=$D6,chars=0(   ALL   )(level-08-02) }
+. { #FONT$3D00,attr=$D6,chars=0(  HOPE!  )(level-08-03) }
 . UDGTABLE#
 
 b $BC80
@@ -3278,7 +3278,7 @@ t $C3E0 Messaging: MPH
 
 b $C3E4 Graphics: Arrow Top
 @ $C3E4 label=Graphics_ArrowTop
-D $C3E4 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$786C-$7874-$08(arrow-top) } UDGTABLE#
+D $C3E4 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01($786C-$7874-$08)(arrow-top) } UDGTABLE#
   $C3E4,$01 See #R$786C.
   $C3E5,$01 See #R$7874.
 
@@ -3288,7 +3288,7 @@ t $C3E6 Messaging: Fuel
 
 b $C3EA Graphics: Arrow Middle
 @ $C3EA label=Graphics_ArrowMiddle
-D $C3EA #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$787C-$7884-$08(arrow-middle) } UDGTABLE#
+D $C3EA #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01($787C-$7884-$08)(arrow-middle) } UDGTABLE#
   $C3EA,$01 See #R$787C.
   $C3EB,$01 See #R$7884.
 
@@ -3298,7 +3298,7 @@ t $C3EC Messaging: RPM
 
 b $C3F0 Graphics: Arrow Bottom
 @ $C3F0 label=Graphics_ArrowBottom
-D $C3F0 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01;$788C-$7894-$08(arrow-bottom) } UDGTABLE#
+D $C3F0 #UDGTABLE(default,centre) { #UDGARRAY$02,attr=$06,scale=$04,step=$01($788C-$7894-$08)(arrow-bottom) } UDGTABLE#
   $C3F0,$01 See #R$788C.
   $C3F1,$01 See #R$7894.
 
@@ -6394,16 +6394,16 @@ N $E52A Sprite #N$17E, Frame #N$08 ($10 bytes).
   $E52C,$0E Pixel/ control data.
   $E53A,$01 Frame #N$08 terminator.
 
-  $C502,$08 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;(#PC)-(#PC+$08)-$08(graphic-(#PC)) } TABLE#
-  $C519,$08 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;(#PC)-(#PC+$08)-$08(graphic-(#PC)) } TABLE#
-  $C740,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C740-$C748-$08(player-01) } TABLE#
-  $C753,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C753-$C75B-$08(player-02) } TABLE#
-  $C766,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C766-$C76E-$08(player-03) } TABLE#
-  $C777,$0A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C777-$C77F-$08{$00,$00,$20,$28}(player-04) } TABLE#
-  $C785,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C785-$C78D-$08(graphic-32) } TABLE#
-  $C796,$1A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01;$C796-$C7AE-$08{$00,$00,$20,$68}(graphic-33) } TABLE#
+  $C502,$08 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01((#PC)-(#PC+$08)-$08)(graphic-(#PC)) } TABLE#
+  $C519,$08 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01((#PC)-(#PC+$08)-$08)(graphic-(#PC)) } TABLE#
+  $C740,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01($C740-$C748-$08)(player-01) } TABLE#
+  $C753,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01($C753-$C75B-$08)(player-02) } TABLE#
+  $C766,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01($C766-$C76E-$08)(player-03) } TABLE#
+  $C777,$0A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01($C777-$C77F-$08){$00,$00,$20,$28}(player-04) } TABLE#
+  $C785,$10 #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01($C785-$C78D-$08)(graphic-32) } TABLE#
+  $C796,$1A #UDGTABLE(default,centre) { #UDGARRAY$01,attr=$07,scale=$04,step=$01($C796-$C7AE-$08){$00,$00,$20,$68}(graphic-33) } TABLE#
 
-B $D59B #UDGARRAY$01,attr=$07,scale=$04,step=$01;$D59B-$D5B3-$08(kangaroo)
+B $D59B #UDGARRAY$01,attr=$07,scale=$04,step=$01($D59B-$D5B3-$08)(kangaroo)
 
 b $E600
 
@@ -6788,19 +6788,19 @@ N $EC3D Restore the real value of the note after the terminator check.
 
 c $EC5E Sounds: Level Complete
 @ $EC5E label=Sounds_LevelComplete
-N $EC5E #HTML(#AUDIO(level-complete.wav)(#INCLUDE(LevelComplete)))
+N $EC5E #HTML(#AUDIO0(level-complete.wav)(#INCLUDE(LevelComplete)))
   $EC5E,$03 #REGhl=#R$EEE8.
   $EC61,$02 Jump to #R$EC35.
 
 c $EC63 Sounds: The Race Is On!
 @ $EC63 label=Sounds_TheRaceIsOn
-N $EC63 #HTML(#AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn)))
+N $EC63 #HTML(#AUDIO0(race-is-on.wav)(#INCLUDE(RaceIsOn)))
   $EC63,$03 #REGhl=#R$EF4F.
   $EC66,$02 Jump to #R$EC35.
 
 c $EC68 Sounds: Ghostrider Has Finished
 @ $EC68 label=Sounds_GhostriderFinished
-N $EC68 #HTML(#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
+N $EC68 #HTML(#AUDIO0(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished)))
   $EC68,$03 #REGhl=#R$EFC2.
   $EC6B,$02 Jump to #R$EC35.
 

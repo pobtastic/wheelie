@@ -1,3 +1,4 @@
+# Copyright 2026 Paul Maddern (paul@arcadegeek.co.uk)
 GAME=wheelie
 SRCFILES=$(echo wheelie.skool {wheelie,analytics,bases,changelog,data,pages,pokes,sound}.ref {wheelie,dark,wide}.css)
 SKOOL2BINOPTS="-i -S 27934"

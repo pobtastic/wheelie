@@ -1,3 +1,4 @@
+# Copyright 2026 Paul Maddern (paul@arcadegeek.co.uk)
 import art
 import sys
 import os
@@ -28,7 +29,7 @@ def run_skool2asm():
 def run_skool2html():
     options = "-c Config/InitModule={}:publish -d {}/build/html".format(SKOOLKIT_TOOLS, WHEELIE_HOME)
     art.tprint("Wheelie")
-    hex = '-H -c Config/GameDir=wheelie --var pub=2'
-    dec = '-D -c Config/GameDir=wheelie/dec --var pub=4'
+    hex = '-H --ini ListRefs=2 -c Config/GameDir=wheelie --var pub=2'
+    dec = '-D --ini ListRefs=2 -c Config/GameDir=wheelie/dec --var pub=4'
     skool2html.main(options.split() + hex.split() + sys.argv[1:] + [WHEELIE_SKOOL])
     skool2html.main(options.split() + dec.split() + sys.argv[1:] + [WHEELIE_SKOOL])

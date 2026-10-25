@@ -1,3 +1,5 @@
+; Copyright 2026 Paul Maddern (paul@arcadegeek.co.uk)
+
 ;
 ; SkoolKit ref file for Wheelie
 ;
@@ -14,7 +16,7 @@ GameDir=wheelie
 [Game]
 Game=Wheelie
 Logo=#SCR$01,$00,$00,$20,$08,$A900,$B100(/images/logo)
-Copyright=&copy; 1983 Microsphere &copy; 2024 ArcadeGeek LTD.
+Copyright=&copy; 1983 Microsphere<br />&copy; 2026 ArcadeGeek LTD.
 Repository=https://github.com/pobtastic/wheelie/
 LinkInternalOperands=1
 AddressAnchor={address#IF({base}==16)(:04x)}

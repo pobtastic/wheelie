@@ -1,24 +1,24 @@
-; Copyright 2024 Paul Maddern (paul@arcadegeek.co.uk)
+; Copyright 2026 Paul Maddern (paul@arcadegeek.co.uk)
 
 [Page:Sound]
 SectionPrefix=Audio
 
 [Audio:Level Complete]
 
-#AUDIO(level-complete.wav)(#INCLUDE(LevelComplete))
+#AUDIO0(level-complete.wav)(#INCLUDE(LevelComplete))
 
 [Audio:The Race Is On!]
 
-#AUDIO(race-is-on.wav)(#INCLUDE(RaceIsOn))
+#AUDIO0(race-is-on.wav)(#INCLUDE(RaceIsOn))
 
 [Audio:Ghostrider Has Finished]
 
-#AUDIO(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))
+#AUDIO0(ghostrider-finished.wav)(#INCLUDE(GhostriderFinished))
 
 [Audio:Dead]
 
-#AUDIO(dead.wav)(#INCLUDE(Dead))
+#AUDIO0(dead.wav)(#INCLUDE(Dead))
 
 [Audio:OutOfFuel]
 
-#AUDIO(out-of-fuel.wav)(#INCLUDE(OutOfFuel))
+#AUDIO0(out-of-fuel.wav)(#INCLUDE(OutOfFuel))
